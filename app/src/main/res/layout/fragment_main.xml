@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main_fragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+            <!--location label, current height label, geographic direction label-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="14.5">
+
+                <!--location label-->
+                <TextView
+                    android:id="@+id/location_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+
+                    android:text="Zimna Woda"
+                    android:textAppearance="?android:textAppearanceLarge"
+                    android:textSize="@dimen/text_size_16sp"
+                    android:gravity="center"
+                    android:textAlignment="center" />
+
+                <!--current height labels-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="1.1">
+
+                    <TextView
+                        android:id="@+id/current_height_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+
+                        android:text="827"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:textSize="@dimen/text_size_large_30sp"
+                        android:textAlignment="center"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:id="@+id/current_height_text_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+
+                        android:text="m n.p.m."
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:singleLine="false"
+                        android:textAlignment="center"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <!--direction label-->
+                <TextView
+                    android:id="@+id/direction_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+
+                    android:text="NW"
+                    android:textAppearance="?android:textAppearanceLarge"
+                    android:textSize="@dimen/text_size_16sp"
+                    android:gravity="center"
+                    android:textAlignment="center"/>
+            </LinearLayout>
+
+        <!--drawing board-->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="11">
+
+            <SurfaceView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="#03b854">
+            </SurfaceView>
+        </FrameLayout>
+
+        <!--layouts with max height, time, min height, longitude icon, latitude icon, small border line between,
+         longitude text latitude text, small border line between, advert-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="10.5">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="0.85">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/min_height_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+
+                        android:text="Min height"
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:gravity="center"
+                        android:textAlignment="center"/>
+                    <TextView
+                        android:id="@+id/min_height_numbers"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+
+                        android:text="125 m n.p.m."
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:gravity="center"
+                        android:textAlignment="center"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/time"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+
+                        android:text="Time"
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:gravity="center"
+                        android:textAlignment="center"/>
+                    <TextView
+                        android:id="@+id/time_numbers"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+
+                        android:text="00:12:15"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:gravity="center"
+                        android:textAlignment="center"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/max_height_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+
+                        android:text="Max Height"
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:gravity="center"
+                        android:textAlignment="center"/>
+                    <TextView
+                        android:id="@+id/max_height_numbers"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+
+                        android:text="1827 m n.p.m."
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:gravity="center"
+                        android:textAlignment="center"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!--separator line-->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryDark" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/longitude"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+
+                        android:text="Longitude"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:gravity="center"
+                        android:textAlignment="center"/>
+
+                    <TextView
+                        android:id="@+id/latitude"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+
+                        android:text="Latitude"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:gravity="center"
+                        android:textAlignment="center"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!--separator line-->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryDark" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+
+                    android:text="51* 47' 49'' N"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:gravity="center"
+                    android:textAlignment="center"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+
+                    android:text="22* 14' 9'' E"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:gravity="center"
+                    android:textAlignment="center"/>
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorAccent"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/text_size_large_30sp"
+                    android:text="REKLAMA"/>
+            </FrameLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</FrameLayout>
