@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">AltiMeter</string>
+
+    <!--WelcomeScreen label strings-->
+    <string name="ws_height" translatable="true">Height</string>
+    <string name="ws_longitude" translatable="true">Longitude</string>
+    <string name="ws_latitude" translatable="true">Latitude</string>
+    <string name="ws_max_height" translatable="true">Max Height</string>
+    <string name="ws_min_height" translatable="true">Min Height</string>
+</resources>
+
+
