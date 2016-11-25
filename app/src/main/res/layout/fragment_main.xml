@@ -38,7 +38,7 @@
                     android:layout_weight="1.1">
 
                     <TextView
-                        android:id="@+id/current_height_label"
+                        android:id="@+id/current_elevation_label"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -50,12 +50,12 @@
                         android:gravity="center"/>
 
                     <TextView
-                        android:id="@+id/current_height_text_label"
+                        android:id="@+id/current_elevation_text_label"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
 
-                        android:text="m n.p.m."
+                        android:text="@string/meters_short_text"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:singleLine="false"
                         android:textAlignment="center"
@@ -64,7 +64,7 @@
 
                 <!--direction label-->
                 <TextView
-                    android:id="@+id/direction_label"
+                    android:id="@+id/direction_label_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -204,23 +204,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                     <TextView
-                        android:id="@+id/longitude"
+                        android:id="@+id/current_longitude_label"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
 
-                        android:text="Longitude"
+                        android:text="@string/current_longitude_label"
                         android:textAppearance="?android:textAppearanceLarge"
                         android:gravity="center"
                         android:textAlignment="center"/>
 
                     <TextView
-                        android:id="@+id/latitude"
+                        android:id="@+id/current_latitude_label"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
 
-                        android:text="Latitude"
+                        android:text="@string/current_latitude_label"
                         android:textAppearance="?android:textAppearanceLarge"
                         android:gravity="center"
                         android:textAlignment="center"/>
@@ -240,21 +240,23 @@
                 android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/current_longitude_value"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
 
-                    android:text="51* 47' 49'' N"
+                    android:text="@string/current_longitude_value"
                     android:textAppearance="?android:textAppearanceMedium"
                     android:gravity="center"
                     android:textAlignment="center"/>
 
                 <TextView
+                    android:id="@+id/current_latitude_value"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
 
-                    android:text="22* 14' 9'' E"
+                    android:text="@string/current_latitude_value"
                     android:textAppearance="?android:textAppearanceMedium"
                     android:gravity="center"
                     android:textAlignment="center"/>

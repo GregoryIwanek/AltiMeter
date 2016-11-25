@@ -7,6 +7,11 @@
     <string name="ws_latitude" translatable="true">Latitude</string>
     <string name="ws_max_height" translatable="true">Max Height</string>
     <string name="ws_min_height" translatable="true">Min Height</string>
+    <string name="meters_short_text">m n.p.m.</string>
+    <string name="current_longitude_label">Longitude</string>
+    <string name="current_latitude_label">Latitude</string>
+    <string name="current_longitude_value">51* 47\' 49\'\' N</string>
+    <string name="current_latitude_value">22* 14\' 9\'\' E</string>
 </resources>
 
 

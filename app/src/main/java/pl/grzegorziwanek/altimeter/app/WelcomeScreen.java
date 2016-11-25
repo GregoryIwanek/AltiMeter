@@ -1,11 +1,7 @@
 package pl.grzegorziwanek.altimeter.app;
 
-import android.app.Fragment;
-import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.view.View;
 
 public class WelcomeScreen extends AppCompatActivity
 {
