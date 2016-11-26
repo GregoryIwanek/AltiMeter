@@ -1,6 +1,7 @@
 package pl.grzegorziwanek.altimeter.app;
 
 import android.app.Fragment;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,9 +31,17 @@ public class MainFragment extends Fragment
 {
     public MainFragment(){}
 
+    private double mCurrentEleValue;
+    private double mCurrentLngValue;
+    private double mCurrentLatValue;
+    private double mMaxElevValue = 0;
+    private double mMinElevValue = 0;
+
     private TextView mCurrentElevation;
     private TextView mCurrentLatitudeValue;
     private TextView mCurrentLongitudeValue;
+    private TextView mMaxElev;
+    private TextView mMinElev;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -58,7 +67,8 @@ public class MainFragment extends Fragment
         mCurrentElevation = (TextView) rootView.findViewById(R.id.current_elevation_label);
         mCurrentLatitudeValue = (TextView) rootView.findViewById(R.id.current_latitude_value);
         mCurrentLongitudeValue = (TextView) rootView.findViewById(R.id.current_longitude_value);
-
+        mMinElev = (TextView) rootView.findViewById(R.id.min_height_numbers);
+        mMaxElev = (TextView) rootView.findViewById(R.id.max_height_numbers);
         return rootView;
     }
 
@@ -207,6 +217,9 @@ public class MainFragment extends Fragment
                 Log.v(LOG_TAG, "Error occur, getting data from defined JSON string: ", e);
                 e.printStackTrace();
             }
+
+
+
             return null;
         }
 
@@ -232,7 +245,7 @@ public class MainFragment extends Fragment
             //hatch data from Json array into result String array
             for (int i=0; i<altitudeJsonArray.length(); i++)
             {
-            //get JSONObject representing the single point on a map
+                //get JSONObject representing the single point on a map
                 JSONObject pointData = altitudeJsonArray.getJSONObject(i);
 
                 //there is only one main array (RESULTS) and all of points are inside that array;
@@ -240,25 +253,38 @@ public class MainFragment extends Fragment
 
                 //elevation extraction
                 Double pointDataElevation = pointData.getDouble(OMW_ELEVATION);
+                mCurrentEleValue = pointDataElevation;
 
                 //location extraction and assignation lat and lng
                 JSONObject pointDataLocation = pointData.getJSONObject(OMW_LOCATION);
                 Double pointDataLatitude = pointDataLocation.getDouble(OMW_LATITUDE);
                 Double pointDataLongitude = pointDataLocation.getDouble(OMW_LONGITUDE);
+                mCurrentLatValue = pointDataLatitude;
+                mCurrentLngValue = pointDataLongitude;
 
                 //resolution extraction
                 Double pointDataResolution = pointData.getDouble(OMW_RESOLUTION);
-
 
                 resultArray[i] = "Elevation: " + pointDataElevation.toString() + ", " + pointDataLatitude.toString() + ", " + pointDataLongitude.toString();
 
                 //TODO move from here to separated method/class
                 DecimalFormat df = new DecimalFormat("#.###");
+                String currentElevation = df.format(pointDataElevation);
 
-                mCurrentElevation.setText(df.format(pointDataElevation));
+                //min and max elevation
+                if (pointDataElevation <= mMinElevValue)
+                {
+                    mMinElevValue = pointDataElevation;
+                }
+                else if (pointDataElevation >= mMaxElevValue)
+                {
+                    mMaxElevValue = pointDataElevation;
+                }
+
+                //mCurrentElevation.setText(currentElevation);
                 //TODO method to convert Double to format of lng and lat with degrees/minutes/seconds
-                mCurrentLongitudeValue.setText(pointDataLongitude.toString());
-                mCurrentLatitudeValue.setText(pointDataLatitude.toString());
+                //mCurrentLongitudeValue.setText(pointDataLongitude.toString());
+                //mCurrentLatitudeValue.setText(pointDataLatitude.toString());
             }
 
             for (String pointEntry : resultArray)
@@ -266,14 +292,87 @@ public class MainFragment extends Fragment
                 Log.v(LOG_TAG, "Point entry created: " + pointEntry);
             }
 
+            return resultArray;
+        }
+
+        public String convertLocationFormat(Double lat, Double lng)
+        {
+            //mCurrentLongitudeValue.setText(Location.convert(lng, Location.FORMAT_SECONDS));
+            //mCurrentLatitudeValue.setText(Location.convert(lat, Location.FORMAT_SECONDS));
+            String lngText = replaceDelimiters(lng, false);
+            String latText = replaceDelimiters(lat, true);
+            mCurrentLatitudeValue.setText(latText);
+            mCurrentLongitudeValue.setText(lngText);
             return null;
         }
 
-        private String convertLocationFormat(Double value)
+        //consist code responsible for replacing format (23:32:32:3223132 -> 23°xx'xx")
+        public String replaceDelimiters(Double coordinate, boolean isLat)
         {
+            //replace ":" with symbols
+            String str = Location.convert(coordinate, Location.FORMAT_SECONDS);
+            str = str.replaceFirst("-", "");
+            str = str.replaceFirst(":", "°");
+            str = str.replaceFirst(":", "'");
 
+            //get index of point, define end index of the given string
+            int pointIndex = str.indexOf(".");
+            int endIndex = pointIndex;
 
-            return null;
+            //subtract string if is longer than end index
+            if (endIndex < str.length())
+            {
+                str = str.substring(0, endIndex);
+            }
+
+            //add "''" at the end
+            str = str + "\"";
+
+            //define direction (N, W, E, S)
+            str = defineDirection(str, coordinate, isLat);
+
+            return str;
+        }
+
+        public String defineDirection(String str, Double coordinate, boolean isLatitude)
+        {
+            //if is latitude -> add S/N
+            if (isLatitude == true)
+            {
+                if (coordinate < 0)
+                {
+                    str = str + "S";
+                }
+                else
+                {
+                    str = str + "N";
+                }
+            }
+            //if is longitude -> add E/W
+            else
+            {
+                if (coordinate >0 )
+                {
+                    str = str + "E";
+                }
+                else
+                {
+                    str = str + "W";
+                }
+            }
+
+            return str;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
+            DecimalFormat df = new DecimalFormat("#.##");
+            String currentElevation = df.format(mCurrentEleValue);
+            mCurrentElevation.setText(currentElevation);
+            mMaxElev.setText(df.format(mMaxElevValue));
+            mMinElev.setText(df.format(mMinElevValue));
+            convertLocationFormat(mCurrentLatValue, mCurrentLngValue);
         }
     }
 }
