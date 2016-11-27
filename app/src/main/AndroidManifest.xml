@@ -5,6 +5,10 @@
     <!--PERMISSION TO ACCESS INTER: MUST HAVE-->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!--Google play service permission-> to use real time location update-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

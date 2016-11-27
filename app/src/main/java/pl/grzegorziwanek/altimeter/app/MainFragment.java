@@ -1,15 +1,27 @@
 package pl.grzegorziwanek.altimeter.app;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,32 +39,42 @@ import java.text.DecimalFormat;
 /**
  * Created by Grzegorz Iwanek on 23.11.2016.
  */
-public class MainFragment extends Fragment
+public class MainFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
-    public MainFragment(){}
+    public MainFragment() {
+    }
 
+    private GoogleApiClient mGoogleApiClient;
+    private FetchDataInfoTask fetchDataInfoTask;
+
+    //variables to hold data as doubles and refactor them later into TextViews
     private double mCurrentEleValue;
     private double mCurrentLngValue;
     private double mCurrentLatValue;
     private double mMaxElevValue = 0;
     private double mMinElevValue = 0;
 
-    private TextView mCurrentElevation;
-    private TextView mCurrentLatitudeValue;
-    private TextView mCurrentLongitudeValue;
-    private TextView mMaxElev;
-    private TextView mMinElev;
+    //TextViews of View, fulled with refactored data from JSON objects and Google Play Service
+    private TextView mCurrElevationTextView;
+    private TextView mCurrLatitudeTextView;
+    private TextView mCurrLongitudeTextView;
+    private TextView mMaxElevTextView;
+    private TextView mMinElevTextView;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //initiate google play service ( used to update device's location in given intervals)
+        initiateGooglePlayService();
     }
 
     //consist actions to perform upon re/start of app ( update current location and information)
     @Override
-    public void onStart()
-    {
+    public void onStart() {
+        //connect google play service and get current location
+        mGoogleApiClient.connect();
+
         super.onStart();
 
         //refresh info on screen on app start/restart
@@ -64,14 +86,23 @@ public class MainFragment extends Fragment
     {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        mCurrentElevation = (TextView) rootView.findViewById(R.id.current_elevation_label);
-        mCurrentLatitudeValue = (TextView) rootView.findViewById(R.id.current_latitude_value);
-        mCurrentLongitudeValue = (TextView) rootView.findViewById(R.id.current_longitude_value);
-        mMinElev = (TextView) rootView.findViewById(R.id.min_height_numbers);
-        mMaxElev = (TextView) rootView.findViewById(R.id.max_height_numbers);
+        //assign UI elements to inner variables
+        mCurrElevationTextView = (TextView) rootView.findViewById(R.id.current_elevation_label);
+        mCurrLatitudeTextView = (TextView) rootView.findViewById(R.id.current_latitude_value);
+        mCurrLongitudeTextView = (TextView) rootView.findViewById(R.id.current_longitude_value);
+        mMinElevTextView = (TextView) rootView.findViewById(R.id.min_height_numbers);
+        mMaxElevTextView = (TextView) rootView.findViewById(R.id.max_height_numbers);
+
         return rootView;
     }
 
+    @Override
+    public void onAttach(Context context)
+    {
+        super.onAttach(context);
+    }
+
+    //TODO-> assign more content here, consider moving
     //called onStart and restart-> update information to show on app start
     private void updateAppInfo()
     {
@@ -80,299 +111,77 @@ public class MainFragment extends Fragment
         fetchDataInfoTask.execute();
     }
 
-    //Inner class responsible for background update, have to extend AsyncTask<params, progress, result>
-    //ASyncTask <params, progress, result> -> params: given entry data to work on; progress: data to show progress; result: result of background execution
-    public class FetchDataInfoTask extends AsyncTask<Void, Void, Void>
+
+    //Initiate google play service (MainFragment needs to implement GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
+    //and override onConnected, onConnectionSuspended, onConnectionFailed; add LocationServices.API to update device location in real time;
+    private void initiateGooglePlayService()
     {
-        //TODO move it somewhere else, dummy data to get adress of a place
-        //TODO -> query parameter append to URI can take many locations, but as one
-        //TODO -> method to parse many locations into one String
-        private final String LOG_TAG = FetchDataInfoTask.class.getSimpleName();
-        private final int ZIP_CODE = 94043;
-        final String APPID_KEY = "AIzaSyDz8OSO03MnSdoE-0FFN9sZaIyFRlpf79Y"; // TODO move that to config
-        private final double LONGITUDE = 51.797867; //dummy data
-        private final double LATITUDE = 22.232552; //dummy data
-        private final String LOCATIONS = Double.toString(LONGITUDE) + "," + Double.toString(LATITUDE)
-                + "|" + Double.toString(54.797867) + "," + Double.toString(13.321321)
-                + "|" + Double.toString(23.432432) + "," + Double.toString(15.554545)
-                + "|" + Double.toString(65.745644) + "," + Double.toString(55.555555)
-                + "|" + Double.toString(12.664644) + "," + Double.toString(33.235533)
-                + "|" + Double.toString(11.878777) + "," + Double.toString(44.444444)
-                + "|" + Double.toString(56.641212) + "," + Double.toString(76.435355);//dummy data String
-
-        //download data from web as a background task
-        @Override
-        protected Void doInBackground(Void... voids)
+        //connect in onStart, disconnect in onStop of the Activity
+        if (mGoogleApiClient == null)
         {
-            //help class to connect to web and get data
-            HttpURLConnection urlConnection = null;
-            //reads data from given input stream (this case-> data from web to string format)
-            BufferedReader bufferedReader = null;
-            String altitudeJsonStr = null;
-
-            try
-            {
-                //setp 1: construction of the URL query for google maps API, have to add personal API key to use gooogle maps API
-                //TODO move it to a different subclass or abstract class
-                //google maps API takes form: https://maps.googleapis.com/maps/api/elevation/outputFormat?parameters
-                //example: https://maps.googleapis.com/maps/api/elevation/json?locations=39.7391536,-104.9847034&key=AIzaSyDz8OSO03MnSdoE-0FFN9sZaIyFRlpf79Y
-                final int URL_LENGTH_LIMIT = 8192;
-                final String GOOGLEMAPS_BASE_URL = "https://maps.googleapis.com/maps/api/elevation/json?";
-                final String OUTPUT_FORMAT = "json";
-                final String PARAMETERS_LOCATIONS = "locations";
-                final String PARAMETERS_PATH = "path";
-                final String APPID_PARAM = "key";
-
-                //important: use android.net URI class, not JAVA!!!
-                //parse base url -> build instance of builder -> append query parameters -> build url
-                Uri buildUri = Uri.parse(GOOGLEMAPS_BASE_URL).buildUpon()
-                        .appendQueryParameter(PARAMETERS_LOCATIONS, LOCATIONS)
-                        .appendQueryParameter(APPID_PARAM, APPID_KEY)
-                        .build();
-
-                //check how generated uri looks like
-                Log.v(LOG_TAG, "URI has been built: " + buildUri.toString());
-
-                //build string url
-                URL url = new URL(buildUri.toString());
-
-                //step 2: creation of request to google maps API, opening connection with web
-                //incompatible type if without (HttpURLConnection call)
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-
-                //step 3: read input stream from web by getting stream from opened connection
-                // get input stream from url connection -> create StringBuffer instance ->
-                // define BufferedReader here with InputStreamReader -> append strings to the StringBuffer in a loop ->
-                // define string to show as StringBuffer.toString();
-                InputStream inputStream = urlConnection.getInputStream();
-                if (inputStream == null)
-                {
-                    //set as null if no data to show
-                    Log.v(LOG_TAG, "Input stream was empty, no data to shown, return null");
-                    return null;
-                }
-
-                StringBuffer stringBuffer = new StringBuffer();
-
-                //define BufferedReader by got input stream
-                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-
-                //have to use additional string (line) to call readLine() just once ( so lines from stream won't be losed and empty)
-                String line;
-                while ((line = bufferedReader.readLine()) != null)
-                {
-                    //append "line" instead calling readLine() again
-                    stringBuffer.append(line + "\n");
-                }
-
-                if (stringBuffer.length() == 0)
-                {
-                    //string stream was empty, so no point in further parsing-> return null so no data is shown
-                    Log.v(LOG_TAG, "String stream was empty, no data to shown, return null");
-                    return null;
-                }
-
-                //define altitude string
-                altitudeJsonStr = stringBuffer.toString();
-
-                //log message with result string
-                Log.v(LOG_TAG, "altitude string generated: " + altitudeJsonStr);
-            }
-            catch (IOException e)
-            {
-                //if error occur, code didn't get data from web so no point in performing further data parsing, return null
-                Log.v(LOG_TAG, "Error, at getting data from web:", e);
-                return null;
-            }
-            finally
-            {
-                //close opened url connection
-                if (urlConnection != null)
-                {
-                    urlConnection.disconnect();
-                }
-                //try to close opened buffered reader
-                if (bufferedReader != null)
-                {
-                    try
-                    {
-                        bufferedReader.close();
-                    }
-                    catch (IOException e)
-                    {
-                        Log.v(LOG_TAG, "Error, at BufferedReaded closing:", e);
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            try
-            {
-                //TODO change num of points from fixed to method generated
-                getAltitudeDataFromJson(altitudeJsonStr, 7);
-            } catch (JSONException e)
-            {
-                Log.v(LOG_TAG, "Error occur, getting data from defined JSON string: ", e);
-                e.printStackTrace();
-            }
-
-
-
-            return null;
+            mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
         }
+    }
 
-        //method to extract data in correct form from given Json String;
-        // TODO-> methods to define number of points, right now fixed dummy
-        public String[] getAltitudeDataFromJson(String altitudeJsonStr, int numOfPoints) throws JSONException
+    @Override
+    public void onConnected(@Nullable Bundle bundle)
+    {
+
+        System.out.println("IS GOOGLE API CLIENT CONNECTED?: " + mGoogleApiClient.isConnected());
+
+        //TODO-> move outside of this method, just to test current state
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(1000);
+        mLocationRequest.setFastestInterval(500);
+        //TODO-> changed to priority high accuracy to make it work on emulator,
+        //TODO-> on real device choose balanced mode
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest);
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient,
+                        builder.build());
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
+        //!!! TODO -> change permissions system, for now API target version has been downgraded from API 25 to API 22 to make it work
+        //!!! TODO -> from API 23 dangerous permissions have to be check in runtime
+        //onConnected is triggered after onStart(), so doInBackground() is completed first, then
+        //commands from here
+        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        System.out.println(mLastLocation);
+        if (mLastLocation != null)
         {
-
-            //JSON objects names which need to be extracted from given string
-            final String OMW_RESULTS = "results";
-            final String OMW_ELEVATION = "elevation";
-            final String OMW_LOCATION = "location";
-            final String OMW_LATITUDE = "lat";
-            final String OMW_LONGITUDE = "lng";
-            final String OMW_RESOLUTION = "resolution";
-            final String OMW_STATUS = "status";
-
-            //create Json object and array with data, assign given Json string parameter to object
-            JSONObject altitudeJson = new JSONObject(altitudeJsonStr);
-            JSONArray altitudeJsonArray = altitudeJson.getJSONArray(OMW_RESULTS);
-            String[] resultArray = new String[numOfPoints];
-
-            //hatch data from Json array into result String array
-            for (int i=0; i<altitudeJsonArray.length(); i++)
-            {
-                //get JSONObject representing the single point on a map
-                JSONObject pointData = altitudeJsonArray.getJSONObject(i);
-
-                //there is only one main array (RESULTS) and all of points are inside that array;
-                //each cell consist elevation, location which is subarray and consist lan and lng, and resolution
-
-                //elevation extraction
-                Double pointDataElevation = pointData.getDouble(OMW_ELEVATION);
-                mCurrentEleValue = pointDataElevation;
-
-                //location extraction and assignation lat and lng
-                JSONObject pointDataLocation = pointData.getJSONObject(OMW_LOCATION);
-                Double pointDataLatitude = pointDataLocation.getDouble(OMW_LATITUDE);
-                Double pointDataLongitude = pointDataLocation.getDouble(OMW_LONGITUDE);
-                mCurrentLatValue = pointDataLatitude;
-                mCurrentLngValue = pointDataLongitude;
-
-                //resolution extraction
-                Double pointDataResolution = pointData.getDouble(OMW_RESOLUTION);
-
-                resultArray[i] = "Elevation: " + pointDataElevation.toString() + ", " + pointDataLatitude.toString() + ", " + pointDataLongitude.toString();
-
-                //TODO move from here to separated method/class
-                DecimalFormat df = new DecimalFormat("#.###");
-                String currentElevation = df.format(pointDataElevation);
-
-                //min and max elevation
-                if (pointDataElevation <= mMinElevValue)
-                {
-                    mMinElevValue = pointDataElevation;
-                }
-                else if (pointDataElevation >= mMaxElevValue)
-                {
-                    mMaxElevValue = pointDataElevation;
-                }
-
-                //mCurrentElevation.setText(currentElevation);
-                //TODO method to convert Double to format of lng and lat with degrees/minutes/seconds
-                //mCurrentLongitudeValue.setText(pointDataLongitude.toString());
-                //mCurrentLatitudeValue.setText(pointDataLatitude.toString());
-            }
-
-            for (String pointEntry : resultArray)
-            {
-                Log.v(LOG_TAG, "Point entry created: " + pointEntry);
-            }
-
-            return resultArray;
+            mCurrLatitudeTextView.setText(String.valueOf(mLastLocation.getLatitude()));
+            mCurrLatitudeTextView.setText("");
+            mCurrLongitudeTextView.setText(String.valueOf(mLastLocation.getLongitude()));
+            System.out.println(mLastLocation);
         }
+    }
 
-        public String convertLocationFormat(Double lat, Double lng)
+    @Override
+    public void onConnectionSuspended(int i)
+    {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
+    {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location)
+    {
+        if (location != null)
         {
-            //mCurrentLongitudeValue.setText(Location.convert(lng, Location.FORMAT_SECONDS));
-            //mCurrentLatitudeValue.setText(Location.convert(lat, Location.FORMAT_SECONDS));
-            String lngText = replaceDelimiters(lng, false);
-            String latText = replaceDelimiters(lat, true);
-            mCurrentLatitudeValue.setText(latText);
-            mCurrentLongitudeValue.setText(lngText);
-            return null;
-        }
-
-        //consist code responsible for replacing format (23:32:32:3223132 -> 23°xx'xx")
-        public String replaceDelimiters(Double coordinate, boolean isLat)
-        {
-            //replace ":" with symbols
-            String str = Location.convert(coordinate, Location.FORMAT_SECONDS);
-            str = str.replaceFirst("-", "");
-            str = str.replaceFirst(":", "°");
-            str = str.replaceFirst(":", "'");
-
-            //get index of point, define end index of the given string
-            int pointIndex = str.indexOf(".");
-            int endIndex = pointIndex;
-
-            //subtract string if is longer than end index
-            if (endIndex < str.length())
-            {
-                str = str.substring(0, endIndex);
-            }
-
-            //add "''" at the end
-            str = str + "\"";
-
-            //define direction (N, W, E, S)
-            str = defineDirection(str, coordinate, isLat);
-
-            return str;
-        }
-
-        public String defineDirection(String str, Double coordinate, boolean isLatitude)
-        {
-            //if is latitude -> add S/N
-            if (isLatitude == true)
-            {
-                if (coordinate < 0)
-                {
-                    str = str + "S";
-                }
-                else
-                {
-                    str = str + "N";
-                }
-            }
-            //if is longitude -> add E/W
-            else
-            {
-                if (coordinate >0 )
-                {
-                    str = str + "E";
-                }
-                else
-                {
-                    str = str + "W";
-                }
-            }
-
-            return str;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid)
-        {
-            DecimalFormat df = new DecimalFormat("#.##");
-            String currentElevation = df.format(mCurrentEleValue);
-            mCurrentElevation.setText(currentElevation);
-            mMaxElev.setText(df.format(mMaxElevValue));
-            mMinElev.setText(df.format(mMinElevValue));
-            convertLocationFormat(mCurrentLatValue, mCurrentLngValue);
+            mCurrLatitudeTextView.setText(String.valueOf(location.getLatitude()));
+            mCurrLongitudeTextView.setText(String.valueOf(location.getLongitude()));
         }
     }
 }
