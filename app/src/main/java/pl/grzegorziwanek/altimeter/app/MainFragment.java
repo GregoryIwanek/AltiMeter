@@ -3,12 +3,9 @@ package pl.grzegorziwanek.altimeter.app;
 import android.app.Fragment;
 import android.content.Context;
 import android.location.Location;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,18 +20,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.DecimalFormat;
-
 
 /**
  * Created by Grzegorz Iwanek on 23.11.2016.
@@ -45,7 +30,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     private GoogleApiClient mGoogleApiClient;
-    private FetchDataInfoTask fetchDataInfoTask;
+    private FetchDataInfoTask mFetchDataInfoTask;
+    private static DataFormatConverter sDataFormatConverter;
 
     //variables to hold data as doubles and refactor them later into TextViews
     private double mCurrentEleValue;
@@ -55,14 +41,15 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     private double mMinElevValue = 0;
 
     //TextViews of View, fulled with refactored data from JSON objects and Google Play Service
-    private TextView mCurrElevationTextView;
-    private TextView mCurrLatitudeTextView;
-    private TextView mCurrLongitudeTextView;
-    private TextView mMaxElevTextView;
-    private TextView mMinElevTextView;
+    private static TextView sCurrElevationTextView;
+    private static TextView sCurrLatitudeTextView;
+    private static TextView sCurrLongitudeTextView;
+    private static TextView sMaxElevTextView;
+    private static TextView sMinElevTextView;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
         //initiate google play service ( used to update device's location in given intervals)
@@ -71,7 +58,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     //consist actions to perform upon re/start of app ( update current location and information)
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         //connect google play service and get current location
         mGoogleApiClient.connect();
 
@@ -87,11 +75,13 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         //assign UI elements to inner variables
-        mCurrElevationTextView = (TextView) rootView.findViewById(R.id.current_elevation_label);
-        mCurrLatitudeTextView = (TextView) rootView.findViewById(R.id.current_latitude_value);
-        mCurrLongitudeTextView = (TextView) rootView.findViewById(R.id.current_longitude_value);
-        mMinElevTextView = (TextView) rootView.findViewById(R.id.min_height_numbers);
-        mMaxElevTextView = (TextView) rootView.findViewById(R.id.max_height_numbers);
+        sCurrElevationTextView = (TextView) rootView.findViewById(R.id.current_elevation_label);
+        sCurrLatitudeTextView = (TextView) rootView.findViewById(R.id.current_latitude_value);
+        sCurrLongitudeTextView = (TextView) rootView.findViewById(R.id.current_longitude_value);
+        sMinElevTextView = (TextView) rootView.findViewById(R.id.min_height_numbers);
+        sMaxElevTextView = (TextView) rootView.findViewById(R.id.max_height_numbers);
+
+        sDataFormatConverter = new DataFormatConverter();
 
         return rootView;
     }
@@ -156,9 +146,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         System.out.println(mLastLocation);
         if (mLastLocation != null)
         {
-            mCurrLatitudeTextView.setText(String.valueOf(mLastLocation.getLatitude()));
-            mCurrLatitudeTextView.setText("");
-            mCurrLongitudeTextView.setText(String.valueOf(mLastLocation.getLongitude()));
+            sCurrLatitudeTextView.setText(String.valueOf(mLastLocation.getLatitude()));
+            sCurrLongitudeTextView.setText(String.valueOf(mLastLocation.getLongitude()));
             System.out.println(mLastLocation);
         }
     }
@@ -180,8 +169,11 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     {
         if (location != null)
         {
-            mCurrLatitudeTextView.setText(String.valueOf(location.getLatitude()));
-            mCurrLongitudeTextView.setText(String.valueOf(location.getLongitude()));
+            //format geo coordinates to degrees/minutes/seconds and update TextViews
+            String latitudeStr = sDataFormatConverter.replaceDelimitersAddDirection(location.getLatitude(), true);
+            String longitudeStr = sDataFormatConverter.replaceDelimitersAddDirection(location.getLongitude(), false);
+            sCurrLatitudeTextView.setText(latitudeStr);
+            sCurrLongitudeTextView.setText(longitudeStr);
         }
     }
 }
