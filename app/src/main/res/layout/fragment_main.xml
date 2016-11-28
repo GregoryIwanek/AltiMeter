@@ -53,7 +53,7 @@
                         android:id="@+id/current_elevation_text_label"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="2"
+                        android:layout_weight="1.25"
 
                         android:text="@string/meters_short_text"
                         android:textAppearance="?android:textAppearanceSmall"

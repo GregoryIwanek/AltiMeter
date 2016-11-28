@@ -6,6 +6,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 
-
 /**
  * Created by Grzegorz Iwanek on 23.11.2016.
  */
@@ -28,6 +28,10 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 {
     public MainFragment() {
     }
+
+    private static final String LOG_TAG = MainFragment.class.getSimpleName();
+    //TODO-> assign location update to settings, not here (ONE_MINUTE variable)
+    private static final int FIVE_SECONDS = 1000*5;
 
     private GoogleApiClient mGoogleApiClient;
     private FetchDataInfoTask mFetchDataInfoTask;
@@ -37,8 +41,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     private double mCurrentEleValue;
     private double mCurrentLngValue;
     private double mCurrentLatValue;
-    private double mMaxElevValue = 0;
-    private double mMinElevValue = 0;
+    private double mMaxAltitdeValue;
+    private double mMinAltitudeValue;
 
     //TextViews of View, fulled with refactored data from JSON objects and Google Play Service
     private static TextView sCurrElevationTextView;
@@ -96,9 +100,9 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     //called onStart and restart-> update information to show on app start
     private void updateAppInfo()
     {
-        FetchDataInfoTask fetchDataInfoTask = new FetchDataInfoTask();
+        //FetchDataInfoTask fetchDataInfoTask = new FetchDataInfoTask();
 
-        fetchDataInfoTask.execute();
+        //fetchDataInfoTask.execute();
     }
 
 
@@ -120,48 +124,43 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     @Override
     public void onConnected(@Nullable Bundle bundle)
     {
+        //define location request of GooglePlayService
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(1000);
+        locationRequest.setFastestInterval(1000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        System.out.println("IS GOOGLE API CLIENT CONNECTED?: " + mGoogleApiClient.isConnected());
+        //build location request
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+        //TODO->analyse line below, if needed*
+        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
 
-        //TODO-> move outside of this method, just to test current state
-        LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(1000);
-        mLocationRequest.setFastestInterval(500);
-        //TODO-> changed to priority high accuracy to make it work on emulator,
-        //TODO-> on real device choose balanced mode
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(mLocationRequest);
-        PendingResult<LocationSettingsResult> result =
-                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient,
-                        builder.build());
-
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        //call location request to get location update in set intervals
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
 
         //!!! TODO -> change permissions system, for now API target version has been downgraded from API 25 to API 22 to make it work
-        //!!! TODO -> from API 23 dangerous permissions have to be check in runtime
-        //onConnected is triggered after onStart(), so doInBackground() is completed first, then
-        //commands from here
-        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        System.out.println(mLastLocation);
-        if (mLastLocation != null)
+        //!!! TODO -> from API 23 dangerous permissions have to be check in runtime; -> change to API 25 and add required code changes
+        //onConnected is triggered after onStart(), so doInBackground() is completed first, then commands from here;
+        //update TextViews with location, in case there is incorrect old value from
+        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (lastLocation != null)
         {
-            sCurrLatitudeTextView.setText(String.valueOf(mLastLocation.getLatitude()));
-            sCurrLongitudeTextView.setText(String.valueOf(mLastLocation.getLongitude()));
-            System.out.println(mLastLocation);
+            updateCurrentPositionTextViews(lastLocation);
         }
+
+        setMinMaxAltitude(lastLocation.getAltitude());
     }
 
     @Override
     public void onConnectionSuspended(int i)
     {
-
+        Log.v(LOG_TAG, "Connection suspended, no location updates will be received");
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
     {
-
+        Log.v(LOG_TAG, "Error occur, connection failed: " + connectionResult.getErrorMessage());
     }
 
     @Override
@@ -169,11 +168,55 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     {
         if (location != null)
         {
-            //format geo coordinates to degrees/minutes/seconds and update TextViews
-            String latitudeStr = sDataFormatConverter.replaceDelimitersAddDirection(location.getLatitude(), true);
-            String longitudeStr = sDataFormatConverter.replaceDelimitersAddDirection(location.getLongitude(), false);
-            sCurrLatitudeTextView.setText(latitudeStr);
-            sCurrLongitudeTextView.setText(longitudeStr);
+            updateCurrentPositionTextViews(location);
+
+            //update current elevation TextView
+            String elevationStr = sDataFormatConverter.formatElevation(location.getAltitude());
+            sCurrElevationTextView.setText(elevationStr);
+
+            updateMaxMinAltitude(location.getAltitude());
+        }
+    }
+
+    //format geo coordinates to degrees/minutes/seconds and update TextViews
+    private void updateCurrentPositionTextViews(Location location)
+    {
+        String latitudeStr = sDataFormatConverter.replaceDelimitersAddDirection(location.getLatitude(), true);
+        String longitudeStr = sDataFormatConverter.replaceDelimitersAddDirection(location.getLongitude(), false);
+        sCurrLatitudeTextView.setText(latitudeStr);
+        sCurrLongitudeTextView.setText(longitudeStr);
+    }
+
+    //set at start of app to prevent min/maxAltitude equal to null
+    private void setMinMaxAltitude(Double altitude)
+    {
+        //TODO->check if there is stored last location in preferences
+        mMinAltitudeValue = altitude;
+        String minAltitudeStr = sDataFormatConverter.formatElevation(mMinAltitudeValue);
+        minAltitudeStr = sDataFormatConverter.addMetersAboveSeaLevel(minAltitudeStr);
+        sMinElevTextView.setText(minAltitudeStr);
+        mMaxAltitdeValue = altitude;
+        String maxAltitudeStr = sDataFormatConverter.formatElevation(mMaxAltitdeValue);
+        maxAltitudeStr = sDataFormatConverter.addMetersAboveSeaLevel(maxAltitudeStr);
+        sMaxElevTextView.setText(maxAltitudeStr);
+    }
+
+    //if needed update min and max recorded altitude and update TextViews;
+    private void updateMaxMinAltitude(Double altitude)
+    {
+        if (altitude < mMinAltitudeValue)
+        {
+            mMinAltitudeValue = altitude;
+            String minAltitudeStr = sDataFormatConverter.formatElevation(mMinAltitudeValue);
+            minAltitudeStr = sDataFormatConverter.addMetersAboveSeaLevel(minAltitudeStr);
+            sMinElevTextView.setText(minAltitudeStr);
+        }
+        else if (altitude > mMaxAltitdeValue)
+        {
+            mMaxAltitdeValue = altitude;
+            String maxAltitudeStr = sDataFormatConverter.formatElevation(mMaxAltitdeValue);
+            maxAltitudeStr = sDataFormatConverter.addMetersAboveSeaLevel(maxAltitudeStr);
+            sMaxElevTextView.setText(maxAltitudeStr);
         }
     }
 }

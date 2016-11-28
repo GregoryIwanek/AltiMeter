@@ -2,6 +2,8 @@ package pl.grzegorziwanek.altimeter.app;
 
 import android.location.Location;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by Grzegorz Iwanek on 27.11.2016.
  * Consist upgraded ArrayAdapter<String> class; used to update all wanted text views in view at once (single ArrayAdapter by default upgrade one object);
@@ -10,6 +12,8 @@ import android.location.Location;
 public class DataFormatConverter
 {
     public DataFormatConverter(){}
+
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
 
     //consist code responsible for replacing format (23:32:32:3223132 -> 23°xx'xx")
     public String replaceDelimitersAddDirection(Double coordinate, boolean isLatitude)
@@ -63,6 +67,18 @@ public class DataFormatConverter
             }
         }
 
+        return str;
+    }
+
+    //format given altitude to X.XX
+    public String formatElevation(Double altitude)
+    {
+        return DECIMAL_FORMAT.format(altitude);
+    }
+
+    public String addMetersAboveSeaLevel(String str)
+    {
+        str = str + " m n.p.m.";
         return str;
     }
 }
