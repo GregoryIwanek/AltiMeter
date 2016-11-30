@@ -10,8 +10,13 @@
     <string name="meters_short_text">m n.p.m.</string>
     <string name="current_longitude_label">Longitude</string>
     <string name="current_latitude_label">Latitude</string>
-    <string name="current_longitude_value">51* 47\' 49\'\' N</string>
-    <string name="current_latitude_value">22* 14\' 9\'\' E</string>
+    <string name="current_no_value">...</string>
+    <string name="max_height_text">Max Height</string>
+    <string name="min_height_text">Min Height</string>
+    <string name="service_not_available">Service not available</string>
+    <string name="invalid_lat_long_used">Invalid latitude longitude used</string>
+    <string name="no_address_found">No address found</string>
+    <string name="address_found">Address found</string>
 </resources>
 
 

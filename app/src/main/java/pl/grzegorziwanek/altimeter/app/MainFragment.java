@@ -1,9 +1,13 @@
 package pl.grzegorziwanek.altimeter.app;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -41,8 +45,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     private double mCurrentEleValue;
     private double mCurrentLngValue;
     private double mCurrentLatValue;
-    private double mMaxAltitdeValue;
-    private double mMinAltitudeValue;
+    private double mMaxAltitdeValue = -10000;
+    private double mMinAltitudeValue = 10000;
 
     //TextViews of View, fulled with refactored data from JSON objects and Google Play Service
     private static TextView sCurrElevationTextView;
@@ -50,6 +54,35 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     private static TextView sCurrLongitudeTextView;
     private static TextView sMaxElevTextView;
     private static TextView sMinElevTextView;
+    private static TextView sCurrAddressTextView;
+
+    private AddressResultReceiver addressResultReceiver;
+
+    @SuppressLint("ParcelCreator")
+    class AddressResultReceiver extends ResultReceiver
+    {
+        String mAddressOutput;
+
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            super.onReceiveResult(resultCode, resultData);
+
+
+            // Display the address string
+            // or an error message sent from the intent service.
+            mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
+            //displayAddressOutput();
+
+            // Show a toast message if an address was found.
+            if (resultCode == Constants.SUCCESS_RESULT) {
+                //showToast(getString(R.string.address_found));
+            }
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -84,6 +117,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         sCurrLongitudeTextView = (TextView) rootView.findViewById(R.id.current_longitude_value);
         sMinElevTextView = (TextView) rootView.findViewById(R.id.min_height_numbers);
         sMaxElevTextView = (TextView) rootView.findViewById(R.id.max_height_numbers);
+        sCurrAddressTextView = (TextView) rootView.findViewById(R.id.location_label);
 
         sDataFormatConverter = new DataFormatConverter();
 
@@ -135,7 +169,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         //TODO->analyse line below, if needed*
         PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
 
-        //call location request to get location update in set intervals
+        //call location request to get location update in set intervals-> must have
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
 
         //!!! TODO -> change permissions system, for now API target version has been downgraded from API 25 to API 22 to make it work
@@ -145,10 +179,9 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (lastLocation != null)
         {
+            setMinMaxAltitude(lastLocation.getAltitude());
             updateCurrentPositionTextViews(lastLocation);
         }
-
-        setMinMaxAltitude(lastLocation.getAltitude());
     }
 
     @Override
@@ -192,12 +225,12 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     {
         //TODO->check if there is stored last location in preferences
         mMinAltitudeValue = altitude;
-        String minAltitudeStr = sDataFormatConverter.formatElevation(mMinAltitudeValue);
-        minAltitudeStr = sDataFormatConverter.addMetersAboveSeaLevel(minAltitudeStr);
-        sMinElevTextView.setText(minAltitudeStr);
         mMaxAltitdeValue = altitude;
+        String minAltitudeStr = sDataFormatConverter.formatElevation(mMinAltitudeValue);
         String maxAltitudeStr = sDataFormatConverter.formatElevation(mMaxAltitdeValue);
+        minAltitudeStr = sDataFormatConverter.addMetersAboveSeaLevel(minAltitudeStr);
         maxAltitudeStr = sDataFormatConverter.addMetersAboveSeaLevel(maxAltitudeStr);
+        sMinElevTextView.setText(minAltitudeStr);
         sMaxElevTextView.setText(maxAltitudeStr);
     }
 

@@ -24,7 +24,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
 
-                    android:text="Zimna Woda"
+                    android:text="@string/current_no_value"
                     android:textAppearance="?android:textAppearanceLarge"
                     android:textSize="@dimen/text_size_16sp"
                     android:gravity="center"
@@ -43,7 +43,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
 
-                        android:text="827"
+                        android:text="@string/current_no_value"
                         android:textAppearance="?android:textAppearanceLarge"
                         android:textSize="@dimen/text_size_large_30sp"
                         android:textAlignment="center"
@@ -56,6 +56,7 @@
                         android:layout_weight="1.25"
 
                         android:text="@string/meters_short_text"
+                        android:textColor="@color/colorBlack"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:singleLine="false"
                         android:textAlignment="center"
@@ -69,7 +70,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
 
-                    android:text="NW"
+                    android:text="@string/current_no_value"
                     android:textAppearance="?android:textAppearanceLarge"
                     android:textSize="@dimen/text_size_16sp"
                     android:gravity="center"
@@ -115,7 +116,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
 
-                        android:text="Min Height"
+                        android:text="@string/min_height_text"
+                        android:textColor="@color/colorBlack"
                         android:textAppearance="?android:textAppearanceMedium"
                         android:gravity="center"
                         android:textAlignment="center"/>
@@ -125,7 +127,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
 
-                        android:text="125 m n.p.m."
+                        android:text="@string/current_no_value"
+                        android:textColor="@color/colorBlack"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:gravity="center"
                         android:textAlignment="center"/>
@@ -171,7 +174,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
 
-                        android:text="Max Height"
+                        android:text="@string/max_height_text"
+                        android:textColor="@color/colorBlack"
                         android:textAppearance="?android:textAppearanceMedium"
                         android:gravity="center"
                         android:textAlignment="center"/>
@@ -181,7 +185,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
 
-                        android:text="1827 m n.p.m."
+                        android:text="@string/current_no_value"
+                        android:textColor="@color/colorBlack"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:gravity="center"
                         android:textAlignment="center"/>
@@ -246,7 +251,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
 
-                    android:text="@string/current_latitude_value"
+                    android:text="@string/current_no_value"
+                    android:textColor="@color/colorBlack"
                     android:textAppearance="?android:textAppearanceMedium"
                     android:gravity="center"
                     android:textAlignment="center"/>
@@ -257,7 +263,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
 
-                    android:text="@string/current_longitude_value"
+                    android:text="@string/current_no_value"
+                    android:textColor="@color/colorBlack"
                     android:textAppearance="?android:textAppearanceMedium"
                     android:gravity="center"
                     android:textAlignment="center"/>
