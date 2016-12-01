@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -28,7 +30,7 @@ import com.google.android.gms.location.LocationSettingsResult;
 /**
  * Created by Grzegorz Iwanek on 23.11.2016.
  */
-public class MainFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
+public class MainFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener
 {
     public MainFragment() {
     }
@@ -56,7 +58,20 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     private static TextView sMinElevTextView;
     private static TextView sCurrAddressTextView;
 
-    private AddressResultReceiver addressResultReceiver;
+    private AddressResultReceiver mResultReceiver;
+    public Location mLastLocation;
+    public Button button;
+
+    @Override
+    public void onClick(View view)
+    {
+        System.out.println("clicked");
+        if (view == button)
+        {
+            System.out.println("startIntent");
+            //startIntentService();
+        }
+    }
 
     @SuppressLint("ParcelCreator")
     class AddressResultReceiver extends ResultReceiver
@@ -72,15 +87,39 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
             super.onReceiveResult(resultCode, resultData);
 
 
+            System.out.println("NEW ADDRESS");
             // Display the address string
             // or an error message sent from the intent service.
             mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
-            //displayAddressOutput();
+            sCurrAddressTextView.setText(mAddressOutput);
 
             // Show a toast message if an address was found.
             if (resultCode == Constants.SUCCESS_RESULT) {
                 //showToast(getString(R.string.address_found));
             }
+        }
+    }
+
+    protected void startIntentService(Location location)
+    {
+        //mResultReceiver = new AddressResultReceiver(new Handler());
+        System.out.println("creating intent");
+        Intent intent = new Intent(getActivity(), FetchAddressIntentService.class);
+        System.out.println("created and adding constants");
+        intent.putExtra(Constants.RECEIVER, mResultReceiver);
+        System.out.println("GET EXTRAS " + intent.getExtras());
+        intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);
+        System.out.println("starting service");
+        this.getActivity().startService(intent);
+    }
+
+    public void fetchAddressButtonHandler(View view) {
+        // Only start the service to fetch the address if GoogleApiClient is
+        // connected.
+        System.out.println("checking if connected");
+        if (mGoogleApiClient.isConnected() && mLastLocation != null) {
+            System.out.println("starting");
+            //startIntentService();
         }
     }
 
@@ -91,6 +130,12 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
         //initiate google play service ( used to update device's location in given intervals)
         initiateGooglePlayService();
+
+        //TODO->remove that, dummy data
+        mLastLocation = new Location(LocationManager.NETWORK_PROVIDER);
+        mLastLocation.setLatitude(51.797247);
+        mLastLocation.setLongitude(22.236283);
+        mLastLocation.setAltitude(42.00);
     }
 
     //consist actions to perform upon re/start of app ( update current location and information)
@@ -104,6 +149,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
         //refresh info on screen on app start/restart
         updateAppInfo();
+
+        mResultReceiver = new AddressResultReceiver(new Handler());
     }
 
     @Override
@@ -120,6 +167,9 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         sCurrAddressTextView = (TextView) rootView.findViewById(R.id.location_label);
 
         sDataFormatConverter = new DataFormatConverter();
+
+        button = (Button) rootView.findViewById(R.id.moje_id);
+        button.setOnClickListener(this);
 
         return rootView;
     }
@@ -208,6 +258,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
             sCurrElevationTextView.setText(elevationStr);
 
             updateMaxMinAltitude(location.getAltitude());
+
+            startIntentService(location);
         }
     }
 

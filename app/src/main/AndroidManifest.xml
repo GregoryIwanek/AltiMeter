@@ -20,10 +20,11 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-            <service
-                android:name=".FetchAddressIntentService"
-                android:exported="false"/>
         </activity>
+        <service
+            android:name="pl.grzegorziwanek.altimeter.app.FetchAddressIntentService"
+            android:exported="false"
+            android:enabled="true"/>
     </application>
 
 </manifest>
