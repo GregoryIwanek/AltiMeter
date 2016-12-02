@@ -83,11 +83,20 @@
             android:layout_height="match_parent"
             android:layout_weight="11">
 
-            <SurfaceView
+            <!--ELEMENT FROM EXTERNAL LIBRARY TO CREATE GRAPHS IN REAL TIME-->
+            <pl.grzegorziwanek.altimeter.app.GraphViewDrawTask
+                android:id="@+id/graph_view"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="#03b854">
-            </SurfaceView>
+                android:layout_height="match_parent"/>
+            <!--<com.jjoe64.graphview.GraphView-->
+                <!--android:id="@+id/graph_view"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent" />-->
+            <!--<SurfaceView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="200dp"-->
+                <!--android:background="#03b854">-->
+            <!--</SurfaceView>-->
         </FrameLayout>
 
         <!--layouts with max height, time, min height, longitude icon, latitude icon, small border line between,

@@ -26,4 +26,7 @@ dependencies {
 
     //dependency google play service ( used for real time location update service)
     compile 'com.google.android.gms:play-services:9.6.1'
+
+    //EXTERNAL LIBRARY TO CREATE GRAPHS IN REAL TIME
+    compile 'com.jjoe64:graphview:4.2.1'
 }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,18 +28,21 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 /**
  * Created by Grzegorz Iwanek on 23.11.2016.
  */
-public class MainFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener
-{
+public class MainFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
     public MainFragment() {
     }
 
     private static final String LOG_TAG = MainFragment.class.getSimpleName();
     //TODO-> assign location update to settings, not here (ONE_MINUTE variable)
-    private static final int FIVE_SECONDS = 1000*5;
+    private static final int FIVE_SECONDS = 1000 * 5;
 
     private GoogleApiClient mGoogleApiClient;
     private FetchDataInfoTask mFetchDataInfoTask;
@@ -61,21 +66,33 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     private AddressResultReceiver mResultReceiver;
     public Location mLastLocation;
     public Button button;
+    //public GraphView graphView;
+    public GraphViewDrawTask graphViewDrawTask;
 
+    //TODO->remove button, test code to check some features
     @Override
-    public void onClick(View view)
-    {
+    public void onClick(View view) {
         System.out.println("clicked");
-        if (view == button)
-        {
+        if (view == button) {
             System.out.println("startIntent");
             //startIntentService();
         }
+
+//        //TODO->remove from here, just to check after clicking button
+//        //required classes imported from com.jjoe64, not from google service
+//        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[]{
+//                new DataPoint(0, 1),
+//                new DataPoint(1, 5),
+//                new DataPoint(2, 3),
+//                new DataPoint(3, 2),
+//                new DataPoint(4, 6)
+//        });
+//        graphView.addSeries(series);
+        graphViewDrawTask.deliverGraph();
     }
 
     @SuppressLint("ParcelCreator")
-    class AddressResultReceiver extends ResultReceiver
-    {
+    class AddressResultReceiver extends ResultReceiver {
         String mAddressOutput;
 
         public AddressResultReceiver(Handler handler) {
@@ -100,8 +117,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         }
     }
 
-    protected void startIntentService(Location location)
-    {
+    protected void startIntentService(Location location) {
         //mResultReceiver = new AddressResultReceiver(new Handler());
         System.out.println("creating intent");
         Intent intent = new Intent(getActivity(), FetchAddressIntentService.class);
@@ -119,13 +135,12 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         System.out.println("checking if connected");
         if (mGoogleApiClient.isConnected() && mLastLocation != null) {
             System.out.println("starting");
-            //startIntentService();
+            startIntentService(mLastLocation);
         }
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //initiate google play service ( used to update device's location in given intervals)
@@ -140,8 +155,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     //consist actions to perform upon re/start of app ( update current location and information)
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         //connect google play service and get current location
         mGoogleApiClient.connect();
 
@@ -154,8 +168,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         //assign UI elements to inner variables
@@ -170,20 +183,20 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
         button = (Button) rootView.findViewById(R.id.moje_id);
         button.setOnClickListener(this);
+        //graphView = (GraphView) rootView.findViewById(R.id.graph_view);
+        graphViewDrawTask = (GraphViewDrawTask) rootView.findViewById(R.id.graph_view);
 
         return rootView;
     }
 
     @Override
-    public void onAttach(Context context)
-    {
+    public void onAttach(Context context) {
         super.onAttach(context);
     }
 
     //TODO-> assign more content here, consider moving
     //called onStart and restart-> update information to show on app start
-    private void updateAppInfo()
-    {
+    private void updateAppInfo() {
         //FetchDataInfoTask fetchDataInfoTask = new FetchDataInfoTask();
 
         //fetchDataInfoTask.execute();
@@ -192,11 +205,9 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     //Initiate google play service (MainFragment needs to implement GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
     //and override onConnected, onConnectionSuspended, onConnectionFailed; add LocationServices.API to update device location in real time;
-    private void initiateGooglePlayService()
-    {
+    private void initiateGooglePlayService() {
         //connect in onStart, disconnect in onStop of the Activity
-        if (mGoogleApiClient == null)
-        {
+        if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
@@ -206,8 +217,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     @Override
-    public void onConnected(@Nullable Bundle bundle)
-    {
+    public void onConnected(@Nullable Bundle bundle) {
         //define location request of GooglePlayService
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setInterval(1000);

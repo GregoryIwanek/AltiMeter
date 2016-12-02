@@ -23,7 +23,7 @@ import java.util.Locale;
  */
 public class FetchAddressIntentService extends IntentService
 {
-    //constructor
+    //constructors, have to add empty one to avoid conflict from manifest file
     public FetchAddressIntentService(){super("EMPTY CONSTRUCTOR");}
     public FetchAddressIntentService(String name) {super(name);}
 
@@ -35,10 +35,8 @@ public class FetchAddressIntentService extends IntentService
     protected void onHandleIntent(Intent intent)
     {
         //HAVE TO bind and assign receiver from here and activity (through Constants)
-        System.out.println("TRYING SOMETHING");
         resultReceiver = intent.getParcelableExtra(Constants.RECEIVER);
 
-        System.out.println("Service started");
         //create geocoder instance-> it will handle reversed geocoding operation
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         Location location = intent.getParcelableExtra(Constants.LOCATION_DATA_EXTRA);
