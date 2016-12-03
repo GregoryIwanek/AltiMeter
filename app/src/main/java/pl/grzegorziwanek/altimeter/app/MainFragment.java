@@ -32,6 +32,8 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.util.ArrayList;
+
 /**
  * Created by Grzegorz Iwanek on 23.11.2016.
  */
@@ -41,8 +43,6 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     private static final String LOG_TAG = MainFragment.class.getSimpleName();
-    //TODO-> assign location update to settings, not here (ONE_MINUTE variable)
-    private static final int FIVE_SECONDS = 1000 * 5;
 
     private GoogleApiClient mGoogleApiClient;
     private FetchDataInfoTask mFetchDataInfoTask;
@@ -68,6 +68,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     public Button button;
     //public GraphView graphView;
     public GraphViewDrawTask graphViewDrawTask;
+    public ArrayList<Double> altList = new ArrayList<>();
 
     //TODO->remove button, test code to check some features
     @Override
@@ -88,7 +89,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 //                new DataPoint(4, 6)
 //        });
 //        graphView.addSeries(series);
-        graphViewDrawTask.deliverGraph();
+        graphViewDrawTask.deliverGraph(altList);
     }
 
     @SuppressLint("ParcelCreator")
@@ -270,6 +271,10 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
             updateMaxMinAltitude(location.getAltitude());
 
             startIntentService(location);
+
+            //TODO->kick somewhere else
+            altList.add(location.getAltitude());
+            graphViewDrawTask.deliverGraph(altList);
         }
     }
 

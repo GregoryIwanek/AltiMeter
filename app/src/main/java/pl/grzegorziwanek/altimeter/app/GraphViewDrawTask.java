@@ -5,8 +5,6 @@ import android.graphics.Canvas;
 import android.location.Location;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
-import android.widget.FrameLayout;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -17,13 +15,16 @@ import java.util.ArrayList;
 /**
  * Created by Grzegorz Iwanek on 01.12.2016.
  * Consist extension of external library class GraphView (http://www.android-graphview.org/) and required customized methods
- *
  */
 public class GraphViewDrawTask extends GraphView
 {
+    //override default constructors of the GridView (it's required to prevent errors from compilation)
     public GraphViewDrawTask(Context context) {super(context);}
     public GraphViewDrawTask(Context context, AttributeSet attrs) {super(context, attrs);}
     public GraphViewDrawTask(Context context, AttributeSet attrs, int defStyle) {super(context, attrs, defStyle);}
+
+    //list of points to draw on a graph
+    LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -41,27 +42,35 @@ public class GraphViewDrawTask extends GraphView
 
     }
 
-    public void deliverGraph()
+    public void deliverGraph(ArrayList<Double> list)
     {
-        //TODO->remove from here, just to check after clicking button
-        //required classes imported from com.jjoe64, not from google service
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[]{
-                new DataPoint(0, 12),
-                new DataPoint(1, 1),
-                new DataPoint(2, 5),
-                new DataPoint(4, 12),
-                new DataPoint(6, 11),
-                new DataPoint(8, 12),
-                new DataPoint(9, 1),
-                new DataPoint(10, 5),
-                new DataPoint(11, 12),
-                new DataPoint(12, 11),
-                new DataPoint(67, 100),
-        });
+        //if we call to draw for the first time (series is empty, without any data and we add it for a first time)
+        if (series.isEmpty())
+        {
+            //define list with DataPoints based on given altitude list
+            ArrayList<DataPoint> pointList = new ArrayList<>();
+            int i = 0;
+            for (Double point: list)
+            {
+                pointList.add(new DataPoint(i, point));
+                i++;
+            }
+            //add points to series
+            series = new LineGraphSeries<DataPoint>(pointList.toArray(new DataPoint[]{}));
 
-        //this.addSeries(series);
-        this.addSeries(series);
-        series.appendData(new DataPoint(100,22), false, 10);
-        this.refreshDrawableState();
+            //draw graph on a screen
+            this.addSeries(series);
+        }
+        //series already have some data (case when we update/add new points to graph)
+        else
+        {
+            int xAxis = list.size();
+            series.appendData(new DataPoint(xAxis, list.get(xAxis-1)), true, list.size());
+
+            //update Graph screen
+            this.refreshDrawableState();
+        }
+
+        this.getViewport().setScalable(true);
     }
 }
