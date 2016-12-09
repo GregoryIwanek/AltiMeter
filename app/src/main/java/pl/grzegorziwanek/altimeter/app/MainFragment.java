@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,9 +26,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.ArrayList;
 
@@ -46,7 +41,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     private GoogleApiClient mGoogleApiClient;
     private FetchDataInfoTask mFetchDataInfoTask;
-    private static DataFormatConverter sDataFormatConverter;
+    private static DataFormatAndValueConverter sDataFormatAndValueConverter;
 
     //variables to hold data as doubles and refactor them later into TextViews
     private double mCurrentEleValue;
@@ -78,22 +73,12 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
             System.out.println("startIntent");
             //startIntentService();
         }
-
-//        //TODO->remove from here, just to check after clicking button
-//        //required classes imported from com.jjoe64, not from google service
-//        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[]{
-//                new DataPoint(0, 1),
-//                new DataPoint(1, 5),
-//                new DataPoint(2, 3),
-//                new DataPoint(3, 2),
-//                new DataPoint(4, 6)
-//        });
-//        graphView.addSeries(series);
         graphViewDrawTask.deliverGraph(altList);
     }
 
     @SuppressLint("ParcelCreator")
-    class AddressResultReceiver extends ResultReceiver {
+    class AddressResultReceiver extends ResultReceiver
+    {
         String mAddressOutput;
 
         public AddressResultReceiver(Handler handler) {
@@ -118,7 +103,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         }
     }
 
-    protected void startIntentService(Location location) {
+    protected void startIntentService(Location location)
+    {
         //mResultReceiver = new AddressResultReceiver(new Handler());
         System.out.println("creating intent");
         Intent intent = new Intent(getActivity(), FetchAddressIntentService.class);
@@ -130,7 +116,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         this.getActivity().startService(intent);
     }
 
-    public void fetchAddressButtonHandler(View view) {
+    public void fetchAddressButtonHandler(View view)
+    {
         // Only start the service to fetch the address if GoogleApiClient is
         // connected.
         System.out.println("checking if connected");
@@ -141,7 +128,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
         //initiate google play service ( used to update device's location in given intervals)
@@ -156,7 +144,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     //consist actions to perform upon re/start of app ( update current location and information)
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         //connect google play service and get current location
         mGoogleApiClient.connect();
 
@@ -180,7 +169,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         sMaxElevTextView = (TextView) rootView.findViewById(R.id.max_height_numbers);
         sCurrAddressTextView = (TextView) rootView.findViewById(R.id.location_label);
 
-        sDataFormatConverter = new DataFormatConverter();
+        sDataFormatAndValueConverter = new DataFormatAndValueConverter();
 
         button = (Button) rootView.findViewById(R.id.moje_id);
         button.setOnClickListener(this);
@@ -191,13 +180,15 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(Context context)
+    {
         super.onAttach(context);
     }
 
     //TODO-> assign more content here, consider moving
     //called onStart and restart-> update information to show on app start
-    private void updateAppInfo() {
+    private void updateAppInfo()
+    {
         //FetchDataInfoTask fetchDataInfoTask = new FetchDataInfoTask();
 
         //fetchDataInfoTask.execute();
@@ -206,7 +197,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     //Initiate google play service (MainFragment needs to implement GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
     //and override onConnected, onConnectionSuspended, onConnectionFailed; add LocationServices.API to update device location in real time;
-    private void initiateGooglePlayService() {
+    private void initiateGooglePlayService()
+    {
         //connect in onStart, disconnect in onStop of the Activity
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())
@@ -218,7 +210,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
+    public void onConnected(@Nullable Bundle bundle)
+    {
         //define location request of GooglePlayService
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setInterval(1000);
@@ -265,7 +258,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
             updateCurrentPositionTextViews(location);
 
             //update current elevation TextView
-            String elevationStr = sDataFormatConverter.formatElevation(location.getAltitude());
+            String elevationStr = sDataFormatAndValueConverter.formatElevation(location.getAltitude());
             sCurrElevationTextView.setText(elevationStr);
 
             updateMaxMinAltitude(location.getAltitude());
@@ -281,8 +274,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     //format geo coordinates to degrees/minutes/seconds and update TextViews
     private void updateCurrentPositionTextViews(Location location)
     {
-        String latitudeStr = sDataFormatConverter.replaceDelimitersAddDirection(location.getLatitude(), true);
-        String longitudeStr = sDataFormatConverter.replaceDelimitersAddDirection(location.getLongitude(), false);
+        String latitudeStr = sDataFormatAndValueConverter.replaceDelimitersAddDirection(location.getLatitude(), true);
+        String longitudeStr = sDataFormatAndValueConverter.replaceDelimitersAddDirection(location.getLongitude(), false);
         sCurrLatitudeTextView.setText(latitudeStr);
         sCurrLongitudeTextView.setText(longitudeStr);
     }
@@ -293,30 +286,24 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         //TODO->check if there is stored last location in preferences
         mMinAltitudeValue = altitude;
         mMaxAltitdeValue = altitude;
-        String minAltitudeStr = sDataFormatConverter.formatElevation(mMinAltitudeValue);
-        String maxAltitudeStr = sDataFormatConverter.formatElevation(mMaxAltitdeValue);
-        minAltitudeStr = sDataFormatConverter.addMetersAboveSeaLevel(minAltitudeStr);
-        maxAltitudeStr = sDataFormatConverter.addMetersAboveSeaLevel(maxAltitudeStr);
+        String minAltitudeStr = sDataFormatAndValueConverter.formatElevation(mMinAltitudeValue);
+        String maxAltitudeStr = sDataFormatAndValueConverter.formatElevation(mMaxAltitdeValue);
+        minAltitudeStr = sDataFormatAndValueConverter.addMetersAboveSeaLevel(minAltitudeStr);
+        maxAltitudeStr = sDataFormatAndValueConverter.addMetersAboveSeaLevel(maxAltitudeStr);
         sMinElevTextView.setText(minAltitudeStr);
         sMaxElevTextView.setText(maxAltitudeStr);
     }
 
-    //if needed update min and max recorded altitude and update TextViews;
-    private void updateMaxMinAltitude(Double altitude)
+    //update current minimum and maximum elevation value text views
+    private void updateMaxMinAltitude(Double currAltitude)
     {
-        if (altitude < mMinAltitudeValue)
-        {
-            mMinAltitudeValue = altitude;
-            String minAltitudeStr = sDataFormatConverter.formatElevation(mMinAltitudeValue);
-            minAltitudeStr = sDataFormatConverter.addMetersAboveSeaLevel(minAltitudeStr);
-            sMinElevTextView.setText(minAltitudeStr);
-        }
-        else if (altitude > mMaxAltitdeValue)
-        {
-            mMaxAltitdeValue = altitude;
-            String maxAltitudeStr = sDataFormatConverter.formatElevation(mMaxAltitdeValue);
-            maxAltitudeStr = sDataFormatConverter.addMetersAboveSeaLevel(maxAltitudeStr);
-            sMaxElevTextView.setText(maxAltitudeStr);
-        }
+        mMinAltitudeValue = sDataFormatAndValueConverter.updateMinAltitude(currAltitude, mMinAltitudeValue);
+        mMaxAltitdeValue = sDataFormatAndValueConverter.updateMaxAltitude(currAltitude, mMaxAltitdeValue);
+
+        String minAltitudeStr = sDataFormatAndValueConverter.updateCurrMinMaxString(mMinAltitudeValue);
+        String maxAltitudeStr = sDataFormatAndValueConverter.updateCurrMinMaxString(mMaxAltitdeValue);
+
+        sMinElevTextView.setText(minAltitudeStr);
+        sMaxElevTextView.setText(maxAltitudeStr);
     }
 }

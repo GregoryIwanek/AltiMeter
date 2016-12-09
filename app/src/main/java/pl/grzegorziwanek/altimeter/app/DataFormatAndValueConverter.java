@@ -9,9 +9,9 @@ import java.text.DecimalFormat;
  * Consist upgraded ArrayAdapter<String> class; used to update all wanted text views in view at once (single ArrayAdapter by default upgrade one object);
  * Responsible for comparing value of current data and if corresponding TextViews need to be changed;
  */
-public class DataFormatConverter
+public class DataFormatAndValueConverter
 {
-    public DataFormatConverter(){}
+    public DataFormatAndValueConverter(){}
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
 
@@ -80,5 +80,30 @@ public class DataFormatConverter
     {
         str = str + " m n.p.m.";
         return str;
+    }
+
+    public Double updateMaxAltitude(Double altitude, Double currMax)
+    {
+        if (altitude > currMax)
+        {
+            return altitude;
+        }
+        else return currMax;
+    }
+
+    public Double updateMinAltitude(Double altitude, Double currMin)
+    {
+        if (altitude < currMin)
+        {
+            return altitude;
+        }
+        else return currMin;
+    }
+
+    public String updateCurrMinMaxString(Double currMinMaxAltitude)
+    {
+        String currMinMaxStr = formatElevation(currMinMaxAltitude);
+        currMinMaxStr = addMetersAboveSeaLevel(currMinMaxStr);
+        return currMinMaxStr;
     }
 }
