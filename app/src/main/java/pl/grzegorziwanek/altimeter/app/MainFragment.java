@@ -33,9 +33,9 @@ import java.util.ArrayList;
  * Created by Grzegorz Iwanek on 23.11.2016.
  */
 public class MainFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
-    public MainFragment() {
-    }
+        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+
+    public MainFragment(){}
 
     private static final String LOG_TAG = MainFragment.class.getSimpleName();
 
@@ -44,11 +44,12 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     private static DataFormatAndValueConverter sDataFormatAndValueConverter;
 
     //variables to hold data as doubles and refactor them later into TextViews
+    public Location mLastLocation;
     private double mCurrentEleValue;
     private double mCurrentLngValue;
     private double mCurrentLatValue;
-    private double mMaxAltitdeValue = -10000;
-    private double mMinAltitudeValue = 10000;
+    private double mMaxAltitdeValue = -20000;
+    private double mMinAltitudeValue = 20000;
 
     //TextViews of View, fulled with refactored data from JSON objects and Google Play Service
     private static TextView sCurrElevationTextView;
@@ -58,23 +59,92 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     private static TextView sMinElevTextView;
     private static TextView sCurrAddressTextView;
 
-    private AddressResultReceiver mResultReceiver;
-    public Location mLastLocation;
-    public Button button;
-    //public GraphView graphView;
-    public GraphViewDrawTask graphViewDrawTask;
-    public ArrayList<Double> altList = new ArrayList<>();
+    //graph view field
+    private static GraphViewDrawTask graphViewDrawTask;
+    private static ArrayList<Double> sAltList = new ArrayList<>();
+    private static AddressResultReceiver sResultReceiver;
 
-    //TODO->remove button, test code to check some features
+//    //TODO->remove button, test code to check some features
+//    public Button button;
+//    @Override
+//    public void onClick(View view) {
+//        System.out.println("clicked");
+//        if (view == button) {
+//            System.out.println("startIntent");
+//            //startIntentService();
+//        }
+//        graphViewDrawTask.deliverGraph(sAltList);
+//    }
+
     @Override
-    public void onClick(View view) {
-        System.out.println("clicked");
-        if (view == button) {
-            System.out.println("startIntent");
-            //startIntentService();
-        }
-        graphViewDrawTask.deliverGraph(altList);
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        //initiate google play service ( used to update device's location in given intervals)
+        initiateGooglePlayService();
+
+        //TODO->remove that, dummy data
+        mLastLocation = new Location(LocationManager.NETWORK_PROVIDER);
+        mLastLocation.setLatitude(51.797247);
+        mLastLocation.setLongitude(22.236283);
+        mLastLocation.setAltitude(42.00);
     }
+
+    //consist actions to perform upon re/start of app ( update current location and information)
+    @Override
+    public void onStart()
+    {
+        //connect google play service and get current location
+        mGoogleApiClient.connect();
+
+        super.onStart();
+
+        //refresh info on screen on app start/restart
+        updateAppInfo();
+
+        sResultReceiver = new AddressResultReceiver(new Handler());
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+        //assign UI elements to inner variables
+        sCurrElevationTextView = (TextView) rootView.findViewById(R.id.current_elevation_label);
+        sCurrLatitudeTextView = (TextView) rootView.findViewById(R.id.current_latitude_value);
+        sCurrLongitudeTextView = (TextView) rootView.findViewById(R.id.current_longitude_value);
+        sMinElevTextView = (TextView) rootView.findViewById(R.id.min_height_numbers);
+        sMaxElevTextView = (TextView) rootView.findViewById(R.id.max_height_numbers);
+        sCurrAddressTextView = (TextView) rootView.findViewById(R.id.location_label);
+        graphViewDrawTask = (GraphViewDrawTask) rootView.findViewById(R.id.graph_view);
+
+        sDataFormatAndValueConverter = new DataFormatAndValueConverter();
+
+//        button = (Button) rootView.findViewById(R.id.moje_id);
+//        button.setOnClickListener(this);
+
+        return rootView;
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        //check if activity in foreground, get current address, redraw altitude graph
+        if (this.getActivity() != null)
+        {
+            startIntentService(mLastLocation);
+
+            //redraw graph only when app backs from background, not when started first time
+            if (!sAltList.isEmpty())
+            {
+                graphViewDrawTask.deliverGraphOnResume(sAltList);
+            }
+        }
+    }
+
 
     @SuppressLint("ParcelCreator")
     class AddressResultReceiver extends ResultReceiver
@@ -105,14 +175,9 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     protected void startIntentService(Location location)
     {
-        //mResultReceiver = new AddressResultReceiver(new Handler());
-        System.out.println("creating intent");
-        Intent intent = new Intent(getActivity(), FetchAddressIntentService.class);
-        System.out.println("created and adding constants");
-        intent.putExtra(Constants.RECEIVER, mResultReceiver);
-        System.out.println("GET EXTRAS " + intent.getExtras());
+        Intent intent = new Intent(this.getActivity(), FetchAddressIntentService.class);
+        intent.putExtra(Constants.RECEIVER, sResultReceiver);
         intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);
-        System.out.println("starting service");
         this.getActivity().startService(intent);
     }
 
@@ -125,58 +190,6 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
             System.out.println("starting");
             startIntentService(mLastLocation);
         }
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        //initiate google play service ( used to update device's location in given intervals)
-        initiateGooglePlayService();
-
-        //TODO->remove that, dummy data
-        mLastLocation = new Location(LocationManager.NETWORK_PROVIDER);
-        mLastLocation.setLatitude(51.797247);
-        mLastLocation.setLongitude(22.236283);
-        mLastLocation.setAltitude(42.00);
-    }
-
-    //consist actions to perform upon re/start of app ( update current location and information)
-    @Override
-    public void onStart()
-    {
-        //connect google play service and get current location
-        mGoogleApiClient.connect();
-
-        super.onStart();
-
-        //refresh info on screen on app start/restart
-        updateAppInfo();
-
-        mResultReceiver = new AddressResultReceiver(new Handler());
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-        //assign UI elements to inner variables
-        sCurrElevationTextView = (TextView) rootView.findViewById(R.id.current_elevation_label);
-        sCurrLatitudeTextView = (TextView) rootView.findViewById(R.id.current_latitude_value);
-        sCurrLongitudeTextView = (TextView) rootView.findViewById(R.id.current_longitude_value);
-        sMinElevTextView = (TextView) rootView.findViewById(R.id.min_height_numbers);
-        sMaxElevTextView = (TextView) rootView.findViewById(R.id.max_height_numbers);
-        sCurrAddressTextView = (TextView) rootView.findViewById(R.id.location_label);
-
-        sDataFormatAndValueConverter = new DataFormatAndValueConverter();
-
-        button = (Button) rootView.findViewById(R.id.moje_id);
-        button.setOnClickListener(this);
-        //graphView = (GraphView) rootView.findViewById(R.id.graph_view);
-        graphViewDrawTask = (GraphViewDrawTask) rootView.findViewById(R.id.graph_view);
-
-        return rootView;
     }
 
     @Override
@@ -233,7 +246,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (lastLocation != null)
         {
-            setMinMaxAltitude(lastLocation.getAltitude());
+            updateCurrentMaxMinAltitude(lastLocation.getAltitude());
             updateCurrentPositionTextViews(lastLocation);
         }
     }
@@ -255,54 +268,47 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     {
         if (location != null)
         {
-            updateCurrentPositionTextViews(location);
+            //add new location point to the list
+            sAltList.add(location.getAltitude());
 
-            //update current elevation TextView
-            String elevationStr = sDataFormatAndValueConverter.formatElevation(location.getAltitude());
-            sCurrElevationTextView.setText(elevationStr);
+            //perform ONLY if an activity is in foreground (updating TextViews and redrawing graph)
+            if (this.getActivity() != null)
+            {
+                //TODO->update current max min in separeted method, without updating textviews
+                updateCurrentPositionTextViews(location);
+                updateCurrentMaxMinAltitude(location.getAltitude());
 
-            updateMaxMinAltitude(location.getAltitude());
+                String elevationStr = sDataFormatAndValueConverter.formatElevation(location.getAltitude());
+                sCurrElevationTextView.setText(elevationStr);
 
-            startIntentService(location);
-
-            //TODO->kick somewhere else
-            altList.add(location.getAltitude());
-            graphViewDrawTask.deliverGraph(altList);
+                startIntentService(location);
+                graphViewDrawTask.deliverGraph(sAltList);
+            }
         }
     }
 
-    //format geo coordinates to degrees/minutes/seconds and update TextViews
-    private void updateCurrentPositionTextViews(Location location)
+    private void updateCurrentPositionTextViews(Location currLocation)
     {
-        String latitudeStr = sDataFormatAndValueConverter.replaceDelimitersAddDirection(location.getLatitude(), true);
-        String longitudeStr = sDataFormatAndValueConverter.replaceDelimitersAddDirection(location.getLongitude(), false);
+        //format geo coordinates to degrees/minutes/seconds (from XX:XX:XX.XX to XX*XX'XX''N)
+        String latitudeStr = sDataFormatAndValueConverter.replaceDelimitersAddDirection(currLocation.getLatitude(), true);
+        String longitudeStr = sDataFormatAndValueConverter.replaceDelimitersAddDirection(currLocation.getLongitude(), false);
+
+        //set new values of current location coordinates text views
         sCurrLatitudeTextView.setText(latitudeStr);
         sCurrLongitudeTextView.setText(longitudeStr);
     }
 
-    //set at start of app to prevent min/maxAltitude equal to null
-    private void setMinMaxAltitude(Double altitude)
+    private void updateCurrentMaxMinAltitude(Double currAltitude)
     {
-        //TODO->check if there is stored last location in preferences
-        mMinAltitudeValue = altitude;
-        mMaxAltitdeValue = altitude;
-        String minAltitudeStr = sDataFormatAndValueConverter.formatElevation(mMinAltitudeValue);
-        String maxAltitudeStr = sDataFormatAndValueConverter.formatElevation(mMaxAltitdeValue);
-        minAltitudeStr = sDataFormatAndValueConverter.addMetersAboveSeaLevel(minAltitudeStr);
-        maxAltitudeStr = sDataFormatAndValueConverter.addMetersAboveSeaLevel(maxAltitudeStr);
-        sMinElevTextView.setText(minAltitudeStr);
-        sMaxElevTextView.setText(maxAltitudeStr);
-    }
-
-    //update current minimum and maximum elevation value text views
-    private void updateMaxMinAltitude(Double currAltitude)
-    {
+        //update variables holding max and min altitude (double)
         mMinAltitudeValue = sDataFormatAndValueConverter.updateMinAltitude(currAltitude, mMinAltitudeValue);
         mMaxAltitdeValue = sDataFormatAndValueConverter.updateMaxAltitude(currAltitude, mMaxAltitdeValue);
 
+        //refactor string with min max altitude to correct form
         String minAltitudeStr = sDataFormatAndValueConverter.updateCurrMinMaxString(mMinAltitudeValue);
         String maxAltitudeStr = sDataFormatAndValueConverter.updateCurrMinMaxString(mMaxAltitdeValue);
 
+        //update TextViews
         sMinElevTextView.setText(minAltitudeStr);
         sMaxElevTextView.setText(maxAltitudeStr);
     }

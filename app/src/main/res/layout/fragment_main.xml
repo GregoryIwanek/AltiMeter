@@ -149,31 +149,33 @@
                     android:orientation="vertical"
                     android:layout_weight="1">
 
-                    <Button
-                        android:id="@+id/moje_id"
+                    <!--<Button-->
+                        <!--android:id="@+id/moje_id"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:clickable="true" />-->
+                    <TextView
+                        android:id="@+id/distance"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:clickable="true" />
-                    <!--<TextView-->
-                        <!--android:id="@+id/time"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:layout_weight="1"-->
+                        android:layout_weight="1"
 
-                        <!--android:text="Time"-->
-                        <!--android:textAppearance="?android:textAppearanceMedium"-->
-                        <!--android:gravity="center"-->
-                        <!--android:textAlignment="center"/>-->
-                    <!--<TextView-->
-                        <!--android:id="@+id/time_numbers"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:layout_weight="1"-->
+                        android:text="@string/distance_text"
+                        android:textColor="@color/colorBlack"
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:gravity="center"
+                        android:textAlignment="center"/>
+                    <TextView
+                        android:id="@+id/distance_numbers"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
 
-                        <!--android:text="00:12:15"-->
-                        <!--android:textAppearance="?android:textAppearanceSmall"-->
-                        <!--android:gravity="center"-->
-                        <!--android:textAlignment="center"/>-->
+                        android:text="@string/distance_numbers_text"
+                        android:textColor="@color/colorBlack"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:gravity="center"
+                        android:textAlignment="center"/>
                 </LinearLayout>
 
                 <LinearLayout
