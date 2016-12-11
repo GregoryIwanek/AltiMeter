@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -35,9 +34,10 @@ import java.util.ArrayList;
 public class MainFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    public MainFragment(){}
+    public MainFragment() {}
 
     private static final String LOG_TAG = MainFragment.class.getSimpleName();
+    public static final String PREFS_NAME = "MyPrefsFile";
 
     private GoogleApiClient mGoogleApiClient;
     private FetchDataInfoTask mFetchDataInfoTask;
@@ -45,11 +45,11 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     //variables to hold data as doubles and refactor them later into TextViews
     public Location mLastLocation;
-    private double mCurrentEleValue;
-    private double mCurrentLngValue;
-    private double mCurrentLatValue;
-    private double mMaxAltitdeValue = -20000;
+    public ArrayList<Location> mLocationList;
+    //TODO-> save these three variables in shared preferences ( values are reset after onResume is called)
+    private double mMaxAltitudeValue = -20000;
     private double mMinAltitudeValue = 20000;
+    private double mCurrentDistance = 0;
 
     //TextViews of View, fulled with refactored data from JSON objects and Google Play Service
     private static TextView sCurrElevationTextView;
@@ -58,23 +58,12 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     private static TextView sMaxElevTextView;
     private static TextView sMinElevTextView;
     private static TextView sCurrAddressTextView;
+    private static TextView sDistanceTextView;
 
     //graph view field
     private static GraphViewDrawTask graphViewDrawTask;
     private static ArrayList<Double> sAltList = new ArrayList<>();
     private static AddressResultReceiver sResultReceiver;
-
-//    //TODO->remove button, test code to check some features
-//    public Button button;
-//    @Override
-//    public void onClick(View view) {
-//        System.out.println("clicked");
-//        if (view == button) {
-//            System.out.println("startIntent");
-//            //startIntentService();
-//        }
-//        graphViewDrawTask.deliverGraph(sAltList);
-//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -84,11 +73,11 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         //initiate google play service ( used to update device's location in given intervals)
         initiateGooglePlayService();
 
-        //TODO->remove that, dummy data
-        mLastLocation = new Location(LocationManager.NETWORK_PROVIDER);
-        mLastLocation.setLatitude(51.797247);
-        mLastLocation.setLongitude(22.236283);
-        mLastLocation.setAltitude(42.00);
+        mLocationList = new ArrayList<>();
+
+        SharedPreferences settings = this.getActivity().getSharedPreferences(PREFS_NAME, 0);
+        boolean silent = settings.getBoolean("silentMode", false);
+       //setSilent(silent);
     }
 
     //consist actions to perform upon re/start of app ( update current location and information)
@@ -100,14 +89,12 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
         super.onStart();
 
-        //refresh info on screen on app start/restart
-        updateAppInfo();
-
         sResultReceiver = new AddressResultReceiver(new Handler());
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         //assign UI elements to inner variables
@@ -117,12 +104,10 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         sMinElevTextView = (TextView) rootView.findViewById(R.id.min_height_numbers);
         sMaxElevTextView = (TextView) rootView.findViewById(R.id.max_height_numbers);
         sCurrAddressTextView = (TextView) rootView.findViewById(R.id.location_label);
+        sDistanceTextView = (TextView) rootView.findViewById(R.id.distance_numbers);
         graphViewDrawTask = (GraphViewDrawTask) rootView.findViewById(R.id.graph_view);
 
         sDataFormatAndValueConverter = new DataFormatAndValueConverter();
-
-//        button = (Button) rootView.findViewById(R.id.moje_id);
-//        button.setOnClickListener(this);
 
         return rootView;
     }
@@ -132,19 +117,24 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     {
         super.onResume();
 
-        //check if activity in foreground, get current address, redraw altitude graph
+        //check if activity is in a foreground, get current address, redraw altitude graph
         if (this.getActivity() != null)
         {
-            startIntentService(mLastLocation);
+            //check if last location is saved (prevent errors on first run of app)
+            if (mLastLocation != null)
+            {
+                startAddressIntentService(mLastLocation);
+            }
 
             //redraw graph only when app backs from background, not when started first time
-            if (!sAltList.isEmpty())
-            {
+            if (!sAltList.isEmpty()) {
                 graphViewDrawTask.deliverGraphOnResume(sAltList);
             }
         }
-    }
 
+        System.out.println("MIN ON RESUME: " + mMinAltitudeValue);
+        System.out.println("MAX ON RESUME: " + mMaxAltitudeValue);
+    }
 
     @SuppressLint("ParcelCreator")
     class AddressResultReceiver extends ResultReceiver
@@ -159,21 +149,14 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             super.onReceiveResult(resultCode, resultData);
 
-
-            System.out.println("NEW ADDRESS");
             // Display the address string
             // or an error message sent from the intent service.
             mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
             sCurrAddressTextView.setText(mAddressOutput);
-
-            // Show a toast message if an address was found.
-            if (resultCode == Constants.SUCCESS_RESULT) {
-                //showToast(getString(R.string.address_found));
-            }
         }
     }
 
-    protected void startIntentService(Location location)
+    protected void startAddressIntentService(Location location)
     {
         Intent intent = new Intent(this.getActivity(), FetchAddressIntentService.class);
         intent.putExtra(Constants.RECEIVER, sResultReceiver);
@@ -181,32 +164,10 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         this.getActivity().startService(intent);
     }
 
-    public void fetchAddressButtonHandler(View view)
-    {
-        // Only start the service to fetch the address if GoogleApiClient is
-        // connected.
-        System.out.println("checking if connected");
-        if (mGoogleApiClient.isConnected() && mLastLocation != null) {
-            System.out.println("starting");
-            startIntentService(mLastLocation);
-        }
-    }
-
     @Override
-    public void onAttach(Context context)
-    {
+    public void onAttach(Context context) {
         super.onAttach(context);
     }
-
-    //TODO-> assign more content here, consider moving
-    //called onStart and restart-> update information to show on app start
-    private void updateAppInfo()
-    {
-        //FetchDataInfoTask fetchDataInfoTask = new FetchDataInfoTask();
-
-        //fetchDataInfoTask.execute();
-    }
-
 
     //Initiate google play service (MainFragment needs to implement GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
     //and override onConnected, onConnectionSuspended, onConnectionFailed; add LocationServices.API to update device location in real time;
@@ -243,23 +204,23 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         //!!! TODO -> from API 23 dangerous permissions have to be check in runtime; -> change to API 25 and add required code changes
         //onConnected is triggered after onStart(), so doInBackground() is completed first, then commands from here;
         //update TextViews with location, in case there is incorrect old value from
-        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (lastLocation != null)
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (mLastLocation != null)
         {
-            updateCurrentMaxMinAltitude(lastLocation.getAltitude());
-            updateCurrentPositionTextViews(lastLocation);
+            updateCurrentMaxMinAltitude(mLastLocation.getAltitude());
+            updateCurrentPositionTextViews(mLastLocation);
         }
+
+        mLocationList.add(mLastLocation);
     }
 
     @Override
-    public void onConnectionSuspended(int i)
-    {
+    public void onConnectionSuspended(int i) {
         Log.v(LOG_TAG, "Connection suspended, no location updates will be received");
     }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
-    {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.v(LOG_TAG, "Error occur, connection failed: " + connectionResult.getErrorMessage());
     }
 
@@ -270,18 +231,28 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         {
             //add new location point to the list
             sAltList.add(location.getAltitude());
+            mLocationList.add(location);
 
-            //perform ONLY if an activity is in foreground (updating TextViews and redrawing graph)
+            if (mLastLocation != null)
+            {
+                updateDistance(mLastLocation, location);
+            }
+
+            mLastLocation = location;
+
+            //update min and max values even if app is in a background
+            updateCurrentMaxMinAltitude(location.getAltitude());
+
+            //perform ONLY if an activity is in FOREGROUND (updating TextViews and redrawing graph)
             if (this.getActivity() != null)
             {
-                //TODO->update current max min in separeted method, without updating textviews
                 updateCurrentPositionTextViews(location);
-                updateCurrentMaxMinAltitude(location.getAltitude());
+                updateCurrentMaxMinStr();
 
                 String elevationStr = sDataFormatAndValueConverter.formatElevation(location.getAltitude());
                 sCurrElevationTextView.setText(elevationStr);
 
-                startIntentService(location);
+                startAddressIntentService(location);
                 graphViewDrawTask.deliverGraph(sAltList);
             }
         }
@@ -302,14 +273,52 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     {
         //update variables holding max and min altitude (double)
         mMinAltitudeValue = sDataFormatAndValueConverter.updateMinAltitude(currAltitude, mMinAltitudeValue);
-        mMaxAltitdeValue = sDataFormatAndValueConverter.updateMaxAltitude(currAltitude, mMaxAltitdeValue);
+        mMaxAltitudeValue = sDataFormatAndValueConverter.updateMaxAltitude(currAltitude, mMaxAltitudeValue);
+        System.out.println("MIN MIN MIN: " + mMinAltitudeValue);
+        System.out.println("MAX MAX MAX: " + mMaxAltitudeValue);
+    }
 
+    private void updateCurrentMaxMinStr()
+    {
         //refactor string with min max altitude to correct form
         String minAltitudeStr = sDataFormatAndValueConverter.updateCurrMinMaxString(mMinAltitudeValue);
-        String maxAltitudeStr = sDataFormatAndValueConverter.updateCurrMinMaxString(mMaxAltitdeValue);
+        String maxAltitudeStr = sDataFormatAndValueConverter.updateCurrMinMaxString(mMaxAltitudeValue);
+
+        System.out.println("MIN MIN MIN: " + minAltitudeStr);
+        System.out.println("MAX MAX MAX: " + maxAltitudeStr);
 
         //update TextViews
         sMinElevTextView.setText(minAltitudeStr);
         sMaxElevTextView.setText(maxAltitudeStr);
     }
+
+    private void updateDistance(Location lastLocation, Location currLocation)
+    {
+        if (lastLocation != null && currLocation != null)
+        {
+            float[] results = new float[1];
+            Location.distanceBetween(lastLocation.getLatitude(), lastLocation.getLongitude(),
+                    currLocation.getLatitude(), currLocation.getLongitude(), results);
+            mCurrentDistance += results[0];
+
+            sDistanceTextView.setText(sDataFormatAndValueConverter.formatDistance(mCurrentDistance, "MILES"));
+        }
+    }
 }
+
+//    public void fetchAddressButtonHandler(View view) {
+//        // Only start the service to fetch the address if GoogleApiClient is connected.
+//        if (mGoogleApiClient.isConnected() && mLastLocation != null) {
+//            System.out.println("starting");
+//            startAddressIntentService(mLastLocation);
+//        }
+//    }
+
+//    //TODO-> assign more content here, consider moving
+//    //called onStart and restart-> update information to show on app start
+//    private void updateAppInfo()
+//    {
+//        //FetchDataInfoTask fetchDataInfoTask = new FetchDataInfoTask();
+//
+//        //fetchDataInfoTask.execute();
+//    }

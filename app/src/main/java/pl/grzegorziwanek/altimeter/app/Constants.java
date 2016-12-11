@@ -21,3 +21,15 @@ public final class Constants
     private static final int ONE_MINUTE = 1000 * 60;
     private static final int TWO_MINUTES = 1000 * 60 * 2;
 }
+
+//    //TODO->remove button, test code to check some features
+//    public Button button;
+//    @Override
+//    public void onClick(View view) {
+//        System.out.println("clicked");
+//        if (view == button) {
+//            System.out.println("startIntent");
+//            //startAddressIntentService();
+//        }
+//        graphViewDrawTask.deliverGraph(sAltList);
+//    }

@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="pl.grzegorziwanek.altimeter.app.WelcomeScreen"
     android:id="@+id/screen_welcome_activity">
-</FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/main_content">
+    </RelativeLayout>
+
+    <ListView
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:id="@+id/lv_sliding_menu"
+        android:background="@color/colorWhite"
+        android:layout_gravity="start">
+    </ListView>
+</android.support.v4.widget.DrawerLayout>

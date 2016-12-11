@@ -19,6 +19,8 @@
     <string name="address_found">Address found</string>
     <string name="distance_text">Distance</string>
     <string name="distance_numbers_text">1.984km</string>
+    <string name="drawer_opened">OPENED</string>
+    <string name="drawer_closed">CLOSED</string>
 </resources>
 
 

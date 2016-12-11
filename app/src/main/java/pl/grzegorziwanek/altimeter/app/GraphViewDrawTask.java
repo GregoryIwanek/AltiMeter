@@ -81,11 +81,8 @@ public class GraphViewDrawTask extends GraphView
             int xAxis = list.size();
             sSeries.appendData(new DataPoint(xAxis, list.get(xAxis-1)), true, list.size());
         }
-        //change X axis max bound to new value (added new point to graph, fixed bounds have to be changed)
-        updateBounds(list.size());
 
-        //update Graph screen
-        refreshDrawableState();
+        refreshGraphLook(list.size());
     }
 
     public void deliverGraphOnResume(ArrayList<Double> list)
@@ -104,8 +101,14 @@ public class GraphViewDrawTask extends GraphView
         sSeries = new LineGraphSeries<DataPoint>(pointList.toArray(new DataPoint[]{}));
         this.addSeries(sSeries);
 
+        refreshGraphLook(list.size());
+    }
+
+    //TODO->change listsize name
+    private void refreshGraphLook(int xBound)
+    {
         //change X axis max bound to new value (added new point to graph, fixed bounds have to be changed)
-        updateBounds(list.size());
+        updateBounds(xBound);
 
         //update Graph screen
         refreshDrawableState();

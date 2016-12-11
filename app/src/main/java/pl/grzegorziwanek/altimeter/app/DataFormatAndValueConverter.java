@@ -20,7 +20,6 @@ public class DataFormatAndValueConverter
     {
         //replace ":" with symbols
         String str = Location.convert(coordinate, Location.FORMAT_SECONDS);
-        System.out.println(str);
         str = str.replaceFirst("-", "");
         str = str.replaceFirst(":", "°");
         str = str.replaceFirst(":", "'");
@@ -105,5 +104,47 @@ public class DataFormatAndValueConverter
         String currMinMaxStr = formatElevation(currMinMaxAltitude);
         currMinMaxStr = addMetersAboveSeaLevel(currMinMaxStr);
         return currMinMaxStr;
+    }
+
+    public String formatDistance(Double currDistance, String unitFormat)
+    {
+        Double distance = currDistance;
+        String unit;
+
+        //format value and unit by chosen format
+        switch (unitFormat)
+        {
+            case "METERS": unit = "m";
+                break;
+            case "KILOMETERS": distance /= 1000; unit = "km";
+                break;
+            case "MILES": distance /= 1609.344; unit = "mi";
+                break;
+            default: unit = "m";
+                break;
+        }
+
+        //locate point "." in a distance number
+        String distanceStr = distance.toString();
+        int pointIndex;
+        if (distanceStr.contains("."))
+        {
+            pointIndex = distanceStr.indexOf(".");
+        }
+        else
+        {
+            pointIndex = distanceStr.length();
+        }
+
+        //subtract string 3 places after point
+        if (pointIndex < distanceStr.length() && distanceStr.contains("."))
+        {
+            distanceStr = distanceStr.substring(0, pointIndex + 3);
+        }
+
+        //set distance string
+        distanceStr = distanceStr + " " + unit;
+
+        return distanceStr;
     }
 }
