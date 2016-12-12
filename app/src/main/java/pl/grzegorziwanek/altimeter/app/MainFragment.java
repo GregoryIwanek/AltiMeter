@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -74,10 +75,6 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         initiateGooglePlayService();
 
         mLocationList = new ArrayList<>();
-
-        SharedPreferences settings = this.getActivity().getSharedPreferences(PREFS_NAME, 0);
-        boolean silent = settings.getBoolean("silentMode", false);
-       //setSilent(silent);
     }
 
     //consist actions to perform upon re/start of app ( update current location and information)
@@ -131,7 +128,6 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
                 graphViewDrawTask.deliverGraphOnResume(sAltList);
             }
         }
-
         System.out.println("MIN ON RESUME: " + mMinAltitudeValue);
         System.out.println("MAX ON RESUME: " + mMaxAltitudeValue);
     }
@@ -215,16 +211,6 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
-        Log.v(LOG_TAG, "Connection suspended, no location updates will be received");
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.v(LOG_TAG, "Error occur, connection failed: " + connectionResult.getErrorMessage());
-    }
-
-    @Override
     public void onLocationChanged(Location location)
     {
         if (location != null)
@@ -303,6 +289,18 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
             sDistanceTextView.setText(sDataFormatAndValueConverter.formatDistance(mCurrentDistance, "MILES"));
         }
+
+        Toast.makeText(this.getActivity(),"Current distance updated " + mCurrentDistance, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.v(LOG_TAG, "Connection suspended, no location updates will be received");
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.v(LOG_TAG, "Error occur, connection failed: " + connectionResult.getErrorMessage());
     }
 }
 

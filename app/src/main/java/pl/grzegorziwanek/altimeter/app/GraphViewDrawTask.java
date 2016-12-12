@@ -38,14 +38,15 @@ public class GraphViewDrawTask extends GraphView
         //set bounds of graphs manual (graph is not scalable and scrollable by user)
         this.getViewport().setXAxisBoundsManual(true);
         this.getViewport().setMinX(0);
-        this.getViewport().setMaxX(1);
+        this.getViewport().setMaxX(120);
     }
 
     //update X axis max bound (after refresh screen is resized to fit new value); Y axis is resized automatically;
     public void updateBounds(int xAxisEnd)
     {
         this.getViewport().setMinX(0);
-        this.getViewport().setMaxX(xAxisEnd);
+        //this.getViewport().setMaxX(xAxisEnd);
+        this.getViewport().setMaxX(120);
     }
 
     //initiate graph drawing task (need: altitude, date/time when measure occurred, min and max altitude recorded)
