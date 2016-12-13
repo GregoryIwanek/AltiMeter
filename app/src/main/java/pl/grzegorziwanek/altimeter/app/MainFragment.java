@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +34,7 @@ import java.util.ArrayList;
  * Created by Grzegorz Iwanek on 23.11.2016.
  */
 public class MainFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
 
     public MainFragment() {}
 
@@ -48,8 +49,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     public Location mLastLocation;
     public ArrayList<Location> mLocationList;
     //TODO-> save these three variables in shared preferences ( values are reset after onResume is called)
-    private double mMaxAltitudeValue = -20000;
-    private double mMinAltitudeValue = 20000;
+    private double mMaxAltitudeValue;
+    private double mMinAltitudeValue;
     private double mCurrentDistance = 0;
 
     //TextViews of View, fulled with refactored data from JSON objects and Google Play Service
@@ -60,6 +61,9 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     private static TextView sMinElevTextView;
     private static TextView sCurrAddressTextView;
     private static TextView sDistanceTextView;
+    private static ImageButton sRefreshButton;
+    private static ImageButton sPauseButton;
+    private static ImageButton sPlayButton;
 
     //graph view field
     private static GraphViewDrawTask graphViewDrawTask;
@@ -95,6 +99,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         //assign UI elements to inner variables
+        //TextViews
         sCurrElevationTextView = (TextView) rootView.findViewById(R.id.current_elevation_label);
         sCurrLatitudeTextView = (TextView) rootView.findViewById(R.id.current_latitude_value);
         sCurrLongitudeTextView = (TextView) rootView.findViewById(R.id.current_longitude_value);
@@ -102,7 +107,17 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         sMaxElevTextView = (TextView) rootView.findViewById(R.id.max_height_numbers);
         sCurrAddressTextView = (TextView) rootView.findViewById(R.id.location_label);
         sDistanceTextView = (TextView) rootView.findViewById(R.id.distance_numbers);
+
+        //graph
         graphViewDrawTask = (GraphViewDrawTask) rootView.findViewById(R.id.graph_view);
+
+        //buttons
+        sPlayButton = (ImageButton) rootView.findViewById(R.id.play_button);
+        sRefreshButton = (ImageButton) rootView.findViewById(R.id.refresh_button);
+        sPauseButton = (ImageButton) rootView.findViewById(R.id.pause_button);
+        sPlayButton.setOnClickListener(this);
+        sRefreshButton.setOnClickListener(this);
+        sPauseButton.setOnClickListener(this);
 
         sDataFormatAndValueConverter = new DataFormatAndValueConverter();
 
@@ -127,9 +142,63 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
             if (!sAltList.isEmpty()) {
                 graphViewDrawTask.deliverGraphOnResume(sAltList);
             }
+
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+            Float sharedPrefMin = sharedPreferences.getFloat("CurrentMin", Constants.ALTITUDE_MIN);
+            Float sharedPrefMax = sharedPreferences.getFloat("CurrentMax", Constants.ALTITUDE_MAX);
+            if (sharedPrefMin == Constants.ALTITUDE_MIN || sharedPrefMax == Constants.ALTITUDE_MAX)
+            {
+                mMinAltitudeValue = sharedPrefMin;
+                mMaxAltitudeValue = sharedPrefMax;
+                Log.v(LOG_TAG, "Min and Max altitude not provided, default values used instead...");
+            }
+            else
+            {
+                mMinAltitudeValue = sharedPrefMin;
+                mMaxAltitudeValue = sharedPrefMax;
+                updateCurrentMaxMinStr();
+            }
         }
-        System.out.println("MIN ON RESUME: " + mMinAltitudeValue);
-        System.out.println("MAX ON RESUME: " + mMaxAltitudeValue);
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+
+        updateSharedPreferences();
+    }
+
+    @Override
+    public void onClick(View view)
+    {
+        switch (view.getId())
+        {
+            case R.id.play_button:
+                onStartButtonClick();
+                break;
+            case R.id.pause_button:
+                onPauseButtonClick();
+                break;
+            case R.id.refresh_button:
+                onRefreshButtonClick();
+                break;
+        }
+    }
+
+    public void onPauseButtonClick()
+    {
+
+    }
+
+    public void onRefreshButtonClick()
+    {
+
+    }
+
+    public void onStartButtonClick()
+    {
+
     }
 
     @SuppressLint("ParcelCreator")
@@ -240,8 +309,28 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
                 startAddressIntentService(location);
                 graphViewDrawTask.deliverGraph(sAltList);
+
+                updateSharedPreferences();
             }
         }
+    }
+
+    private void updateSharedPreferences()
+    {
+        //update Shared preferences to store basic data about location, called on locationChanged (if activity in foreground)
+        //onResumed to retrieve data after resume of app, and onPause to save last active data
+        Float latitude = (float) mLastLocation.getLatitude();
+        Float longitude = (float) mLastLocation.getLongitude();
+        Float altitude = (float) mLastLocation.getAltitude();
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putFloat("CurrentLatitude", latitude);
+        editor.putFloat("CurrentLongitude", longitude);
+        editor.putFloat("CurrentAltitude", altitude);
+        editor.putFloat("CurrentMin", (float) mMinAltitudeValue);
+        editor.putFloat("CurrentMax", (float) mMaxAltitudeValue);
+        editor.commit();
     }
 
     private void updateCurrentPositionTextViews(Location currLocation)
@@ -289,8 +378,6 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
             sDistanceTextView.setText(sDataFormatAndValueConverter.formatDistance(mCurrentDistance, "MILES"));
         }
-
-        Toast.makeText(this.getActivity(),"Current distance updated " + mCurrentDistance, Toast.LENGTH_SHORT).show();
     }
 
     @Override

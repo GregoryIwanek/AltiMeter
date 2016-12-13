@@ -20,6 +20,10 @@ public final class Constants
     private static final int THIRTY_SECONDS = 1000 * 30;
     private static final int ONE_MINUTE = 1000 * 60;
     private static final int TWO_MINUTES = 1000 * 60 * 2;
+
+    //Shared preferences default
+    public static final int ALTITUDE_MIN = 20000;
+    public static final int ALTITUDE_MAX = -20000;
 }
 
 //    //TODO->remove button, test code to check some features

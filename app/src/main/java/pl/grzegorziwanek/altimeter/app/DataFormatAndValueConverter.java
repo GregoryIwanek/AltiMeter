@@ -136,6 +136,7 @@ public class DataFormatAndValueConverter
             pointIndex = distanceStr.length();
         }
 
+        //TODO->find error with out of length
         //subtract string 3 places after point
         if (pointIndex < distanceStr.length() && distanceStr.contains("."))
         {
