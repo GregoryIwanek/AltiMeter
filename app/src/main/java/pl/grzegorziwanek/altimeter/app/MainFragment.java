@@ -62,8 +62,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     private static TextView sCurrAddressTextView;
     private static TextView sDistanceTextView;
     private static ImageButton sRefreshButton;
-    private static ImageButton sPauseButton;
-    private static ImageButton sPlayButton;
+    private static ImageButton sPlayPauseButton;
 
     //graph view field
     private static GraphViewDrawTask graphViewDrawTask;
@@ -112,12 +111,12 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         graphViewDrawTask = (GraphViewDrawTask) rootView.findViewById(R.id.graph_view);
 
         //buttons
-        sPlayButton = (ImageButton) rootView.findViewById(R.id.play_button);
         sRefreshButton = (ImageButton) rootView.findViewById(R.id.refresh_button);
-        sPauseButton = (ImageButton) rootView.findViewById(R.id.pause_button);
-        sPlayButton.setOnClickListener(this);
+        sPlayPauseButton = (ImageButton) rootView.findViewById(R.id.pause_button);
+        sRefreshButton.setTag(R.drawable.ic_refresh_black_18dp);
+        sPlayPauseButton.setTag(R.drawable.ic_pause_black_18dp);
         sRefreshButton.setOnClickListener(this);
-        sPauseButton.setOnClickListener(this);
+        sPlayPauseButton.setOnClickListener(this);
 
         sDataFormatAndValueConverter = new DataFormatAndValueConverter();
 
@@ -129,7 +128,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     {
         super.onResume();
 
-        //check if activity is in a foreground, get current address, redraw altitude graph
+        //check if activity is in a foreground, get current address, redraw altitude graph and update by stored preferences
         if (this.getActivity() != null)
         {
             //check if last location is saved (prevent errors on first run of app)
@@ -174,31 +173,63 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     {
         switch (view.getId())
         {
-            case R.id.play_button:
-                onStartButtonClick();
-                break;
             case R.id.pause_button:
-                onPauseButtonClick();
+                onPlayPauseButtonClick();
                 break;
             case R.id.refresh_button:
                 onRefreshButtonClick();
                 break;
+            default:
+                break;
         }
     }
 
-    public void onPauseButtonClick()
+    public void onPlayPauseButtonClick()
     {
+        //on click pause play -> switch button image and perform play/pause action;
+        //
+        if (sPlayPauseButton.getTag() != null)
+        {
+            if (Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_black_18dp)
+            {
+                sPlayPauseButton.setBackgroundResource(R.drawable.ic_play_arrow_black_18dp);
+                sPlayPauseButton.setTag(R.drawable.ic_play_arrow_black_18dp);
+                Toast.makeText(this.getActivity(), "Paused", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                sPlayPauseButton.setBackgroundResource(R.drawable.ic_pause_black_18dp);
+                sPlayPauseButton.setTag(R.drawable.ic_pause_black_18dp);
+                Toast.makeText(this.getActivity(), "Resumed", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else
+        {
+            Log.v(LOG_TAG, "PAUSE BUTTON IMAGE TAG WAS NOT FOUND, ON CLICK OPERATION CANCELED");
+        }
 
     }
 
     public void onRefreshButtonClick()
     {
+        if (Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_black_18dp)
+        {
+            sPlayPauseButton.setBackgroundResource(R.drawable.ic_play_arrow_black_18dp);
+            sPlayPauseButton.setTag(R.drawable.ic_play_arrow_black_18dp);
+        }
 
-    }
+        mLocationList.clear();
+        mMaxAltitudeValue = Constants.ALTITUDE_MAX;
+        mMinAltitudeValue = Constants.ALTITUDE_MIN;
+        mCurrentDistance = 0;
 
-    public void onStartButtonClick()
-    {
-
+        sDistanceTextView.setText(Constants.DEFAULT_TEXT);
+        sCurrAddressTextView.setText(Constants.DEFAULT_TEXT);
+        sCurrElevationTextView.setText(Constants.DEFAULT_TEXT);
+        sCurrLatitudeTextView.setText(Constants.DEFAULT_TEXT);
+        sCurrLongitudeTextView.setText(Constants.DEFAULT_TEXT);
+        sMaxElevTextView.setText(Constants.DEFAULT_TEXT);
+        sMinElevTextView.setText(Constants.DEFAULT_TEXT);
     }
 
     @SuppressLint("ParcelCreator")

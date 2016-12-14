@@ -24,6 +24,8 @@ public final class Constants
     //Shared preferences default
     public static final int ALTITUDE_MIN = 20000;
     public static final int ALTITUDE_MAX = -20000;
+
+    public static final String DEFAULT_TEXT = "...";
 }
 
 //    //TODO->remove button, test code to check some features

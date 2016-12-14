@@ -29,6 +29,11 @@
                         android:orientation="horizontal"
                         android:layout_weight="1">
 
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1.5"/>
+
                         <ImageButton
                             android:id="@+id/refresh_button"
                             android:clickable="true"
@@ -36,6 +41,11 @@
                             android:layout_height="match_parent"
                             android:background="@drawable/ic_refresh_black_18dp"
                             android:layout_weight="1"/>
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1.5"/>
 
                         <ImageButton
                             android:id="@+id/pause_button"
@@ -45,13 +55,18 @@
                             android:background="@drawable/ic_pause_black_18dp"
                             android:layout_weight="1"/>
 
-                        <ImageButton
-                            android:id="@+id/play_button"
-                            android:clickable="true"
+                        <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/ic_play_arrow_black_18dp"
-                            android:layout_weight="1"/>
+                            android:layout_weight="1.5"/>
+
+                        <!--<ImageButton-->
+                            <!--android:id="@+id/play_button"-->
+                            <!--android:clickable="true"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="match_parent"-->
+                            <!--android:background="@drawable/ic_play_arrow_black_18dp"-->
+                            <!--android:layout_weight="1"/>-->
                     </LinearLayout>
 
                     <!--direction label-->
