@@ -52,7 +52,7 @@
                             android:clickable="true"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/ic_pause_black_18dp"
+                            android:background="@drawable/ic_play_arrow_black_18dp"
                             android:layout_weight="1"/>
 
                         <FrameLayout
@@ -226,7 +226,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
 
-                        android:text="@string/distance_numbers_text"
+                        android:text="@string/current_no_value"
                         android:textColor="@color/colorBlack"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:gravity="center"

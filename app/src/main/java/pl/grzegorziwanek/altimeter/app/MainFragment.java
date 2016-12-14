@@ -5,12 +5,14 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +38,7 @@ import java.util.ArrayList;
 public class MainFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
 
-    public MainFragment() {}
+    public MainFragment(){}
 
     private static final String LOG_TAG = MainFragment.class.getSimpleName();
     public static final String PREFS_NAME = "MyPrefsFile";
@@ -70,8 +72,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     private static AddressResultReceiver sResultReceiver;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //initiate google play service ( used to update device's location in given intervals)
@@ -82,8 +83,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     //consist actions to perform upon re/start of app ( update current location and information)
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         //connect google play service and get current location
         mGoogleApiClient.connect();
 
@@ -93,8 +93,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         //assign UI elements to inner variables
@@ -114,7 +113,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         sRefreshButton = (ImageButton) rootView.findViewById(R.id.refresh_button);
         sPlayPauseButton = (ImageButton) rootView.findViewById(R.id.pause_button);
         sRefreshButton.setTag(R.drawable.ic_refresh_black_18dp);
-        sPlayPauseButton.setTag(R.drawable.ic_pause_black_18dp);
+        sPlayPauseButton.setTag(R.drawable.ic_play_arrow_black_18dp);
         sRefreshButton.setOnClickListener(this);
         sPlayPauseButton.setOnClickListener(this);
 
@@ -124,16 +123,13 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
 
         //check if activity is in a foreground, get current address, redraw altitude graph and update by stored preferences
-        if (this.getActivity() != null)
-        {
+        if (this.getActivity() != null) {
             //check if last location is saved (prevent errors on first run of app)
-            if (mLastLocation != null)
-            {
+            if (mLastLocation != null) {
                 startAddressIntentService(mLastLocation);
             }
 
@@ -142,17 +138,14 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
                 graphViewDrawTask.deliverGraphOnResume(sAltList);
             }
 
-            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
             Float sharedPrefMin = sharedPreferences.getFloat("CurrentMin", Constants.ALTITUDE_MIN);
             Float sharedPrefMax = sharedPreferences.getFloat("CurrentMax", Constants.ALTITUDE_MAX);
-            if (sharedPrefMin == Constants.ALTITUDE_MIN || sharedPrefMax == Constants.ALTITUDE_MAX)
-            {
+            if (sharedPrefMin == Constants.ALTITUDE_MIN || sharedPrefMax == Constants.ALTITUDE_MAX) {
                 mMinAltitudeValue = sharedPrefMin;
                 mMaxAltitudeValue = sharedPrefMax;
                 Log.v(LOG_TAG, "Min and Max altitude not provided, default values used instead...");
-            }
-            else
-            {
+            } else {
                 mMinAltitudeValue = sharedPrefMin;
                 mMaxAltitudeValue = sharedPrefMax;
                 updateCurrentMaxMinStr();
@@ -161,8 +154,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
 
         updateSharedPreferences();
@@ -171,8 +163,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     @Override
     public void onClick(View view)
     {
-        switch (view.getId())
-        {
+        switch (view.getId()) {
             case R.id.pause_button:
                 onPlayPauseButtonClick();
                 break;
@@ -187,7 +178,9 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     public void onPlayPauseButtonClick()
     {
         //on click pause play -> switch button image and perform play/pause action;
-        //
+
+        System.out.println(Integer.parseInt((sPlayPauseButton.getTag()).toString()));
+        System.out.println(R.drawable.ic_pause_black_18dp);
         if (sPlayPauseButton.getTag() != null)
         {
             if (Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_black_18dp)
@@ -195,6 +188,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
                 sPlayPauseButton.setBackgroundResource(R.drawable.ic_play_arrow_black_18dp);
                 sPlayPauseButton.setTag(R.drawable.ic_play_arrow_black_18dp);
                 Toast.makeText(this.getActivity(), "Paused", Toast.LENGTH_SHORT).show();
+
+                System.out.println(Integer.parseInt((sPlayPauseButton.getTag()).toString()));
             }
             else
             {
@@ -212,16 +207,18 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     public void onRefreshButtonClick()
     {
+        //change icon to "play"
         if (Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_black_18dp)
         {
             sPlayPauseButton.setBackgroundResource(R.drawable.ic_play_arrow_black_18dp);
             sPlayPauseButton.setTag(R.drawable.ic_play_arrow_black_18dp);
         }
 
+        //clear data
         mLocationList.clear();
         mMaxAltitudeValue = Constants.ALTITUDE_MAX;
         mMinAltitudeValue = Constants.ALTITUDE_MIN;
-        mCurrentDistance = 0;
+        mCurrentDistance = Constants.DISTANCE_DEFAULT;
 
         sDistanceTextView.setText(Constants.DEFAULT_TEXT);
         sCurrAddressTextView.setText(Constants.DEFAULT_TEXT);
@@ -233,8 +230,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     @SuppressLint("ParcelCreator")
-    class AddressResultReceiver extends ResultReceiver
-    {
+    class AddressResultReceiver extends ResultReceiver {
         String mAddressOutput;
 
         public AddressResultReceiver(Handler handler) {
@@ -252,8 +248,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         }
     }
 
-    protected void startAddressIntentService(Location location)
-    {
+    protected void startAddressIntentService(Location location) {
         Intent intent = new Intent(this.getActivity(), FetchAddressIntentService.class);
         intent.putExtra(Constants.RECEIVER, sResultReceiver);
         intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);
@@ -267,8 +262,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     //Initiate google play service (MainFragment needs to implement GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
     //and override onConnected, onConnectionSuspended, onConnectionFailed; add LocationServices.API to update device location in real time;
-    private void initiateGooglePlayService()
-    {
+    private void initiateGooglePlayService() {
         //connect in onStart, disconnect in onStop of the Activity
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())
@@ -290,30 +284,38 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
         //build location request
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
-        //TODO->analyse line below, if needed*
-        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
 
-        //call location request to get location update in set intervals-> must have
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
-
-        //!!! TODO -> change permissions system, for now API target version has been downgraded from API 25 to API 22 to make it work
-        //!!! TODO -> from API 23 dangerous permissions have to be check in runtime; -> change to API 25 and add required code changes
-        //onConnected is triggered after onStart(), so doInBackground() is completed first, then commands from here;
-        //update TextViews with location, in case there is incorrect old value from
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mLastLocation != null)
+        //check for location permissions Google Service
+        //permissions has not been granted, ask for new one
+        if (ActivityCompat.checkSelfPermission(this.getActivity(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this.getActivity(),
+                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
-            updateCurrentMaxMinAltitude(mLastLocation.getAltitude());
-            updateCurrentPositionTextViews(mLastLocation);
+            return;
         }
+        //permissions has been granted, proceed
+        else
+        {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
 
-        mLocationList.add(mLastLocation);
+            //update TextViews with location, in case there is incorrect old value
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            if (mLastLocation != null)
+            {
+                updateCurrentMaxMinAltitude(mLastLocation.getAltitude());
+                updateCurrentPositionTextViews(mLastLocation);
+            }
+
+            mLocationList.add(mLastLocation);
+        }
     }
 
     @Override
     public void onLocationChanged(Location location)
     {
-        if (location != null)
+        //TODO->remove part which is checking for "pause icon" and replace it with something else
+        if (location != null && Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_black_18dp)
         {
             //add new location point to the list
             sAltList.add(location.getAltitude());
@@ -354,7 +356,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         Float longitude = (float) mLastLocation.getLongitude();
         Float altitude = (float) mLastLocation.getAltitude();
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putFloat("CurrentLatitude", latitude);
         editor.putFloat("CurrentLongitude", longitude);
@@ -407,6 +409,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
                     currLocation.getLatitude(), currLocation.getLongitude(), results);
             mCurrentDistance += results[0];
 
+            //TODO-> add in settings km m and miles to chose
             sDistanceTextView.setText(sDataFormatAndValueConverter.formatDistance(mCurrentDistance, "MILES"));
         }
     }
@@ -421,20 +424,3 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         Log.v(LOG_TAG, "Error occur, connection failed: " + connectionResult.getErrorMessage());
     }
 }
-
-//    public void fetchAddressButtonHandler(View view) {
-//        // Only start the service to fetch the address if GoogleApiClient is connected.
-//        if (mGoogleApiClient.isConnected() && mLastLocation != null) {
-//            System.out.println("starting");
-//            startAddressIntentService(mLastLocation);
-//        }
-//    }
-
-//    //TODO-> assign more content here, consider moving
-//    //called onStart and restart-> update information to show on app start
-//    private void updateAppInfo()
-//    {
-//        //FetchDataInfoTask fetchDataInfoTask = new FetchDataInfoTask();
-//
-//        //fetchDataInfoTask.execute();
-//    }

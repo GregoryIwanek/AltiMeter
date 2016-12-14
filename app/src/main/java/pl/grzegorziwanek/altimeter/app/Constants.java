@@ -24,6 +24,7 @@ public final class Constants
     //Shared preferences default
     public static final int ALTITUDE_MIN = 20000;
     public static final int ALTITUDE_MAX = -20000;
+    public static final int DISTANCE_DEFAULT = 0;
 
     public static final String DEFAULT_TEXT = "...";
 }
@@ -39,3 +40,23 @@ public final class Constants
 //        }
 //        graphViewDrawTask.deliverGraph(sAltList);
 //    }
+
+//    public void fetchAddressButtonHandler(View view) {
+//        // Only start the service to fetch the address if GoogleApiClient is connected.
+//        if (mGoogleApiClient.isConnected() && mLastLocation != null) {
+//            System.out.println("starting");
+//            startAddressIntentService(mLastLocation);
+//        }
+//    }
+
+//    //TODO-> assign more content here, consider moving
+//    //called onStart and restart-> update information to show on app start
+//    private void updateAppInfo()
+//    {
+//        //FetchDataInfoTask fetchDataInfoTask = new FetchDataInfoTask();
+//
+//        //fetchDataInfoTask.execute();
+//    }
+
+//TODO->analyse line below, if needed* onConnected !!!
+//PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
