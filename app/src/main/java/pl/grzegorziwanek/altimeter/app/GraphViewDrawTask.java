@@ -2,6 +2,7 @@ package pl.grzegorziwanek.altimeter.app;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.location.Location;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -39,6 +40,8 @@ public class GraphViewDrawTask extends GraphView
         this.getViewport().setXAxisBoundsManual(true);
         this.getViewport().setMinX(0);
         this.getViewport().setMaxX(120);
+
+        //sSeries.setColor(Color.YELLOW);
     }
 
     //update X axis max bound (after refresh screen is resized to fit new value); Y axis is resized automatically;

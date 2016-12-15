@@ -112,8 +112,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         //buttons
         sRefreshButton = (ImageButton) rootView.findViewById(R.id.refresh_button);
         sPlayPauseButton = (ImageButton) rootView.findViewById(R.id.pause_button);
-        sRefreshButton.setTag(R.drawable.ic_refresh_black_18dp);
-        sPlayPauseButton.setTag(R.drawable.ic_play_arrow_black_18dp);
+        sRefreshButton.setTag(R.drawable.ic_refresh_white_18dp);
+        sPlayPauseButton.setTag(R.drawable.ic_play_arrow_white_18dp);
         sRefreshButton.setOnClickListener(this);
         sPlayPauseButton.setOnClickListener(this);
 
@@ -180,21 +180,21 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         //on click pause play -> switch button image and perform play/pause action;
 
         System.out.println(Integer.parseInt((sPlayPauseButton.getTag()).toString()));
-        System.out.println(R.drawable.ic_pause_black_18dp);
+        System.out.println(R.drawable.ic_pause_white_18dp);
         if (sPlayPauseButton.getTag() != null)
         {
-            if (Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_black_18dp)
+            if (Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_white_18dp)
             {
-                sPlayPauseButton.setBackgroundResource(R.drawable.ic_play_arrow_black_18dp);
-                sPlayPauseButton.setTag(R.drawable.ic_play_arrow_black_18dp);
+                sPlayPauseButton.setBackgroundResource(R.drawable.ic_play_arrow_white_18dp);
+                sPlayPauseButton.setTag(R.drawable.ic_play_arrow_white_18dp);
                 Toast.makeText(this.getActivity(), "Paused", Toast.LENGTH_SHORT).show();
 
                 System.out.println(Integer.parseInt((sPlayPauseButton.getTag()).toString()));
             }
             else
             {
-                sPlayPauseButton.setBackgroundResource(R.drawable.ic_pause_black_18dp);
-                sPlayPauseButton.setTag(R.drawable.ic_pause_black_18dp);
+                sPlayPauseButton.setBackgroundResource(R.drawable.ic_pause_white_18dp);
+                sPlayPauseButton.setTag(R.drawable.ic_pause_white_18dp);
                 Toast.makeText(this.getActivity(), "Resumed", Toast.LENGTH_SHORT).show();
             }
         }
@@ -208,10 +208,10 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     public void onRefreshButtonClick()
     {
         //change icon to "play"
-        if (Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_black_18dp)
+        if (Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_white_18dp)
         {
-            sPlayPauseButton.setBackgroundResource(R.drawable.ic_play_arrow_black_18dp);
-            sPlayPauseButton.setTag(R.drawable.ic_play_arrow_black_18dp);
+            sPlayPauseButton.setBackgroundResource(R.drawable.ic_play_arrow_white_18dp);
+            sPlayPauseButton.setTag(R.drawable.ic_play_arrow_white_18dp);
         }
 
         //clear data
@@ -220,6 +220,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         mMinAltitudeValue = Constants.ALTITUDE_MIN;
         mCurrentDistance = Constants.DISTANCE_DEFAULT;
 
+        //reset Text Views
         sDistanceTextView.setText(Constants.DEFAULT_TEXT);
         sCurrAddressTextView.setText(Constants.DEFAULT_TEXT);
         sCurrElevationTextView.setText(Constants.DEFAULT_TEXT);
@@ -315,7 +316,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     public void onLocationChanged(Location location)
     {
         //TODO->remove part which is checking for "pause icon" and replace it with something else
-        if (location != null && Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_black_18dp)
+        if (location != null && Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_white_18dp)
         {
             //add new location point to the list
             sAltList.add(location.getAltitude());
