@@ -22,7 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".slidingmenu.SettingsFragment"></activity>
         <service
             android:name="pl.grzegorziwanek.altimeter.app.FetchAddressIntentService"
             android:exported="false"

@@ -29,6 +29,7 @@ public class WelcomeScreen extends AppCompatActivity
     private SlidingMenuAdapter slidingMenuAdapter;
     private ListView listViewSliding;
     private DrawerLayout drawerLayout;
+    private RelativeLayout relativeLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
     @Override
@@ -39,6 +40,7 @@ public class WelcomeScreen extends AppCompatActivity
 
         listViewSliding = (ListView) findViewById(R.id.lv_sliding_menu);
         drawerLayout = (DrawerLayout) findViewById(R.id.screen_welcome_activity);
+        relativeLayout = (RelativeLayout) findViewById(R.id.main_content);
         menuItemList = new ArrayList<>();
 
         menuItemList.add(new MenuItemSlider("Settings", R.drawable.ic_settings_black_18dp));
@@ -49,7 +51,7 @@ public class WelcomeScreen extends AppCompatActivity
         listViewSliding.setAdapter(slidingMenuAdapter);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //listViewSliding.setItemChecked(0, true);
+        listViewSliding.setItemChecked(0, true);
 
         drawerLayout.closeDrawer(listViewSliding);
 

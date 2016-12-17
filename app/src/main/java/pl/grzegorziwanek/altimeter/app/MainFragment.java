@@ -75,6 +75,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        Log.v(LOG_TAG, "onCreate CALLED");
 
         //initiate google play service ( used to update device's location in given intervals)
         initiateGooglePlayService();
@@ -86,10 +87,11 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     @Override
     public void onStart()
     {
+        super.onStart();
+        Log.v(LOG_TAG, "onStart CALLED");
+
         //connect google play service and get current location
         mGoogleApiClient.connect();
-
-        super.onStart();
 
         sResultReceiver = new AddressResultReceiver(new Handler());
     }
@@ -97,6 +99,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        Log.v(LOG_TAG, "onCreateView CALLED");
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         //assign UI elements to inner variables
@@ -129,10 +132,12 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     public void onResume()
     {
         super.onResume();
+        Log.v(LOG_TAG, "onResume CALLED");
 
         //check if activity is in a foreground, get current address, redraw altitude graph and update by stored preferences
         if (this.getActivity() != null)
         {
+            Log.v(LOG_TAG, "onResume CALLED, activity visible");
             //check if last location is saved (prevent errors on first run of app)
             if (mLastLocation != null) {
                 startAddressIntentService(mLastLocation);
@@ -161,9 +166,9 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     @Override
     public void onPause()
     {
-        updateSharedPreferences();
-
         super.onPause();
+        Log.v(LOG_TAG, "onPause CALLED");
+        updateSharedPreferences();
     }
 
     @Override
@@ -282,6 +287,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     @Override
     public void onConnected(@Nullable Bundle bundle)
     {
+        Log.v(LOG_TAG, "onConnected CALLED");
+
         //define location request of GooglePlayService
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setInterval(1000);
@@ -298,11 +305,17 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
                 && ActivityCompat.checkSelfPermission(this.getActivity(),
                 android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
+            Log.v(LOG_TAG, "onConnected return CALLED");
+            System.out.println(ActivityCompat.checkSelfPermission(this.getActivity(),
+                    android.Manifest.permission.ACCESS_FINE_LOCATION));
+            System.out.println(ActivityCompat.checkSelfPermission(this.getActivity(),
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED);
             return;
         }
         //permissions has been granted, proceed
         else
         {
+            Log.v(LOG_TAG, "onConnected else CALLED");
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
 
             //update TextViews with location, in case there is incorrect old value
@@ -320,6 +333,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     @Override
     public void onLocationChanged(Location location)
     {
+        System.out.println("DIOAJIOJOIIJOIHIHUYGYTFTDR");
         //TODO->remove part which is checking for "pause icon" and replace it with something else
         if (location != null && Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_white_18dp)
         {

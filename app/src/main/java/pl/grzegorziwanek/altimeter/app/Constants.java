@@ -1,8 +1,5 @@
 package pl.grzegorziwanek.altimeter.app;
 
-import android.view.Window;
-import android.view.WindowManager;
-
 /**
  * Created by Grzegorz Iwanek on 30.11.2016.
  * Consist constants keys used in called FetchAddressIntentService and to retrieve result's back
