@@ -72,7 +72,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     private static AddressResultReceiver sResultReceiver;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
         //initiate google play service ( used to update device's location in given intervals)
@@ -83,7 +84,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     //consist actions to perform upon re/start of app ( update current location and information)
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         //connect google play service and get current location
         mGoogleApiClient.connect();
 
@@ -93,7 +95,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         //assign UI elements to inner variables
@@ -123,11 +126,13 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     @Override
-    public void onResume() {
+    public void onResume()
+    {
         super.onResume();
 
         //check if activity is in a foreground, get current address, redraw altitude graph and update by stored preferences
-        if (this.getActivity() != null) {
+        if (this.getActivity() != null)
+        {
             //check if last location is saved (prevent errors on first run of app)
             if (mLastLocation != null) {
                 startAddressIntentService(mLastLocation);
@@ -154,10 +159,11 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-
+    public void onPause()
+    {
         updateSharedPreferences();
+
+        super.onPause();
     }
 
     @Override
@@ -178,11 +184,9 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     public void onPlayPauseButtonClick()
     {
         //on click pause play -> switch button image and perform play/pause action;
-
-        System.out.println(Integer.parseInt((sPlayPauseButton.getTag()).toString()));
-        System.out.println(R.drawable.ic_pause_white_18dp);
         if (sPlayPauseButton.getTag() != null)
         {
+            //TODO->change condition from checking id of picture to different (connect somehow to styles)
             if (Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_white_18dp)
             {
                 sPlayPauseButton.setBackgroundResource(R.drawable.ic_play_arrow_white_18dp);
@@ -202,7 +206,6 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         {
             Log.v(LOG_TAG, "PAUSE BUTTON IMAGE TAG WAS NOT FOUND, ON CLICK OPERATION CANCELED");
         }
-
     }
 
     public void onRefreshButtonClick()
@@ -231,7 +234,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     @SuppressLint("ParcelCreator")
-    class AddressResultReceiver extends ResultReceiver {
+    class AddressResultReceiver extends ResultReceiver
+    {
         String mAddressOutput;
 
         public AddressResultReceiver(Handler handler) {
@@ -263,7 +267,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     //Initiate google play service (MainFragment needs to implement GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
     //and override onConnected, onConnectionSuspended, onConnectionFailed; add LocationServices.API to update device location in real time;
-    private void initiateGooglePlayService() {
+    private void initiateGooglePlayService()
+    {
         //connect in onStart, disconnect in onStop of the Activity
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())

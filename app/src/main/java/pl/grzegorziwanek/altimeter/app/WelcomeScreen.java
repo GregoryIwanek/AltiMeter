@@ -1,5 +1,9 @@
 package pl.grzegorziwanek.altimeter.app;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.PersistableBundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.grzegorziwanek.altimeter.app.slidingmenu.MenuItemSlider;
+import pl.grzegorziwanek.altimeter.app.slidingmenu.SettingsFragment;
 import pl.grzegorziwanek.altimeter.app.slidingmenu.SlidingMenuAdapter;
 
 public class WelcomeScreen extends AppCompatActivity
@@ -24,7 +29,6 @@ public class WelcomeScreen extends AppCompatActivity
     private SlidingMenuAdapter slidingMenuAdapter;
     private ListView listViewSliding;
     private DrawerLayout drawerLayout;
-    private RelativeLayout relativeLayoutMain;
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
     @Override
@@ -35,10 +39,9 @@ public class WelcomeScreen extends AppCompatActivity
 
         listViewSliding = (ListView) findViewById(R.id.lv_sliding_menu);
         drawerLayout = (DrawerLayout) findViewById(R.id.screen_welcome_activity);
-        relativeLayoutMain = (RelativeLayout) findViewById(R.id.main_content);
         menuItemList = new ArrayList<>();
 
-        menuItemList.add(new MenuItemSlider("Settings", R.drawable.ic_settings_blue_grey_50_18dp));
+        menuItemList.add(new MenuItemSlider("Settings", R.drawable.ic_settings_black_18dp));
         menuItemList.add(new MenuItemSlider("About", R.drawable.ic_eject_light_green));
         menuItemList.add(new MenuItemSlider("Android", R.drawable.ic_android_light_green_a700_18dp));
 
@@ -46,20 +49,24 @@ public class WelcomeScreen extends AppCompatActivity
         listViewSliding.setAdapter(slidingMenuAdapter);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        listViewSliding.setItemChecked(0, true);
+        //listViewSliding.setItemChecked(0, true);
 
         drawerLayout.closeDrawer(listViewSliding);
 
         //handle on item click
+        System.out.println("SETTING ONCLICK");
         listViewSliding.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                listViewSliding.setItemChecked(i, true);
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                System.out.println(" Setting ONCLICK listener");
+                listViewSliding.setItemChecked(position, true);
+                replaceFragment(position);
                 drawerLayout.closeDrawer(listViewSliding);
+                System.out.println("POSITION IS " + position);
+                System.out.println("IS THERE ONCLICK LISTENER? " + listViewSliding.getOnItemClickListener());
             }
-
-
         });
+        System.out.println("IS THERE ONCLICK LISTENER? " + listViewSliding.getOnItemClickListener());
 
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_opened, R.string.drawer_closed)
         {
@@ -89,7 +96,7 @@ public class WelcomeScreen extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        //getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
@@ -107,5 +114,29 @@ public class WelcomeScreen extends AppCompatActivity
     public void onPostCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onPostCreate(savedInstanceState, persistentState);
         actionBarDrawerToggle.syncState();
+    }
+
+    public void replaceFragment(int pos)
+    {
+//        Fragment fragment;
+//        switch (pos)
+//        {
+//            case 0: fragment = new SettingsFragment();
+//                break;
+//            default: fragment = new SettingsFragment();
+//                break;
+//        }
+//
+//        if (fragment != null)
+//        {
+//            FragmentManager fragmentManager = getFragmentManager();
+//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//            fragmentTransaction.replace(R.id.screen_welcome_activity, fragment);
+//            fragmentTransaction.addToBackStack(null);
+//            fragmentTransaction.commit();
+//        }
+
+//        Intent intent = new Intent(this, SettingsFragment.class);
+//        startActivity(intent);
     }
 }

@@ -7,6 +7,7 @@ import android.location.Location;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -41,7 +42,7 @@ public class GraphViewDrawTask extends GraphView
         this.getViewport().setMinX(0);
         this.getViewport().setMaxX(120);
 
-        //sSeries.setColor(Color.YELLOW);
+        setFormatLabels("m", "s");
     }
 
     //update X axis max bound (after refresh screen is resized to fit new value); Y axis is resized automatically;
@@ -50,12 +51,6 @@ public class GraphViewDrawTask extends GraphView
         this.getViewport().setMinX(0);
         //this.getViewport().setMaxX(xAxisEnd);
         this.getViewport().setMaxX(120);
-    }
-
-    //initiate graph drawing task (need: altitude, date/time when measure occurred, min and max altitude recorded)
-    public void performDrawingTask(ArrayList<Location> locationsList)
-    {
-
     }
 
     public void deliverGraph(ArrayList<Double> list)
@@ -108,7 +103,6 @@ public class GraphViewDrawTask extends GraphView
         refreshGraphLook(list.size());
     }
 
-    //TODO->change listsize name
     private void refreshGraphLook(int xBound)
     {
         //change X axis max bound to new value (added new point to graph, fixed bounds have to be changed)
@@ -116,5 +110,29 @@ public class GraphViewDrawTask extends GraphView
 
         //update Graph screen
         refreshDrawableState();
+    }
+
+    public void setFormatLabels(String yFormat, String xFormat)
+    {
+        final String axisYFormat = yFormat;
+        final String axisXFormat = xFormat;
+
+        getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter()
+        {
+            @Override
+            public String formatLabel(double isValueAxisY, boolean isValueAxisX)
+            {
+                if (isValueAxisX)
+                {
+                    //show on X axis
+                    return super.formatLabel(isValueAxisY, isValueAxisX) + axisXFormat;
+                }
+                else
+                {
+                    //show on Y axis
+                    return super.formatLabel(isValueAxisY, isValueAxisX) + axisYFormat;
+                }
+            }
+        });
     }
 }

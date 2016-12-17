@@ -8,7 +8,8 @@ public class MenuItemSlider
     String title;
     int imageId;
 
-    public MenuItemSlider(String title, int imageId) {
+    public MenuItemSlider(String title, int imageId)
+    {
         this.title = title;
         this.imageId = imageId;
     }

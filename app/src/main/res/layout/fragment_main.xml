@@ -141,7 +141,7 @@
             <pl.grzegorziwanek.altimeter.app.GraphViewDrawTask
                 android:id="@+id/graph_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"/>
         </FrameLayout>
 
         <!--layouts with max height, time, min height, longitude icon, latitude icon, small border line between,
@@ -326,12 +326,30 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <ImageButton
-                    android:id="@+id/arrow_forward"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="5.5"
-                    android:background="@drawable/ic_arrow_forward_white_18dp"/>
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"/>
+
+                    <ImageButton
+                        android:id="@+id/arrow_forward"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:background="@drawable/ic_arrow_forward_white_18dp"
+                        android:layout_weight="0.25" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"/>
+                </LinearLayout>
             </LinearLayout>
 
 
@@ -349,6 +367,5 @@
                     android:text="REKLAMA"/>
             </FrameLayout>
         </LinearLayout>
-
     </LinearLayout>
 </FrameLayout>

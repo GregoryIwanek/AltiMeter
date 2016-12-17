@@ -18,6 +18,7 @@
         android:layout_height="match_parent"
         android:id="@+id/lv_sliding_menu"
         android:background="@color/colorWhite"
-        android:layout_gravity="start">
+        android:layout_gravity="start"
+        android:descendantFocusability="blocksDescendants">
     </ListView>
 </android.support.v4.widget.DrawerLayout>
