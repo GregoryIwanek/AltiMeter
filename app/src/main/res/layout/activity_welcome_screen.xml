@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pl.grzegorziwanek.altimeter.app.WelcomeScreen"
-    android:id="@+id/screen_welcome_activity">
+    android:layout_width="match_parent">
 
-    <RelativeLayout
+    <android.support.v4.widget.DrawerLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/main_content">
-    </RelativeLayout>
+        tools:context="pl.grzegorziwanek.altimeter.app.WelcomeScreen"
+        android:id="@+id/screen_welcome_activity">
 
-    <ListView
-        android:layout_width="200dp"
-        android:layout_height="match_parent"
-        android:id="@+id/lv_sliding_menu"
-        android:background="@color/colorWhite"
-        android:layout_gravity="start">
-    </ListView>
-</android.support.v4.widget.DrawerLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/main_content">
+        </FrameLayout>
+
+        <ListView
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:id="@+id/lv_sliding_menu"
+            android:background="@color/colorWhite"
+            android:layout_gravity="start">
+        </ListView>
+    </android.support.v4.widget.DrawerLayout>
+</LinearLayout>

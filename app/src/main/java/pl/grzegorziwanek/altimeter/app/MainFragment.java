@@ -309,7 +309,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
             System.out.println(ActivityCompat.checkSelfPermission(this.getActivity(),
                     android.Manifest.permission.ACCESS_FINE_LOCATION));
             System.out.println(ActivityCompat.checkSelfPermission(this.getActivity(),
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED);
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION));
             return;
         }
         //permissions has been granted, proceed

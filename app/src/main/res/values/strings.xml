@@ -31,6 +31,10 @@
 
     <string name="pref_user_profile">User Profile</string>
     <string name="pref_update_setting">Update Settings</string>
+
+    <!--about strings-->
+    <string name="about_first">Do you want to know all specific information about your location, anytime, anywhere? Do you want to share distance and altitude of your last mountain trip? Then that app is for you!</string>
+    <string name="about_second">With AltiMeter you are able to catch any information about location and store this for later use, track changes,"\ calculate distance (horizontal, vertical and combined as well) and generate graphs with elevation level and maps of places you've been.</string>
+    <string name="about_how_does_it_work">How Does It Work?</string>
+    <string name="about_what_does_it_do">What Does It Do?</string>
 </resources>
-
-
