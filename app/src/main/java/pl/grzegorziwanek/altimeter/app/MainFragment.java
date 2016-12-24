@@ -33,6 +33,8 @@ import com.google.android.gms.location.LocationSettingsRequest;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import pl.grzegorziwanek.altimeter.app.Map.MyMapFragment;
 
 /**
@@ -59,16 +61,16 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     private double mCurrentDistance;
 
     //TextViews of View, fulled with refactored data from JSON objects and Google Play Service
-    private static TextView sCurrElevationTextView;
-    private static TextView sCurrLatitudeTextView;
-    private static TextView sCurrLongitudeTextView;
-    private static TextView sMaxElevTextView;
-    private static TextView sMinElevTextView;
-    private static TextView sCurrAddressTextView;
-    private static TextView sDistanceTextView;
-    private static ImageButton sRefreshButton;
-    private static ImageButton sPlayPauseButton;
-    private static ImageButton sMapFragmentButton;
+    @BindView (R.id.current_elevation_label) TextView sCurrElevationTextView;
+    @BindView(R.id.current_latitude_value) TextView sCurrLatitudeTextView;
+    @BindView(R.id.current_longitude_value) TextView sCurrLongitudeTextView;
+    @BindView(R.id.max_height_numbers) TextView sMaxElevTextView;
+    @BindView(R.id.min_height_numbers) TextView sMinElevTextView;
+    @BindView(R.id.location_label) TextView sCurrAddressTextView;
+    @BindView(R.id.distance_numbers) TextView sDistanceTextView;
+    @BindView(R.id.refresh_button) ImageButton sRefreshButton;
+    @BindView(R.id.pause_button) ImageButton sPlayPauseButton;
+    @BindView(R.id.map_fragment) ImageButton sMapFragmentButton;
 
     //graph view field
     private static GraphViewDrawTask graphViewDrawTask;
@@ -106,23 +108,9 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         Log.v(LOG_TAG, " onCreateView CALLED");
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        //assign UI elements to inner variables
-        //TextViews
-        sCurrElevationTextView = (TextView) rootView.findViewById(R.id.current_elevation_label);
-        sCurrLatitudeTextView = (TextView) rootView.findViewById(R.id.current_latitude_value);
-        sCurrLongitudeTextView = (TextView) rootView.findViewById(R.id.current_longitude_value);
-        sMinElevTextView = (TextView) rootView.findViewById(R.id.min_height_numbers);
-        sMaxElevTextView = (TextView) rootView.findViewById(R.id.max_height_numbers);
-        sCurrAddressTextView = (TextView) rootView.findViewById(R.id.location_label);
-        sDistanceTextView = (TextView) rootView.findViewById(R.id.distance_numbers);
+        //assign UI elements to corresponding elements from fragment_main layout XML file
+        ButterKnife.bind(this, rootView);
 
-        //graph
-        graphViewDrawTask = (GraphViewDrawTask) rootView.findViewById(R.id.graph_view);
-
-        //buttons
-        sRefreshButton = (ImageButton) rootView.findViewById(R.id.refresh_button);
-        sPlayPauseButton = (ImageButton) rootView.findViewById(R.id.pause_button);
-        sMapFragmentButton = (ImageButton) rootView.findViewById(R.id.map_fragment);
         sRefreshButton.setTag(R.drawable.ic_refresh_white_18dp);
         sPlayPauseButton.setTag(R.drawable.ic_play_arrow_white_18dp);
         sRefreshButton.setOnClickListener(this);
@@ -348,7 +336,9 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
             locationRequest.setFastestInterval(intervalLong/2);
         }
 
-        locationRequest.setSmallestDisplacement(5);
+
+        //TODO-> in final version switch from comment to code
+        //locationRequest.setSmallestDisplacement(5);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         return locationRequest;
