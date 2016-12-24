@@ -20,15 +20,15 @@ public class DataFormatAndValueConverter
     {
         //replace ":" with symbols
         String str = Location.convert(coordinate, Location.FORMAT_SECONDS);
-        str = str.replaceFirst("-", "");
         str = str.replaceFirst(":", "°");
         str = str.replaceFirst(":", "'");
+        str = str.replaceFirst(",", "''");
 
         //get index of point, define end index of the given string and subtract it ONLY if it has "."
         int pointIndex;
-        if (str.contains("."))
+        if (str.contains("''"))
         {
-            pointIndex = str.indexOf(".");
+            pointIndex = str.indexOf("''");
         }
         else
         {
@@ -36,13 +36,13 @@ public class DataFormatAndValueConverter
         }
 
         //subtract string if is longer than end index
-        if (pointIndex < str.length() && str.contains("."))
+        if (pointIndex < str.length() && str.contains("''"))
         {
-            str = str.substring(0, pointIndex);
+            str = str.substring(0, pointIndex+2);
         }
 
         //add "''" at the end
-        str = str + "\"";
+        //str = str + "\"";
 
         //Define direction symbol
         //if is latitude -> add S/N

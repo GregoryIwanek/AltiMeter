@@ -37,4 +37,5 @@
     <string name="about_second">With AltiMeter you are able to catch any information about location and store this for later use, track changes,"\ calculate distance (horizontal, vertical and combined as well) and generate graphs with elevation level and maps of places you've been.</string>
     <string name="about_how_does_it_work">How Does It Work?</string>
     <string name="about_what_does_it_do">What Does It Do?</string>
+    <string name="pref_location_update_settings">Location Settings</string>
 </resources>

@@ -1,4 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/settings_fragment">
 
+    <PreferenceCategory android:title="@string/pref_user_profile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <EditTextPreference
+            android:title="@string/pref_user_name"
+            android:summary="@string/pref_user_name_summary"
+            android:key="prefUsername"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_location_update_settings"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListPreference
+            android:defaultValue="5"
+            android:key="pref_sync_frequency_key"
+            android:entries="@array/syncLocationUpdateFrequency"
+            android:summary="@string/pref_sync_frequency_summary"
+            android:entryValues="@array/syncLocationUpdateFrequencyValues"
+            android:title="@string/pref_sync_frequency"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="prefSendReport"
+            android:summary="@string/pref_send_report_summary"
+            android:title="@string/pref_send_report"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </CheckBoxPreference>
+    </PreferenceCategory>
 </PreferenceScreen>

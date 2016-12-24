@@ -12,4 +12,22 @@
         <item name="30">30</item>
         <item name="0">0</item>
     </string-array>
+
+    <!--Location update frequency settings-->
+    <string-array name="syncLocationUpdateFrequency">
+        <item name="5">Every 5 sec</item>
+        <item name="10">Every 10 sec</item>
+        <item name="30">Every 30 sec</item>
+        <item name="60">Every 1 min</item>
+        <item name="2">Every 2 min</item>
+        <item name="5">Every 5 min</item>
+    </string-array>
+    <string-array name="syncLocationUpdateFrequencyValues">
+        <item name="5">5</item>
+        <item name="10">10</item>
+        <item name="30">30</item>
+        <item name="60">60</item>
+        <item name="2">120</item>
+        <item name="5">300</item>
+    </string-array>
 </resources>

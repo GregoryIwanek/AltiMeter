@@ -15,14 +15,18 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".WelcomeScreen">
+        <activity
+            android:name=".WelcomeScreen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <!--key lines for setting launcher activity-->
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".slidingmenu.SettingsFragment"></activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDz8OSO03MnSdoE-0FFN9sZaIyFRlpf79Y" />
         <service
             android:name="pl.grzegorziwanek.altimeter.app.FetchAddressIntentService"
             android:exported="false"

@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 /**
  *Inner class responsible for background update, have to extend AsyncTask<params, progress, result>
@@ -24,25 +25,30 @@ import java.text.DecimalFormat;
 
 public class FetchDataInfoTask extends AsyncTask<Void, Void, Void>
 {
-    //TODO move it somewhere else, dummy data to get adress of a place
-    //TODO -> query parameter append to URI can take many locations, but as one
-    //TODO -> method to parse many locations into one String
     private final String LOG_TAG = FetchDataInfoTask.class.getSimpleName();
-    private final int ZIP_CODE = 94043;
     final String APPID_KEY = "AIzaSyDz8OSO03MnSdoE-0FFN9sZaIyFRlpf79Y"; // TODO move that to config
-    private final double LONGITUDE = 51.797867; //dummy data
-    private final double LATITUDE = 22.232552; //dummy data
-    private final String LOCATIONS = Double.toString(LONGITUDE) + "," + Double.toString(LATITUDE)
-            + "|" + Double.toString(54.797867) + "," + Double.toString(13.321321)
-            + "|" + Double.toString(23.432432) + "," + Double.toString(15.554545)
-            + "|" + Double.toString(65.745644) + "," + Double.toString(55.555555)
-            + "|" + Double.toString(12.664644) + "," + Double.toString(33.235533)
-            + "|" + Double.toString(11.878777) + "," + Double.toString(44.444444)
-            + "|" + Double.toString(56.641212) + "," + Double.toString(76.435355);//dummy data String
+    private String locationsStr;
+    private AsyncResponse asyncResponse;
+    private Double mCurrentEleValue;
+
+    public FetchDataInfoTask(AsyncResponse asyncResponse)
+    {
+        this.asyncResponse = asyncResponse;
+    }
+
+    public void setLocationsStr(Location record)
+    {
+        locationsStr = null;
+//        for (Location record : locationList)
+//        {
+//            locationsStr = Double.toString(record.getLongitude()) + "," + Double.toString(record.getLatitude());
+//        }
+        locationsStr = Double.toString(record.getLatitude()) + "," + Double.toString(record.getLongitude());
+    }
 
     //download data from web as a background task
     @Override
-    protected Void doInBackground(Void... voids)
+    protected Void doInBackground(Void... Void)
     {
         //help class to connect to web and get data
         HttpURLConnection urlConnection = null;
@@ -66,7 +72,7 @@ public class FetchDataInfoTask extends AsyncTask<Void, Void, Void>
             //important: use android.net URI class, not JAVA!!!
             //parse base url -> build instance of builder -> append query parameters -> build url
             Uri buildUri = Uri.parse(GOOGLEMAPS_BASE_URL).buildUpon()
-                    .appendQueryParameter(PARAMETERS_LOCATIONS, LOCATIONS)
+                    .appendQueryParameter(PARAMETERS_LOCATIONS, locationsStr)
                     .appendQueryParameter(APPID_PARAM, APPID_KEY)
                     .build();
 
@@ -151,14 +157,12 @@ public class FetchDataInfoTask extends AsyncTask<Void, Void, Void>
         try
         {
             //TODO change num of points from fixed to method generated
-            getAltitudeDataFromJson(altitudeJsonStr, 7);
+            getAltitudeDataFromJson(altitudeJsonStr, 1);
         } catch (JSONException e)
         {
             Log.v(LOG_TAG, "Error occur, getting data from defined JSON string: ", e);
             e.printStackTrace();
         }
-
-
 
         return null;
     }
@@ -193,14 +197,12 @@ public class FetchDataInfoTask extends AsyncTask<Void, Void, Void>
 
             //elevation extraction
             Double pointDataElevation = pointData.getDouble(OMW_ELEVATION);
-//            mCurrentEleValue = pointDataElevation;
+           mCurrentEleValue = pointDataElevation;
 
             //location extraction and assignation lat and lng
             JSONObject pointDataLocation = pointData.getJSONObject(OMW_LOCATION);
             Double pointDataLatitude = pointDataLocation.getDouble(OMW_LATITUDE);
             Double pointDataLongitude = pointDataLocation.getDouble(OMW_LONGITUDE);
-            //mCurrentLatValue = pointDataLatitude;
-            //mCurrentLngValue = pointDataLongitude;
 
             //resolution extraction
             Double pointDataResolution = pointData.getDouble(OMW_RESOLUTION);
@@ -210,21 +212,6 @@ public class FetchDataInfoTask extends AsyncTask<Void, Void, Void>
             //TODO move from here to separated method/class
             DecimalFormat df = new DecimalFormat("#.###");
             String currentElevation = df.format(pointDataElevation);
-
-//            //min and max elevation
-//            if (pointDataElevation <= mMinElevValue)
-//            {
-//                mMinElevValue = pointDataElevation;
-//            }
-//            else if (pointDataElevation >= mMaxElevValue)
-//            {
-//                mMaxElevValue = pointDataElevation;
-//            }
-
-            //mCurrElevationTextView.setText(currentElevation);
-            //TODO method to convert Double to format of lng and lat with degrees/minutes/seconds
-            //mCurrLongitudeTextView.setText(pointDataLongitude.toString());
-            //mCurrLatitudeTextView.setText(pointDataLatitude.toString());
         }
 
         for (String pointEntry : resultArray)
@@ -235,83 +222,20 @@ public class FetchDataInfoTask extends AsyncTask<Void, Void, Void>
         return resultArray;
     }
 
-    public String convertLocationFormat(Double lat, Double lng)
-    {
-        //mCurrLongitudeTextView.setText(Location.convert(lng, Location.FORMAT_SECONDS));
-        //mCurrLatitudeTextView.setText(Location.convert(lat, Location.FORMAT_SECONDS));
-        String lngText = replaceDelimiters(lng, false);
-        String latText = replaceDelimiters(lat, true);
-//        mCurrLatitudeTextView.setText(latText);
-//        mCurrLongitudeTextView.setText(lngText);
-        return null;
-    }
-
-    //consist code responsible for replacing format (23:32:32:3223132 -> 23°xx'xx")
-    public String replaceDelimiters(Double coordinate, boolean isLat)
-    {
-        //replace ":" with symbols
-        String str = Location.convert(coordinate, Location.FORMAT_SECONDS);
-        str = str.replaceFirst("-", "");
-        str = str.replaceFirst(":", "°");
-        str = str.replaceFirst(":", "'");
-
-        //get index of point, define end index of the given string
-        int pointIndex = str.indexOf(".");
-        int endIndex = pointIndex;
-
-        //subtract string if is longer than end index
-        if (endIndex < str.length())
-        {
-            str = str.substring(0, endIndex);
-        }
-
-        //add "''" at the end
-        str = str + "\"";
-
-        //define direction (N, W, E, S)
-        str = defineDirection(str, coordinate, isLat);
-
-        return str;
-    }
-
-    public String defineDirection(String str, Double coordinate, boolean isLatitude)
-    {
-        //if is latitude -> add S/N
-        if (isLatitude == true)
-        {
-            if (coordinate < 0)
-            {
-                str = str + "S";
-            }
-            else
-            {
-                str = str + "N";
-            }
-        }
-        //if is longitude -> add E/W
-        else
-        {
-            if (coordinate >0 )
-            {
-                str = str + "E";
-            }
-            else
-            {
-                str = str + "W";
-            }
-        }
-
-        return str;
-    }
-
     @Override
     protected void onPostExecute(Void aVoid)
     {
-//        DecimalFormat df = new DecimalFormat("#.##");
-//        String currentElevation = df.format(mCurrentEleValue);
-//        mCurrElevationTextView.setText(currentElevation);
-//        mMaxElevTextView.setText(df.format(mMaxElevValue));
-//        mMinElevTextView.setText(df.format(mMinElevValue));
-//        convertLocationFormat(mCurrentLatValue, mCurrentLngValue);
+        if (mCurrentEleValue != null)
+        {
+            //round elevation value (to set precision to meters)
+            mCurrentEleValue = (double) Math.round(mCurrentEleValue);
+
+            //pass data to MainFragment through AsyncResponse interface
+            asyncResponse.processAccurateElevation(mCurrentEleValue);
+        }
+        else
+        {
+            Log.v(LOG_TAG, " onPostExecute, current elevation wasn't fetched from JSON, stopped");
+        }
     }
 }

@@ -24,13 +24,6 @@ public class SettingsFragment extends PreferenceFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-    }
-
-        @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
-        return rootView;
+        addPreferencesFromResource(R.xml.preferences);
     }
 }

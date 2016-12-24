@@ -2,8 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/settings_fragment"
-    android:background="@color/colorBlack">
+    android:id="@+id/da">
 
     <PreferenceCategory android:title="@string/pref_user_profile"
         android:layout_width="match_parent"
@@ -38,56 +37,3 @@
             android:layout_height="match_parent" />
     </PreferenceCategory>
 </PreferenceScreen>
-    <!--<?xml version="1.0" encoding="utf-8"?>-->
-    <!--<LinearLayout-->
-    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:tools="http://schemas.android.com/tools"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_width="match_parent">-->
-
-    <!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:text="DAIOJDOAWIJDOWIAJDWOIADJWOAIDJWOIA"/>-->
-    <!--</LinearLayout>-->
-    <!--<?xml version="1.0" encoding="utf-8"?>-->
-    <!--<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:id="@+id/settings_fragment"-->
-    <!--android:background="@color/colorBlack">-->
-
-    <!--<PreferenceCategory android:title="@string/pref_user_profile"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent">-->
-    <!--<EditTextPreference-->
-    <!--android:title="@string/pref_user_name"-->
-    <!--android:summary="@string/pref_user_name_summary"-->
-    <!--android:key="prefUsername"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent" />-->
-    <!--</PreferenceCategory>-->
-
-    <!--<PreferenceCategory android:title="@string/pref_update_setting"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent">-->
-    <!--<CheckBoxPreference-->
-    <!--android:defaultValue="false"-->
-    <!--android:key="prefSendReport"-->
-    <!--android:summary="@string/pref_send_report_summary"-->
-    <!--android:title="@string/pref_send_report"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent">-->
-    <!--</CheckBoxPreference>-->
-
-    <!--<ListPreference-->
-    <!--android:key="prefSyncFrequency"-->
-    <!--android:entries="@array/syncFrequency"-->
-    <!--android:summary="@string/pref_sync_frequency_summary"-->
-    <!--android:entryValues="@array/syncFrequencyValues"-->
-    <!--android:title="@string/pref_sync_frequency"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent" />-->
-    <!--</PreferenceCategory>-->
-
-    <!--</PreferenceScreen>-->
