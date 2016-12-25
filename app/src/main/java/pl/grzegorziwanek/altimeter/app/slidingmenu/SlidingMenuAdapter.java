@@ -14,8 +14,8 @@ import pl.grzegorziwanek.altimeter.app.R;
 /**
  * Created by Grzegorz Iwanek on 10.12.2016.
  */
-public class SlidingMenuAdapter extends BaseAdapter
-{
+public class SlidingMenuAdapter extends BaseAdapter {
+
     private Context context;
     private List<MenuItemSlider> listMenuItemSlider;
 
@@ -40,9 +40,9 @@ public class SlidingMenuAdapter extends BaseAdapter
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup viewGroup)
-    {
+    public View getView(int position, View view, ViewGroup viewGroup) {
         View v = View.inflate(context, R.layout.item_sliding_menu, null);
+
         ImageView imageView = (ImageView) v.findViewById(R.id.item_image);
         TextView textView = (TextView) v.findViewById(R.id.item_title);
 

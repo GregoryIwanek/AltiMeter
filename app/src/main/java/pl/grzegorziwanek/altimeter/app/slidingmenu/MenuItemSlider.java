@@ -3,13 +3,12 @@ package pl.grzegorziwanek.altimeter.app.slidingmenu;
 /**
  * Created by Grzegorz Iwanek on 10.12.2016.
  */
-public class MenuItemSlider
-{
+public class MenuItemSlider {
+
     String title;
     int imageId;
 
-    public MenuItemSlider(String title, int imageId)
-    {
+    public MenuItemSlider(String title, int imageId) {
         this.title = title;
         this.imageId = imageId;
     }

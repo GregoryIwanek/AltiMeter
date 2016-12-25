@@ -29,14 +29,17 @@ public class GraphViewDrawTask extends GraphView
     private static LineGraphSeries<DataPoint> sSeries = new LineGraphSeries<>();
 
     @Override
-    protected void onDraw(Canvas canvas) {super.onDraw(canvas);}
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+    }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {return super.onTouchEvent(event);}
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
+    }
 
     //initial settings, called at least one time (from constructor)
-    public void setSettings()
-    {
+    public void setSettings() {
         //set bounds of graphs manual (graph is not scalable and scrollable by user)
         this.getViewport().setXAxisBoundsManual(true);
         this.getViewport().setMinX(0);
@@ -46,24 +49,20 @@ public class GraphViewDrawTask extends GraphView
     }
 
     //update X axis max bound (after refresh screen is resized to fit new value); Y axis is resized automatically;
-    public void updateBounds(int xAxisEnd)
-    {
+    public void updateBounds(int xAxisEnd) {
         this.getViewport().setMinX(0);
-        //this.getViewport().setMaxX(xAxisEnd);
         this.getViewport().setMaxX(120);
     }
 
-    public void deliverGraph(ArrayList<Double> list)
-    {
+    public void deliverGraph(ArrayList<Double> list) {
         //if we call to draw for the first time (sSeries is empty, without any data and we add it for a first time to the GraphView Viewport)
         //or use that on button click to create new graph from given data
-        if (sSeries.isEmpty())
-        {
+        if (sSeries.isEmpty()) {
             //define list with DataPoints based on given altitude list
             ArrayList<DataPoint> pointList = new ArrayList<>();
+
             int i = 0;
-            for (Double point: list)
-            {
+            for (Double point: list) {
                 pointList.add(new DataPoint(i, point));
                 i++;
             }
@@ -72,10 +71,7 @@ public class GraphViewDrawTask extends GraphView
 
             //draw sSeries on a graph screen
             this.addSeries(sSeries);
-        }
-        //sSeries already have some data (case when we update/add new points to graph)
-        else
-        {
+        } else {//sSeries already have some data (case when we update/add new points to graph)
             //TODO -> convert that to use time (sec/min/hours) on X axis
             int xAxis = list.size();
             sSeries.appendData(new DataPoint(xAxis, list.get(xAxis-1)), true, list.size());
@@ -84,15 +80,13 @@ public class GraphViewDrawTask extends GraphView
         refreshGraphLook(list.size());
     }
 
-    public void deliverGraphOnResume(ArrayList<Double> list)
-    {
+    public void deliverGraphOnResume(ArrayList<Double> list) {
         this.getSeries().clear();
 
         //define list with DataPoints based on given altitude list
         ArrayList<DataPoint> pointList = new ArrayList<>();
         int i = 0;
-        for (Double point: list)
-        {
+        for (Double point: list) {
             pointList.add(new DataPoint(i, point));
             i++;
         }
@@ -103,8 +97,7 @@ public class GraphViewDrawTask extends GraphView
         refreshGraphLook(list.size());
     }
 
-    private void refreshGraphLook(int xBound)
-    {
+    private void refreshGraphLook(int xBound) {
         //change X axis max bound to new value (added new point to graph, fixed bounds have to be changed)
         updateBounds(xBound);
 
@@ -112,23 +105,18 @@ public class GraphViewDrawTask extends GraphView
         refreshDrawableState();
     }
 
-    public void setFormatLabels(String yFormat, String xFormat)
-    {
+    public void setFormatLabels(String yFormat, String xFormat) {
         final String axisYFormat = yFormat;
         final String axisXFormat = xFormat;
 
-        getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter()
-        {
+        getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+
             @Override
-            public String formatLabel(double isValueAxisY, boolean isValueAxisX)
-            {
-                if (isValueAxisX)
-                {
+            public String formatLabel(double isValueAxisY, boolean isValueAxisX) {
+                if (isValueAxisX) {
                     //show on X axis
                     return super.formatLabel(isValueAxisY, isValueAxisX) + axisXFormat;
-                }
-                else
-                {
+                } else {
                     //show on Y axis
                     return super.formatLabel(isValueAxisY, isValueAxisX) + axisYFormat;
                 }

@@ -21,8 +21,8 @@ import pl.grzegorziwanek.altimeter.app.slidingmenu.MenuItemSlider;
 import pl.grzegorziwanek.altimeter.app.slidingmenu.SettingsFragment;
 import pl.grzegorziwanek.altimeter.app.slidingmenu.SlidingMenuAdapter;
 
-public class WelcomeScreen extends AppCompatActivity
-{
+public class WelcomeScreen extends AppCompatActivity {
+
     private List<MenuItemSlider> menuItemList;
     private SlidingMenuAdapter slidingMenuAdapter;
     private ListView listViewSliding;
@@ -31,8 +31,7 @@ public class WelcomeScreen extends AppCompatActivity
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_screen);
 
@@ -57,6 +56,7 @@ public class WelcomeScreen extends AppCompatActivity
         //handle on item click
         System.out.println("SETTING ONCLICK");
         listViewSliding.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 System.out.println(" Setting ONCLICK listener");
@@ -67,10 +67,11 @@ public class WelcomeScreen extends AppCompatActivity
                 System.out.println("IS THERE ONCLICK LISTENER? " + listViewSliding.getOnItemClickListener());
             }
         });
+
         System.out.println("IS THERE ONCLICK LISTENER? " + listViewSliding.getOnItemClickListener());
 
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_opened, R.string.drawer_closed)
-        {
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_opened, R.string.drawer_closed) {
+
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -89,8 +90,7 @@ public class WelcomeScreen extends AppCompatActivity
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
         //check for saved instance of an app, run fragment containing layout if there is none
-        if (savedInstanceState == null)
-        {
+        if (savedInstanceState == null) {
             //series of task to start fragment with rich menu.
             //get fragmentManager -> transaction -> type of fragment transaction (add) -> commit to run;
             getFragmentManager().beginTransaction().add(R.id.screen_welcome_activity, new MainFragment()).commit();
@@ -99,9 +99,7 @@ public class WelcomeScreen extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (actionBarDrawerToggle.onOptionsItemSelected(item))
-        {
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -113,11 +111,9 @@ public class WelcomeScreen extends AppCompatActivity
         actionBarDrawerToggle.syncState();
     }
 
-    public void replaceFragment(int pos)
-    {
+    public void replaceFragment(int pos) {
         Fragment fragment;
-        switch (pos)
-        {
+        switch (pos) {
             case 0: fragment = new SettingsFragment();
                 break;
             case 1: fragment = new AboutFragment();
@@ -128,8 +124,7 @@ public class WelcomeScreen extends AppCompatActivity
                 break;
         }
 
-        if (fragment != null)
-        {
+        if (fragment != null) {
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.screen_welcome_activity, fragment);

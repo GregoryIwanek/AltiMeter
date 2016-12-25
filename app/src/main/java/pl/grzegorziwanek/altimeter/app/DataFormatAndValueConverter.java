@@ -9,24 +9,20 @@ import java.text.DecimalFormat;
  * Consist upgraded ArrayAdapter<String> class; used to update all wanted text views in view at once (single ArrayAdapter by default upgrade one object);
  * Responsible for comparing value of current data and if corresponding TextViews need to be changed;
  */
-public class DataFormatAndValueConverter
-{
+public class DataFormatAndValueConverter {
+
     public DataFormatAndValueConverter(){}
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
     private static String sUnitsFormat;
-
-    public static String getsUnitsFormat() {
-        return sUnitsFormat;
-    }
 
     public static void setsUnitsFormat(String sUnitsFormat) {
         DataFormatAndValueConverter.sUnitsFormat = sUnitsFormat;
     }
 
     //consist code responsible for replacing format (23:32:32:3223132 -> 23°xx'xx")
-    public String replaceDelimitersAddDirection(Double coordinate, boolean isLatitude)
-    {
+    public String replaceDelimitersAddDirection(Double coordinate, boolean isLatitude) {
+
         //replace ":" with symbols
         String str = Location.convert(coordinate, Location.FORMAT_SECONDS);
         str = str.replaceFirst(":", "°");
@@ -35,18 +31,14 @@ public class DataFormatAndValueConverter
 
         //get index of point, define end index of the given string and subtract it ONLY if it has "."
         int pointIndex;
-        if (str.contains("''"))
-        {
+        if (str.contains("''")) {
             pointIndex = str.indexOf("''");
-        }
-        else
-        {
+        } else {
             pointIndex = str.length() + 1;
         }
 
         //subtract string if is longer than end index
-        if (pointIndex < str.length() && str.contains("''"))
-        {
+        if (pointIndex < str.length() && str.contains("''")) {
             str = str.substring(0, pointIndex+2);
         }
 
@@ -54,19 +46,15 @@ public class DataFormatAndValueConverter
         //str = str + "\"";
 
         //Define direction symbol
-        //if is latitude -> add S/N
-        if (isLatitude == true)
-        {
+        //if coordinate is latitude -> add S/N
+        if (isLatitude == true) {
             if (coordinate < 0) {
                 str = str + "S";
-            }
-            else {
+            } else {
                 str = str + "N";
             }
-        }
-        //if is longitude -> add E/W
-        else
-        {
+        } else {
+            //if coordinate is longitude -> add E/W
             if (coordinate < 0) {
                 str = str + "W";
             }
@@ -79,50 +67,43 @@ public class DataFormatAndValueConverter
     }
 
     //format given altitude to X.XX
-    public String formatElevation(Double altitude)
-    {
+    public String formatElevation(Double altitude) {
         return DECIMAL_FORMAT.format(altitude);
     }
 
-    public String addMetersAboveSeaLevel(String str)
-    {
+    public String addMetersAboveSeaLevel(String str) {
         str = str + " m n.p.m.";
         return str;
     }
 
-    public Double updateMaxAltitude(Double altitude, Double currMax)
-    {
-        if (altitude > currMax)
-        {
+    public Double updateMaxAltitude(Double altitude, Double currMax) {
+        if (altitude > currMax) {
             return altitude;
+        } else {
+            return currMax;
         }
-        else return currMax;
     }
 
-    public Double updateMinAltitude(Double altitude, Double currMin)
-    {
-        if (altitude < currMin)
-        {
+    public Double updateMinAltitude(Double altitude, Double currMin) {
+        if (altitude < currMin) {
             return altitude;
+        } else {
+            return currMin;
         }
-        else return currMin;
     }
 
-    public String updateCurrMinMaxString(Double currMinMaxAltitude)
-    {
+    public String updateCurrMinMaxString(Double currMinMaxAltitude) {
         String currMinMaxStr = formatElevation(currMinMaxAltitude);
         currMinMaxStr = addMetersAboveSeaLevel(currMinMaxStr);
         return currMinMaxStr;
     }
 
-    public String formatDistance(Double currDistance)
-    {
+    public String formatDistance(Double currDistance) {
         Double distance = currDistance;
         String unit;
 
         //format value and unit by chosen format
-        switch (sUnitsFormat)
-        {
+        switch (sUnitsFormat) {
             case "METERS": unit = "m";
                 break;
             case "KILOMETERS": distance /= 1000; unit = "km";
@@ -133,27 +114,26 @@ public class DataFormatAndValueConverter
                 break;
         }
 
+        //format output of distance to correct decimal
+        String distanceStr = DECIMAL_FORMAT.format(distance);
+
         //locate point "." in a distance number
-        String distanceStr = distance.toString();
         int pointIndex;
-        if (distanceStr.contains("."))
-        {
+        if (distanceStr.contains(".")) {
             pointIndex = distanceStr.indexOf(".");
-        }
-        else
-        {
+        } else {
             pointIndex = distanceStr.length();
         }
 
         //subtract string 3 places after point
-        if (pointIndex <= distanceStr.length()-4 && distanceStr.contains("."))
-        {
+        if (pointIndex <= distanceStr.length()-4 && distanceStr.contains(".")) {
             distanceStr = distanceStr.substring(0, pointIndex + 3);
         }
 
         //set distance string
         distanceStr = distanceStr + " " + unit;
 
+        System.out.println("DISTANCE STRING " +distanceStr);
         return distanceStr;
     }
 }

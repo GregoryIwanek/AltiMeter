@@ -24,8 +24,8 @@
     <!--settings strings-->
     <string name="pref_send_report">Send crash reports</string>
     <string name="pref_send_report_summary">Helps to fix bugs</string>
-    <string name="pref_sync_frequency">Sync frequency</string>
-    <string name="pref_sync_frequency_summary">Set the sync frequency</string>
+    <string name="pref_sync_frequency">Location sync frequency</string>
+    <string name="pref_sync_frequency_summary">Set the location sync frequency</string>
     <string name="pref_user_name">Set username</string>
     <string name="pref_user_name_summary">Set your username</string>
     <string name="pref_units">Set units</string>
@@ -39,4 +39,7 @@
     <string name="about_how_does_it_work">How Does It Work?</string>
     <string name="about_what_does_it_do">What Does It Do?</string>
     <string name="pref_location_update_settings">Location Settings</string>
+    <string name="pref_units_summary">Set distance units</string>
+    <string name="pref_language">Set language</string>
+    <string name="pref_language_summary">Set preferred language</string>
 </resources>

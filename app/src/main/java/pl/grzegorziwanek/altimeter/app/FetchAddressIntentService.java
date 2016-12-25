@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -25,16 +24,19 @@ import java.util.Locale;
 public class FetchAddressIntentService extends IntentService
 {
     //constructors, have to add empty one to avoid conflict from manifest file
-    public FetchAddressIntentService(){super("EMPTY CONSTRUCTOR");}
-    public FetchAddressIntentService(String name) {super(name);}
+    public FetchAddressIntentService() {
+        super("EMPTY CONSTRUCTOR");
+    }
+    public FetchAddressIntentService(String name) {
+        super(name);
+    }
 
     private static final String LOG_TAG = FetchAddressIntentService.class.getSimpleName();
 
     protected ResultReceiver resultReceiver;
 
     @Override
-    protected void onHandleIntent(Intent intent)
-    {
+    protected void onHandleIntent(Intent intent) {
         //HAVE TO bind and assign receiver from here and activity (through Constants)
         resultReceiver = intent.getParcelableExtra(Constants.RECEIVER);
 
@@ -48,19 +50,14 @@ public class FetchAddressIntentService extends IntentService
         //possible errors: No location data provided, Invalid latitude or longitude used, No geocoder available, Sorry, no address found
         List<Address> addresses = null;
 
-        try
-        {
+        try {
             //try to assign allowed number of addresses to a list; have to
             addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-        }
-        catch (IOException ioException)
-        {
+        } catch (IOException ioException) {
             //thrown in case of service offline
             errorMessage = getString(R.string.service_not_available);
             Log.e(LOG_TAG, errorMessage, ioException);
-        }
-        catch (IllegalArgumentException illegalArgumentException)
-        {
+        } catch (IllegalArgumentException illegalArgumentException) {
             //thrown in case of wrong given coordinates
             errorMessage = getString(R.string.invalid_lat_long_used);
             Log.e(LOG_TAG, errorMessage + ", " + "Latitude: " + location.getLatitude()
@@ -68,40 +65,34 @@ public class FetchAddressIntentService extends IntentService
         }
 
         //check for case of no address found
-        if (addresses == null || addresses.size() == 0)
-        {
+        if (addresses == null || addresses.size() == 0) {
             //check if different error has already occur
-            if(errorMessage.isEmpty())
-            {
+            if(errorMessage.isEmpty()) {
                 errorMessage = getString(R.string.no_address_found);
                 Log.e(LOG_TAG, errorMessage);
             }
 
             //deliver info about failure
-            deliverResultToReciever(Constants.FAILURE_RESULT, errorMessage);
-        }
-        //if address was found
-        else
-        {
+            deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage);
+        } else {
+            //address was found
             Address address = addresses.get(0);
             ArrayList<String> addressLines = new ArrayList<>();
 
             //fetching each of address lines from given address object to the List
-            for (int i=0; i<address.getMaxAddressLineIndex(); i++)
-            {
+            for (int i=0; i<address.getMaxAddressLineIndex(); i++) {
                 addressLines.add(address.getAddressLine(i));
             }
             Log.i(LOG_TAG, getString(R.string.address_found));
 
             //delivering address to the receiver
             String combinedAddress = TextUtils.join(System.getProperty("line.separator"), addressLines);
-            deliverResultToReciever(Constants.SUCCESS_RESULT, combinedAddress);
+            deliverResultToReceiver(Constants.SUCCESS_RESULT, combinedAddress);
         }
     }
 
     //delivers message to receiver which  delivers to activity which called for intent process
-    private void deliverResultToReciever(int resultCode, String message)
-    {
+    private void deliverResultToReceiver(int resultCode, String message) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.RESULT_DATA_KEY, message);
         resultReceiver.send(resultCode, bundle);

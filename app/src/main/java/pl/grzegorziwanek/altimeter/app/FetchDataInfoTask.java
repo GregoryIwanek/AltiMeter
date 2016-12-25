@@ -36,28 +36,21 @@ public class FetchDataInfoTask extends AsyncTask<Void, Void, Void>
         this.asyncResponse = asyncResponse;
     }
 
-    public void setLocationsStr(Location record)
-    {
+    public void setLocationsStr(Location record) {
         locationsStr = null;
-//        for (Location record : locationList)
-//        {
-//            locationsStr = Double.toString(record.getLongitude()) + "," + Double.toString(record.getLatitude());
-//        }
         locationsStr = Double.toString(record.getLatitude()) + "," + Double.toString(record.getLongitude());
     }
 
     //download data from web as a background task
     @Override
-    protected Void doInBackground(Void... Void)
-    {
+    protected Void doInBackground(Void... Void) {
         //help class to connect to web and get data
         HttpURLConnection urlConnection = null;
         //reads data from given input stream (this case-> data from web to string format)
         BufferedReader bufferedReader = null;
         String altitudeJsonStr = null;
 
-        try
-        {
+        try {
             //setp 1: construction of the URL query for google maps API, have to add personal API key to use gooogle maps API
             //TODO move it to a different subclass or abstract class
             //google maps API takes form: https://maps.googleapis.com/maps/api/elevation/outputFormat?parameters
@@ -93,8 +86,7 @@ public class FetchDataInfoTask extends AsyncTask<Void, Void, Void>
             // define BufferedReader here with InputStreamReader -> append strings to the StringBuffer in a loop ->
             // define string to show as StringBuffer.toString();
             InputStream inputStream = urlConnection.getInputStream();
-            if (inputStream == null)
-            {
+            if (inputStream == null) {
                 //set as null if no data to show
                 Log.v(LOG_TAG, "Input stream was empty, no data to shown, return null");
                 return null;
@@ -107,14 +99,12 @@ public class FetchDataInfoTask extends AsyncTask<Void, Void, Void>
 
             //have to use additional string (line) to call readLine() just once ( so lines from stream won't be losed and empty)
             String line;
-            while ((line = bufferedReader.readLine()) != null)
-            {
+            while ((line = bufferedReader.readLine()) != null) {
                 //append "line" instead calling readLine() again
                 stringBuffer.append(line + "\n");
             }
 
-            if (stringBuffer.length() == 0)
-            {
+            if (stringBuffer.length() == 0) {
                 //string stream was empty, so no point in further parsing-> return null so no data is shown
                 Log.v(LOG_TAG, "String stream was empty, no data to shown, return null");
                 return null;
@@ -125,29 +115,20 @@ public class FetchDataInfoTask extends AsyncTask<Void, Void, Void>
 
             //log message with result string
             Log.v(LOG_TAG, "altitude string generated: " + altitudeJsonStr);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             //if error occur, code didn't get data from web so no point in performing further data parsing, return null
             Log.v(LOG_TAG, "Error, at getting data from web:", e);
             return null;
-        }
-        finally
-        {
+        } finally {
             //close opened url connection
-            if (urlConnection != null)
-            {
+            if (urlConnection != null) {
                 urlConnection.disconnect();
             }
             //try to close opened buffered reader
-            if (bufferedReader != null)
-            {
-                try
-                {
+            if (bufferedReader != null) {
+                try {
                     bufferedReader.close();
-                }
-                catch (IOException e)
-                {
+                } catch (IOException e) {
                     Log.v(LOG_TAG, "Error, at BufferedReaded closing:", e);
                     e.printStackTrace();
                 }

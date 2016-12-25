@@ -16,14 +16,13 @@ import pl.grzegorziwanek.altimeter.app.R;
 /**
  * Created by Grzegorz Iwanek on 10.12.2016.
  */
-public class SettingsFragment extends PreferenceFragment
-{
+public class SettingsFragment extends PreferenceFragment {
+
     public SettingsFragment(){}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         addPreferencesFromResource(R.xml.preferences);
     }
 }

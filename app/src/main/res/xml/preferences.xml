@@ -7,12 +7,22 @@
     <PreferenceCategory android:title="@string/pref_user_profile"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <EditTextPreference
             android:title="@string/pref_user_name"
             android:summary="@string/pref_user_name_summary"
             android:key="prefUsername"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <ListPreference
+            android:title="@string/pref_language"
+            android:summary="@string/pref_language_summary"
+            android:key="pref_language_key"
+            android:entries="@array/languageArray"
+            android:entryValues="@array/languageArrayValues"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_location_update_settings"
@@ -34,6 +44,7 @@
             android:entries="@array/unitsArray"
             android:entryValues="@array/unitsArrayValues"
             android:title="@string/pref_units"
+            android:summary="@string/pref_units_summary"
             android:key="pref_set_units"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
