@@ -156,6 +156,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
                 mMaxAltitudeValue = sharedPrefMax;
                 mCurrentDistance = sharedPrefDistance;
                 updateCurrentMaxMinStr();
+                updateDistanceUnits();
                 updateDistanceTextView(mCurrentDistance);
             }
         }
@@ -203,7 +204,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
                 locationRequest = setLocationRequest(locationRequest);
                 checkPermissionsAndRequestUpdates(locationRequest);
 
-                updateUnits();
+                updateDistanceUnits();
 
                 Toast.makeText(this.getActivity(), "Resumed", Toast.LENGTH_SHORT).show();
             }
@@ -512,7 +513,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         sDistanceTextView.setText(sDataFormatAndValueConverter.formatDistance(currentDistance));
     }
 
-    private void updateUnits()
+    private void updateDistanceUnits()
     {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
         String units = sharedPreferences.getString("pref_set_units", "KILOMETERS");
