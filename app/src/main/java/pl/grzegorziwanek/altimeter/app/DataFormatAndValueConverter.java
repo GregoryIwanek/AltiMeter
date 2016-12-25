@@ -14,6 +14,15 @@ public class DataFormatAndValueConverter
     public DataFormatAndValueConverter(){}
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
+    private static String sUnitsFormat;
+
+    public static String getsUnitsFormat() {
+        return sUnitsFormat;
+    }
+
+    public static void setsUnitsFormat(String sUnitsFormat) {
+        DataFormatAndValueConverter.sUnitsFormat = sUnitsFormat;
+    }
 
     //consist code responsible for replacing format (23:32:32:3223132 -> 23°xx'xx")
     public String replaceDelimitersAddDirection(Double coordinate, boolean isLatitude)
@@ -106,13 +115,13 @@ public class DataFormatAndValueConverter
         return currMinMaxStr;
     }
 
-    public String formatDistance(Double currDistance, String unitFormat)
+    public String formatDistance(Double currDistance)
     {
         Double distance = currDistance;
         String unit;
 
         //format value and unit by chosen format
-        switch (unitFormat)
+        switch (sUnitsFormat)
         {
             case "METERS": unit = "m";
                 break;

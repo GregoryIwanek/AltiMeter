@@ -42,8 +42,7 @@ import pl.grzegorziwanek.altimeter.app.Map.MyMapFragment;
  */
 public class MainFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener, AsyncResponse {
-    public MainFragment() {
-    }
+    public MainFragment() {}
 
     private static final String LOG_TAG = MainFragment.class.getSimpleName();
     public static final String PREFS_NAME = "MyPrefsFile";
@@ -61,7 +60,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     private double mCurrentDistance;
 
     //TextViews of View, fulled with refactored data from JSON objects and Google Play Service
-    @BindView (R.id.current_elevation_label) TextView sCurrElevationTextView;
+    @BindView(R.id.current_elevation_label) TextView sCurrElevationTextView;
     @BindView(R.id.current_latitude_value) TextView sCurrLatitudeTextView;
     @BindView(R.id.current_longitude_value) TextView sCurrLongitudeTextView;
     @BindView(R.id.max_height_numbers) TextView sMaxElevTextView;
@@ -73,7 +72,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     @BindView(R.id.map_fragment) ImageButton sMapFragmentButton;
 
     //graph view field
-    private static GraphViewDrawTask graphViewDrawTask;
+    @BindView(R.id.graph_view) GraphViewDrawTask graphViewDrawTask;
     private static ArrayList<Double> sAltList = new ArrayList<>();
     private static AddressResultReceiver sResultReceiver;
 
@@ -204,6 +203,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
                 locationRequest = setLocationRequest(locationRequest);
                 checkPermissionsAndRequestUpdates(locationRequest);
 
+                updateUnits();
+
                 Toast.makeText(this.getActivity(), "Resumed", Toast.LENGTH_SHORT).show();
             }
         }
@@ -269,7 +270,11 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         sCurrElevationTextView.setText(elevationStr);
 
         sAltList.add(elevation);
-        graphViewDrawTask.deliverGraph(sAltList);
+
+        if (sAltList != null)
+        {
+            graphViewDrawTask.deliverGraph(sAltList);
+        }
 
         mLastLocation.setAltitude(elevation);
     }
@@ -335,7 +340,6 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         else {
             locationRequest.setFastestInterval(intervalLong/2);
         }
-
 
         //TODO-> in final version switch from comment to code
         //locationRequest.setSmallestDisplacement(5);
@@ -505,7 +509,14 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     private void updateDistanceTextView(Double currentDistance)
     {
-        sDistanceTextView.setText(sDataFormatAndValueConverter.formatDistance(currentDistance, "MILES"));
+        sDistanceTextView.setText(sDataFormatAndValueConverter.formatDistance(currentDistance));
+    }
+
+    private void updateUnits()
+    {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+        String units = sharedPreferences.getString("pref_set_units", "KILOMETERS");
+        sDataFormatAndValueConverter.setsUnitsFormat(units);
     }
 
     @Override
