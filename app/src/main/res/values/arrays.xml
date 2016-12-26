@@ -10,6 +10,16 @@
         <item name="English">ENGLISH</item>
     </string-array>
 
+    <!--Style-->
+    <string-array name="styleArray">
+        <item name="Dark">Dark</item>
+        <item name="Light">Light</item>
+    </string-array>
+    <string-array name="styleValues">
+        <item name="Dark">DARK</item>
+        <item name="Light">LIGHT</item>
+    </string-array>
+
     <!--Location update frequency settings-->
     <string-array name="syncLocationUpdateFrequency">
         <item name="5">Every 5 sec</item>

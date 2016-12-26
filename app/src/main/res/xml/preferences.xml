@@ -23,6 +23,15 @@
             android:entryValues="@array/languageArrayValues"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+
+        <ListPreference
+            android:title="@string/pref_style_name"
+            android:summary="@string/pref_style_summary"
+            android:key="pref_style_key"
+            android:entries="@array/styleArray"
+            android:entryValues="@array/styleValues"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_location_update_settings"
@@ -37,7 +46,7 @@
             android:entryValues="@array/syncLocationUpdateFrequencyValues"
             android:title="@string/pref_sync_frequency"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
         <ListPreference
             android:defaultValue="KILOMETERS"
@@ -55,7 +64,6 @@
             android:summary="@string/pref_send_report_summary"
             android:title="@string/pref_send_report"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </CheckBoxPreference>
+            android:layout_height="match_parent"/>
     </PreferenceCategory>
 </PreferenceScreen>

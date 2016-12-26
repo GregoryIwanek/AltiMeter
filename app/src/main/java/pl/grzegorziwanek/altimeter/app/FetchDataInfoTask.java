@@ -178,7 +178,7 @@ public class FetchDataInfoTask extends AsyncTask<Void, Void, Void>
 
             //elevation extraction
             Double pointDataElevation = pointData.getDouble(OMW_ELEVATION);
-           mCurrentEleValue = pointDataElevation;
+            mCurrentEleValue = pointDataElevation;
 
             //location extraction and assignation lat and lng
             JSONObject pointDataLocation = pointData.getJSONObject(OMW_LOCATION);

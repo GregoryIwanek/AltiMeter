@@ -330,7 +330,7 @@
                         android:layout_weight="1"/>
 
                     <ImageButton
-                        android:id="@+id/map_fragment"
+                        android:id="@+id/map_fragment_button"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"

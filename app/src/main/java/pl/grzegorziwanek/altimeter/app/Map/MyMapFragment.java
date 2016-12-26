@@ -24,6 +24,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import pl.grzegorziwanek.altimeter.app.R;
 
 /**
@@ -33,8 +35,8 @@ public class MyMapFragment extends Fragment
 {
     public MyMapFragment(){}
 
+    @BindView(R.id.map) MapView mMapView;
     private GoogleMap mGoogleMap;
-    private MapView mMapView;
     private ArrayList<Location> locationArrayList;
 
     public void setListOfPoints(ArrayList<Location> locationArrayList)
@@ -47,7 +49,7 @@ public class MyMapFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
-        mMapView = (MapView) view.findViewById(R.id.map);
+        ButterKnife.bind(this, view);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
 

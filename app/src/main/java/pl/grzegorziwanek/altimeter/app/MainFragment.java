@@ -40,6 +40,12 @@ import pl.grzegorziwanek.altimeter.app.Map.MyMapFragment;
 
 /**
  * Created by Grzegorz Iwanek on 23.11.2016.
+ * Consist main UI fragment within, extension of Fragment;
+ * Implements:
+ * google's api location client (ConnectionCallbacks, OnConnectionFailedListener, LocationListener);
+ * customized AsyncResponse interface (to return location data through AsyncTask's onPostExecute method);
+ * inner class to catch data from FetchAddressIntentService;
+ * Uses ButcherKnife outer library;
  */
 public class MainFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, AsyncResponse {
@@ -56,11 +62,13 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     //variables to hold data as doubles and refactor them later into TextViews
     public Location mLastLocation;
     public ArrayList<Location> mLocationList;
+
     //TODO-> save these three variables in shared preferences ( values are reset after onResume is called)
     private double mMaxAltitudeValue;
     private double mMinAltitudeValue;
     private double mCurrentDistance;
 
+    //ButterKnife
     //TextViews of View, fulled with refactored data from JSON objects and Google Play Service
     @BindView(R.id.current_elevation_label) TextView sCurrElevationTextView;
     @BindView(R.id.current_latitude_value) TextView sCurrLatitudeTextView;
@@ -71,7 +79,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     @BindView(R.id.distance_numbers) TextView sDistanceTextView;
     @BindView(R.id.refresh_button) ImageButton sRefreshButton;
     @BindView(R.id.pause_button) ImageButton sPlayPauseButton;
-    @BindView(R.id.map_fragment) ImageButton sMapFragmentButton;
+    @BindView(R.id.map_fragment_button) ImageButton sMapFragmentButton;
 
     //graph view field
     @BindView(R.id.graph_view) GraphViewDrawTask graphViewDrawTask;
@@ -140,11 +148,13 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
                 graphViewDrawTask.deliverGraphOnResume(sAltList);
             }
 
-            //update shared preferences values
+            //update shared preferences values onResumed app
             SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
             Float sharedPrefMin = sharedPreferences.getFloat("CurrentMin", Constants.ALTITUDE_MIN);
             Float sharedPrefMax = sharedPreferences.getFloat("CurrentMax", Constants.ALTITUDE_MAX);
             Float sharedPrefDistance = sharedPreferences.getFloat("CurrentDistance", Constants.DISTANCE_DEFAULT);
+
+            //update
             if (sharedPrefMin == Constants.ALTITUDE_MIN || sharedPrefMax == Constants.ALTITUDE_MAX) {
                 mMinAltitudeValue = Constants.ALTITUDE_MIN;
                 mMaxAltitudeValue = Constants.ALTITUDE_MAX;
@@ -220,9 +230,9 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         sMinElevTextView.setText(Constants.DEFAULT_TEXT);
     }
 
-    @OnClick(R.id.map_fragment)
+    @OnClick(R.id.map_fragment_button)
     public void onMapButtonClick() {
-        //initiate map section on first run of an app
+        //initiate map object on first run of an app
         if (myMapFragment == null) {
             myMapFragment = new MyMapFragment();
             myMapFragment.setListOfPoints(mLocationList);

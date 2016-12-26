@@ -5,7 +5,6 @@ package pl.grzegorziwanek.altimeter.app;
  * Consist constants keys used in called FetchAddressIntentService and to retrieve result's back
  */
 public final class Constants {
-
     //service constants (used in fetch address service by current location)
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;
