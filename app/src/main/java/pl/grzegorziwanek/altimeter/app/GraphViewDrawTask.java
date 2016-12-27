@@ -20,10 +20,10 @@ import java.util.ArrayList;
  */
 public class GraphViewDrawTask extends GraphView {
     //list of points to draw on a graph screen
-    private static LineGraphSeries<DataPoint> sSeries = new LineGraphSeries<>();
-    private static Long sRecordStartTime = null;
-    private static Integer sMaxElevation = 0;
-    private static Integer sMinElevation = 0;
+    private LineGraphSeries<DataPoint> mSeries = new LineGraphSeries<>();
+    private Long mStartTimeRecord = null;
+    private Integer mMaxElevation = 0;
+    private Integer mMinElevation = 0;
 
     //override default constructors of the GridView (it's required to prevent errors from compilation); initiate basic settings;
     public GraphViewDrawTask(Context context) {
@@ -51,27 +51,95 @@ public class GraphViewDrawTask extends GraphView {
         return super.onTouchEvent(event);
     }
 
-    //initial settings, called at least one time (from constructor)
-    public void setSettings() {
-        //set bounds of graphs manual (graph is not scalable and scrollable by user)
-        this.getViewport().setXAxisBoundsManual(true);
-        this.getViewport().setMinX(0);
-        this.getViewport().setMaxX(120);
-
-        System.out.println("SET DIAGRAM APPEARANCE SETTINGS WAS CALLED");
-        int color = Color.argb(50, 0, 255, 255);
-        sSeries.setColor(Color.GREEN);
-        sSeries.setThickness(5);
-        sSeries.setDrawBackground(true);
-        sSeries.setBackgroundColor(color);
+    private void setSettings() {
+        setGraphBounds();
+        defineDiagramAppearance();
 
         setFormatLabels("m", "s");
     }
 
+    private void setGraphBounds(){
+        setChangeBoundsManually();
+        initiateGraphViewBounds();
+        setGraphBoundsValues();
+    }
+
+    private void setChangeBoundsManually(){
+        this.getViewport().setXAxisBoundsManual(true);
+        this.getViewport().setYAxisBoundsManual(true);
+    }
+
+    private void initiateGraphViewBounds(){
+        this.getViewport().setMinX(0);
+        this.getViewport().setMaxX(100);
+        this.getViewport().setMinY(0);
+        this.getViewport().setMaxY(100);
+    }
+
+    private void setGraphBoundsValues(){
+        setXBoundsValues();
+        setYBoundsValues();
+    }
+
+    private void setXBoundsValues(){
+        if(mSeries.getHighestValueX() > this.getViewport().getMaxX(false)*0.8){
+            int xRange = getNewXBoundsRange();
+            this.getViewport().setMaxX(xRange);
+        }
+    }
+
+    private int getNewXBoundsRange(){
+        int newXRange = (int) (mSeries.getHighestValueX() * 1.2);
+        return newXRange;
+    }
+
+    private void setYBoundsValues(){
+        if(mSeries.getHighestValueY() > this.getViewport().getMaxY(false)*0.8){
+            int yMaxRange = getNewYMaxBoundsRange();
+            this.getViewport().setMaxY(yMaxRange);
+        }
+        if(mSeries.getLowestValueY() > this.getViewport().getMinY(false)*(0.8)){
+            int yMinRange = getNewYMinBoundsRange();
+            this.getViewport().setMinY(yMinRange);
+        }
+    }
+
+    private int getNewYMaxBoundsRange(){
+        int newYMaxRange = (int) (mSeries.getHighestValueY() * 1.2);
+        return newYMaxRange;
+    }
+
+    private int getNewYMinBoundsRange(){
+        //TODO->work on below zero values
+        if(mSeries.getLowestValueY() < 0){
+            int newYMinRange = (int) (mSeries.getLowestValueY() - 100);
+            return newYMinRange;
+        }else {
+            int newYMinRange = (int) (mSeries.getLowestValueY() * 0.8);
+            return newYMinRange;
+        }
+    }
+
+    private void defineDiagramAppearance(){
+        setDiagramLine();
+        setDiagramBackground();
+    }
+
+    private void setDiagramLine(){
+        int colorId = Color.rgb(35, 255, 15);
+        mSeries.setColor(colorId);
+        mSeries.setThickness(5);
+    }
+
+    private void setDiagramBackground(){
+        int colorId = Color.argb(65, 0, 255, 255);
+        mSeries.setDrawBackground(true);
+        mSeries.setBackgroundColor(colorId);
+    }
+
     //update X axis max bound (after refresh screen is resized to fit new value); Y axis is resized automatically;
     private void updateBounds(int xAxisEnd) {
-        this.getViewport().setMinX(0);
-        this.getViewport().setMaxX(120);
+        setGraphBoundsValues();
 
         //TODO-> implement belows
         //TODO-> add catching time of location record to onLocationChanged method
@@ -81,56 +149,55 @@ public class GraphViewDrawTask extends GraphView {
         //-> example: point 1, measured 18:00 -> position x=0; point 2, measured 18:01, position x=60 ( 1 sec == 1 unit on diagram)
         //-> so diagram with 1 hour will have xAxis border at 60min*60sec = 3600 units
 
-        this.getViewport().setYAxisBoundsManual(true);
-        this.getViewport().setMinY(sMinElevation*0.75);
-        this.getViewport().setMaxY(sMaxElevation*1.25);
+        this.getViewport().setMinY(mMinElevation *0.75);
+        this.getViewport().setMaxY(mMaxElevation *1.25);
     }
 
     private void updateYBounds(int yToCheck) {
-        if (sMaxElevation == null || sMinElevation == null){
-            sMaxElevation = yToCheck;
-            sMinElevation = yToCheck;
+        if (mMaxElevation == null || mMinElevation == null){
+            mMaxElevation = yToCheck;
+            mMinElevation = yToCheck;
         }else {
-            if(sMaxElevation < yToCheck){
-                sMaxElevation = yToCheck;
+            if(mMaxElevation < yToCheck){
+                mMaxElevation = yToCheck;
             }
-            if(sMinElevation > yToCheck){
-                sMinElevation = yToCheck;
+            if(mMinElevation > yToCheck){
+                mMinElevation = yToCheck;
             }
         }
     }
 
     public void deliverGraph(ArrayList<Location> locationsList) {
         System.out.println("DELIVER GRAPH CALLED");
-        if (sRecordStartTime == null){
-            sRecordStartTime = locationsList.get(0).getTime();
+        if (mStartTimeRecord == null){
+            mStartTimeRecord = locationsList.get(0).getTime();
         }
 
-        //if we call to draw for the first time (sSeries is empty, without any data and we add it for a first time to the GraphView Viewport)
+        //if we call to draw for the first time (mSeries is empty, without any data and we add it for a first time to the GraphView Viewport)
         //or use that on button click to create new graph from given data
-        if (sSeries.isEmpty()) {
+        if (mSeries.isEmpty()) {
             for (int i=0; i<locationsList.size(); i++){
                 if (i > 0) {
-                    Long timeBetweenRecords = (locationsList.get(i).getTime() - sRecordStartTime)/1000;
+                    Long timeBetweenRecords = (locationsList.get(i).getTime() - mStartTimeRecord)/1000;
                     DataPoint graphPoint = new DataPoint(timeBetweenRecords, locationsList.get(i).getAltitude());
-                    sSeries.appendData(graphPoint, true, locationsList.size());
+                    mSeries.appendData(graphPoint, false, locationsList.size());
                     updateYBounds((int) graphPoint.getY());
                 }else {
                     DataPoint graphPoint = new DataPoint(i, locationsList.get(i).getAltitude());
-                    sSeries.appendData(graphPoint, true, locationsList.size());
+                    mSeries.appendData(graphPoint, false, locationsList.size());
                     updateYBounds((int) graphPoint.getY());
                 }
             }
-            //draw sSeries on a graph screen
-            this.addSeries(sSeries);
+            //draw mSeries on a graph screen
+            this.addSeries(mSeries);
         } else {
-            //sSeries already have some data (case when we update/add new points to graph)
+            //mSeries already have some data (case when we update/add new points to graph)
             //TODO -> convert that to use time (sec/min/hours) on X axis
             if (locationsList.size() > 1){
                 int listSize = locationsList.size();
-                Long timeBetweenRecords = (locationsList.get(listSize-1).getTime() - sRecordStartTime)/1000;
+                Long timeBetweenRecords = (locationsList.get(listSize-1).getTime() - mStartTimeRecord)/1000;
                 DataPoint graphPoint = new DataPoint(timeBetweenRecords, locationsList.get(listSize-1).getAltitude());
-                sSeries.appendData(graphPoint, true, listSize);
+                mSeries.appendData(graphPoint, false, listSize);
                 updateYBounds((int) graphPoint.getY());
             }else {
                 System.out.println("WRONG LOCATIONSLIST SIZE, HAS TO BE BIGGER THAN 1");
@@ -141,7 +208,7 @@ public class GraphViewDrawTask extends GraphView {
 
     public void deliverGraphOnResume(int listSize) {
         System.out.println("DELIVER GRAPH ON RESUME CALLED");
-        this.addSeries(sSeries);
+        this.addSeries(mSeries);
 
 //        if(listSize > 0){
 //            refreshGraphLook(listSize);
@@ -149,15 +216,8 @@ public class GraphViewDrawTask extends GraphView {
     }
 
     private void refreshGraphLook(int xBound) {
-        //change X axis max bound to new value (added new point to graph, fixed bounds have to be changed)
         updateBounds(xBound);
-
-        //update Graph screen
         refreshDrawableState();
-    }
-
-    private void clearView(){
-        this.getSeries().clear();
     }
 
     public void setFormatLabels(String yFormat, String xFormat) {
@@ -165,7 +225,6 @@ public class GraphViewDrawTask extends GraphView {
         final String axisXFormat = xFormat;
 
         getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
-
             @Override
             public String formatLabel(double isValueAxisY, boolean isValueAxisX) {
                 if (isValueAxisX) {
