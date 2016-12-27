@@ -120,30 +120,32 @@ public class GraphViewDrawTask extends GraphView {
 
     //TODO->fix X axis positions
     public void deliverGraphOnResume(ArrayList<Double> list) {
+        System.out.println("DELIVER GRAPH ON RESUME CALLED");
+        System.out.println("SIZE OF LIST ON RESUME " + list.size());
+        //update xAxisBorder
+        updateXBorderValue(list.size());
 
-            System.out.println("DELIVER GRAPH ON RESUME CALLED");
-            this.getSeries().clear();
+//        int i = getSeries().size();
+        System.out.println("CHECK SERIES BEFORE CLEAR " + this.getSeries());
+        //this.getSeries().clear();
+        //TODO->REMOVE LATER
+        //define list with DataPoints based on given altitude list
+        //ArrayList<DataPoint> pointList = new ArrayList<>();
 
-            //update xAxisBorder
-            updateXBorderValue(list.size());
+//        for (Double point: list) {
+//            //TODO->REMOVE LATER
+//            //pointList.add(new DataPoint(i, point+1));
+//            sSeries.appendData(new DataPoint(i, point), true, xAxisBorder);
+//            i++;
+//        }
+        //TODO->REMOVE LATER
+        //add points to sSeries of graph
+        //sSeries = new LineGraphSeries<DataPoint>(pointList.toArray(new DataPoint[]{}));
+        System.out.println("CHECK SERIES AFTER CLEAR "+ this.getSeries());
+        this.addSeries(sSeries);
+        System.out.println("CHECK SERIES AFTER ADDED ONRESUME " + this.getSeries());
 
-            //TODO->REMOVE LATER
-            //define list with DataPoints based on given altitude list
-            //ArrayList<DataPoint> pointList = new ArrayList<>();
-            int i = getSeries().size();
-            for (Double point: list) {
-                //TODO->REMOVE LATER
-                //pointList.add(new DataPoint(i, point+1));
-                sSeries.appendData(new DataPoint(i, point), true, xAxisBorder);
-                i++;
-            }
-            //TODO->REMOVE LATER
-            //add points to sSeries of graph
-            //sSeries = new LineGraphSeries<DataPoint>(pointList.toArray(new DataPoint[]{}));
-            this.addSeries(sSeries);
-
-            refreshGraphLook(list.size());
-
+        refreshGraphLook(list.size());
     }
 
     private void refreshGraphLook(int xBound) {
