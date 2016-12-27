@@ -9,15 +9,15 @@ import java.text.DecimalFormat;
  * Consist upgraded ArrayAdapter<String> class; used to update all wanted text views in view at once (single ArrayAdapter by default upgrade one object);
  * Responsible for comparing value of current data and if corresponding TextViews need to be changed;
  */
-public class DataFormatAndValueConverter {
+public class FormatAndValueConverter {
 
-    public DataFormatAndValueConverter(){}
+    public FormatAndValueConverter(){}
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
     private static String sUnitsFormat;
 
     public static void setsUnitsFormat(String sUnitsFormat) {
-        DataFormatAndValueConverter.sUnitsFormat = sUnitsFormat;
+        FormatAndValueConverter.sUnitsFormat = sUnitsFormat;
     }
 
     //consist code responsible for replacing format (23:32:32:3223132 -> 23°xx'xx")

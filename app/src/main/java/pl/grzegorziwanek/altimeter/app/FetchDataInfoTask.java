@@ -23,16 +23,14 @@ import java.util.ArrayList;
  *ASyncTask <params, progress, result> -> params: given entry data to work on; progress: data to show progress; result: result of background execution
  */
 
-public class FetchDataInfoTask extends AsyncTask<Void, Void, Void>
-{
+public class FetchDataInfoTask extends AsyncTask<Void, Void, Void> {
     private final String LOG_TAG = FetchDataInfoTask.class.getSimpleName();
     final String APPID_KEY = "AIzaSyDz8OSO03MnSdoE-0FFN9sZaIyFRlpf79Y"; // TODO move that to config
     private String locationsStr;
     private AsyncResponse asyncResponse;
     private Double mCurrentEleValue;
 
-    public FetchDataInfoTask(AsyncResponse asyncResponse)
-    {
+    public FetchDataInfoTask(AsyncResponse asyncResponse) {
         this.asyncResponse = asyncResponse;
     }
 
@@ -150,9 +148,7 @@ public class FetchDataInfoTask extends AsyncTask<Void, Void, Void>
 
     //method to extract data in correct form from given Json String;
     // TODO-> methods to define number of points, right now fixed dummy
-    public String[] getAltitudeDataFromJson(String altitudeJsonStr, int numOfPoints) throws JSONException
-    {
-
+    public String[] getAltitudeDataFromJson(String altitudeJsonStr, int numOfPoints) throws JSONException {
         //JSON objects names which need to be extracted from given string
         final String OMW_RESULTS = "results";
         final String OMW_ELEVATION = "elevation";
@@ -168,8 +164,7 @@ public class FetchDataInfoTask extends AsyncTask<Void, Void, Void>
         String[] resultArray = new String[numOfPoints];
 
         //hatch data from Json array into result String array
-        for (int i=0; i<altitudeJsonArray.length(); i++)
-        {
+        for (int i=0; i<altitudeJsonArray.length(); i++) {
             //get JSONObject representing the single point on a map
             JSONObject pointData = altitudeJsonArray.getJSONObject(i);
 
@@ -195,8 +190,7 @@ public class FetchDataInfoTask extends AsyncTask<Void, Void, Void>
             String currentElevation = df.format(pointDataElevation);
         }
 
-        for (String pointEntry : resultArray)
-        {
+        for (String pointEntry : resultArray) {
             Log.v(LOG_TAG, "Point entry created: " + pointEntry);
         }
 
@@ -204,18 +198,14 @@ public class FetchDataInfoTask extends AsyncTask<Void, Void, Void>
     }
 
     @Override
-    protected void onPostExecute(Void aVoid)
-    {
-        if (mCurrentEleValue != null)
-        {
+    protected void onPostExecute(Void aVoid) {
+        if (mCurrentEleValue != null) {
             //round elevation value (to set precision to meters)
             mCurrentEleValue = (double) Math.round(mCurrentEleValue);
 
             //pass data to MainFragment through AsyncResponse interface
             asyncResponse.processAccurateElevation(mCurrentEleValue);
-        }
-        else
-        {
+        } else {
             Log.v(LOG_TAG, " onPostExecute, current elevation wasn't fetched from JSON, stopped");
         }
     }

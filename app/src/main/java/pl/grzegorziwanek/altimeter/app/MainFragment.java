@@ -44,7 +44,7 @@ import pl.grzegorziwanek.altimeter.app.Map.MyMapFragment;
  * Implements:
  * google's api location client (ConnectionCallbacks, OnConnectionFailedListener, LocationListener);
  * customized AsyncResponse interface (to return location data through AsyncTask's onPostExecute method);
- * inner class to catch data from FetchAddressIntentService;
+ * inner class to catch data from AddressIntentService;
  * Uses ButcherKnife outer library;
  */
 public class MainFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
@@ -57,7 +57,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     private GoogleApiClient mGoogleApiClient;
     private FetchDataInfoTask mFetchDataInfoTask;
-    private static DataFormatAndValueConverter sDataFormatAndValueConverter;
+    private static FormatAndValueConverter sFormatAndValueConverter;
 
     //variables to hold data as doubles and refactor them later into TextViews
     public Location mLastLocation;
@@ -83,7 +83,6 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     //graph view field
     @BindView(R.id.graph_view) GraphViewDrawTask graphViewDrawTask;
-    private static ArrayList<Double> sAltList = new ArrayList<>();
     private static AddressResultReceiver sResultReceiver;
 
     //map section
@@ -123,7 +122,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         sRefreshButton.setTag(R.drawable.ic_refresh_white_18dp);
         sPlayPauseButton.setTag(R.drawable.ic_play_arrow_white_18dp);
 
-        sDataFormatAndValueConverter = new DataFormatAndValueConverter();
+        sFormatAndValueConverter = new FormatAndValueConverter();
         mFetchDataInfoTask = new FetchDataInfoTask(this);
 
         return rootView;
@@ -144,9 +143,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
             }
 
             //redraw graph only when app backs from background, not when started first time (when altitude list is empty)
-            if (!sAltList.isEmpty()) {
-                graphViewDrawTask.deliverGraphOnResume(sAltList);
-            }
+            graphViewDrawTask.deliverGraphOnResume(mLocationList.size());
 
             //update shared preferences values onResumed app
             SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -228,6 +225,9 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         sCurrLongitudeTextView.setText(Constants.DEFAULT_TEXT);
         sMaxElevTextView.setText(Constants.DEFAULT_TEXT);
         sMinElevTextView.setText(Constants.DEFAULT_TEXT);
+
+        //reset graph view diagram
+        graphViewDrawTask.getSeries().clear();
     }
 
     @OnClick(R.id.map_fragment_button)
@@ -250,20 +250,16 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     //AsyncResponse interface methods (send data back to this activity from AsyncTask's onPostExecute method)
     @Override
     public void processAccurateElevation(Double elevation) {
-
         Log.v(LOG_TAG, " processAccurateElevation CALLED");
 
         updateCurrentMaxMinAltitude(elevation);
         updateCurrentMaxMinStr();
 
-        String elevationStr = sDataFormatAndValueConverter.formatElevation(elevation);
+        String elevationStr = sFormatAndValueConverter.formatElevation(elevation);
         sCurrElevationTextView.setText(elevationStr);
 
-        sAltList.add(elevation);
-
-        if (sAltList != null) {
-            graphViewDrawTask.deliverGraph(sAltList);
-        }
+        mLocationList.get(mLocationList.size()-1).setAltitude(elevation);
+        graphViewDrawTask.deliverGraph(mLocationList);
 
         mLastLocation.setAltitude(elevation);
     }
@@ -289,7 +285,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     protected void startAddressIntentService(Location location) {
-        Intent intent = new Intent(this.getActivity(), FetchAddressIntentService.class);
+        Intent intent = new Intent(this.getActivity(), AddressIntentService.class);
         intent.putExtra(Constants.RECEIVER, sResultReceiver);
         intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);
         this.getActivity().startService(intent);
@@ -435,8 +431,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     private void updateCurrentPositionTextViews(Location currLocation) {
         //format geo coordinates to degrees/minutes/seconds (from XX:XX:XX.XX to XX*XX'XX''N)
-        String latitudeStr = sDataFormatAndValueConverter.replaceDelimitersAddDirection(currLocation.getLatitude(), true);
-        String longitudeStr = sDataFormatAndValueConverter.replaceDelimitersAddDirection(currLocation.getLongitude(), false);
+        String latitudeStr = sFormatAndValueConverter.replaceDelimitersAddDirection(currLocation.getLatitude(), true);
+        String longitudeStr = sFormatAndValueConverter.replaceDelimitersAddDirection(currLocation.getLongitude(), false);
 
         //set new values of current location coordinates text views
         sCurrLatitudeTextView.setText(latitudeStr);
@@ -445,14 +441,14 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     private void updateCurrentMaxMinAltitude(Double currAltitude) {
         //update variables holding max and min altitude (double)
-        mMinAltitudeValue = sDataFormatAndValueConverter.updateMinAltitude(currAltitude, mMinAltitudeValue);
-        mMaxAltitudeValue = sDataFormatAndValueConverter.updateMaxAltitude(currAltitude, mMaxAltitudeValue);
+        mMinAltitudeValue = sFormatAndValueConverter.updateMinAltitude(currAltitude, mMinAltitudeValue);
+        mMaxAltitudeValue = sFormatAndValueConverter.updateMaxAltitude(currAltitude, mMaxAltitudeValue);
     }
 
     private void updateCurrentMaxMinStr() {
         //refactor string with min max altitude to correct form
-        String minAltitudeStr = sDataFormatAndValueConverter.updateCurrMinMaxString(mMinAltitudeValue);
-        String maxAltitudeStr = sDataFormatAndValueConverter.updateCurrMinMaxString(mMaxAltitudeValue);
+        String minAltitudeStr = sFormatAndValueConverter.updateCurrMinMaxString(mMinAltitudeValue);
+        String maxAltitudeStr = sFormatAndValueConverter.updateCurrMinMaxString(mMaxAltitudeValue);
 
         //update TextViews
         sMinElevTextView.setText(minAltitudeStr);
@@ -475,13 +471,13 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     private void updateDistanceTextView(Double currentDistance) {
-        sDistanceTextView.setText(sDataFormatAndValueConverter.formatDistance(currentDistance));
+        sDistanceTextView.setText(sFormatAndValueConverter.formatDistance(currentDistance));
     }
 
     private void updateDistanceUnits() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
         String units = sharedPreferences.getString("pref_set_units", "KILOMETERS");
-        sDataFormatAndValueConverter.setsUnitsFormat(units);
+        sFormatAndValueConverter.setsUnitsFormat(units);
     }
 
     @Override
