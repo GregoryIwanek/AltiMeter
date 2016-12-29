@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class GraphViewDrawTask extends GraphView {
     //list of points to draw on a graph screen
     private LineGraphSeries<DataPoint> mDiagramSeries = new LineGraphSeries<>();
-    private int currSeriesCount = 0;
+    private int curSeriesCount = 0;
     private Long mRecordingStartTime = null;
 
     //override default constructors of the GridView (it's required to prevent errors from compilation); initiate basic settings;
@@ -103,7 +103,7 @@ public class GraphViewDrawTask extends GraphView {
         }
     }
 
-    private int getNewXBoundsRange(){
+    private int getNewXBoundsRange() {
         return (int) (mDiagramSeries.getHighestValueX() * 2);
     }
 
@@ -165,31 +165,16 @@ public class GraphViewDrawTask extends GraphView {
     private void updateBounds() {
         setGraphBoundsValues();
     }
-    //TODO-> implement belows
-    //TODO-> add catching time of location record to onLocationChanged method
-    //-> shared preferences / preferences -> user sets preferred time period to show on diagram (ex 1 hour, 2 hours etc.)
-    //-> here, depending on chosen preferred time set xAxis border as the set of numbers converted to seconds/minutes/hours
-    //-> define x position of points by using difference of time between recordings of two points
-    //-> example: point 1, measured 18:00 -> position x=0; point 2, measured 18:01, position x=60 ( 1 sec == 1 unit on diagram)
-    //-> so diagram with 1 hour will have xAxis border at 60min*60sec = 3600 units
-    //TODO->!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //TODO->code to assign whole list after onResume is triggered (mSeries and recording start time is reset)
-    //TODO->make above corresponding and exchangeable with regural deliverGraph method content
-
-
-    //TODO->implement both: after starting app (list size 1-2-3-4...) and after on resum (list size ...10-11-12...)
 
     public void deliverGraph(ArrayList<Location> locationsList) {
-        //TODO->think about that part
-        if (mRecordingStartTime == null) {
-            setRecordingStartTime(locationsList.get(0).getTime());
-        }
-
+        setRecordingStartTime(locationsList.get(0).getTime());
         drawGraph(locationsList);
     }
 
     private void setRecordingStartTime(Long startTime) {
-        mRecordingStartTime = startTime;
+        if (mRecordingStartTime == null) {
+            mRecordingStartTime = startTime;
+        }
     }
 
     private void drawGraph(ArrayList<Location> locationsList) {
@@ -199,51 +184,19 @@ public class GraphViewDrawTask extends GraphView {
             appendToExistingGraph(locationsList);
         }
 
-        //if we call to draw for the first time (mDiagramSeries is empty, without any data and we add it for a first time to the GraphView Viewport)
-        //or use that on button click to create new graph from given data
-//        if (mDiagramSeries.isEmpty()){
-//            for (int i=0; i<locationsList.size(); i++){
-//                if (i > 0) {
-//                    System.out.println("SERIES EMPTY NEXT ONE");
-//                    Long timeBetweenRecords = (locationsList.get(i).getTime() - mRecordingStartTime)/1000;
-//                    DataPoint graphPoint = new DataPoint(timeBetweenRecords, locationsList.get(i).getAltitude());
-//                    mDiagramSeries.appendData(graphPoint, false, 10);
-//                }else {
-//                    System.out.println("SERIES EMPTY FIRST ONE");
-//                    DataPoint graphPoint = new DataPoint(0, locationsList.get(i).getAltitude());
-//                    mDiagramSeries.appendData(graphPoint, false, 10);
-//                }
-//            }
-//            //draw mDiagramSeries on a graph screen
-//            addSeriesToGraph();
-//        }else {
-//            //mDiagramSeries already have some data (case when we update/add new points to graph)
-//            //TODO -> convert that to use time (sec/min/hours) on X axis
-//            if (locationsList.size() > 1){
-//                int listSize = locationsList.size();
-//                Long timeBetweenRecords = (locationsList.get(listSize-1).getTime() - mRecordingStartTime)/1000;
-//                DataPoint graphPoint = new DataPoint(timeBetweenRecords, locationsList.get(listSize-1).getAltitude());
-//                mDiagramSeries.appendData(graphPoint, false, 10);
-//            }else {
-//                System.out.println("WRONG LOCATIONSLIST SIZE, HAS TO BE BIGGER THAN 1");
-//            }
-//        }
         refreshGraphLook();
-
-        System.out.println("SIZE OF GRAPH SERIES = "+ this.getSeries().size());
-        System.out.println("VALUES "+this.getSeries().lastIndexOf(mDiagramSeries));
     }
 
     private void drawGraphFirstTime(ArrayList<Location> locationsList) {
         int listSize = locationsList.size();
         for (int i=0; i<locationsList.size(); i++) {
             if (i > 0) {
-                System.out.println("SERIES EMPTY NEXT ONE");
                 Long timeBetweenRecords = (locationsList.get(i).getTime() - mRecordingStartTime)/1000;
-                double yValue = locationsList.get(i).getAltitude();
-                appendNextPointToSeries(listSize, yValue, timeBetweenRecords);
+                if (timeBetweenRecords > mDiagramSeries.getHighestValueX()) {
+                    double yValue = locationsList.get(i).getAltitude();
+                    appendNextPointToSeries(listSize, yValue, timeBetweenRecords);
+                }
             }else {
-                System.out.println("SERIES EMPTY FIRST ONE");
                 double yValue = locationsList.get(0).getAltitude();
                 appendFirstPointToSeries(listSize, yValue);
             }
@@ -255,20 +208,20 @@ public class GraphViewDrawTask extends GraphView {
     private void appendFirstPointToSeries(int listSize, double yValue) {
         DataPoint graphPoint = new DataPoint(0, yValue);
         mDiagramSeries.appendData(graphPoint, false, listSize);
-        currSeriesCount++;
+        curSeriesCount++;
     }
 
-    private void appendNextPointToSeries(int listSize, double yValue, long timeBetweenRecords){
+    private void appendNextPointToSeries(int listSize, double yValue, long timeBetweenRecords) {
         DataPoint graphPoint = new DataPoint(timeBetweenRecords, yValue);
         mDiagramSeries.appendData(graphPoint, false, listSize);
-        currSeriesCount++;
+        curSeriesCount++;
     }
 
     private void appendToExistingGraph(ArrayList<Location> locationsList) {
         int listSize = locationsList.size();
-        for (int i = currSeriesCount; i<locationsList.size(); i++) {
+        for (int i = curSeriesCount; i<locationsList.size(); i++) {
             Long timeBetweenRecords = (locationsList.get(i).getTime() - mRecordingStartTime)/1000;
-            if (timeBetweenRecords > mDiagramSeries.getHighestValueX()){
+            if (timeBetweenRecords > mDiagramSeries.getHighestValueX()) {
                 double yValue = locationsList.get(i).getAltitude();
                 appendNextPointToSeries(listSize, yValue, timeBetweenRecords);
             }
@@ -279,10 +232,10 @@ public class GraphViewDrawTask extends GraphView {
         this.addSeries(mDiagramSeries);
     }
 
-    public void deliverGraphOnResume(ArrayList<Location> locationsList){
-        if(locationsList.size() != 0){
+    public void deliverGraphOnResume(ArrayList<Location> locationsList) {
+        if (locationsList.size() != 0) {
             deliverGraph(locationsList);
-            if(this.getSeries().isEmpty()){
+            if (this.getSeries().isEmpty()) {
                 this.addSeries(mDiagramSeries);
             }
             refreshGraphLook();
@@ -312,3 +265,14 @@ public class GraphViewDrawTask extends GraphView {
         });
     }
 }
+
+//TODO-> implement belows
+//TODO-> add catching time of location record to onLocationChanged method
+//-> shared preferences / preferences -> user sets preferred time period to show on diagram (ex 1 hour, 2 hours etc.)
+//-> here, depending on chosen preferred time set xAxis border as the set of numbers converted to seconds/minutes/hours
+//-> define x position of points by using difference of time between recordings of two points
+//-> example: point 1, measured 18:00 -> position x=0; point 2, measured 18:01, position x=60 ( 1 sec == 1 unit on diagram)
+//-> so diagram with 1 hour will have xAxis border at 60min*60sec = 3600 units
+//TODO->!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//TODO->code to assign whole list after onResume is triggered (mSeries and recording start time is reset)
+//TODO->make above corresponding and exchangeable with regural deliverGraph method content
