@@ -18,98 +18,113 @@ import java.util.ArrayList;
  * Created by Grzegorz Iwanek on 01.12.2016.
  * Consist extension of external library class GraphView (http://www.android-graphview.org/) and required customized methods
  */
-public class GraphViewDrawTask extends GraphView{
+public class GraphViewDrawTask extends GraphView {
     //list of points to draw on a graph screen
     private LineGraphSeries<DataPoint> mDiagramSeries = new LineGraphSeries<>();
-    private Long mStartTimeRecord = null;
-    private Integer mMaxElevation = 0;
-    private Integer mMinElevation = 0;
+    private int currSeriesCount = 0;
+    private Long mRecordingStartTime = null;
 
     //override default constructors of the GridView (it's required to prevent errors from compilation); initiate basic settings;
-    public GraphViewDrawTask(Context context){
+    public GraphViewDrawTask(Context context) {
         super(context);
-        setSettings();
+        setGraphViewSettings();
     }
 
-    public GraphViewDrawTask(Context context, AttributeSet attrs){
+    public GraphViewDrawTask(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setSettings();
+        setGraphViewSettings();
     }
 
-    public GraphViewDrawTask(Context context, AttributeSet attrs, int defStyle){
+    public GraphViewDrawTask(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        setSettings();
+        setGraphViewSettings();
     }
 
     @Override
-    protected void onDraw(Canvas canvas){
+    protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event){
+    public boolean onTouchEvent(MotionEvent event) {
         return super.onTouchEvent(event);
     }
 
-    private void setSettings(){
-        setGraphBounds();
+    private void setGraphViewSettings() {
         defineDiagramAppearance();
+        setGraphBounds();
         setFormatLabels("m", "s");
     }
 
-    private void setGraphBounds(){
+    private void defineDiagramAppearance() {
+        setDiagramLine();
+        setDiagramBackground();
+    }
+
+    private void setDiagramLine() {
+        int colorId = Color.rgb(35, 255, 15);
+        mDiagramSeries.setColor(colorId);
+        mDiagramSeries.setThickness(2);
+    }
+
+    private void setDiagramBackground() {
+        int colorId = Color.argb(65, 0, 255, 255);
+        mDiagramSeries.setDrawBackground(true);
+        mDiagramSeries.setBackgroundColor(colorId);
+    }
+
+    private void setGraphBounds() {
         setChangeBoundsManually();
         initiateGraphViewBounds();
         setGraphBoundsValues();
     }
 
-    private void setChangeBoundsManually(){
+    private void setChangeBoundsManually() {
         this.getViewport().setXAxisBoundsManual(true);
         this.getViewport().setYAxisBoundsManual(true);
     }
 
-    private void initiateGraphViewBounds(){
+    private void initiateGraphViewBounds() {
         this.getViewport().setMinX(0);
-        this.getViewport().setMaxX(600);
+        this.getViewport().setMaxX(300);
         this.getViewport().setMinY(0);
         this.getViewport().setMaxY(100);
     }
 
-    private void setGraphBoundsValues(){
+    private void setGraphBoundsValues() {
         setXBounds();
         setYBounds();
     }
 
-    private void setXBounds(){
-        if(mDiagramSeries.getHighestValueX() > this.getViewport().getMaxX(false)*0.8){
+    private void setXBounds() {
+        if (mDiagramSeries.getHighestValueX() > this.getViewport().getMaxX(false)*0.8) {
             int xRange = getNewXBoundsRange();
             this.getViewport().setMaxX(xRange);
         }
     }
 
     private int getNewXBoundsRange(){
-        int newXRange = (int) (mDiagramSeries.getHighestValueX() * 1.2);
-        return newXRange;
+        return (int) (mDiagramSeries.getHighestValueX() * 2);
     }
 
-    private void setYBounds(){
+    private void setYBounds() {
         int heightMid = getMiddleHeight();
         setYMaxBounds(heightMid);
         setYMinBounds(heightMid);
     }
 
-    private int getHeightDifference(){
-        int heightDiff = (int)(mDiagramSeries.getHighestValueY() - mDiagramSeries.getLowestValueY());
-        return heightDiff;
+    private int getHeightDifference() {
+        return (int)(mDiagramSeries.getHighestValueY()
+                - mDiagramSeries.getLowestValueY());
     }
 
-    private int getMiddleHeight(){
-        int heightMiddle = (int)((mDiagramSeries.getHighestValueY() + mDiagramSeries.getLowestValueY())/2);
-        return heightMiddle;
+    private int getMiddleHeight() {
+        return (int)((mDiagramSeries.getHighestValueY()
+                + mDiagramSeries.getLowestValueY())/2);
     }
 
-    private void setYMaxBounds(int heightMiddle){
-        if ((mDiagramSeries.getHighestValueY() - heightMiddle) > 40){
+    private void setYMaxBounds(int heightMiddle) {
+        if ((mDiagramSeries.getHighestValueY() - heightMiddle) > 40) {
             int yMaxRange = getNewYMaxBoundsRange(heightMiddle);
             this.getViewport().setMaxY(yMaxRange);
         }else {
@@ -118,14 +133,13 @@ public class GraphViewDrawTask extends GraphView{
         }
     }
 
-    private int getNewYMaxBoundsRange(int heightMiddle){
+    private int getNewYMaxBoundsRange(int heightMiddle) {
         int heightDiff = getHeightDifference();
-        int newYMaxRange = (int) (heightMiddle + (heightDiff/2)*1.25);
-        return newYMaxRange;
+        return (int) (heightMiddle + (heightDiff/2)*1.25);
     }
 
-    private void setYMinBounds(int heightMiddle){
-        if ((heightMiddle - mDiagramSeries.getLowestValueY()) > 40){
+    private void setYMinBounds(int heightMiddle) {
+        if ((heightMiddle - mDiagramSeries.getLowestValueY()) > 40) {
             int yMinRange = getNewYMinBoundsRange(heightMiddle);
             this.getViewport().setMinY(yMinRange);
         }else {
@@ -134,39 +148,21 @@ public class GraphViewDrawTask extends GraphView{
         }
     }
 
-    private int getNewYMinBoundsRange(int heightMiddle){
+    private int getNewYMinBoundsRange(int heightMiddle) {
         int heightDiff = getHeightDifference();
         int newYMinRange;
-        if(mDiagramSeries.getLowestValueY() < 0){
+        if (mDiagramSeries.getLowestValueY() < 0) {
             newYMinRange = (int) (heightMiddle - (heightDiff/2)*1.25);
         }else {
             newYMinRange = (int) (heightMiddle - (heightDiff/2)*1.25);
-            if(newYMinRange < 0){
+            if (newYMinRange < 0) {
                 newYMinRange = 0;
             }
         }
         return newYMinRange;
     }
 
-    private void defineDiagramAppearance(){
-        setDiagramLine();
-        setDiagramBackground();
-    }
-
-    private void setDiagramLine(){
-        int colorId = Color.rgb(35, 255, 15);
-        mDiagramSeries.setColor(colorId);
-        mDiagramSeries.setThickness(5);
-    }
-
-    private void setDiagramBackground(){
-        int colorId = Color.argb(65, 0, 255, 255);
-        mDiagramSeries.setDrawBackground(true);
-        mDiagramSeries.setBackgroundColor(colorId);
-    }
-
-    //update X axis max bound (after refresh screen is resized to fit new value); Y axis is resized automatically;
-    private void updateBounds(){
+    private void updateBounds() {
         setGraphBoundsValues();
     }
     //TODO-> implement belows
@@ -176,69 +172,121 @@ public class GraphViewDrawTask extends GraphView{
     //-> define x position of points by using difference of time between recordings of two points
     //-> example: point 1, measured 18:00 -> position x=0; point 2, measured 18:01, position x=60 ( 1 sec == 1 unit on diagram)
     //-> so diagram with 1 hour will have xAxis border at 60min*60sec = 3600 units
+    //TODO->!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //TODO->code to assign whole list after onResume is triggered (mSeries and recording start time is reset)
+    //TODO->make above corresponding and exchangeable with regural deliverGraph method content
 
-    private void updateYBounds(int yToCheck){
-        if (mMaxElevation == null || mMinElevation == null){
-            mMaxElevation = yToCheck;
-            mMinElevation = yToCheck;
-        }else {
-            if(mMaxElevation < yToCheck){
-                mMaxElevation = yToCheck;
-            }
-            if(mMinElevation > yToCheck){
-                mMinElevation = yToCheck;
-            }
+
+    //TODO->implement both: after starting app (list size 1-2-3-4...) and after on resum (list size ...10-11-12...)
+
+    public void deliverGraph(ArrayList<Location> locationsList) {
+        //TODO->think about that part
+        if (mRecordingStartTime == null) {
+            setRecordingStartTime(locationsList.get(0).getTime());
         }
+
+        drawGraph(locationsList);
     }
 
-    public void deliverGraph(ArrayList<Location> locationsList){
-        System.out.println("DELIVER GRAPH CALLED");
-        if (mStartTimeRecord == null){
-            mStartTimeRecord = locationsList.get(0).getTime();
+    private void setRecordingStartTime(Long startTime) {
+        mRecordingStartTime = startTime;
+    }
+
+    private void drawGraph(ArrayList<Location> locationsList) {
+        if (mDiagramSeries.isEmpty()) {
+            drawGraphFirstTime(locationsList);
+        } else {
+            appendToExistingGraph(locationsList);
         }
 
         //if we call to draw for the first time (mDiagramSeries is empty, without any data and we add it for a first time to the GraphView Viewport)
         //or use that on button click to create new graph from given data
-        if (mDiagramSeries.isEmpty()){
-            for (int i=0; i<locationsList.size(); i++){
-                if (i > 0) {
-                    Long timeBetweenRecords = (locationsList.get(i).getTime() - mStartTimeRecord)/1000;
-                    DataPoint graphPoint = new DataPoint(timeBetweenRecords, locationsList.get(i).getAltitude());
-                    mDiagramSeries.appendData(graphPoint, false, locationsList.size());
-                    updateYBounds((int) graphPoint.getY());
-                }else {
-                    DataPoint graphPoint = new DataPoint(i, locationsList.get(i).getAltitude());
-                    mDiagramSeries.appendData(graphPoint, false, locationsList.size());
-                    updateYBounds((int) graphPoint.getY());
-                }
-            }
-            //draw mDiagramSeries on a graph screen
-            this.addSeries(mDiagramSeries);
-        }else {
-            //mDiagramSeries already have some data (case when we update/add new points to graph)
-            //TODO -> convert that to use time (sec/min/hours) on X axis
-            if (locationsList.size() > 1){
-                int blabla;
-                if(locationsList.size()%2 == 0){
-                    blabla = -1;
-                }else {
-                    blabla = 1;
-                }
-                int listSize = locationsList.size();
-                Long timeBetweenRecords = (locationsList.get(listSize-1).getTime() - mStartTimeRecord)/1000;
-                DataPoint graphPoint = new DataPoint(timeBetweenRecords, locationsList.get(listSize-1).getAltitude()+blabla*listSize*10);
-                mDiagramSeries.appendData(graphPoint, false, listSize);
-                updateYBounds((int) graphPoint.getY());
-            }else {
-                System.out.println("WRONG LOCATIONSLIST SIZE, HAS TO BE BIGGER THAN 1");
-            }
-        }
+//        if (mDiagramSeries.isEmpty()){
+//            for (int i=0; i<locationsList.size(); i++){
+//                if (i > 0) {
+//                    System.out.println("SERIES EMPTY NEXT ONE");
+//                    Long timeBetweenRecords = (locationsList.get(i).getTime() - mRecordingStartTime)/1000;
+//                    DataPoint graphPoint = new DataPoint(timeBetweenRecords, locationsList.get(i).getAltitude());
+//                    mDiagramSeries.appendData(graphPoint, false, 10);
+//                }else {
+//                    System.out.println("SERIES EMPTY FIRST ONE");
+//                    DataPoint graphPoint = new DataPoint(0, locationsList.get(i).getAltitude());
+//                    mDiagramSeries.appendData(graphPoint, false, 10);
+//                }
+//            }
+//            //draw mDiagramSeries on a graph screen
+//            addSeriesToGraph();
+//        }else {
+//            //mDiagramSeries already have some data (case when we update/add new points to graph)
+//            //TODO -> convert that to use time (sec/min/hours) on X axis
+//            if (locationsList.size() > 1){
+//                int listSize = locationsList.size();
+//                Long timeBetweenRecords = (locationsList.get(listSize-1).getTime() - mRecordingStartTime)/1000;
+//                DataPoint graphPoint = new DataPoint(timeBetweenRecords, locationsList.get(listSize-1).getAltitude());
+//                mDiagramSeries.appendData(graphPoint, false, 10);
+//            }else {
+//                System.out.println("WRONG LOCATIONSLIST SIZE, HAS TO BE BIGGER THAN 1");
+//            }
+//        }
         refreshGraphLook();
+
+        System.out.println("SIZE OF GRAPH SERIES = "+ this.getSeries().size());
+        System.out.println("VALUES "+this.getSeries().lastIndexOf(mDiagramSeries));
     }
 
-    public void deliverGraphOnResume(){
-        System.out.println("DELIVER GRAPH ON RESUME CALLED");
+    private void drawGraphFirstTime(ArrayList<Location> locationsList) {
+        int listSize = locationsList.size();
+        for (int i=0; i<locationsList.size(); i++) {
+            if (i > 0) {
+                System.out.println("SERIES EMPTY NEXT ONE");
+                Long timeBetweenRecords = (locationsList.get(i).getTime() - mRecordingStartTime)/1000;
+                double yValue = locationsList.get(i).getAltitude();
+                appendNextPointToSeries(listSize, yValue, timeBetweenRecords);
+            }else {
+                System.out.println("SERIES EMPTY FIRST ONE");
+                double yValue = locationsList.get(0).getAltitude();
+                appendFirstPointToSeries(listSize, yValue);
+            }
+        }
+
+        addSeriesToGraph();
+    }
+
+    private void appendFirstPointToSeries(int listSize, double yValue) {
+        DataPoint graphPoint = new DataPoint(0, yValue);
+        mDiagramSeries.appendData(graphPoint, false, listSize);
+        currSeriesCount++;
+    }
+
+    private void appendNextPointToSeries(int listSize, double yValue, long timeBetweenRecords){
+        DataPoint graphPoint = new DataPoint(timeBetweenRecords, yValue);
+        mDiagramSeries.appendData(graphPoint, false, listSize);
+        currSeriesCount++;
+    }
+
+    private void appendToExistingGraph(ArrayList<Location> locationsList) {
+        int listSize = locationsList.size();
+        for (int i = currSeriesCount; i<locationsList.size(); i++) {
+            Long timeBetweenRecords = (locationsList.get(i).getTime() - mRecordingStartTime)/1000;
+            if (timeBetweenRecords > mDiagramSeries.getHighestValueX()){
+                double yValue = locationsList.get(i).getAltitude();
+                appendNextPointToSeries(listSize, yValue, timeBetweenRecords);
+            }
+        }
+    }
+
+    private void addSeriesToGraph() {
         this.addSeries(mDiagramSeries);
+    }
+
+    public void deliverGraphOnResume(ArrayList<Location> locationsList){
+        if(locationsList.size() != 0){
+            deliverGraph(locationsList);
+            if(this.getSeries().isEmpty()){
+                this.addSeries(mDiagramSeries);
+            }
+            refreshGraphLook();
+        }
     }
 
     private void refreshGraphLook(){

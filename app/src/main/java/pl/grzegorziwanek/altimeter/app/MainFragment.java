@@ -143,7 +143,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
             }
 
             //redraw graph only when app backs from background, not when started first time (when altitude list is empty)
-            graphViewDrawTask.deliverGraphOnResume(mLocationList.size());
+            graphViewDrawTask.deliverGraphOnResume(mLocationList);
 
             //update shared preferences values onResumed app
             SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
