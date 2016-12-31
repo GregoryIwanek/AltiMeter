@@ -21,24 +21,23 @@ import java.util.Locale;
  * Implements IntentService; Has to be included in manifest file in corresponding activity section;
  * Returns address through use of geocoder class;
  */
-public class AddressIntentService extends IntentService
-{
-    //constructors, have to add empty one to avoid conflict from manifest file
+public class AddressIntentService extends IntentService {
+
+    private static final String LOG_TAG = AddressIntentService.class.getSimpleName();
+    protected ResultReceiver resultReceiver;
+
     public AddressIntentService() {
         super("EMPTY CONSTRUCTOR");
     }
+
     public AddressIntentService(String name) {
         super(name);
     }
 
-    private static final String LOG_TAG = AddressIntentService.class.getSimpleName();
-
-    protected ResultReceiver resultReceiver;
-
     @Override
     protected void onHandleIntent(Intent intent) {
-        //HAVE TO bind and assign receiver from here and activity (through Constants)
-        resultReceiver = intent.getParcelableExtra(Constants.RECEIVER);
+        //bind and assign receiver from here and activity (through Constants)
+        bindResultReceiver(intent);
 
         //create geocoder instance-> it will handle reversed geocoding operation
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -91,7 +90,10 @@ public class AddressIntentService extends IntentService
         }
     }
 
-    //delivers message to receiver which  delivers to activity which called for intent process
+    private void bindResultReceiver(Intent intent) {
+        resultReceiver = intent.getParcelableExtra(Constants.RECEIVER);
+    }
+
     private void deliverResultToReceiver(int resultCode, String message) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.RESULT_DATA_KEY, message);

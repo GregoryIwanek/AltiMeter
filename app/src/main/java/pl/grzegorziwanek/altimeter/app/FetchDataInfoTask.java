@@ -16,7 +16,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 
 /**
  *Inner class responsible for background update, have to extend AsyncTask<params, progress, result>
@@ -26,17 +25,17 @@ import java.util.ArrayList;
 public class FetchDataInfoTask extends AsyncTask<Void, Void, Void> {
     private final String LOG_TAG = FetchDataInfoTask.class.getSimpleName();
     final String APPID_KEY = "AIzaSyDz8OSO03MnSdoE-0FFN9sZaIyFRlpf79Y"; // TODO move that to config
-    private String locationsStr;
-    private AsyncResponse asyncResponse;
+    private String mLocationsStr;
+    private AsyncResponse mAsyncResponse;
     private Double mCurrentEleValue;
 
     public FetchDataInfoTask(AsyncResponse asyncResponse) {
-        this.asyncResponse = asyncResponse;
+        mAsyncResponse = asyncResponse;
     }
 
     public void setLocationsStr(Location record) {
-        locationsStr = null;
-        locationsStr = Double.toString(record.getLatitude()) + "," + Double.toString(record.getLongitude());
+        mLocationsStr = null;
+        mLocationsStr = Double.toString(record.getLatitude()) + "," + Double.toString(record.getLongitude());
     }
 
     //download data from web as a background task
@@ -63,7 +62,7 @@ public class FetchDataInfoTask extends AsyncTask<Void, Void, Void> {
             //important: use android.net URI class, not JAVA!!!
             //parse base url -> build instance of builder -> append query parameters -> build url
             Uri buildUri = Uri.parse(GOOGLEMAPS_BASE_URL).buildUpon()
-                    .appendQueryParameter(PARAMETERS_LOCATIONS, locationsStr)
+                    .appendQueryParameter(PARAMETERS_LOCATIONS, mLocationsStr)
                     .appendQueryParameter(APPID_PARAM, APPID_KEY)
                     .build();
 
@@ -204,7 +203,7 @@ public class FetchDataInfoTask extends AsyncTask<Void, Void, Void> {
             mCurrentEleValue = (double) Math.round(mCurrentEleValue);
 
             //pass data to MainFragment through AsyncResponse interface
-            asyncResponse.processAccurateElevation(mCurrentEleValue);
+            mAsyncResponse.processAccurateElevation(mCurrentEleValue);
         } else {
             Log.v(LOG_TAG, " onPostExecute, current elevation wasn't fetched from JSON, stopped");
         }

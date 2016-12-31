@@ -21,10 +21,9 @@ import java.util.ArrayList;
 public class GraphViewDrawTask extends GraphView {
     //list of points to draw on a graph screen
     private LineGraphSeries<DataPoint> mDiagramSeries = new LineGraphSeries<>();
-    private int curSeriesCount = 0;
+    private int mCurSeriesCount = 0;
     private Long mRecordingStartTime = null;
 
-    //override default constructors of the GridView (it's required to prevent errors from compilation); initiate basic settings;
     public GraphViewDrawTask(Context context) {
         super(context);
         setGraphViewSettings();
@@ -53,7 +52,7 @@ public class GraphViewDrawTask extends GraphView {
     private void setGraphViewSettings() {
         defineDiagramAppearance();
         setGraphBounds();
-        setFormatLabels("m", "s");
+        setLabelsFormatSymbols("m", "s");
     }
 
     private void defineDiagramAppearance() {
@@ -97,7 +96,7 @@ public class GraphViewDrawTask extends GraphView {
     }
 
     private void setXBounds() {
-        if (mDiagramSeries.getHighestValueX() > this.getViewport().getMaxX(false)*0.8) {
+        if (mDiagramSeries.getHighestValueX() > this.getViewport().getMaxX(false) * 0.8) {
             int xRange = getNewXBoundsRange();
             this.getViewport().setMaxX(xRange);
         }
@@ -111,16 +110,6 @@ public class GraphViewDrawTask extends GraphView {
         int heightMid = getMiddleHeight();
         setYMaxBounds(heightMid);
         setYMinBounds(heightMid);
-    }
-
-    private int getHeightDifference() {
-        return (int)(mDiagramSeries.getHighestValueY()
-                - mDiagramSeries.getLowestValueY());
-    }
-
-    private int getMiddleHeight() {
-        return (int)((mDiagramSeries.getHighestValueY()
-                + mDiagramSeries.getLowestValueY())/2);
     }
 
     private void setYMaxBounds(int heightMiddle) {
@@ -162,6 +151,16 @@ public class GraphViewDrawTask extends GraphView {
         return newYMinRange;
     }
 
+    private int getHeightDifference() {
+        return (int)(mDiagramSeries.getHighestValueY()
+                - mDiagramSeries.getLowestValueY());
+    }
+
+    private int getMiddleHeight() {
+        return (int)((mDiagramSeries.getHighestValueY()
+                + mDiagramSeries.getLowestValueY())/2);
+    }
+
     private void updateBounds() {
         setGraphBoundsValues();
     }
@@ -169,6 +168,7 @@ public class GraphViewDrawTask extends GraphView {
     public void deliverGraph(ArrayList<Location> locationsList) {
         setRecordingStartTime(locationsList.get(0).getTime());
         drawGraph(locationsList);
+        refreshGraphLook();
     }
 
     private void setRecordingStartTime(Long startTime) {
@@ -178,68 +178,33 @@ public class GraphViewDrawTask extends GraphView {
     }
 
     private void drawGraph(ArrayList<Location> locationsList) {
-        if (mDiagramSeries.isEmpty()) {
-            drawGraphFirstTime(locationsList);
-        } else {
-            appendToExistingGraph(locationsList);
-        }
-
-        refreshGraphLook();
-    }
-
-    private void drawGraphFirstTime(ArrayList<Location> locationsList) {
         int listSize = locationsList.size();
-        for (int i=0; i<locationsList.size(); i++) {
-            if (i > 0) {
-                Long timeBetweenRecords = (locationsList.get(i).getTime() - mRecordingStartTime)/1000;
-                if (timeBetweenRecords > mDiagramSeries.getHighestValueX()) {
-                    double yValue = locationsList.get(i).getAltitude();
-                    appendNextPointToSeries(listSize, yValue, timeBetweenRecords);
-                }
-            }else {
-                double yValue = locationsList.get(0).getAltitude();
-                appendFirstPointToSeries(listSize, yValue);
-            }
-        }
-
-        addSeriesToGraph();
-    }
-
-    private void appendFirstPointToSeries(int listSize, double yValue) {
-        DataPoint graphPoint = new DataPoint(0, yValue);
-        mDiagramSeries.appendData(graphPoint, false, listSize);
-        curSeriesCount++;
-    }
-
-    private void appendNextPointToSeries(int listSize, double yValue, long timeBetweenRecords) {
-        DataPoint graphPoint = new DataPoint(timeBetweenRecords, yValue);
-        mDiagramSeries.appendData(graphPoint, false, listSize);
-        curSeriesCount++;
-    }
-
-    private void appendToExistingGraph(ArrayList<Location> locationsList) {
-        int listSize = locationsList.size();
-        for (int i = curSeriesCount; i<locationsList.size(); i++) {
-            Long timeBetweenRecords = (locationsList.get(i).getTime() - mRecordingStartTime)/1000;
-            if (timeBetweenRecords > mDiagramSeries.getHighestValueX()) {
+        for (int i=mCurSeriesCount; i<locationsList.size(); i++) {
+            Long recordingTime = getRecordingTime(locationsList.get(i).getTime());
+            if (recordingTime > mDiagramSeries.getHighestValueX() || recordingTime == 0) {
                 double yValue = locationsList.get(i).getAltitude();
-                appendNextPointToSeries(listSize, yValue, timeBetweenRecords);
+                appendPointToSeries(listSize, yValue, recordingTime);
             }
         }
+
+        if (this.getSeries().isEmpty()) {
+            addSeriesToGraph();
+        }
+    }
+
+    private void appendPointToSeries(int listSize, double yValue, long recordingTimeAsX) {
+        DataPoint graphPoint = new DataPoint(recordingTimeAsX, yValue);
+        mDiagramSeries.appendData(graphPoint, false, listSize);
+        mCurSeriesCount++;
+    }
+
+    private Long getRecordingTime(Long recordTime) {
+        Long recordingTime = (recordTime - mRecordingStartTime)/1000;
+        return recordingTime;
     }
 
     private void addSeriesToGraph() {
         this.addSeries(mDiagramSeries);
-    }
-
-    public void deliverGraphOnResume(ArrayList<Location> locationsList) {
-        if (locationsList.size() != 0) {
-            deliverGraph(locationsList);
-            if (this.getSeries().isEmpty()) {
-                this.addSeries(mDiagramSeries);
-            }
-            refreshGraphLook();
-        }
     }
 
     private void refreshGraphLook(){
@@ -247,7 +212,7 @@ public class GraphViewDrawTask extends GraphView {
         refreshDrawableState();
     }
 
-    public void setFormatLabels(String yFormat, String xFormat){
+    public void setLabelsFormatSymbols(String yFormat, String xFormat){
         final String axisYFormat = yFormat;
         final String axisXFormat = xFormat;
 
@@ -255,24 +220,11 @@ public class GraphViewDrawTask extends GraphView {
             @Override
             public String formatLabel(double isValueAxisY, boolean isValueAxisX) {
                 if (isValueAxisX) {
-                    //show on X axis
-                    return super.formatLabel(isValueAxisY, isValueAxisX) + axisXFormat;
+                    return super.formatLabel(isValueAxisY, true) + axisXFormat;
                 } else {
-                    //show on Y axis
-                    return super.formatLabel(isValueAxisY, isValueAxisX) + axisYFormat;
+                    return super.formatLabel(isValueAxisY, false) + axisYFormat;
                 }
             }
         });
     }
 }
-
-//TODO-> implement belows
-//TODO-> add catching time of location record to onLocationChanged method
-//-> shared preferences / preferences -> user sets preferred time period to show on diagram (ex 1 hour, 2 hours etc.)
-//-> here, depending on chosen preferred time set xAxis border as the set of numbers converted to seconds/minutes/hours
-//-> define x position of points by using difference of time between recordings of two points
-//-> example: point 1, measured 18:00 -> position x=0; point 2, measured 18:01, position x=60 ( 1 sec == 1 unit on diagram)
-//-> so diagram with 1 hour will have xAxis border at 60min*60sec = 3600 units
-//TODO->!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//TODO->code to assign whole list after onResume is triggered (mSeries and recording start time is reset)
-//TODO->make above corresponding and exchangeable with regural deliverGraph method content

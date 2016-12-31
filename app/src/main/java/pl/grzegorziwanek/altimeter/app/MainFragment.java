@@ -143,7 +143,9 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
             }
 
             //redraw graph only when app backs from background, not when started first time (when altitude list is empty)
-            graphViewDrawTask.deliverGraphOnResume(mLocationList);
+            if (!mLocationList.isEmpty()) {
+                graphViewDrawTask.deliverGraph(mLocationList);
+            }
 
             //update shared preferences values onResumed app
             SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -431,8 +433,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     private void updateCurrentPositionTextViews(Location currLocation) {
         //format geo coordinates to degrees/minutes/seconds (from XX:XX:XX.XX to XX*XX'XX''N)
-        String latitudeStr = sFormatAndValueConverter.replaceDelimitersAddDirection(currLocation.getLatitude(), true);
-        String longitudeStr = sFormatAndValueConverter.replaceDelimitersAddDirection(currLocation.getLongitude(), false);
+        String latitudeStr = sFormatAndValueConverter.setGeoCoordinateStr(currLocation.getLatitude(), true);
+        String longitudeStr = sFormatAndValueConverter.setGeoCoordinateStr(currLocation.getLongitude(), false);
 
         //set new values of current location coordinates text views
         sCurrLatitudeTextView.setText(latitudeStr);
@@ -441,14 +443,14 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     private void updateCurrentMaxMinAltitude(Double currAltitude) {
         //update variables holding max and min altitude (double)
-        mMinAltitudeValue = sFormatAndValueConverter.updateMinAltitude(currAltitude, mMinAltitudeValue);
-        mMaxAltitudeValue = sFormatAndValueConverter.updateMaxAltitude(currAltitude, mMaxAltitudeValue);
+        mMinAltitudeValue = sFormatAndValueConverter.updateMinAltitudeValue(currAltitude, mMinAltitudeValue);
+        mMaxAltitudeValue = sFormatAndValueConverter.updateMaxAltitudeValue(currAltitude, mMaxAltitudeValue);
     }
 
     private void updateCurrentMaxMinStr() {
         //refactor string with min max altitude to correct form
-        String minAltitudeStr = sFormatAndValueConverter.updateCurrMinMaxString(mMinAltitudeValue);
-        String maxAltitudeStr = sFormatAndValueConverter.updateCurrMinMaxString(mMaxAltitudeValue);
+        String minAltitudeStr = sFormatAndValueConverter.setMinMaxString(mMinAltitudeValue);
+        String maxAltitudeStr = sFormatAndValueConverter.setMinMaxString(mMaxAltitudeValue);
 
         //update TextViews
         sMinElevTextView.setText(minAltitudeStr);
@@ -471,13 +473,13 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     private void updateDistanceTextView(Double currentDistance) {
-        sDistanceTextView.setText(sFormatAndValueConverter.formatDistance(currentDistance));
+        sDistanceTextView.setText(sFormatAndValueConverter.setDistanceStr(currentDistance));
     }
 
     private void updateDistanceUnits() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
         String units = sharedPreferences.getString("pref_set_units", "KILOMETERS");
-        sFormatAndValueConverter.setsUnitsFormat(units);
+        sFormatAndValueConverter.setUnitsFormat(units);
     }
 
     @Override

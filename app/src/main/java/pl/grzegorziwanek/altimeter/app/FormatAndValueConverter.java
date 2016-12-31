@@ -14,126 +14,166 @@ public class FormatAndValueConverter {
     public FormatAndValueConverter(){}
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
-    private static String sUnitsFormat;
+    private String mUnitsFormat;
+    private String mUnitsSymbol;
 
-    public static void setsUnitsFormat(String sUnitsFormat) {
-        FormatAndValueConverter.sUnitsFormat = sUnitsFormat;
+    public void setUnitsFormat(String unitsFormat) {
+        mUnitsFormat = unitsFormat;
     }
 
-    //consist code responsible for replacing format (23:32:32:3223132 -> 23°xx'xx")
-    public String replaceDelimitersAddDirection(Double coordinate, boolean isLatitude) {
+    /** Set geographical coordinates string methods
+     * example: 51°23'13''N*/
+    public String setGeoCoordinateStr(Double coordinate, boolean isLatitude) {
+        String str;
+        str = convertCoordinateToStr(coordinate);
+        str = replaceSpecialSigns(str);
 
-        //replace ":" with symbols
-        String str = Location.convert(coordinate, Location.FORMAT_SECONDS);
-        str = str.replaceFirst(":", "°");
-        str = str.replaceFirst(":", "'");
-        str = str.replaceFirst(",", "''");
-
-        //get index of point, define end index of the given string and subtract it ONLY if it has "."
-        int pointIndex;
-        if (str.contains("''")) {
-            pointIndex = str.indexOf("''");
-        } else {
-            pointIndex = str.length() + 1;
-        }
-
-        //subtract string if is longer than end index
-        if (pointIndex < str.length() && str.contains("''")) {
-            str = str.substring(0, pointIndex+2);
-        }
-
-        //add "''" at the end
-        //str = str + "\"";
-
-        //Define direction symbol
-        //if coordinate is latitude -> add S/N
-        if (isLatitude == true) {
-            if (coordinate < 0) {
-                str = str + "S";
-            } else {
-                str = str + "N";
-            }
-        } else {
-            //if coordinate is longitude -> add E/W
-            if (coordinate < 0) {
-                str = str + "W";
-            }
-            else {
-                str = str + "E";
-            }
-        }
+        int indexOfPointInStr;
+        indexOfPointInStr = getIndexOfPointInStr(str);
+        str = subtractStr(str, indexOfPointInStr);
+        str = setGeoDirectionSymbol(str, coordinate, isLatitude);
 
         return str;
     }
 
-    //format given altitude to X.XX
+    private String convertCoordinateToStr(Double coordinate) {
+        return Location.convert(coordinate, Location.FORMAT_SECONDS);
+    }
+
+    private String replaceSpecialSigns(String str) {
+        str = str.replaceFirst(":", "°");
+        str = str.replaceFirst(":", "'");
+        str = str.replaceFirst(",", "''");
+        return str;
+    }
+
+    private int getIndexOfPointInStr(String str) {
+        if (str.contains("''")) {
+            return str.indexOf("''");
+        } else {
+            return str.length() + 1;
+        }
+    }
+
+    private String subtractStr(String str, int indexOfPointInStr) {
+        if (indexOfPointInStr < str.length() && str.contains("''")) {
+            return str.substring(0, indexOfPointInStr+2);
+        } else {
+            return str;
+        }
+    }
+
+    private String setGeoDirectionSymbol(String str, Double coordinate, boolean isLatitude) {
+        if (isLatitude) {
+            return appendSymbolForLatitude(str, coordinate);
+        } else {
+            return appendSymbolForLongitude(str, coordinate);
+        }
+    }
+
+    private String appendSymbolForLatitude(String str, Double coordinate) {
+        if (coordinate < 0) {
+            return str + "S";
+        } else {
+            return str + "N";
+        }
+    }
+
+    private String appendSymbolForLongitude(String str, Double coordinate) {
+        if (coordinate < 0) {
+            return str + "W";
+        }
+        else {
+            return str + "E";
+        }
+    }
+
+    /** Set distance string methods
+     *  example: 13.23 mi*/
+    public String setDistanceStr(Double currDistance) {
+        Double distance;
+        distance = formatValueOfDistance(currDistance);
+
+        String distanceStr;
+        distanceStr = formatDistanceToStr(distance);
+
+        int indexOfPointInStr;
+        indexOfPointInStr = getIndexOfPointInDistance(distanceStr);
+
+        distanceStr = subtractDistanceStr(distanceStr, indexOfPointInStr);
+        distanceStr = appendUnitSymbol(distanceStr);
+
+        System.out.println("DISTANCE STRING " +distanceStr);
+        return distanceStr;
+    }
+
+    private Double formatValueOfDistance(Double distance) {
+        switch (mUnitsFormat) {
+            case "METERS": mUnitsSymbol = "m";
+                break;
+            case "KILOMETERS": distance /= 1000; mUnitsSymbol = "km";
+                break;
+            case "MILES": distance /= 1609.344; mUnitsSymbol = "mi";
+                break;
+            default: mUnitsSymbol = "m";
+                break;
+        }
+
+        return distance;
+    }
+
+    private String formatDistanceToStr(Double distance) {
+        return DECIMAL_FORMAT.format(distance);
+    }
+
+    private int getIndexOfPointInDistance(String str) {
+        if (str.contains(".")) {
+            return str.indexOf(".");
+        } else {
+            return str.length();
+        }
+    }
+
+    private String subtractDistanceStr(String str, int pointIndex) {
+        if (pointIndex <= str.length()-4 && str.contains(".")) {
+            return str.substring(0, pointIndex + 3);
+        } else {
+            return str;
+        }
+    }
+
+    private String appendUnitSymbol(String str) {
+        return str + " " + mUnitsSymbol;
+    }
+
+    public String setMinMaxString(Double altitude) {
+        String str = formatElevation(altitude);
+        str = appendMetersAboveSeaLevel(str);
+        return str;
+    }
+
     public String formatElevation(Double altitude) {
         return DECIMAL_FORMAT.format(altitude);
     }
 
-    public String addMetersAboveSeaLevel(String str) {
+    public String appendMetersAboveSeaLevel(String str) {
         str = str + " m n.p.m.";
         return str;
     }
 
-    public Double updateMaxAltitude(Double altitude, Double currMax) {
-        if (altitude > currMax) {
+    public Double updateMaxAltitudeValue(Double altitude, Double currMaxAltitude) {
+        if (altitude > currMaxAltitude) {
             return altitude;
         } else {
-            return currMax;
+            return currMaxAltitude;
         }
     }
 
-    public Double updateMinAltitude(Double altitude, Double currMin) {
-        if (altitude < currMin) {
+    public Double updateMinAltitudeValue(Double altitude, Double currMinAltitude) {
+        if (altitude < currMinAltitude) {
             return altitude;
         } else {
-            return currMin;
+            return currMinAltitude;
         }
-    }
-
-    public String updateCurrMinMaxString(Double currMinMaxAltitude) {
-        String currMinMaxStr = formatElevation(currMinMaxAltitude);
-        currMinMaxStr = addMetersAboveSeaLevel(currMinMaxStr);
-        return currMinMaxStr;
-    }
-
-    public String formatDistance(Double currDistance) {
-        Double distance = currDistance;
-        String unit;
-
-        //format value and unit by chosen format
-        switch (sUnitsFormat) {
-            case "METERS": unit = "m";
-                break;
-            case "KILOMETERS": distance /= 1000; unit = "km";
-                break;
-            case "MILES": distance /= 1609.344; unit = "mi";
-                break;
-            default: unit = "m";
-                break;
-        }
-
-        //format output of distance to correct decimal
-        String distanceStr = DECIMAL_FORMAT.format(distance);
-
-        //locate point "." in a distance number
-        int pointIndex;
-        if (distanceStr.contains(".")) {
-            pointIndex = distanceStr.indexOf(".");
-        } else {
-            pointIndex = distanceStr.length();
-        }
-
-        //subtract string 3 places after point
-        if (pointIndex <= distanceStr.length()-4 && distanceStr.contains(".")) {
-            distanceStr = distanceStr.substring(0, pointIndex + 3);
-        }
-
-        //set distance string
-        distanceStr = distanceStr + " " + unit;
-
-        System.out.println("DISTANCE STRING " +distanceStr);
-        return distanceStr;
     }
 }
