@@ -5,27 +5,27 @@ package pl.grzegorziwanek.altimeter.app.slidingmenu;
  */
 public class MenuItemSlider {
 
-    String title;
-    int imageId;
+    private String mTitle;
+    private int mImageId;
 
     public MenuItemSlider(String title, int imageId) {
-        this.title = title;
-        this.imageId = imageId;
+        mTitle = title;
+        mImageId = imageId;
     }
 
     public String getTitle() {
-        return title;
+        return mTitle;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        mTitle = title;
     }
 
     public int getImageId() {
-        return imageId;
+        return mImageId;
     }
 
     public void setImageId(int imageId) {
-        this.imageId = imageId;
+        mImageId = imageId;
     }
 }

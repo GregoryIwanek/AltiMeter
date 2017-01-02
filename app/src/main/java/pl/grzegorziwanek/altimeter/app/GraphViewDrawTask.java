@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * Consist extension of external library class GraphView (http://www.android-graphview.org/) and required customized methods
  */
 public class GraphViewDrawTask extends GraphView {
-    //list of points to draw on a graph screen
+
     private LineGraphSeries<DataPoint> mDiagramSeries = new LineGraphSeries<>();
     private int mCurSeriesCount = 0;
     private Long mRecordingStartTime = null;

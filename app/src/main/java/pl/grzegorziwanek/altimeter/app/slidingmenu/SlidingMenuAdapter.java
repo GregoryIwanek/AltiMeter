@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import pl.grzegorziwanek.altimeter.app.R;
 
 /**
@@ -18,6 +20,8 @@ public class SlidingMenuAdapter extends BaseAdapter {
 
     private Context context;
     private List<MenuItemSlider> listMenuItemSlider;
+    @BindView(R.id.item_image) ImageView mImageView;
+    @BindView(R.id.item_title) TextView mTextView;
 
     public SlidingMenuAdapter(Context context, List<MenuItemSlider> listMenuItemSlider) {
         this.context = context;
@@ -41,15 +45,21 @@ public class SlidingMenuAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
-        View v = View.inflate(context, R.layout.item_sliding_menu, null);
+        View v = view;
+        if (view == null) {
+            v = View.inflate(context, R.layout.item_sliding_menu, null);
+        }
 
-        ImageView imageView = (ImageView) v.findViewById(R.id.item_image);
-        TextView textView = (TextView) v.findViewById(R.id.item_title);
+        ButterKnife.bind(this, v);
 
-        MenuItemSlider menuItemSlider = listMenuItemSlider.get(position);
-        imageView.setImageResource(menuItemSlider.getImageId());
-        textView.setText(menuItemSlider.getTitle());
+        populateMenuSlider(position);
 
         return v;
+    }
+
+    private void populateMenuSlider(int itemPosition) {
+        MenuItemSlider menuItemSlider = listMenuItemSlider.get(itemPosition);
+        mImageView.setImageResource(menuItemSlider.getImageId());
+        mTextView.setText(menuItemSlider.getTitle());
     }
 }

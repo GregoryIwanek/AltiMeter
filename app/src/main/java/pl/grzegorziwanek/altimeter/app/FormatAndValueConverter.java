@@ -21,16 +21,16 @@ public class FormatAndValueConverter {
         mUnitsFormat = unitsFormat;
     }
 
-    /** Set geographical coordinates string methods
+    /** Set geographical coordinates string
      * example: 51°23'13''N*/
     public String setGeoCoordinateStr(Double coordinate, boolean isLatitude) {
         String str;
         str = convertCoordinateToStr(coordinate);
         str = replaceSpecialSigns(str);
 
-        int indexOfPointInStr;
-        indexOfPointInStr = getIndexOfPointInStr(str);
-        str = subtractStr(str, indexOfPointInStr);
+        int indexOfDoubleApostropheInStr;
+        indexOfDoubleApostropheInStr = getIndexOfDoubleApostropheInStr(str);
+        str = subtractStr(str, indexOfDoubleApostropheInStr);
         str = setGeoDirectionSymbol(str, coordinate, isLatitude);
 
         return str;
@@ -47,7 +47,7 @@ public class FormatAndValueConverter {
         return str;
     }
 
-    private int getIndexOfPointInStr(String str) {
+    private int getIndexOfDoubleApostropheInStr(String str) {
         if (str.contains("''")) {
             return str.indexOf("''");
         } else {
@@ -55,9 +55,9 @@ public class FormatAndValueConverter {
         }
     }
 
-    private String subtractStr(String str, int indexOfPointInStr) {
-        if (indexOfPointInStr < str.length() && str.contains("''")) {
-            return str.substring(0, indexOfPointInStr+2);
+    private String subtractStr(String str, int indexOfSignInStr) {
+        if (indexOfSignInStr < str.length() && str.contains("''")) {
+            return str.substring(0, indexOfSignInStr+2);
         } else {
             return str;
         }
@@ -88,7 +88,7 @@ public class FormatAndValueConverter {
         }
     }
 
-    /** Set distance string methods
+    /** Set distance string
      *  example: 13.23 mi*/
     public String setDistanceStr(Double currDistance) {
         Double distance;
@@ -146,6 +146,8 @@ public class FormatAndValueConverter {
         return str + " " + mUnitsSymbol;
     }
 
+    /** Set minimum elevation and maximum elevation string
+     *  example: 13.23 m n.p.m.*/
     public String setMinMaxString(Double altitude) {
         String str = formatElevation(altitude);
         str = appendMetersAboveSeaLevel(str);
