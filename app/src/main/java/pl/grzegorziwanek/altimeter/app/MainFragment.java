@@ -91,39 +91,27 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v(LOG_TAG, " onCreate CALLED");
 
-        //initiate google play service ( used to update device's location in given intervals)
         initiateGooglePlayService();
-
         mLocationList = new ArrayList<>();
-    }
-
-    //consist actions to perform upon re/start of app ( update current location and information)
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.v(LOG_TAG, " onStart CALLED");
-
-        //connect google play service and get current location
-        mGoogleApiClient.connect();
-
+        sFormatAndValueConverter = new FormatAndValueConverter();
+        mFetchDataInfoTask = new FetchDataInfoTask(this);
         sResultReceiver = new AddressResultReceiver(new Handler());
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.v(LOG_TAG, " onCreateView CALLED");
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        //assign UI elements to corresponding elements from fragment_main layout XML file
         ButterKnife.bind(this, rootView);
 
-        sRefreshButton.setTag(R.drawable.ic_refresh_white_18dp);
-        sPlayPauseButton.setTag(R.drawable.ic_play_arrow_white_18dp);
-
-        sFormatAndValueConverter = new FormatAndValueConverter();
-        mFetchDataInfoTask = new FetchDataInfoTask(this);
+        setButtonsTags();
 
         return rootView;
     }
@@ -131,11 +119,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     @Override
     public void onResume() {
         super.onResume();
-        Log.v(LOG_TAG, " onResume CALLED");
 
-        //check if activity is in a foreground, get current address, redraw altitude graph and update by stored preferences
-        if (this.getActivity() != null) {
-            Log.v(LOG_TAG, " onResume CALLED, activity is visible");
+        if (checkActivityIsVisible()) {
 
             //check if last location is saved (prevent errors on first run of an app)
             if (mLastLocation != null) {
@@ -163,7 +148,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
                 mMinAltitudeValue = sharedPrefMin;
                 mMaxAltitudeValue = sharedPrefMax;
                 mCurrentDistance = sharedPrefDistance;
-                updateCurrentMaxMinStr();
+                updateMinMaxAltitude(mLastLocation.getAltitude());
                 updateDistanceUnits();
                 updateDistanceTextView(mCurrentDistance);
             }
@@ -175,6 +160,21 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         super.onPause();
         Log.v(LOG_TAG, " onPause CALLED");
         updateSharedPreferences();
+    }
+
+    private void initiateGooglePlayService() {
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+    }
+
+    private void setButtonsTags() {
+        sRefreshButton.setTag(R.drawable.ic_refresh_white_18dp);
+        sPlayPauseButton.setTag(R.drawable.ic_play_arrow_white_18dp);
     }
 
     @OnClick(R.id.pause_button)
@@ -205,21 +205,49 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         }
     }
 
+    private void checkButtonTag(int buttonTag) {
+        switch (buttonTag) {
+            case R.drawable.ic_pause_white_18dp:
+                setButtonTagAndImage(sPlayPauseButton, R.drawable.ic_play_arrow_white_18dp);
+                break;
+            case R.drawable.ic_play_arrow_white_18dp:
+                setButtonTagAndImage(sPlayPauseButton, R.drawable.ic_pause_white_18dp);
+                break;
+            case R.drawable.ic_refresh_white_18dp:
+                changePlayPauseButtonIcon();
+            default:
+                Log.d(LOG_TAG, " checkButtonTag: NO CORRECT BUTTON TAG PROVIDED");
+                break;
+        }
+    }
+
+    private void setButtonTagAndImage(ImageButton button, int imageId) {
+        button.setBackgroundResource(imageId);
+        button.setTag(imageId);
+    }
+
+    private boolean checkActivityIsVisible() {
+        return this.getActivity() != null;
+    }
+
     @OnClick(R.id.refresh_button)
     public void onRefreshButtonClick() {
-        //change icon to "play"
+        changePlayPauseButtonIcon();
+        clearData();
+    }
+
+    private void changePlayPauseButtonIcon() {
         if (Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_white_18dp) {
             sPlayPauseButton.setBackgroundResource(R.drawable.ic_play_arrow_white_18dp);
             sPlayPauseButton.setTag(R.drawable.ic_play_arrow_white_18dp);
         }
+    }
 
-        //clear data
+    private void clearData() {
         mLocationList.clear();
         mMaxAltitudeValue = Constants.ALTITUDE_MAX;
         mMinAltitudeValue = Constants.ALTITUDE_MIN;
         mCurrentDistance = Constants.DISTANCE_DEFAULT;
-
-        //reset Text Views
         sDistanceTextView.setText(Constants.DEFAULT_TEXT);
         sCurrAddressTextView.setText(Constants.DEFAULT_TEXT);
         sCurrElevationTextView.setText(Constants.DEFAULT_TEXT);
@@ -227,21 +255,24 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         sCurrLongitudeTextView.setText(Constants.DEFAULT_TEXT);
         sMaxElevTextView.setText(Constants.DEFAULT_TEXT);
         sMinElevTextView.setText(Constants.DEFAULT_TEXT);
-
-        //reset graph view diagram
         graphViewDrawTask.getSeries().clear();
     }
 
     @OnClick(R.id.map_fragment_button)
     public void onMapButtonClick() {
-        //initiate map object on first run of an app
+        setMapFragment();
+        replaceFragmentWithMap();
+    }
+
+    private void setMapFragment() {
         if (myMapFragment == null) {
             myMapFragment = new MyMapFragment();
             myMapFragment.setListOfPoints(mLocationList);
             myMapFragment.updateMap();
         }
+    }
 
-        //replace current view with map section
+    private void replaceFragmentWithMap() {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.screen_welcome_activity, myMapFragment);
@@ -254,8 +285,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     public void processAccurateElevation(Double elevation) {
         Log.v(LOG_TAG, " processAccurateElevation CALLED");
 
-        updateCurrentMaxMinAltitude(elevation);
-        updateCurrentMaxMinStr();
+        updateMinMaxAltitude(elevation);
 
         String elevationStr = sFormatAndValueConverter.formatElevation(elevation);
         sCurrElevationTextView.setText(elevationStr);
@@ -279,8 +309,6 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             super.onReceiveResult(resultCode, resultData);
 
-            // Display the address string
-            // or an error message sent from the intent service.
             mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
             sCurrAddressTextView.setText(mAddressOutput);
         }
@@ -296,19 +324,6 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-    }
-
-    //Initiate google play service (MainFragment needs to implement GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
-    //and override onConnected, onConnectionSuspended, onConnectionFailed; add LocationServices.API to update device location in real time;
-    private void initiateGooglePlayService() {
-        //connect in onStart, disconnect in onStop of the Activity
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-        }
     }
 
     public LocationRequest setLocationRequest(LocationRequest locationRequest) {
@@ -359,8 +374,6 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.v(LOG_TAG, " (GooglePlayService) onConnected CALLED");
-
         //define location request of GooglePlayService
         LocationRequest locationRequest = new LocationRequest();
         locationRequest = setLocationRequest(locationRequest);
@@ -373,7 +386,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
         //update TextViews with location, in case there is incorrect old value
         if (mLastLocation != null) {
-            updateCurrentPositionTextViews(mLastLocation);
+            updateCurrentPosition(mLastLocation);
         }
 
         mLocationList.add(mLastLocation);
@@ -383,42 +396,42 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     public void onLocationChanged(Location location) {
         //TODO->remove part which is checking for "pause icon" and replace it with something else
         if (location != null && Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_white_18dp) {
-            //add new location point to the list
-            mLocationList.add(location);
-            System.out.println("LOCATION LIST SIZE IS " + mLocationList.size());
+            appendLocationToList(location);
 
             if (mLastLocation != null) {
                 updateDistance(mLastLocation, location);
             }
 
-            //set long and lat, without elevation (GooglePlayService very often return elevation 0)
-            mLastLocation.setLongitude(location.getLongitude());
-            mLastLocation.setLatitude(location.getLatitude());
+            setGeoCoordinates(location);
+            fetchCurrAltitude(location);
 
-            if (mFetchDataInfoTask != null) {
-                mFetchDataInfoTask = null;
-            }
-            mFetchDataInfoTask = new FetchDataInfoTask(this);
-            mFetchDataInfoTask.setLocationsStr(location);
-            mFetchDataInfoTask.execute();
-
-            //perform ONLY if an activity is in FOREGROUND (updating TextViews and redrawing graph)
-            if (this.getActivity() != null) {
-                updateCurrentPositionTextViews(location);
+            if (checkActivityIsVisible()) {
+                updateCurrentPosition(location);
                 startAddressIntentService(location);
                 updateSharedPreferences();
             }
         }
     }
 
+    private void appendLocationToList(Location location) {
+        mLocationList.add(location);
+    }
+
+    private void setGeoCoordinates(Location location) {
+        mLastLocation.setLongitude(location.getLongitude());
+        mLastLocation.setLatitude(location.getLatitude());
+    }
+
+    private void fetchCurrAltitude(Location location) {
+        mFetchDataInfoTask = new FetchDataInfoTask(this);
+        mFetchDataInfoTask.setLocationsStr(location);
+        mFetchDataInfoTask.execute();
+    }
+
     private void updateSharedPreferences() {
-        //update Shared preferences to store basic data about location, called on locationChanged (if activity in foreground)
-        //onResumed to retrieve data after resume of app, and onPause to save last active data
         Float latitude = (float) mLastLocation.getLatitude();
         Float longitude = (float) mLastLocation.getLongitude();
         Float altitude = (float) mLastLocation.getAltitude();
-
-        System.out.println("ACCURYCY IS " + mLastLocation.getAccuracy());
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -428,44 +441,52 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         editor.putFloat("CurrentDistance", (float) mCurrentDistance);
         editor.putFloat("CurrentMin", (float) mMinAltitudeValue);
         editor.putFloat("CurrentMax", (float) mMaxAltitudeValue);
-        editor.commit();
+        editor.apply();
     }
 
-    private void updateCurrentPositionTextViews(Location currLocation) {
-        //format geo coordinates to degrees/minutes/seconds (from XX:XX:XX.XX to XX*XX'XX''N)
-        String latitudeStr = sFormatAndValueConverter.setGeoCoordinateStr(currLocation.getLatitude(), true);
-        String longitudeStr = sFormatAndValueConverter.setGeoCoordinateStr(currLocation.getLongitude(), false);
+    private void updateCurrentPosition(Location currLocation) {
+        String latitudeStr = setLatLongStr(currLocation.getAltitude(), true);
+        String longitudeStr = setLatLongStr(currLocation.getAltitude(), false);
+        updateCurrPositionTextView(latitudeStr, longitudeStr);
+    }
 
-        //set new values of current location coordinates text views
+    private String setLatLongStr(Double currLocation, boolean isLatitude) {
+        return sFormatAndValueConverter.setGeoCoordinateStr(currLocation, isLatitude);
+    }
+
+    private void updateCurrPositionTextView(String latitudeStr, String longitudeStr) {
         sCurrLatitudeTextView.setText(latitudeStr);
         sCurrLongitudeTextView.setText(longitudeStr);
     }
 
-    private void updateCurrentMaxMinAltitude(Double currAltitude) {
-        //update variables holding max and min altitude (double)
-        mMinAltitudeValue = sFormatAndValueConverter.updateMinAltitudeValue(currAltitude, mMinAltitudeValue);
-        mMaxAltitudeValue = sFormatAndValueConverter.updateMaxAltitudeValue(currAltitude, mMaxAltitudeValue);
+    private void updateMinMaxAltitude(double currAltitude) {
+        updateMinMaxAltitudeValue(currAltitude);
+
+        String minAltitudeStr = setMinMaxStr(mMinAltitudeValue);
+        String maxAltitudeStr = setMinMaxStr(mMaxAltitudeValue);
+        updateMinMaxTextView(minAltitudeStr, maxAltitudeStr);
     }
 
-    private void updateCurrentMaxMinStr() {
-        //refactor string with min max altitude to correct form
-        String minAltitudeStr = sFormatAndValueConverter.setMinMaxString(mMinAltitudeValue);
-        String maxAltitudeStr = sFormatAndValueConverter.setMinMaxString(mMaxAltitudeValue);
+    private void updateMinMaxAltitudeValue(Double currElevation) {
+        mMinAltitudeValue = sFormatAndValueConverter.updateMinAltitudeValue(currElevation, mMinAltitudeValue);
+        mMaxAltitudeValue = sFormatAndValueConverter.updateMaxAltitudeValue(currElevation, mMaxAltitudeValue);
+    }
 
-        //update TextViews
+    private String setMinMaxStr(double altValue) {
+        return sFormatAndValueConverter.setMinMaxString(altValue);
+    }
+
+    private void updateMinMaxTextView(String minAltitudeStr, String maxAltitudeStr) {
         sMinElevTextView.setText(minAltitudeStr);
         sMaxElevTextView.setText(maxAltitudeStr);
     }
 
     private void updateDistance(Location lastLocation, Location currLocation) {
-        System.out.println("DISTANCE CHANGED: " + mCurrentDistance);
         if (lastLocation != null && currLocation != null) {
             float[] results = new float[1];
             Location.distanceBetween(lastLocation.getLatitude(), lastLocation.getLongitude(),
                     currLocation.getLatitude(), currLocation.getLongitude(), results);
             mCurrentDistance += results[0];
-
-            System.out.println("DISTANCE CHANGED: " + mCurrentDistance);
 
             //TODO-> add in settings km m and miles to chose
             updateDistanceTextView(mCurrentDistance);
@@ -477,7 +498,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     private void updateDistanceUnits() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+        SharedPreferences sharedPreferences;
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
         String units = sharedPreferences.getString("pref_set_units", "KILOMETERS");
         sFormatAndValueConverter.setUnitsFormat(units);
     }

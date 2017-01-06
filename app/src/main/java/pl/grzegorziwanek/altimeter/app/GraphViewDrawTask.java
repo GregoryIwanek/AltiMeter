@@ -199,8 +199,7 @@ public class GraphViewDrawTask extends GraphView {
     }
 
     private Long getRecordingTime(Long recordTime) {
-        Long recordingTime = (recordTime - mRecordingStartTime)/1000;
-        return recordingTime;
+        return (recordTime - mRecordingStartTime)/1000;
     }
 
     private void addSeriesToGraph() {

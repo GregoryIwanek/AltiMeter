@@ -36,14 +36,18 @@ public class WelcomeScreen extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        setNavigationMenuSlidingList();
-        setDisplayHome();
-        setActionBarDrawerToggle();
-        setListenerToDrawerLayout();
+        setNavigationSlider();
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction().add(R.id.screen_welcome_activity, new MainFragment()).commit();
         }
+    }
+
+    private void setNavigationSlider() {
+        setNavigationMenuSlidingList();
+        setDisplayHome();
+        setActionBarDrawerToggle();
+        setListenerToDrawerLayout();
     }
 
     private void setNavigationMenuSlidingList() {
