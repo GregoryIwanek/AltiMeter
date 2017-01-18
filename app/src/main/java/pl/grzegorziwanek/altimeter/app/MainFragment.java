@@ -16,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +40,7 @@ import butterknife.OnClick;
 import pl.grzegorziwanek.altimeter.app.Map.MyMapFragment;
 
 /**
- * Created by Grzegorz Iwanek on 23.11.2016.
+ * Created by XXX XXX on 23.11.2016.
  * Consist main UI fragment within, extension of Fragment;
  * Implements:
  * google's api location client (ConnectionCallbacks, OnConnectionFailedListener, LocationListener);
@@ -81,7 +82,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     @BindView(R.id.pause_button) ImageButton sPlayPauseButton;
     @BindView(R.id.map_fragment_button) ImageButton sMapFragmentButton;
 
-    //graph view field
+    //GraphView section
     @BindView(R.id.graph_view) GraphViewDrawTask graphViewDrawTask;
     private static AddressResultReceiver sResultReceiver;
 
@@ -91,68 +92,22 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         initiateGooglePlayService();
-        mLocationList = new ArrayList<>();
-        sFormatAndValueConverter = new FormatAndValueConverter();
-        mFetchDataInfoTask = new FetchDataInfoTask(this);
-        sResultReceiver = new AddressResultReceiver(new Handler());
+        initiateVariables();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        connectGoogleAPIClient();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
         ButterKnife.bind(this, rootView);
-
-        setButtonsTags();
-
+        initiateButtonsTags();
         return rootView;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (checkActivityIsVisible()) {
-
-            //check if last location is saved (prevent errors on first run of an app)
-            if (mLastLocation != null) {
-                startAddressIntentService(mLastLocation);
-            }
-
-            //redraw graph only when app backs from background, not when started first time (when altitude list is empty)
-            if (!mLocationList.isEmpty()) {
-                graphViewDrawTask.deliverGraph(mLocationList);
-            }
-
-            //update shared preferences values onResumed app
-            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-            Float sharedPrefMin = sharedPreferences.getFloat("CurrentMin", Constants.ALTITUDE_MIN);
-            Float sharedPrefMax = sharedPreferences.getFloat("CurrentMax", Constants.ALTITUDE_MAX);
-            Float sharedPrefDistance = sharedPreferences.getFloat("CurrentDistance", Constants.DISTANCE_DEFAULT);
-
-            //update
-            if (sharedPrefMin == Constants.ALTITUDE_MIN || sharedPrefMax == Constants.ALTITUDE_MAX) {
-                mMinAltitudeValue = Constants.ALTITUDE_MIN;
-                mMaxAltitudeValue = Constants.ALTITUDE_MAX;
-                mCurrentDistance = Constants.DISTANCE_DEFAULT;
-                Log.v(LOG_TAG, " Min and Max altitude not provided, default values are used instead...");
-            } else {
-                mMinAltitudeValue = sharedPrefMin;
-                mMaxAltitudeValue = sharedPrefMax;
-                mCurrentDistance = sharedPrefDistance;
-                updateMinMaxAltitude(mLastLocation.getAltitude());
-                updateDistanceUnits();
-                updateDistanceTextView(mCurrentDistance);
-            }
-        }
     }
 
     @Override
@@ -162,19 +117,64 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         updateSharedPreferences();
     }
 
-    private void initiateGooglePlayService() {
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateOnResume();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        //define location request of GooglePlayService
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest = setLocationRequest(locationRequest);
+
+        //build location request
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+
+        //check for location permissions Google Service and request location updates
+        checkPermissionsAndRequestUpdates(locationRequest);
+
+        //update TextViews with location, in case there is incorrect old value
+        if (mLastLocation != null) {
+            updateCurrentPosition(mLastLocation);
+            mLocationList.add(mLastLocation);
         }
     }
 
-    private void setButtonsTags() {
-        sRefreshButton.setTag(R.drawable.ic_refresh_white_18dp);
-        sPlayPauseButton.setTag(R.drawable.ic_play_arrow_white_18dp);
+    @Override
+    public void onLocationChanged(Location location) {
+        //TODO->remove part which is checking for "pause icon" and replace it with something else
+        if (location != null && Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_white_18dp) {
+            appendLocationToList(location);
+
+            if (mLastLocation != null) {
+                updateDistance(mLastLocation, location);
+            }
+
+            setGeoCoordinates(location);
+            fetchCurrAltitude(location);
+
+            if (checkActivityIsVisible()) {
+                updateCurrentPosition(location);
+                startAddressIntentService(location);
+                updateSharedPreferences();
+            }
+        }
+    }
+
+    //AsyncResponse interface methods (send data back to this activity from AsyncTask's onPostExecute method)
+    @Override
+    public void processAccurateElevation(Double elevation) {
+        updateMinMaxAltitude(elevation);
+
+        String elevationStr = sFormatAndValueConverter.formatElevation(elevation);
+        sCurrElevationTextView.setText(elevationStr);
+
+        mLocationList.get(mLocationList.size()-1).setAltitude(elevation);
+        graphViewDrawTask.deliverGraph(mLocationList);
+
+        mLastLocation.setAltitude(elevation);
     }
 
     @OnClick(R.id.pause_button)
@@ -205,6 +205,175 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         }
     }
 
+    @OnClick(R.id.refresh_button)
+    public void onRefreshButtonClick() {
+        changePlayPauseButtonIcon();
+        clearData();
+    }
+
+    @OnClick(R.id.map_fragment_button)
+    public void onMapButtonClick() {
+        setMapFragment();
+        replaceFragmentWithMap();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @SuppressLint("ParcelCreator")
+    class AddressResultReceiver extends ResultReceiver {
+
+        String mAddressOutput;
+
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            super.onReceiveResult(resultCode, resultData);
+
+            mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
+            sCurrAddressTextView.setText(mAddressOutput);
+        }
+    }
+
+    private void updateOnResume() {
+        if (checkActivityIsVisible()) {
+            runAddressIntentService();
+            runGraphDrawing();
+            updatePreferencesOnResume();
+        }
+    }
+
+    private boolean checkActivityIsVisible() {
+        return this.getActivity() != null;
+    }
+
+    private void runAddressIntentService() {
+        if (mLastLocation != null) {
+            startAddressIntentService(mLastLocation);
+        }
+    }
+
+    private void runGraphDrawing() {
+        if (!mLocationList.isEmpty()) {
+            graphViewDrawTask.deliverGraph(mLocationList);
+        }
+    }
+
+    private void updatePreferencesOnResume() {
+        if (isPrefValueProvided()) {
+            updateValuesOnResume();
+        } else {
+            resetValues();
+        }
+    }
+
+    private boolean isPrefValueProvided() {
+        SharedPreferences sharedPreferences = getMyPreferences();
+        return !(getPreferencesFloat(sharedPreferences, "CurrentMin") == Constants.ALTITUDE_MIN
+                || getPreferencesFloat(sharedPreferences, "CurrentMax") == Constants.ALTITUDE_MAX);
+    }
+
+    private void updateValuesOnResume() {
+        updateValues();
+        updateMinMaxAltitude(mLastLocation.getAltitude());
+        updateDistanceUnits();
+        updateDistanceTextView(mCurrentDistance);
+    }
+
+    private void updateValues() {
+        SharedPreferences sharedPreferences = getMyPreferences();
+        mMinAltitudeValue = getPreferencesFloat(sharedPreferences, "CurrentMin");
+        mMaxAltitudeValue = getPreferencesFloat(sharedPreferences, "CurrentMax");
+        mCurrentDistance = getPreferencesFloat(sharedPreferences, "CurrentDistance");
+    }
+
+    private void resetValues() {
+        mMinAltitudeValue = Constants.ALTITUDE_MIN;
+        mMaxAltitudeValue = Constants.ALTITUDE_MAX;
+        mCurrentDistance = Constants.DISTANCE_DEFAULT;
+        Log.v(LOG_TAG, " Min and Max altitude not provided, default values are used instead...");
+    }
+
+    private SharedPreferences getMyPreferences() {
+        return getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+    }
+
+    private SharedPreferences getDefaultPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+    }
+
+    private Float getPreferencesFloat(SharedPreferences sharedPreferences, String key) {
+        switch (key) {
+            case "CurrentMin":
+                return sharedPreferences.getFloat("CurrentMin", Constants.ALTITUDE_MIN);
+            case "CurrentMax":
+                return sharedPreferences.getFloat("CurrentMax", Constants.ALTITUDE_MAX);
+            case "CurrentDistance":
+                return sharedPreferences.getFloat("CurrentDistance", Constants.DISTANCE_DEFAULT);
+            default:
+                return (float) Constants.DISTANCE_DEFAULT;
+        }
+    }
+
+    private String getPreferencesString(SharedPreferences sharedPreferences, String key) {
+        switch (key) {
+            case "pref_sync_frequency_key":
+                return sharedPreferences.getString("pref_sync_frequency_key", "5");
+            case "pref_set_units":
+                return sharedPreferences.getString("pref_set_units", "KILOMETERS");
+            default:
+                return Constants.DEFAULT_TEXT;
+        }
+    }
+
+    private void initiateGooglePlayService() {
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+    }
+
+    private void initiateVariables() {
+        mLocationList = new ArrayList<>();
+        sFormatAndValueConverter = new FormatAndValueConverter();
+        mFetchDataInfoTask = new FetchDataInfoTask(this);
+        sResultReceiver = new AddressResultReceiver(new Handler());
+    }
+
+    private void connectGoogleAPIClient() {
+        mGoogleApiClient.connect();
+    }
+
+    private void initiateButtonsTags() {
+        if (isButtonTagUndefined()) {
+            sRefreshButton.setTag(R.drawable.ic_refresh_white_18dp);
+
+            if (isPlayImageOnButton()) {
+                sPlayPauseButton.setTag(R.drawable.ic_play_arrow_white_18dp);
+            } else {
+                sPlayPauseButton.setTag(R.drawable.ic_pause_white_18dp);
+            }
+        }
+    }
+
+    private boolean isButtonTagUndefined() {
+        return sPlayPauseButton.getTag() == null || sRefreshButton.getTag() == null;
+    }
+
+    private boolean isPlayImageOnButton() {
+        return sPlayPauseButton.getBackground().equals(
+                ContextCompat.getDrawable(getActivity(), R.drawable.ic_play_arrow_white_18dp));
+    }
+
+    //TODO
     private void checkButtonTag(int buttonTag) {
         switch (buttonTag) {
             case R.drawable.ic_pause_white_18dp:
@@ -221,19 +390,10 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         }
     }
 
+    //TODO
     private void setButtonTagAndImage(ImageButton button, int imageId) {
         button.setBackgroundResource(imageId);
         button.setTag(imageId);
-    }
-
-    private boolean checkActivityIsVisible() {
-        return this.getActivity() != null;
-    }
-
-    @OnClick(R.id.refresh_button)
-    public void onRefreshButtonClick() {
-        changePlayPauseButtonIcon();
-        clearData();
     }
 
     private void changePlayPauseButtonIcon() {
@@ -258,12 +418,6 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         graphViewDrawTask.getSeries().clear();
     }
 
-    @OnClick(R.id.map_fragment_button)
-    public void onMapButtonClick() {
-        setMapFragment();
-        replaceFragmentWithMap();
-    }
-
     private void setMapFragment() {
         if (myMapFragment == null) {
             myMapFragment = new MyMapFragment();
@@ -280,40 +434,6 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         fragmentTransaction.commit();
     }
 
-    //AsyncResponse interface methods (send data back to this activity from AsyncTask's onPostExecute method)
-    @Override
-    public void processAccurateElevation(Double elevation) {
-        Log.v(LOG_TAG, " processAccurateElevation CALLED");
-
-        updateMinMaxAltitude(elevation);
-
-        String elevationStr = sFormatAndValueConverter.formatElevation(elevation);
-        sCurrElevationTextView.setText(elevationStr);
-
-        mLocationList.get(mLocationList.size()-1).setAltitude(elevation);
-        graphViewDrawTask.deliverGraph(mLocationList);
-
-        mLastLocation.setAltitude(elevation);
-    }
-
-    @SuppressLint("ParcelCreator")
-    class AddressResultReceiver extends ResultReceiver {
-
-        String mAddressOutput;
-
-        public AddressResultReceiver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-            super.onReceiveResult(resultCode, resultData);
-
-            mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
-            sCurrAddressTextView.setText(mAddressOutput);
-        }
-    }
-
     protected void startAddressIntentService(Location location) {
         Intent intent = new Intent(this.getActivity(), AddressIntentService.class);
         intent.putExtra(Constants.RECEIVER, sResultReceiver);
@@ -321,16 +441,11 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         this.getActivity().startService(intent);
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
     public LocationRequest setLocationRequest(LocationRequest locationRequest) {
         //get preferences from app Settings screen (different from prefs file which contains current session data)
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+        SharedPreferences sharedPreferences = getDefaultPreferences();
 
-        String interval = sharedPreferences.getString("pref_sync_frequency_key", "5");
+        String interval = getPreferencesString(sharedPreferences, "pref_sync_frequency_key");
         Long intervalLong = Long.valueOf(interval);
         locationRequest.setInterval(intervalLong);
 
@@ -354,12 +469,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this.getActivity(),
                 android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-        {
-            System.out.println(ActivityCompat.checkSelfPermission(this.getActivity(),
-                    android.Manifest.permission.ACCESS_FINE_LOCATION));
-            System.out.println(ActivityCompat.checkSelfPermission(this.getActivity(),
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION));
-            return;
+        { //TODO-> finish this part (inside of "if"
         } else { //permissions has been granted, proceed
             //remove previous location request
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
@@ -369,47 +479,6 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
             //update last location, in case there is incorrect old value
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        }
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        //define location request of GooglePlayService
-        LocationRequest locationRequest = new LocationRequest();
-        locationRequest = setLocationRequest(locationRequest);
-
-        //build location request
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
-
-        //check for location permissions Google Service and request location updates
-        checkPermissionsAndRequestUpdates(locationRequest);
-
-        //update TextViews with location, in case there is incorrect old value
-        if (mLastLocation != null) {
-            updateCurrentPosition(mLastLocation);
-        }
-
-        mLocationList.add(mLastLocation);
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        //TODO->remove part which is checking for "pause icon" and replace it with something else
-        if (location != null && Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_white_18dp) {
-            appendLocationToList(location);
-
-            if (mLastLocation != null) {
-                updateDistance(mLastLocation, location);
-            }
-
-            setGeoCoordinates(location);
-            fetchCurrAltitude(location);
-
-            if (checkActivityIsVisible()) {
-                updateCurrentPosition(location);
-                startAddressIntentService(location);
-                updateSharedPreferences();
-            }
         }
     }
 
@@ -433,7 +502,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         Float longitude = (float) mLastLocation.getLongitude();
         Float altitude = (float) mLastLocation.getAltitude();
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getMyPreferences();
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putFloat("CurrentLatitude", latitude);
         editor.putFloat("CurrentLongitude", longitude);
@@ -468,8 +537,10 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     private void updateMinMaxAltitudeValue(Double currElevation) {
-        mMinAltitudeValue = sFormatAndValueConverter.updateMinAltitudeValue(currElevation, mMinAltitudeValue);
-        mMaxAltitudeValue = sFormatAndValueConverter.updateMaxAltitudeValue(currElevation, mMaxAltitudeValue);
+        mMinAltitudeValue =
+                sFormatAndValueConverter.updateMinAltitudeValue(currElevation, mMinAltitudeValue);
+        mMaxAltitudeValue =
+                sFormatAndValueConverter.updateMaxAltitudeValue(currElevation, mMaxAltitudeValue);
     }
 
     private String setMinMaxStr(double altValue) {
@@ -498,9 +569,8 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     private void updateDistanceUnits() {
-        SharedPreferences sharedPreferences;
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-        String units = sharedPreferences.getString("pref_set_units", "KILOMETERS");
+        SharedPreferences sharedPreferences = getDefaultPreferences();
+        String units = getPreferencesString(sharedPreferences, "pref_set_units");
         sFormatAndValueConverter.setUnitsFormat(units);
     }
 
