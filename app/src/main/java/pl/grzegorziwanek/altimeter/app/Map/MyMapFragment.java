@@ -2,7 +2,6 @@ package pl.grzegorziwanek.altimeter.app.Map;
 
 import android.Manifest;
 import android.app.Fragment;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;

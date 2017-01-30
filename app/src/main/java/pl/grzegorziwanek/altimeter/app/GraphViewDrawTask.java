@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 public class GraphViewDrawTask extends GraphView {
 
-    private LineGraphSeries<DataPoint> mDiagramSeries = new LineGraphSeries<>();
+    private final LineGraphSeries<DataPoint> mDiagramSeries = new LineGraphSeries<>();
     private int mCurSeriesCount = 0;
     private Long mRecordingStartTime = null;
 
@@ -37,16 +37,6 @@ public class GraphViewDrawTask extends GraphView {
     public GraphViewDrawTask(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setGraphViewSettings();
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
     }
 
     private void setGraphViewSettings() {

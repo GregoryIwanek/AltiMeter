@@ -148,11 +148,13 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         if (location != null && Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_white_18dp) {
             appendLocationToList(location);
 
-            if (mLastLocation != null) {
+            if ((Double) mLastLocation.getAltitude() != null) {
                 updateDistance(mLastLocation, location);
             }
 
-            setGeoCoordinates(location);
+            if (mLastLocation != null) {
+                setGeoCoordinates(location);
+            }
             fetchCurrAltitude(location);
 
             if (checkActivityIsVisible()) {
@@ -242,6 +244,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     private void updateOnResume() {
         if (checkActivityIsVisible()) {
+            updateDistanceUnits();
             runAddressIntentService();
             runGraphDrawing();
             updatePreferencesOnResume();
@@ -280,7 +283,9 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     private void updateValuesOnResume() {
         updateValues();
-        updateMinMaxAltitude(mLastLocation.getAltitude());
+        if ((Double) mLastLocation.getAltitude() != null) {
+            updateMinMaxAltitude(mLastLocation.getAltitude());
+        }
         updateDistanceUnits();
         updateDistanceTextView(mCurrentDistance);
     }

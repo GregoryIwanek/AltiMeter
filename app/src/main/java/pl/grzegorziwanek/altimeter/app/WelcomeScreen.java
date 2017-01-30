@@ -110,7 +110,7 @@ public class WelcomeScreen extends AppCompatActivity {
 
     private void setDisplayHome() {
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 

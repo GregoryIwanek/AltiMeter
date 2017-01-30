@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pl.grzegorziwanek.altimeter.app.altitudegraph.SwipeRefreshLayoutChild
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_refresh_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/graphs_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:clickable="true">
+
+        <LinearLayout
+            android:id="@+id/graphsLL"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/filteringLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="@dimen/margin_8dp"
+                android:layout_marginRight="@dimen/margin_8dp"
+                android:layout_marginTop="@dimen/margin_16dp"
+                android:layout_marginBottom="@dimen/margin_16dp"/>
+
+            <ListView
+                android:id="@+id/graphs_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/no_graphs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/noGraphsIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_eject_light_green"/>
+
+            <TextView
+                android:id="@+id/noGraphsMain"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:text="NIE MA GRAFÓW"
+                android:layout_marginBottom="@dimen/margin_8dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/noGraphsAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="DODAJ GRAF"/>
+        </LinearLayout>
+    </RelativeLayout>
+</pl.grzegorziwanek.altimeter.app.altitudegraph.SwipeRefreshLayoutChild>
