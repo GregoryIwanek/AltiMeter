@@ -1,36 +1,148 @@
-package pl.grzegorziwanek.altimeter.app.model.location.listeners;
+package pl.grzegorziwanek.altimeter.app.model.location.services;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
-import pl.grzegorziwanek.altimeter.app.model.location.listeners.services.FormatAndValueConverter;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+
+import pl.grzegorziwanek.altimeter.app.model.location.CallbackResponse;
 
 /**
- * Created by Grzegorz Iwanek on 01.02.2017.
+ * Created by Grzegorz Iwanek on 02.02.2017.
  */
+public final class GoogleLocationListener implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-public class LocationCollector {
+    private final CallbackResponse.LocationChangedCallback mCallback;
+    private final String LOG_TAG = getClass().getSimpleName();
+    private final Context mContext;
+    private GoogleApiClient mGoogleApiClient;
 
-    private GoogleLocationListener mLocationListener;
-
-    public LocationCollector newInstance() {
-        return new LocationCollector();
+    private GoogleLocationListener(Context context, CallbackResponse.LocationChangedCallback callback) {
+        mContext = context;
+        mCallback = callback;
+        buildGooglePlayService();
+        connectGoogleAPIClient();
     }
 
-    private LocationCollector() {
+    public static GoogleLocationListener getInstance(Context context, CallbackResponse.LocationChangedCallback callback) {
+        return new GoogleLocationListener(context, callback);
+    }
 
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        startListenForLocations();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.d(LOG_TAG, " connection suspended triggered!");
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d(LOG_TAG, " connection failed triggered!");
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mCallback.onNewLocationFound(location);
+    }
+
+    public void startListenForLocations() {
+        // set location request
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest = setLocationRequest(locationRequest);
+
+        // build and add request
+        LocationSettingsRequest.Builder builder =
+                new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+
+        // check for location permissions
+        checkLocationPermissions(mContext, locationRequest);
+    }
+
+    public void stopListenForLocations() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+    }
+
+    private LocationRequest setLocationRequest(LocationRequest locationRequest) {
+        // set accuracy mode and decimal accuracy
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setSmallestDisplacement(5);
+
+        // get preferences from app settings screen
+        SharedPreferences preferences = getDefaultPreferences();
+
+        // set interval
+        String interval = preferences.getString("pref_sync_frequency_key", "5");
+        Long intervalLong = Long.valueOf(interval);
+        locationRequest.setInterval(intervalLong);
+
+        // set fastest possible interval
+        if (intervalLong < 10000) {
+            locationRequest.setFastestInterval(5000);
+        } else {
+            locationRequest.setFastestInterval(intervalLong/2);
+        }
+
+        return new LocationRequest();
+    }
+
+    private void checkLocationPermissions(@NonNull Context context, LocationRequest locationRequest) {
+        // check for location permissions (required in android API 23 and above)
+        if (ActivityCompat.checkSelfPermission(
+                context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(
+                context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        } else {
+            // remove old location request and add new one
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
+        }
+    }
+
+    private void buildGooglePlayService() {
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(mContext)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+    }
+
+    private void connectGoogleAPIClient() {
+        mGoogleApiClient.connect();
+    }
+
+    private SharedPreferences getDefaultPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(mContext);
     }
 }
 
 
 //GoogleApiClient.ConnectionCallbacks,
-//        GoogleApiClient.OnConnectionFailedListener, LocationListener, AsyncResponse
+//        GoogleApiClient.OnConnectionFailedListener, LocationListener, CallbackResponse
 
 //package pl.grzegorziwanek.altimeter.app;
 
 //public class MainFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
-//        GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener, AsyncResponse {
+//        GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener, CallbackResponse {
 //
 //    private static final String LOG_TAG = pl.grzegorziwanek.altimeter.app.MainFragment.class.getSimpleName();
 //    public static final String PREFS_NAME = "MyPrefsFile";
@@ -125,7 +237,7 @@ public class LocationCollector {
 //    }
 //
 //    @Override
-//    public void onLocationChanged(Location location) {
+//    public void onNewLocationFound(Location location) {
 ////        //TODO->remove part which is checking for "pause icon" and replace it with something else
 ////        if (location != null && Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_white_18dp) {
 ////            appendLocationToList(location);
@@ -147,7 +259,7 @@ public class LocationCollector {
 ////        }
 //    }
 //
-//    //AsyncResponse interface methods (send data back to this activity from AsyncTask's onPostExecute method)
+//    //CallbackResponse interface methods (send data back to this activity from AsyncTask's onPostExecute method)
 //    @Override
 //    public void processAccurateElevation(Double elevation) {
 //        updateMinMaxAltitude(elevation);

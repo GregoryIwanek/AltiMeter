@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.model.location.listeners;
+package pl.grzegorziwanek.altimeter.app.model.location;
 
 /**
  * Created by Grzegorz Iwanek on 30.11.2016.

@@ -6,6 +6,8 @@ import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.model.Session;
 import pl.grzegorziwanek.altimeter.app.model.database.source.SessionDataSource;
 import pl.grzegorziwanek.altimeter.app.model.database.source.SessionRepository;
+import pl.grzegorziwanek.altimeter.app.model.location.LocationCollector;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -16,14 +18,15 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
 
     private final SessionRepository mSessionRepository;
     private final AddNewGraphContract.View mAddNewGraphView;
+    private final LocationCollector mLocationCollector;
     private String mSessionId = "da";
 
     //TODO-> add ID somewhere
     public AddNewGraphPresenter(@NonNull SessionRepository sessionSource,
-                                @NonNull AddNewGraphContract.View addNewGraphView) {
-        //mSessionId = checkNotNull(sessionId);
-        //mSessionId = "dwa";
+                                @NonNull AddNewGraphContract.View addNewGraphView,
+                                @NonNull LocationCollector locationCollector) {
         mSessionRepository = checkNotNull(sessionSource);
+        mLocationCollector = checkNotNull(locationCollector);
         mAddNewGraphView = checkNotNull(addNewGraphView);
         mAddNewGraphView.setPresenter(this);
     }

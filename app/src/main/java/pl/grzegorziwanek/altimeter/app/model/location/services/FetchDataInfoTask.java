@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.model.location.listeners.services;
+package pl.grzegorziwanek.altimeter.app.model.location.services;
 
 import android.location.Location;
 import android.net.Uri;
@@ -204,7 +204,7 @@ public class FetchDataInfoTask extends AsyncTask<Void, Void, Void> {
             //round elevation value (to set precision to meters)
             mCurrentEleValue = (double) Math.round(mCurrentEleValue);
 
-            //pass data to MainFragment through AsyncResponse interface
+            //pass data to MainFragment through CallbackResponse interface
             mAsyncResponse.processAccurateElevation(mCurrentEleValue);
         } else {
             Log.v(LOG_TAG, " onPostExecute, current elevation wasn't fetched from JSON, stopped");

@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.model.location.listeners.services;
+package pl.grzegorziwanek.altimeter.app.model.location.services;
 
 import android.app.IntentService;
 import android.content.Intent;

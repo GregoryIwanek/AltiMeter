@@ -62,7 +62,7 @@ public class SessionActivity extends BasicActivity {
 
     private void setPresenter() {
         mSessionPresenter = new SessionPresenter(
-                SessionRepository.getInstance(SessionLocalDataSource.getInstance(this.getApplicationContext())),
+                SessionRepository.getInstance(SessionLocalDataSource.getInstance(getApplicationContext())),
                 mSessionFragment);
     }
 

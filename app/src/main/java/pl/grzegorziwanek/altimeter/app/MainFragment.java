@@ -42,7 +42,7 @@ import pl.grzegorziwanek.altimeter.app.Map.MyMapFragment;
  * Consist main UI fragment within, extension of Fragment;
  * Implements:
  * google's api location client (ConnectionCallbacks, OnConnectionFailedListener, LocationListener);
- * customized AsyncResponse interface (to return location data through AsyncTask's onPostExecute method);
+ * customized CallbackResponse interface (to return location data through AsyncTask's onPostExecute method);
  * inner class to catch data from AddressIntentService;
  * Uses ButcherKnife outer library;
  */
@@ -167,7 +167,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 //        }
     }
 
-    //AsyncResponse interface methods (send data back to this activity from AsyncTask's onPostExecute method)
+    //CallbackResponse interface methods (send data back to this activity from AsyncTask's onPostExecute method)
     @Override
     public void processAccurateElevation(Double elevation) {
         updateMinMaxAltitude(elevation);

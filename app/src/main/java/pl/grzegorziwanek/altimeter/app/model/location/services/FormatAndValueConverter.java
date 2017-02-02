@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.model.location.listeners.services;
+package pl.grzegorziwanek.altimeter.app.model.location.services;
 
 import android.location.Location;
 
@@ -12,7 +12,7 @@ import java.text.DecimalFormat;
 public class FormatAndValueConverter {
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
-    
+
     //TODO -> kick out mUnitsFrmat and Symbol and move it to Presenter(?), LocationCollector(?)
     private static String mUnitsFormat;
     private static String mUnitsSymbol;

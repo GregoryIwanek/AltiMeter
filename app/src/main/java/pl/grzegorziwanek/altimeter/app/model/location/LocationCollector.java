@@ -1,189 +1,62 @@
-package pl.grzegorziwanek.altimeter.app.model.location.listeners;
+package pl.grzegorziwanek.altimeter.app.model.location;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
+import pl.grzegorziwanek.altimeter.app.model.location.services.GoogleLocationListener;
 
 /**
- * Created by Grzegorz Iwanek on 02.02.2017.
+ * Created by Grzegorz Iwanek on 01.02.2017.
  */
-public final class GoogleLocationListener implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    private final String LOG_TAG = getClass().getSimpleName();
-    private final Context mContext;
-    private GoogleApiClient mGoogleApiClient;
-    private boolean mCallbackBlocked = false;
+public class LocationCollector implements CallbackResponse {
 
-    private GoogleLocationListener(Context context) {
-        mContext = context;
-        buildGooglePlayService();
-        connectGoogleAPIClient();
+    private static LocationCollector INSTANCE = null;
+    private GoogleLocationListener mLocationListener;
+    private LocationChangedCallback callback;
+    private Location mLastLocation = null;
+
+    private LocationCollector(@NonNull Context context) {
+        setCallback();
+        mLocationListener = GoogleLocationListener.getInstance(context, callback);
     }
 
-    public GoogleLocationListener newInstance(Context context) {
-        return new GoogleLocationListener(context);
+    public static LocationCollector getInstance(@NonNull Context context) {
+        if (INSTANCE == null) {
+            INSTANCE = new LocationCollector(context);
+        }
+        return INSTANCE;
+    }
+
+    private void setCallback() {
+        callback = new LocationChangedCallback() {
+            @Override
+            public void onNewLocationFound(Location location) {
+                mLastLocation = location;
+            }
+        };
     }
 
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        // set location request
-        LocationRequest locationRequest = new LocationRequest();
-        locationRequest = setLocationRequest(locationRequest);
-
-        // build and add request
-        LocationSettingsRequest.Builder builder =
-                new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
-
-        // check for location permissions
-        checkLocationPermissions(mContext, locationRequest);
-
-        //TODO -> set callback with current location data
-//        //update TextViews with location, in case there is incorrect old value
-//        if (mLastLocation != null) {
-//            updateCurrentPosition(mLastLocation);
-//            mLocationList.add(mLastLocation);
-//        }
+    public void stopListenForLocations() {
+        mLocationListener.stopListenForLocations();
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
-        Log.d(LOG_TAG, " connection suspended triggered!");
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(LOG_TAG, " connection failed triggered!");
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-
-////        //TODO->remove part which is checking for "pause icon" and replace it with something else
-////        if (location != null && Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_white_18dp) {
-////            appendLocationToList(location);
-////
-////            if ((Double) mLastLocation.getAltitude() != null) {
-////                updateDistance(mLastLocation, location);
-////            }
-////
-////            if (mLastLocation != null) {
-////                setGeoCoordinates(location);
-////            }
-////            fetchCurrAltitude(location);
-////
-////            if (checkActivityIsVisible()) {
-////                updateCurrentPosition(location);
-////                startAddressIntentService(location);
-////                updateSharedPreferences();
-////            }
-////        }
-    }
-
-    private LocationRequest setLocationRequest(LocationRequest locationRequest) {
-        // set accuracy mode and decimal accuracy
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setSmallestDisplacement(5);
-
-        // get preferences from app settings screen
-        SharedPreferences preferences = getDefaultPreferences();
-
-        // set interval
-        String interval = getPreferencesString(preferences, "pref_sync_frequency_key");
-        Long intervalLong = Long.valueOf(interval);
-        locationRequest.setInterval(intervalLong);
-
-        // set fastest possible interval
-        if (intervalLong < 10000) {
-            locationRequest.setFastestInterval(5000);
-        } else {
-            locationRequest.setFastestInterval(intervalLong/2);
-        }
-
-        return new LocationRequest();
-    }
-
-    private void checkLocationPermissions(@NonNull Context context, LocationRequest locationRequest) {
-        // check for location permissions (required in android API 23 and above)
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //TODO - > finish this part, ask for new permissions if failed to get one (shouldn't be triggered)
-        } else {
-            // remove old location request
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-
-            // add new location request
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
-
-            //update last location, in case there is incorrect old value
-            //mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        }
-    }
-
-    private void buildGooglePlayService() {
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(mContext)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-        }
-    }
-
-    private void connectGoogleAPIClient() {
-        mGoogleApiClient.connect();
-    }
-
-    private SharedPreferences getDefaultPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(mContext);
-    }
-
-    public boolean isCallbackBlocked() {
-        return mCallbackBlocked;
-    }
-
-    public void setCallbackBlocked(boolean callbackBlocked) {
-        mCallbackBlocked = callbackBlocked;
-    }
-
-    //TODO -> should I kick that out? For later to rethink.
-    private String getPreferencesString(SharedPreferences sharedPreferences, String key) {
-        switch (key) {
-            case "pref_sync_frequency_key":
-                return sharedPreferences.getString("pref_sync_frequency_key", "5");
-            case "pref_set_units":
-                return sharedPreferences.getString("pref_set_units", "KILOMETERS");
-            default:
-                return
-                        //Constants.DEFAULT_TEXT
-                        "...";
-        }
+    public void startListenForLocations() {
+        mLocationListener.startListenForLocations();
     }
 }
 
 
 //GoogleApiClient.ConnectionCallbacks,
-//        GoogleApiClient.OnConnectionFailedListener, LocationListener, AsyncResponse
+//        GoogleApiClient.OnConnectionFailedListener, LocationListener, CallbackResponse
 
 //package pl.grzegorziwanek.altimeter.app;
 
 //public class MainFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
-//        GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener, AsyncResponse {
+//        GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener, CallbackResponse {
 //
 //    private static final String LOG_TAG = pl.grzegorziwanek.altimeter.app.MainFragment.class.getSimpleName();
 //    public static final String PREFS_NAME = "MyPrefsFile";
@@ -278,7 +151,7 @@ public final class GoogleLocationListener implements GoogleApiClient.ConnectionC
 //    }
 //
 //    @Override
-//    public void onLocationChanged(Location location) {
+//    public void onNewLocationFound(Location location) {
 ////        //TODO->remove part which is checking for "pause icon" and replace it with something else
 ////        if (location != null && Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_white_18dp) {
 ////            appendLocationToList(location);
@@ -300,7 +173,7 @@ public final class GoogleLocationListener implements GoogleApiClient.ConnectionC
 ////        }
 //    }
 //
-//    //AsyncResponse interface methods (send data back to this activity from AsyncTask's onPostExecute method)
+//    //CallbackResponse interface methods (send data back to this activity from AsyncTask's onPostExecute method)
 //    @Override
 //    public void processAccurateElevation(Double elevation) {
 //        updateMinMaxAltitude(elevation);
