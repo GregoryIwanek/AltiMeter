@@ -38,10 +38,10 @@ public class WelcomeScreen extends AppCompatActivity {
 
         setNavigationSlider();
 
-        if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.screen_welcome_activity, new MainFragment()).commit();
-        }
+//        if (savedInstanceState == null) {
+//            getFragmentManager().beginTransaction()
+//                    .add(R.id.screen_welcome_activity, new MainFragment()).commit();
+//        }
     }
 
     private void setNavigationSlider() {

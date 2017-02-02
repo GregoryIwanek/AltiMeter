@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,7 +21,7 @@ import butterknife.ButterKnife;
 import pl.grzegorziwanek.altimeter.app.about.AboutActivity;
 import pl.grzegorziwanek.altimeter.app.altitudegraph.SessionActivity;
 import pl.grzegorziwanek.altimeter.app.Map.MapActivity;
-import pl.grzegorziwanek.altimeter.app.newgraph.NewGraphActivity;
+import pl.grzegorziwanek.altimeter.app.newgraph.AddNewGraphActivity;
 import pl.grzegorziwanek.altimeter.app.slidingmenu.SettingsFragment;
 import pl.grzegorziwanek.altimeter.app.statistics.StatisticsActivity;
 
@@ -39,6 +40,7 @@ public abstract class BasicActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         type = SessionActivity.class;
     }
 
@@ -85,7 +87,7 @@ public abstract class BasicActivity extends AppCompatActivity {
                                 navigateToActivity(SessionActivity.class);
                                 break;
                             case R.id.new_graph_navigation_menu_item:
-                                navigateToActivity(NewGraphActivity.class);
+                                navigateToActivity(AddNewGraphActivity.class);
                                 break;
                             case R.id.map_navigation_menu_item:
                                 navigateToActivity(MapActivity.class);
@@ -111,7 +113,7 @@ public abstract class BasicActivity extends AppCompatActivity {
         );
     }
 
-    private void navigateToActivity(Class<?> type) {
+    protected void navigateToActivity(Class<?> type) {
         if (!getClassName().equals(type.getSimpleName())) {
             setType(type);
             runActivity();

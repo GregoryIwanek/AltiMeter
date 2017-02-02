@@ -2,6 +2,7 @@ package pl.grzegorziwanek.altimeter.app.altitudegraph;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -19,15 +20,14 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.jjoe64.graphview.GraphView;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.grzegorziwanek.altimeter.app.R;
-import pl.grzegorziwanek.altimeter.app.data.Session;
+import pl.grzegorziwanek.altimeter.app.model.Session;
+import pl.grzegorziwanek.altimeter.app.newgraph.AddNewGraphActivity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -38,13 +38,12 @@ public class SessionFragment extends Fragment implements SessionContract.View {
 
     @BindView(R.id.graphs_list) ListView mListView;
     @BindView(R.id.graphsLL) LinearLayout mSessionView;
+    @BindView(R.id.no_graphs) LinearLayout mNoSessionsView;
 
     private SessionAdapter mListAdapter;
     private SessionContract.Presenter mPresenter;
 
-    public SessionFragment() {
-        //requires public empty constructor to work
-    }
+    public SessionFragment() {}
 
     public static SessionFragment newInstance() {
         return new SessionFragment();
@@ -59,11 +58,11 @@ public class SessionFragment extends Fragment implements SessionContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        //mPresenter.start();
+        mPresenter.start();
     }
 
     @Override
-    public void setPresenter(SessionContract.Presenter presenter) {
+    public void setPresenter(@NonNull SessionContract.Presenter presenter) {
         mPresenter = checkNotNull(presenter);
     }
 
@@ -79,17 +78,13 @@ public class SessionFragment extends Fragment implements SessionContract.View {
         mPresenter.start();
     }
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        System.out.println("CHECK IF MTASKVIEW IS ACTIVE BEFORE SETTING ROOT IN VIEW" + this.isActive() );
         View view = inflater.inflate(R.layout.fragment_graph_altitude, container, false);
-        System.out.println("CHECK IF MTASKVIEW IS ACTIVE AFTER SETTING ROOT IN VIEW" + this.isActive() );
 
         ButterKnife.bind(this, view);
-        System.out.println("CHECK IF MTASKVIEW IS ACTIVE AFTER SETTING BUTTERKNIFE IN VIEW" + this.isActive() );
 
-        //Set up graphs view
+        //Set up adapter
         mListView.setAdapter(mListAdapter);
 
         //Set up floating action button
@@ -99,7 +94,7 @@ public class SessionFragment extends Fragment implements SessionContract.View {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO-> add here add new altitude recording
+                mPresenter.addNewSession();
             }
         });
 //        // Set up floating action button
@@ -199,12 +194,14 @@ public class SessionFragment extends Fragment implements SessionContract.View {
         mListAdapter.replaceData(sessions);
         System.out.println("SET VISIBLE");
         mSessionView.setVisibility(View.VISIBLE);
+        mNoSessionsView.setVisibility(View.GONE);
         System.out.println("SET VISIBLE");
     }
 
     @Override
-    public void showAddGraph() {
-
+    public void showAddSession() {
+        Intent intent = new Intent(getContext(), AddNewGraphActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -269,7 +266,7 @@ public class SessionFragment extends Fragment implements SessionContract.View {
 
     @Override
     public boolean isActive() {
-        return false;
+        return isAdded();
     }
 
     @Override
@@ -288,8 +285,14 @@ public class SessionFragment extends Fragment implements SessionContract.View {
         }
 
         public void replaceData(List<Session> sessions) {
+            System.out.println("REPLACE DATA HAS BEEN CALLED");
             setList(sessions);
+            System.out.println("REPLACE DATA HAS BEEN CALLED LIST SET, Size of sessions is: " + sessions.size());
             notifyDataSetChanged();
+            System.out.println("REPLACE DATA HAS BEEN CALLED NOTIFIED");
+            for (Session session : sessions) {
+                System.out.println("SESSIONS LIST ELEMENT: " + session.getTitle() + " " + session.getDescription());
+            }
         }
 
         private void setList(List<Session> sessions) {
@@ -314,6 +317,7 @@ public class SessionFragment extends Fragment implements SessionContract.View {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
+            System.out.println("CALLED GET VIEW FROM FRAGMENT'S ADAPTER");
             View rowView = view;
             if (rowView == null) {
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
@@ -323,7 +327,7 @@ public class SessionFragment extends Fragment implements SessionContract.View {
             final Session session = getItem(i);
 
             TextView graphText = (TextView) rowView.findViewById(R.id.title);
-            graphText.setText("TO DO LATER, TO DO LATER, TO DO LATER");
+            graphText.setText(session.getId());
 
             //TODO-> remove checkbox?
             CheckBox removeItemCB = (CheckBox) rowView.findViewById(R.id.removeItem);
@@ -362,7 +366,7 @@ public class SessionFragment extends Fragment implements SessionContract.View {
                     mItemListener.onGraphClick(session);
                 }
             });
-            return null;
+            return rowView;
         }
     }
 

@@ -1,12 +1,10 @@
-package pl.grzegorziwanek.altimeter.app.data.source;
+package pl.grzegorziwanek.altimeter.app.model.database.source;
 
 import android.support.annotation.NonNull;
 
-import com.jjoe64.graphview.GraphView;
-
 import java.util.List;
 
-import pl.grzegorziwanek.altimeter.app.data.Session;
+import pl.grzegorziwanek.altimeter.app.model.Session;
 
 /**
  * Entry point for accessing graphs data.
@@ -35,11 +33,14 @@ public interface SessionDataSource {
         void onDataNotAvailable();
     }
 
+    interface SaveSessionCallback {
+
+        void onNewSessionSaved(String id);
+    }
+
     void createSession(@NonNull Session session);
 
-    void saveSession(@NonNull Session session);
-
-
+    void saveSession(@NonNull Session session, @NonNull SaveSessionCallback callback);
 
     void getSessions(@NonNull LoadSessionsCallback callback);
 //
@@ -57,10 +58,12 @@ public interface SessionDataSource {
 //
 //    void clearCompletedSessions();
 //
+    void clearSessionData(@NonNull String sessionId);
+
     void refreshSessions();
 
     void deleteAllSessions();
-//
-//    void deleteSession(@NonNull String graphId);
+
+    void deleteSession(@NonNull String sessionId);
 }
 

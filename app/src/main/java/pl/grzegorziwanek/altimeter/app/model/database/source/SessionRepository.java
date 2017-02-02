@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.data.source;
+package pl.grzegorziwanek.altimeter.app.model.database.source;
 
 import android.support.annotation.NonNull;
 
@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import pl.grzegorziwanek.altimeter.app.data.Session;
+import pl.grzegorziwanek.altimeter.app.model.Session;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -90,7 +90,9 @@ public class SessionRepository implements SessionDataSource {
             mSessionLocalDataSource.getSessions(new LoadSessionsCallback() {
                 @Override
                 public void onSessionLoaded(List<Session> sessions) {
+                    System.out.println("onSessionLoaded callback SessionRepository, sessions size: " + sessions.size());
                     refreshCache(sessions);
+                    System.out.println("onSessionLoaded callback SessionRepository, cache size: " + mCachedSessions.size());
                     callback.onSessionLoaded(new ArrayList<>(mCachedSessions.values()));
                 }
 
@@ -103,11 +105,16 @@ public class SessionRepository implements SessionDataSource {
     }
 
     @Override
-    public void saveSession(@NonNull Session session) {
+    public void saveSession(@NonNull Session session, @NonNull final SaveSessionCallback callback) {
         //TODO-> consider adding remote data source
         //save to database
         checkNotNull(session);
-        mSessionLocalDataSource.saveSession(session);
+        mSessionLocalDataSource.saveSession(session, new SaveSessionCallback() {
+            @Override
+            public void onNewSessionSaved(String id) {
+                callback.onNewSessionSaved(id);
+            }
+        });
 
         // Do in memory cache update to keep the app UI to date
         // Add to cache
@@ -123,6 +130,11 @@ public class SessionRepository implements SessionDataSource {
     }
 
     @Override
+    public void clearSessionData(@NonNull String sessionId) {
+        //TODO -> delete data of one session from database
+    }
+
+    @Override
     public void deleteAllSessions() {
         mSessionRemoteDataSource.deleteAllSessions();
         mSessionLocalDataSource.deleteAllSessions();
@@ -134,6 +146,11 @@ public class SessionRepository implements SessionDataSource {
         mCachedSessions.clear();
     }
 
+    @Override
+    public void deleteSession(@NonNull String sessionId) {
+        //TODO -> delete single session from here
+    }
+
     //todo -> finish that one
     private void refreshCache(List<Session> sessions) {
         if (mCachedSessions == null) {
@@ -142,6 +159,8 @@ public class SessionRepository implements SessionDataSource {
         mCachedSessions.clear();
         for (Session session : sessions) {
             mCachedSessions.put(session.getId(), session);
+            System.out.println("ADD NEW SESSION IN TO CACHE: " + session.getId());
+            System.out.println("Session id: " + session.getId());
         }
         mCacheIsDirty = false;
     }
@@ -150,23 +169,23 @@ public class SessionRepository implements SessionDataSource {
     private void refreshLocalDataSource(List<Session> sessions) {
         mSessionLocalDataSource.deleteAllSessions();
         for (Session session : sessions) {
-            mSessionLocalDataSource.saveSession(session);
+            mSessionLocalDataSource.saveSession(session, null);
         }
     }
 
     private void getSessionsFromRemoteDataSource(@NonNull final LoadSessionsCallback callback) {
-        mSessionRemoteDataSource.getSessions(new LoadSessionsCallback() {
-            @Override
-            public void onSessionLoaded(List<Session> sessions) {
-                refreshCache(sessions);
-                refreshLocalDataSource(sessions);
-                callback.onSessionLoaded(new ArrayList<>(mCachedSessions.values()));
-            }
-
-            @Override
-            public void onDataNotAvailable() {
-                callback.onDataNotAvailable();
-            }
-        });
+//        mSessionRemoteDataSource.getSessions(new LoadSessionsCallback() {
+//            @Override
+//            public void onSessionLoaded(List<Session> sessions) {
+//                refreshCache(sessions);
+//                refreshLocalDataSource(sessions);
+//                callback.onSessionLoaded(new ArrayList<>(mCachedSessions.values()));
+//            }
+//
+//            @Override
+//            public void onDataNotAvailable() {
+//                callback.onDataNotAvailable();
+//            }
+//        });
     }
 }

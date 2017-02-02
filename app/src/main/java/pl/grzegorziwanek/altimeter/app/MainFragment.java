@@ -1,9 +1,6 @@
 package pl.grzegorziwanek.altimeter.app;
 
 import android.annotation.SuppressLint;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -53,6 +51,10 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     public MainFragment() {}
 
+    public static MainFragment newInstance() {
+        return new MainFragment();
+    }
+
     private static final String LOG_TAG = MainFragment.class.getSimpleName();
     public static final String PREFS_NAME = "MyPrefsFile";
 
@@ -78,7 +80,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     @BindView(R.id.min_height_numbers) TextView sMinElevTextView;
     @BindView(R.id.location_label) TextView sCurrAddressTextView;
     @BindView(R.id.distance_numbers) TextView sDistanceTextView;
-    @BindView(R.id.refresh_button) ImageButton sRefreshButton;
+    @BindView(R.id.reset_button) ImageButton sRefreshButton;
     @BindView(R.id.pause_button) ImageButton sPlayPauseButton;
     @BindView(R.id.map_fragment_button) ImageButton sMapFragmentButton;
 
@@ -120,7 +122,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     @Override
     public void onResume() {
         super.onResume();
-        updateOnResume();
+        //updateOnResume();
     }
 
     @Override
@@ -144,25 +146,25 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     @Override
     public void onLocationChanged(Location location) {
-        //TODO->remove part which is checking for "pause icon" and replace it with something else
-        if (location != null && Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_white_18dp) {
-            appendLocationToList(location);
-
-            if ((Double) mLastLocation.getAltitude() != null) {
-                updateDistance(mLastLocation, location);
-            }
-
-            if (mLastLocation != null) {
-                setGeoCoordinates(location);
-            }
-            fetchCurrAltitude(location);
-
-            if (checkActivityIsVisible()) {
-                updateCurrentPosition(location);
-                startAddressIntentService(location);
-                updateSharedPreferences();
-            }
-        }
+//        //TODO->remove part which is checking for "pause icon" and replace it with something else
+//        if (location != null && Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_white_18dp) {
+//            appendLocationToList(location);
+//
+//            if ((Double) mLastLocation.getAltitude() != null) {
+//                updateDistance(mLastLocation, location);
+//            }
+//
+//            if (mLastLocation != null) {
+//                setGeoCoordinates(location);
+//            }
+//            fetchCurrAltitude(location);
+//
+//            if (checkActivityIsVisible()) {
+//                updateCurrentPosition(location);
+//                startAddressIntentService(location);
+//                updateSharedPreferences();
+//            }
+//        }
     }
 
     //AsyncResponse interface methods (send data back to this activity from AsyncTask's onPostExecute method)
@@ -179,6 +181,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         mLastLocation.setAltitude(elevation);
     }
 
+    //!!!
     @OnClick(R.id.pause_button)
     public void onPlayPauseButtonClick() {
         //on click pause play -> switch button image and perform play/pause action;
@@ -207,12 +210,14 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
         }
     }
 
-    @OnClick(R.id.refresh_button)
+    //!!!
+    @OnClick(R.id.reset_button)
     public void onRefreshButtonClick() {
         changePlayPauseButtonIcon();
         clearData();
     }
 
+    //!!!
     @OnClick(R.id.map_fragment_button)
     public void onMapButtonClick() {
         setMapFragment();
@@ -283,6 +288,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 
     private void updateValuesOnResume() {
         updateValues();
+        mLastLocation.setAltitude(1000);
         if ((Double) mLastLocation.getAltitude() != null) {
             updateMinMaxAltitude(mLastLocation.getAltitude());
         }
@@ -432,11 +438,11 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     private void replaceFragmentWithMap() {
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.screen_welcome_activity, myMapFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+//        FragmentManager fragmentManager = getFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.screen_welcome_activity, myMapFragment);
+//        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.commit();
     }
 
     protected void startAddressIntentService(Location location) {

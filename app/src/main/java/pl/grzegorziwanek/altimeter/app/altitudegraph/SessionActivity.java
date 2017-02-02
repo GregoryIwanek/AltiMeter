@@ -16,8 +16,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.grzegorziwanek.altimeter.app.BasicActivity;
 import pl.grzegorziwanek.altimeter.app.R;
-import pl.grzegorziwanek.altimeter.app.data.source.SessionRepository;
-import pl.grzegorziwanek.altimeter.app.data.source.local.SessionLocalDataSource;
+import pl.grzegorziwanek.altimeter.app.model.database.source.SessionRepository;
+import pl.grzegorziwanek.altimeter.app.model.database.source.local.SessionLocalDataSource;
 import pl.grzegorziwanek.altimeter.app.utils.ActivityUtils;
 
 /**
@@ -25,7 +25,7 @@ import pl.grzegorziwanek.altimeter.app.utils.ActivityUtils;
  */
 public class SessionActivity extends BasicActivity {
 
-    //    private static final String CURRENT_FILTERING_KEY = "CURRENT_FILTERING_KEY";
+    //private static final String CURRENT_FILTERING_KEY = "CURRENT_FILTERING_KEY";
     private static final String LOG_TAG = SessionActivity.class.getSimpleName();
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
@@ -62,7 +62,7 @@ public class SessionActivity extends BasicActivity {
 
     private void setPresenter() {
         mSessionPresenter = new SessionPresenter(
-                SessionRepository.getInstance(SessionLocalDataSource.getInstance(getApplicationContext())),
+                SessionRepository.getInstance(SessionLocalDataSource.getInstance(this.getApplicationContext())),
                 mSessionFragment);
     }
 

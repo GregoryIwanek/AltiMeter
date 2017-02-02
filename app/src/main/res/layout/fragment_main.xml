@@ -35,7 +35,7 @@
                         android:layout_weight="1.5"/>
 
                     <ImageButton
-                        android:id="@+id/refresh_button"
+                        android:id="@+id/reset_button"
                         android:clickable="true"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

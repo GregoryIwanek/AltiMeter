@@ -8,7 +8,7 @@ import java.util.List;
 
 import pl.grzegorziwanek.altimeter.app.BasePresenter;
 import pl.grzegorziwanek.altimeter.app.BaseView;
-import pl.grzegorziwanek.altimeter.app.data.Session;
+import pl.grzegorziwanek.altimeter.app.model.Session;
 
 /**
  * Created by Grzegorz Iwanek on 18.01.2017.
@@ -21,7 +21,7 @@ public interface SessionContract {
 
         void showSessions(List<Session> sessions);
 
-        void showAddGraph();
+        void showAddSession();
 
         void showGraphDetailsUi(String graphId);
 

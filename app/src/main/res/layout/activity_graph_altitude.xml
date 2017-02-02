@@ -28,6 +28,10 @@
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
         </android.support.design.widget.AppBarLayout>
 
+        <FrameLayout
+            android:id="@id/coordinatorContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
             <android.support.design.widget.CoordinatorLayout
                 android:id="@+id/coordinatorLayout"
                 android:layout_width="match_parent"
@@ -49,6 +53,7 @@
                     app:layout_anchor="@id/contentFrame"
                     app:layout_anchorGravity="bottom|right|end"/>
             </android.support.design.widget.CoordinatorLayout>
+        </FrameLayout>
     </LinearLayout>
 
     <!-- Navigation Drawer -->

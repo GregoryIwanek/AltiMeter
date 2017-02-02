@@ -7,9 +7,9 @@ import com.jjoe64.graphview.GraphView;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.grzegorziwanek.altimeter.app.data.Session;
-import pl.grzegorziwanek.altimeter.app.data.source.SessionDataSource;
-import pl.grzegorziwanek.altimeter.app.data.source.SessionRepository;
+import pl.grzegorziwanek.altimeter.app.model.Session;
+import pl.grzegorziwanek.altimeter.app.model.database.source.SessionDataSource;
+import pl.grzegorziwanek.altimeter.app.model.database.source.SessionRepository;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -32,15 +32,16 @@ public class SessionPresenter implements SessionContract.Presenter {
 
     @Override
     public void start() {
-        for (int i=0; i<10; i++) {
-            createTask("SESSION", "SESSION", "da");
-        }
+//        for (int i=0; i<10; i++) {
+//            createTask("SESSION", "SESSION");
+//        }
         loadSessions(false);
     }
 
-    private void createTask(String title, String description, String id) {
-        Session newSession = new Session(title, description, id);
-        mSessionRepository.saveSession(newSession);
+    private void createTask(String title, String description) {
+        Session newSession = new Session(title, description);
+        mSessionRepository.saveSession(newSession, null);
+        System.out.println("SESSION SAVED FROM PRESENTER");
     }
 
     @Override
@@ -77,7 +78,7 @@ public class SessionPresenter implements SessionContract.Presenter {
         mSessionRepository.getSessions(new SessionDataSource.LoadSessionsCallback() {
             @Override
             public void onSessionLoaded(List<Session> sessions) {
-                System.out.println("CALLING OnSessionLoaded SPresenter");
+                System.out.println("CALLING OnSessionLoaded SPresenter" + sessions.size());
                 List<Session> sessionsToShow = new ArrayList<Session>();
                 // This callback may be called twice, once for the cache and once for loading
                 // the data from the server API, so we check before decrementing, otherwise
@@ -104,7 +105,7 @@ public class SessionPresenter implements SessionContract.Presenter {
                 // The view may not be able to handle UI updates anymore
                 if (!mSessionView.isActive()) {
                     System.out.println("CALLING !mSessionView.isActive() SPresenter");
-                    //return;
+                    return;
                 }
                 if (showLoadingUI) {
                     mSessionView.setLoadingIndicator(false);
@@ -126,6 +127,7 @@ public class SessionPresenter implements SessionContract.Presenter {
     }
 
     private void processSessions(List<Session> sessions) {
+        System.out.println("PROCESS SESSION WILL BE CALLED NOW size()+" + sessions.size());
         if (sessions.isEmpty()) {
             // Show a message indicating there are no tasks for that filter type.
             System.out.println("PROCESSING EMPTY SESSION SPresenter");
@@ -173,7 +175,7 @@ public class SessionPresenter implements SessionContract.Presenter {
 
     @Override
     public void addNewSession() {
-
+        mSessionView.showAddSession();
     }
 
     @Override
