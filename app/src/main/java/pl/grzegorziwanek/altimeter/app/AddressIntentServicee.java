@@ -21,16 +21,16 @@ import java.util.Locale;
  * Implements IntentService; Has to be included in manifest file in corresponding activity section;
  * Returns address through use of geocoder class;
  */
-public class AddressIntentService extends IntentService {
+public class AddressIntentServicee extends IntentService {
 
-    private static final String LOG_TAG = AddressIntentService.class.getSimpleName();
+    private static final String LOG_TAG = AddressIntentServicee.class.getSimpleName();
     protected ResultReceiver resultReceiver;
 
-    public AddressIntentService() {
+    public AddressIntentServicee() {
         super("EMPTY CONSTRUCTOR");
     }
 
-    public AddressIntentService(String name) {
+    public AddressIntentServicee(String name) {
         super(name);
     }
 

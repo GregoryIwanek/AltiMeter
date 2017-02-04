@@ -15,8 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import pl.grzegorziwanek.altimeter.app.Constants;
 import pl.grzegorziwanek.altimeter.app.R;
+import pl.grzegorziwanek.altimeter.app.model.location.CallbackResponse;
+import pl.grzegorziwanek.altimeter.app.model.location.Constants;
 
 /**
  * Created by Grzegorz Iwanek on 30.11.2016.
@@ -24,10 +25,11 @@ import pl.grzegorziwanek.altimeter.app.R;
  * Implements IntentService; Has to be included in manifest file in corresponding activity section;
  * Returns address through use of geocoder class;
  */
+//TODO -> forge it into a AsyncTask
 public class AddressIntentService extends IntentService {
 
     private static final String LOG_TAG = AddressIntentService.class.getSimpleName();
-    protected ResultReceiver resultReceiver;
+    private ResultReceiver mResultReceiver;
 
     public AddressIntentService() {
         super("EMPTY CONSTRUCTOR");
@@ -44,7 +46,7 @@ public class AddressIntentService extends IntentService {
 
         //create geocoder instance-> it will handle reversed geocoding operation
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        Location location = intent.getParcelableExtra(Constants.LOCATION_DATA_EXTRA);
+        Location location = intent.getParcelableExtra(Constants.LOCATION_DATA);
 
         String errorMessage = "";
 
@@ -94,12 +96,12 @@ public class AddressIntentService extends IntentService {
     }
 
     private void bindResultReceiver(Intent intent) {
-        resultReceiver = intent.getParcelableExtra(Constants.RECEIVER);
+        mResultReceiver = intent.getParcelableExtra(Constants.RECEIVER);
     }
 
     private void deliverResultToReceiver(int resultCode, String message) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.RESULT_DATA_KEY, message);
-        resultReceiver.send(resultCode, bundle);
+        mResultReceiver.send(resultCode, bundle);
     }
 }

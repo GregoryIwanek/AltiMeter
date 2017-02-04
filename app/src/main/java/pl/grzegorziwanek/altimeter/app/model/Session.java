@@ -13,10 +13,24 @@ import java.util.UUID;
 
 public final class Session {
 
-    private String mTitle;
-    private String mDescription;
-    private ArrayList<Location> mLocationList;
     private final String mId;
+    private String mTitle = "TFUU";
+    private String mDescription = "SRU";
+    private String mLatitude = "OOO";
+    private String mLongitude = "DADA";
+    private String mAddress = "HEHE";
+    private Double mCurrentElevation;
+    private String mMinHeight = "HUE";
+    private String mMaxHeight = "HI";
+    private Location mLastLocation;
+    private ArrayList<Location> mLocationList;
+
+//    private Session mSession;
+//    private Location mLastLocation;
+//    private String mLatitude;
+//    private String mLongitude;
+//    private String mAdress;
+//    private Double mCurrentElevation;
 
     /**
      * Use this constructor to create new recording session. Unique ID generated automatically.
@@ -83,7 +97,39 @@ public final class Session {
         return mDescription;
     }
 
-    public void setDescription(String mDescription) {
-        this.mDescription = mDescription;
+    public void setDescription(String description) {
+        mDescription = description;
+    }
+
+    public String getLatitude() {
+        return mLatitude;
+    }
+
+    public void setLatitude(String latitude) {
+        mLatitude = latitude;
+    }
+
+    public String getLongitude() {
+        return mLongitude;
+    }
+
+    public void setLongitude(String longitude) {
+        mLongitude = longitude;
+    }
+
+    public String getAddress() {
+        return mAddress;
+    }
+
+    public void setmAddress(String mAddress) {
+        this.mAddress = mAddress;
+    }
+
+    public Double getCurrentElevation() {
+        return mCurrentElevation;
+    }
+
+    public void setCurrentElevation(Double elevation) {
+        mCurrentElevation = elevation;
     }
 }

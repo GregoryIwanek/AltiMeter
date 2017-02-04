@@ -19,6 +19,20 @@ public interface AddNewGraphContract {
 
         void setButtonPicture(int imageId);
 
+        void setAddressTextView(String address);
+
+        void setElevationTextView(String elevation);
+
+        void setMinHeightTextView(String minHeight);
+
+        void setDistanceTextView(String distance);
+
+        void setMaxHeightTextView(String maxHeight);
+
+        void setLatTextView(String latitude);
+
+        void setLongTextView(String longitude);
+
         void drawGraph(ArrayList<Location> locations);
 
         void updateGraph(ArrayList<Location> locations);

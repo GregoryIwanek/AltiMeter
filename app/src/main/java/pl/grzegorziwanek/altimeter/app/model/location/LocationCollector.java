@@ -1,10 +1,22 @@
 package pl.grzegorziwanek.altimeter.app.model.location;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Parcel;
+import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import pl.grzegorziwanek.altimeter.app.model.Session;
+import pl.grzegorziwanek.altimeter.app.model.location.services.AddressIntentService;
+import pl.grzegorziwanek.altimeter.app.model.location.services.FetchElevationTask;
+import pl.grzegorziwanek.altimeter.app.model.location.services.FormatAndValueConverter;
 import pl.grzegorziwanek.altimeter.app.model.location.services.GoogleLocationListener;
+import pl.grzegorziwanek.altimeter.app.newgraph.AddNewGraphPresenter;
 
 /**
  * Created by Grzegorz Iwanek on 01.02.2017.
@@ -13,13 +25,20 @@ import pl.grzegorziwanek.altimeter.app.model.location.services.GoogleLocationLis
 public class LocationCollector implements CallbackResponse {
 
     private static LocationCollector INSTANCE = null;
-    private GoogleLocationListener mLocationListener;
-    private LocationChangedCallback callback;
-    private Location mLastLocation = null;
+    private CallbackResponse mGoogleLocationListener;
+    private FullLocationInfoCallback callbackFullInfo;
+    private LocationChangedCallback callbackNewLocation;
+    private ElevationFetchedCallback callbackElevation;
+    private AddressFetchedCallback callbackAddress;
+    private AddressResultReceiver mResultReceiver;
+    private Context mContext;
+    private Session mSession = null;
+    private Boolean mHasCallback = false;
 
     private LocationCollector(@NonNull Context context) {
-        setCallback();
-        mLocationListener = GoogleLocationListener.getInstance(context, callback);
+        setCallbacks();
+        setVariables(context);
+        mSession = new Session("DLA", "CIEBIE");
     }
 
     public static LocationCollector getInstance(@NonNull Context context) {
@@ -29,26 +48,115 @@ public class LocationCollector implements CallbackResponse {
         return INSTANCE;
     }
 
-    private void setCallback() {
-        callback = new LocationChangedCallback() {
+    private void setVariables(Context context) {
+        mContext = context;
+        mGoogleLocationListener = GoogleLocationListener.getInstance(context, callbackNewLocation);
+        mResultReceiver = new AddressResultReceiver(new Handler());
+    }
+
+    /**
+     * Callbacks used to communicate between THIS {@link LocationCollector} and members:
+     * {@link GoogleLocationListener}   sends back updates of location,
+     * {@link FetchElevationTask}       sends back elevation of location,
+     * {@link AddressIntentService}     sends back closest address of location.
+     */
+    private void setCallbacks() {
+        callbackNewLocation = new LocationChangedCallback() {
             @Override
             public void onNewLocationFound(Location location) {
-                mLastLocation = location;
+                setGeoCoordinateStr(location);
+                fetchCurrentElevation(location);
+                fetchAddress(location);
+            }
+        };
+
+        callbackElevation = new ElevationFetchedCallback() {
+            @Override
+            public void onElevationFound(Double elevation) {
+                setCurrentElevation(elevation);
+                checkIfHaveFullInfo();
+            }
+        };
+
+        callbackAddress = new AddressFetchedCallback() {
+            @Override
+            public int describeContents() {return 0; }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {}
+
+            @Override
+            public void onAddressFound(String address) {
+                setAddress(address);
+                checkIfHaveFullInfo();
             }
         };
     }
 
+    private void checkIfHaveFullInfo() {
+        if (mHasCallback && mSession.getCurrentElevation() != null && mSession.getAddress() != null) {
+            callbackFullInfo.onFullLocationInfoAcquired(mSession);
+        }
+    }
+
+    private void setGeoCoordinateStr(Location location) {
+        String latitudeStr = FormatAndValueConverter.setGeoCoordinateStr(location.getLatitude(), true);
+        String longitudeStr = FormatAndValueConverter.setGeoCoordinateStr(location.getLongitude(), false);
+        mSession.setLatitude(latitudeStr);
+        mSession.setLongitude(longitudeStr);
+    }
+
+    private void fetchCurrentElevation(Location location) {
+        FetchElevationTask task = new FetchElevationTask(callbackElevation);
+        task.setLocationsStr(location);
+        task.execute();
+    }
+
+    private void fetchAddress(Location location) {
+        Intent intent = new Intent(mContext, AddressIntentService.class);
+        intent.putExtra(Constants.RECEIVER, mResultReceiver);
+        intent.putExtra(Constants.LOCATION_DATA, location);
+        mContext.startService(intent);
+    }
+
+    private void setAddress(String address) {
+        mSession.setmAddress(address);
+    }
+
+    private void setCurrentElevation(Double elevation) {
+        mSession.setCurrentElevation(elevation);
+    }
+
     @Override
     public void stopListenForLocations() {
-        mLocationListener.stopListenForLocations();
+        mGoogleLocationListener.stopListenForLocations();
     }
 
     @Override
-    public void startListenForLocations() {
-        mLocationListener.startListenForLocations();
+    public void startListenForLocations(@Nullable FullLocationInfoCallback callback) {
+        callbackFullInfo = callback;
+        mHasCallback = true;
+        mGoogleLocationListener.startListenForLocations(null);
+    }
+
+    @SuppressLint("ParcelCreator")
+    class AddressResultReceiver extends ResultReceiver {
+
+        String mAddressOutput;
+
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            super.onReceiveResult(resultCode, resultData);
+
+            mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
+            callbackAddress.onAddressFound(mAddressOutput);
+        }
     }
 }
-
 
 //GoogleApiClient.ConnectionCallbacks,
 //        GoogleApiClient.OnConnectionFailedListener, LocationListener, CallbackResponse
@@ -62,7 +170,7 @@ public class LocationCollector implements CallbackResponse {
 //    public static final String PREFS_NAME = "MyPrefsFile";
 //
 //    private GoogleApiClient mGoogleApiClient;
-//    private FetchDataInfoTask mFetchDataInfoTask;
+//    private FetchElevationTask mFetchDataInfoTask;
 //    private static FormatAndValueConverter sFormatAndValueConverter;
 //
 //    //variables to hold data as doubles and refactor them later into TextViews
@@ -100,28 +208,23 @@ public class LocationCollector implements CallbackResponse {
 //    @Override
 //    public void onCreate(Bundle savedInstanceState) {
 //        super.onCreate(savedInstanceState);
-//        initiateGooglePlayService();
 //        initiateVariables();
 //    }
 //
 //    @Override
 //    public void onStart() {
 //        super.onStart();
-//        connectGoogleAPIClient();
 //    }
 //
 //    @Override
 //    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 //        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-//        ButterKnife.bind(this, rootView);
-//        initiateButtonsTags();
 //        return rootView;
 //    }
 //
 //    @Override
 //    public void onPause() {
 //        super.onPause();
-//        Log.v(LOG_TAG, " onPause CALLED");
 //        updateSharedPreferences();
 //    }
 //
@@ -361,7 +464,7 @@ public class LocationCollector implements CallbackResponse {
 //    private void initiateVariables() {
 //        mLocationList = new ArrayList<>();
 //        sFormatAndValueConverter = new FormatAndValueConverter();
-//        mFetchDataInfoTask = new FetchDataInfoTask(this);
+//        mFetchDataInfoTask = new FetchElevationTask(this);
 //        sResultReceiver = new pl.grzegorziwanek.altimeter.app.MainFragment.AddressResultReceiver(new Handler());
 //    }
 //
@@ -452,9 +555,9 @@ public class LocationCollector implements CallbackResponse {
 //    }
 //
 //    protected void startAddressIntentService(Location location) {
-//        Intent intent = new Intent(this.getActivity(), AddressIntentService.class);
+//        Intent intent = new Intent(this.getActivity(), AddressIntentServicee.class);
 //        intent.putExtra(Constants.RECEIVER, sResultReceiver);
-//        intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);
+//        intent.putExtra(Constants.LOCATION_DATA, location);
 //        this.getActivity().startService(intent);
 //    }
 //
@@ -509,7 +612,7 @@ public class LocationCollector implements CallbackResponse {
 //    }
 //
 //    private void fetchCurrAltitude(Location location) {
-//        mFetchDataInfoTask = new FetchDataInfoTask(this);
+//        mFetchDataInfoTask = new FetchElevationTask(this);
 //        mFetchDataInfoTask.setLocationsStr(location);
 //        mFetchDataInfoTask.execute();
 //    }
@@ -590,14 +693,6 @@ public class LocationCollector implements CallbackResponse {
 //        String units = getPreferencesString(sharedPreferences, "pref_set_units");
 //        sFormatAndValueConverter.setUnitsFormat(units);
 //    }
-//
-//    @Override
-//    public void onConnectionSuspended(int i) {
-//        Log.v(LOG_TAG, "Connection suspended, no location updates will be received");
-//    }
-//
-//    @Override
-//    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-//        Log.v(LOG_TAG, "Error occur, connection failed: " + connectionResult.getErrorMessage());
-//    }
 //}
+
+

@@ -43,7 +43,7 @@ import pl.grzegorziwanek.altimeter.app.Map.MyMapFragment;
  * Implements:
  * google's api location client (ConnectionCallbacks, OnConnectionFailedListener, LocationListener);
  * customized CallbackResponse interface (to return location data through AsyncTask's onPostExecute method);
- * inner class to catch data from AddressIntentService;
+ * inner class to catch data from AddressIntentServicee;
  * Uses ButcherKnife outer library;
  */
 public class MainFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
@@ -446,7 +446,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     protected void startAddressIntentService(Location location) {
-        Intent intent = new Intent(this.getActivity(), AddressIntentService.class);
+        Intent intent = new Intent(this.getActivity(), AddressIntentServicee.class);
         intent.putExtra(Constants.RECEIVER, sResultReceiver);
         intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);
         this.getActivity().startService(intent);

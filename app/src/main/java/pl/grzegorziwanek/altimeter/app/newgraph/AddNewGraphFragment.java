@@ -101,7 +101,6 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
                 Toast.makeText(this.getActivity(), "Error occur, no play pause button available", Toast.LENGTH_SHORT).show();
                 break;
         }
-
     }
 
     @OnClick(R.id.reset_button)
@@ -132,6 +131,41 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
     @Override
     public void setButtonPicture(int imageId) {
         mPlayPauseButton.setBackgroundResource(imageId);
+    }
+
+    @Override
+    public void setAddressTextView(String address) {
+        mCurrAddressTextView.setText(address);
+    }
+
+    @Override
+    public void setElevationTextView(String elevation) {
+        mCurrElevationTextView.setText(elevation);
+    }
+
+    @Override
+    public void setMinHeightTextView(String minHeight) {
+        mMinElevTextView.setText(minHeight);
+    }
+
+    @Override
+    public void setDistanceTextView(String distance) {
+        mDistanceTextView.setText(distance);
+    }
+
+    @Override
+    public void setMaxHeightTextView(String maxHeight) {
+        mMaxElevTextView.setText(maxHeight);
+    }
+
+    @Override
+    public void setLatTextView(String latitude) {
+        mCurrLatitudeTextView.setText(latitude);
+    }
+
+    @Override
+    public void setLongTextView(String longitude) {
+        mCurrLongitudeTextView.setText(longitude);
     }
 
     @Override

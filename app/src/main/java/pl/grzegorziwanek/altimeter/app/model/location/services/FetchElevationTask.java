@@ -17,22 +17,22 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 
-import pl.grzegorziwanek.altimeter.app.AsyncResponse;
+import pl.grzegorziwanek.altimeter.app.model.location.CallbackResponse;
 
 /**
  *Inner class responsible for background update, have to extend AsyncTask<params, progress, result>
  *ASyncTask <params, progress, result> -> params: given entry data to work on; progress: data to show progress; result: result of background execution
  */
 
-public class FetchDataInfoTask extends AsyncTask<Void, Void, Void> {
-    private final String LOG_TAG = FetchDataInfoTask.class.getSimpleName();
+public class FetchElevationTask extends AsyncTask<Void, Void, Void> {
+    private final String LOG_TAG = FetchElevationTask.class.getSimpleName();
     final String APPID_KEY = "AIzaSyDz8OSO03MnSdoE-0FFN9sZaIyFRlpf79Y"; // TODO move that to config
     private String mLocationsStr;
-    private AsyncResponse mAsyncResponse;
+    private CallbackResponse.ElevationFetchedCallback mCallback;
     private Double mCurrentEleValue;
 
-    public FetchDataInfoTask(AsyncResponse asyncResponse) {
-        mAsyncResponse = asyncResponse;
+    public FetchElevationTask(CallbackResponse.ElevationFetchedCallback callback) {
+        mCallback = callback;
     }
 
     public void setLocationsStr(Location record) {
@@ -205,7 +205,7 @@ public class FetchDataInfoTask extends AsyncTask<Void, Void, Void> {
             mCurrentEleValue = (double) Math.round(mCurrentEleValue);
 
             //pass data to MainFragment through CallbackResponse interface
-            mAsyncResponse.processAccurateElevation(mCurrentEleValue);
+            mCallback.onElevationFound(mCurrentEleValue);
         } else {
             Log.v(LOG_TAG, " onPostExecute, current elevation wasn't fetched from JSON, stopped");
         }

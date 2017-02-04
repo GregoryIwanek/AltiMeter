@@ -53,6 +53,6 @@ public class AddNewGraphActivity extends BasicActivity {
     private void setPresenter() {
         mAddNewGraphPresenter = new AddNewGraphPresenter(
                 SessionRepository.getInstance(SessionLocalDataSource.getInstance(getApplicationContext())),
-                mAddNewGraphFragment, LocationCollector.getInstance(getApplicationContext()));
+                LocationCollector.getInstance(getApplicationContext()), mAddNewGraphFragment);
     }
 }
