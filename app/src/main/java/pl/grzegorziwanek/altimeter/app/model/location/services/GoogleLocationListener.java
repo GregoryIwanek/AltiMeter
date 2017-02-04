@@ -45,7 +45,7 @@ public class GoogleLocationListener implements GoogleApiClient.ConnectionCallbac
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        startListenForLocations(null);
+        //startListenForLocations(null);
     }
 
     @Override

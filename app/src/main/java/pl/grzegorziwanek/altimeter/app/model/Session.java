@@ -14,23 +14,20 @@ import java.util.UUID;
 public final class Session {
 
     private final String mId;
-    private String mTitle = "TFUU";
-    private String mDescription = "SRU";
-    private String mLatitude = "OOO";
-    private String mLongitude = "DADA";
-    private String mAddress = "HEHE";
-    private Double mCurrentElevation;
-    private String mMinHeight = "HUE";
-    private String mMaxHeight = "HI";
-    private Location mLastLocation;
-    private ArrayList<Location> mLocationList;
+    private String mTitle = "TITLE";
+    private String mDescription = "DESCRIPTION";
 
-//    private Session mSession;
-//    private Location mLastLocation;
-//    private String mLatitude;
-//    private String mLongitude;
-//    private String mAdress;
-//    private Double mCurrentElevation;
+    private String mLatitudeStr = "00°00'00''X";
+    private String mLongitudeStr = "00°00'00''Y";
+    private String mAddress = "Solar System," +'\n'+ "Milky Way," +'\n'+ "Laniakea";
+
+    private Double mCurrElevation = null;
+    private Double mMinHeight = (double) 10000;
+    private Double mMaxHeight = (double) -10000;
+    private String mMinHeightStr = "TEST 6"; //??
+    private String mMaxHeightStr = "TEST 7"; //??
+    private static Location mLastLocation = null;
+    private static ArrayList<Location> mLocationList = null;
 
     /**
      * Use this constructor to create new recording session. Unique ID generated automatically.
@@ -102,34 +99,46 @@ public final class Session {
     }
 
     public String getLatitude() {
-        return mLatitude;
+        return mLatitudeStr;
     }
 
     public void setLatitude(String latitude) {
-        mLatitude = latitude;
+        mLatitudeStr = latitude;
     }
 
     public String getLongitude() {
-        return mLongitude;
+        return mLongitudeStr;
     }
 
     public void setLongitude(String longitude) {
-        mLongitude = longitude;
+        mLongitudeStr = longitude;
     }
 
     public String getAddress() {
         return mAddress;
     }
 
-    public void setmAddress(String mAddress) {
-        this.mAddress = mAddress;
+    public void setAddress(String address) {
+        this.mAddress = address;
     }
 
     public Double getCurrentElevation() {
-        return mCurrentElevation;
+        return mCurrElevation;
     }
 
     public void setCurrentElevation(Double elevation) {
-        mCurrentElevation = elevation;
+        mCurrElevation = elevation;
+    }
+
+    public ArrayList<Location> getLocationList() {
+        return mLocationList;
+    }
+
+    public Location getLastLocation() {
+        return mLastLocation;
+    }
+
+    public void setLastLocation(Location location) {
+        mLastLocation = location;
     }
 }

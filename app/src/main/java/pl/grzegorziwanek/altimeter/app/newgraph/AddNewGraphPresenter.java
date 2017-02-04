@@ -66,6 +66,7 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
                 mAddNewGraphView.setMaxHeightTextView(session.getCurrentElevation().toString());
                 mAddNewGraphView.setLatTextView(session.getLatitude());
                 mAddNewGraphView.setLongTextView(session.getLongitude());
+                mAddNewGraphView.drawGraph(session.getLocationList());
             }
         };
 

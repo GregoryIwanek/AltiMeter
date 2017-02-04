@@ -18,7 +18,7 @@ public interface CallbackResponse {
     }
 
     @SuppressLint("ParcelCreator")
-    public interface AddressFetchedCallback extends Parcelable{
+    public interface AddressFetchedCallback {
 
         void onAddressFound(String address);
     }
