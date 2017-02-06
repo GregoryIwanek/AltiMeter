@@ -26,9 +26,7 @@ public class SessionLocalDataSource implements SessionDataSource {
     //Private to prevent direct instantiation.
     private SessionLocalDataSource(@NonNull Context context) {
         checkNotNull(context);
-        System.out.println("will create msessiondbhelper");
         mSessionDbHelper = new SessionDbHelper(context);
-        System.out.println("msessiondbhelper created");
     }
 
     public static SessionLocalDataSource getInstance(@NonNull Context context) {
@@ -38,53 +36,82 @@ public class SessionLocalDataSource implements SessionDataSource {
         return INSTANCE;
     }
 
-
     @Override
-    public void createSession(@NonNull Session session) {
-
-    }
-
-    @Override
-    public void saveSession(@NonNull Session session,@NonNull SaveSessionCallback callback) {
+    public void saveNewSession(@NonNull Session session, @NonNull SaveSessionCallback callback) {
         checkNotNull(session);
-        System.out.println("will call db");
         SQLiteDatabase db = mSessionDbHelper.getWritableDatabase();
-
-        System.out.println(db);
-        System.out.println("db gotten");
 
         ContentValues values = new ContentValues();
         values.put(SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID, session.getId());
-        values.put(SessionDbContract.SessionEntry.COLUMN_NAME_LATITUDE, "1313");
-        values.put(SessionDbContract.SessionEntry.COLUMN_NAME_LONGITUDE, "332");
-        values.put(SessionDbContract.SessionEntry.COLUMN_NAME_ALTITUDE, "043");
-        values.put(SessionDbContract.SessionEntry.COLUMN_NAME_DATE, "21312");
-        values.put(SessionDbContract.SessionEntry.COLUMN_NAME_RADIUS, "543345");
-        //CREATE TABLE records (_id TEXT PRIMARY KEY,entryid TEXT,latitude TEXT,longitude TEXT,altitude TEXT,date TEXT,radius TEXT )
 
-        System.out.println("values created");
         db.insert(SessionDbContract.SessionEntry.TABLE_NAME, null, values);
+        db.close();
 
         callback.onNewSessionSaved(session.getId());
     }
 
-    public void updateSessionData() {
-        //TODO -> make that to update columns and refactor saveSession to just save id of new session into database
+    @Override
+    public void createSessionRecordsTable(@NonNull Session session) {
+        checkNotNull(session);
+        SQLiteDatabase db = mSessionDbHelper.getWritableDatabase();
+        int oldVersion = db.getVersion();
+        int newVersion = oldVersion + 1;
+        SessionDbHelper.setOnUpgrade(session.getId());
+        mSessionDbHelper.onUpgrade(db, oldVersion, newVersion);
+        db.close();
+    }
+
+    @Override
+    public void updateSessionData(@NonNull Session session) {
+        checkNotNull(session);
+        SQLiteDatabase db = mSessionDbHelper.getWritableDatabase();
+
+        ContentValues valuesSession = getSessionValues(session);
+        ContentValues valuesRecord = getRecordValues(session);
+
+        String recordsTableName = "\"" + session.getId() +"\"";
+        insertToDb(db, SessionDbContract.SessionEntry.TABLE_NAME, valuesSession);
+        insertToDb(db, recordsTableName, valuesRecord);
+        db.close();
+    }
+
+    private ContentValues getRecordValues(Session session) {
+        ContentValues valuesRecord = new ContentValues();
+        valuesRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_LATITUDE, session.getLatitude());
+        valuesRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_LONGITUDE, session.getLongitude());
+        valuesRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_ALTITUDE, session.getCurrentElevation());
+        valuesRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_DATE, session.getCurrentLocation().getTime());
+        valuesRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_ADDRESS, session.getAddress());
+        valuesRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_DISTANCE, session.getDistance());
+        return valuesRecord;
+    }
+
+    private ContentValues getSessionValues(Session session) {
+        ContentValues valuesSession = new ContentValues();
+        valuesSession.put(SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ALTITUDE, session.getCurrentElevation());
+        valuesSession.put(SessionDbContract.SessionEntry.COLUMN_NAME_MAX_HEIGHT, session.getMaxHeight());
+        valuesSession.put(SessionDbContract.SessionEntry.COLUMN_NAME_MIN_HEIGHT, session.getMinHeight());
+        valuesSession.put(SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ADDRESS, session.getAddress());
+        valuesSession.put(SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_DISTANCE, session.getDistance());
+        return valuesSession;
+    }
+
+    private void insertToDb(SQLiteDatabase db, String tableName, ContentValues values) {
+        db.insert(tableName, null, values);
     }
 
     @Override
     public void getSessions(@NonNull LoadSessionsCallback callback) {
-        System.out.println("GET SESSIONS LOCAL CALLED");
         List<Session> sessions = new ArrayList<>();
         SQLiteDatabase db = mSessionDbHelper.getReadableDatabase();
 
         String[] projection = {
                 SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID,
-                SessionDbContract.SessionEntry.COLUMN_NAME_LATITUDE,
-                SessionDbContract.SessionEntry.COLUMN_NAME_LONGITUDE,
-                SessionDbContract.SessionEntry.COLUMN_NAME_ALTITUDE,
-                SessionDbContract.SessionEntry.COLUMN_NAME_DATE,
-                SessionDbContract.SessionEntry.COLUMN_NAME_RADIUS
+                SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ALTITUDE,
+                SessionDbContract.SessionEntry.COLUMN_NAME_MAX_HEIGHT,
+                SessionDbContract.SessionEntry.COLUMN_NAME_MIN_HEIGHT,
+                SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ADDRESS,
+                SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_DISTANCE
         };
 
         Cursor c = db.query(
@@ -94,21 +121,19 @@ public class SessionLocalDataSource implements SessionDataSource {
         if (c != null && c.getCount() > 0) {
             while (c.moveToNext()) {
                 String itemId = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID));
-                String itemLatitude = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_LATITUDE));
-                String itemLongitue = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_LONGITUDE));
+//                String itemLatitude = c.getString(c.getColumnIndexOrThrow(SessionDbContract.RecordsEntry.COLUMN_NAME_LATITUDE));
+//                String itemLongitue = c.getString(c.getColumnIndexOrThrow(SessionDbContract.RecordsEntry.COLUMN_NAME_LONGITUDE));
 //                String itemAltitude = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_ALTITUDE));
 //                String itemDate = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_DATE));
 //                String itemRadius = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_RADIUS));
-                Session session = new Session(itemLatitude, itemLongitue, itemId);
+                Session session = new Session("DADA", "WRWA", itemId);
                 sessions.add(session);
-                System.out.println("SESSION OBJECT ADDED TO LIST IN LOOP SessionLocalDataSource");
             }
         }
         if (c != null) {
             c.close();
         }
 
-        System.out.println("GET VALUES CALLED close db");
         db.close();
 
         if (sessions.isEmpty()) {

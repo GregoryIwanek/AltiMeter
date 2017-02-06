@@ -1,8 +1,6 @@
 package pl.grzegorziwanek.altimeter.app.model.location;
 
-import android.annotation.SuppressLint;
 import android.location.Location;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import pl.grzegorziwanek.altimeter.app.model.Session;
@@ -12,23 +10,22 @@ import pl.grzegorziwanek.altimeter.app.model.Session;
  */
 public interface CallbackResponse {
 
-    public interface LocationChangedCallback {
+    interface LocationChangedCallback {
 
         void onNewLocationFound(Location location);
     }
 
-    @SuppressLint("ParcelCreator")
-    public interface AddressFetchedCallback {
+    interface AddressFetchedCallback {
 
         void onAddressFound(String address);
     }
 
-    public interface ElevationFetchedCallback {
+    interface ElevationFetchedCallback {
 
         void onElevationFound(Double elevation);
     }
 
-    public interface FullLocationInfoCallback {
+    interface FullLocationInfoCallback {
 
         void onFullLocationInfoAcquired(Session session);
     }

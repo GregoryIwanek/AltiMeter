@@ -1,6 +1,7 @@
 package pl.grzegorziwanek.altimeter.app.model.location.services;
 
 import android.location.Location;
+import android.util.Log;
 
 import java.text.DecimalFormat;
 
@@ -21,7 +22,7 @@ public class FormatAndValueConverter {
      * Set required by user format of units
      * @param unitsFormat units format chosen by user
      */
-    public void setUnitsFormat(String unitsFormat) {
+    public static void setUnitsFormat(String unitsFormat) {
         mUnitsFormat = unitsFormat;
     }
 
@@ -96,9 +97,23 @@ public class FormatAndValueConverter {
         }
     }
 
+    /** Set new value of the distance
+     * @param lastLocation last known location
+     * @param currLocation current location
+     */
+    public static double updateDistanceValue(Location lastLocation, Location currLocation, Double distance) {
+        if (lastLocation != null && currLocation != null) {
+            float[] results = new float[1];
+            Location.distanceBetween(lastLocation.getLatitude(), lastLocation.getLongitude(),
+                    currLocation.getLatitude(), currLocation.getLongitude(), results);
+            distance += results[0];
+        }
+        return distance;
+    }
+
     /** Set distance string
      * @param currDistance value of distance to forge into string
-     * @return
+     * @return distanceStr
      * example: 13.23 mi*
      */
     public static String setDistanceStr(Double currDistance) {
@@ -178,26 +193,26 @@ public class FormatAndValueConverter {
     }
 
     /** Set new value of maximum altitude in a session
-     * @param altitude new value to compare
+     * @param currAltitude new value to compare
      * @param currMaxAltitude old value to compare
      * @return
      */
-    public static Double updateMaxAltitudeValue(Double altitude, Double currMaxAltitude) {
-        if (altitude > currMaxAltitude) {
-            return altitude;
+    public static Double updateMaxAltitudeValue(Double currAltitude, Double currMaxAltitude) {
+        if (currAltitude > currMaxAltitude) {
+            return currAltitude;
         } else {
             return currMaxAltitude;
         }
     }
 
     /** Set new value of minimum altitude in a session
-     * @param altitude new value to compare
+     * @param currAltitude new value to compare
      * @param currMinAltitude old min value to compare
      * @return
      */
-    public static Double updateMinAltitudeValue(Double altitude, Double currMinAltitude) {
-        if (altitude < currMinAltitude) {
-            return altitude;
+    public static Double updateMinAltitudeValue(Double currAltitude, Double currMinAltitude) {
+        if (currAltitude < currMinAltitude) {
+            return currAltitude;
         } else {
             return currMinAltitude;
         }

@@ -38,15 +38,17 @@ public interface SessionDataSource {
         void onNewSessionSaved(String id);
     }
 
-    void createSession(@NonNull Session session);
+    void createSessionRecordsTable(@NonNull Session session);
 
-    void saveSession(@NonNull Session session, @NonNull SaveSessionCallback callback);
+    void saveNewSession(@NonNull Session session, @NonNull SaveSessionCallback callback);
+
+    void updateSessionData(@NonNull Session session);
 
     void getSessions(@NonNull LoadSessionsCallback callback);
 //
 //    void getSession(@NonNull String graphId, @NonNull GetSessionCallback callback);
 //
-//    void saveSession(@NonNull Session session);
+//    void saveNewSession(@NonNull Session session);
 //
 //    void completeSession(@NonNull Session session);
 //

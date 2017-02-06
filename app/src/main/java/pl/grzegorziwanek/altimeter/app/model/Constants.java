@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.model.location;
+package pl.grzegorziwanek.altimeter.app.model;
 
 /**
  * Created by Grzegorz Iwanek on 30.11.2016.
@@ -26,6 +26,8 @@ public final class Constants {
     public static final int DISTANCE_DEFAULT = 0;
 
     public static final String DEFAULT_TEXT = "...";
+
+    public static String sessionId = "";
 }
 
 

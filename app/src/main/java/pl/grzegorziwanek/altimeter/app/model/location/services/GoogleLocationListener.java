@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -27,25 +28,25 @@ import pl.grzegorziwanek.altimeter.app.model.location.CallbackResponse;
 public class GoogleLocationListener implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, CallbackResponse {
 
-    private final CallbackResponse.LocationChangedCallback mCallback;
+    private final LocationChangedCallback mCallback;
     private final String LOG_TAG = getClass().getSimpleName();
     private final Context mContext;
     private GoogleApiClient mGoogleApiClient;
 
-    private GoogleLocationListener(Context context, CallbackResponse.LocationChangedCallback callback) {
+    private GoogleLocationListener(Context context, LocationChangedCallback callback) {
         mContext = context;
         mCallback = callback;
         buildGooglePlayService();
         connectGoogleAPIClient();
     }
 
-    public static GoogleLocationListener getInstance(Context context, CallbackResponse.LocationChangedCallback callback) {
+    public static GoogleLocationListener getInstance(Context context, LocationChangedCallback callback) {
         return new GoogleLocationListener(context, callback);
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        //startListenForLocations(null);
+        // Do nothing, location request is built after PLAY is clicked
     }
 
     @Override
@@ -60,6 +61,8 @@ public class GoogleLocationListener implements GoogleApiClient.ConnectionCallbac
 
     @Override
     public void onLocationChanged(Location location) {
+        Toast.makeText(mContext, String.valueOf(location.getTime()), Toast.LENGTH_SHORT);
+        System.out.println("TIME IS: " + location.getTime());
         mCallback.onNewLocationFound(location);
     }
 
@@ -95,9 +98,13 @@ public class GoogleLocationListener implements GoogleApiClient.ConnectionCallbac
         Long intervalLong = Long.valueOf(interval);
         locationRequest.setInterval(intervalLong);
 
+        Toast.makeText(mContext, String.valueOf(locationRequest.getInterval()), Toast.LENGTH_LONG);
+        System.out.println("INTERVAL: " + locationRequest.getInterval());
+        System.out.println("FASTEST: " + locationRequest.getFastestInterval());
+
         // set fastest possible interval
         if (intervalLong < 10000) {
-            locationRequest.setFastestInterval(5000);
+            locationRequest.setFastestInterval(10000);
         } else {
             locationRequest.setFastestInterval(intervalLong/2);
         }

@@ -13,21 +13,24 @@ import java.util.UUID;
 
 public final class Session {
 
-    private final String mId;
+    private String mId;
     private String mTitle = "TITLE";
     private String mDescription = "DESCRIPTION";
 
     private String mLatitudeStr = "00°00'00''X";
     private String mLongitudeStr = "00°00'00''Y";
     private String mAddress = "Solar System," +'\n'+ "Milky Way," +'\n'+ "Laniakea";
+    private String mMinHeightStr = null;
+    private String mMaxHeightStr = null;
+    private String mDistanceStr = "0 m";
 
+    private Double mDistance = (double) 0;
     private Double mCurrElevation = null;
     private Double mMinHeight = (double) 10000;
     private Double mMaxHeight = (double) -10000;
-    private String mMinHeightStr = "TEST 6"; //??
-    private String mMaxHeightStr = "TEST 7"; //??
-    private static Location mLastLocation = null;
-    private static ArrayList<Location> mLocationList = null;
+    private Location mLastLocation = null;
+    private Location mCurrLocation = null;
+    private ArrayList<Location> mLocationList = null;
 
     /**
      * Use this constructor to create new recording session. Unique ID generated automatically.
@@ -102,7 +105,7 @@ public final class Session {
         return mLatitudeStr;
     }
 
-    public void setLatitude(String latitude) {
+    public void setLatitudeStr(String latitude) {
         mLatitudeStr = latitude;
     }
 
@@ -110,7 +113,7 @@ public final class Session {
         return mLongitudeStr;
     }
 
-    public void setLongitude(String longitude) {
+    public void setLongitudeStr(String longitude) {
         mLongitudeStr = longitude;
     }
 
@@ -140,5 +143,61 @@ public final class Session {
 
     public void setLastLocation(Location location) {
         mLastLocation = location;
+    }
+
+    public String getMinHeightStr() {
+        return mMinHeightStr;
+    }
+
+    public void setMinHeightStr(String minHeightStr) {
+        mMinHeightStr = minHeightStr;
+    }
+
+    public String getMaxHeightStr() {
+        return mMaxHeightStr;
+    }
+
+    public void setMaxHeightStr(String maxHeightStr) {
+        mMaxHeightStr = maxHeightStr;
+    }
+
+    public String getDistanceStr() {
+        return mDistanceStr;
+    }
+
+    public void setDistanceStr(String distanceStr) {
+        mDistanceStr = distanceStr;
+    }
+
+    public Double getDistance() {
+        return mDistance;
+    }
+
+    public void setDistance(Double distance) {
+        mDistance = distance;
+    }
+
+    public Double getMinHeight() {
+        return mMinHeight;
+    }
+
+    public void setMinHeight(Double minHeight) {
+        mMinHeight = minHeight;
+    }
+
+    public Double getMaxHeight() {
+        return mMaxHeight;
+    }
+
+    public void setMaxHeight(Double maxHeight) {
+        mMaxHeight = maxHeight;
+    }
+
+    public Location getCurrentLocation() {
+        return mCurrLocation;
+    }
+
+    public void setCurrLocation(Location currLocation) {
+        mCurrLocation = currLocation;
     }
 }

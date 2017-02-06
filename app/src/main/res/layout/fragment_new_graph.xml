@@ -10,66 +10,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:layout_weight="14.5">
+        android:layout_weight="13.5">
 
-        <LinearLayout
+        <!--location label-->
+        <TextView
+            android:id="@+id/location_label"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="1">
+            android:layout_weight="1"
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_weight="1">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.5"/>
-
-                <ImageButton
-                    android:id="@+id/reset_button"
-                    android:clickable="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/ic_refresh_white_18dp"
-                    android:layout_weight="1"/>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.5"/>
-
-                <ImageButton
-                    android:id="@+id/pause_button"
-                    android:clickable="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/ic_play_arrow_white_18dp"
-                    android:layout_weight="1"/>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.5"/>
-            </LinearLayout>
-
-            <!--direction label-->
-            <TextView
-                android:id="@+id/direction_label_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-
-                android:text="@string/current_no_value"
-                android:textAppearance="?android:textAppearanceLarge"
-                android:textSize="@dimen/text_size_16sp"
-                android:gravity="center"
-                android:textAlignment="center"/>
-        </LinearLayout>
-
+            android:text="@string/current_no_value"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textSize="@dimen/text_size_16sp"
+            android:gravity="center"
+            android:textAlignment="center" />
 
         <!--current height labels-->
         <LinearLayout
@@ -103,26 +57,99 @@
                 android:gravity="center" />
         </LinearLayout>
 
-        <!--location label-->
-        <TextView
-            android:id="@+id/location_label"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_weight="1">
 
-            android:text="@string/current_no_value"
-            android:textAppearance="?android:textAppearanceLarge"
-            android:textSize="@dimen/text_size_16sp"
-            android:gravity="center"
-            android:textAlignment="center" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1">
 
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5"/>
+
+                <ImageButton
+                    android:id="@+id/reset_button"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ic_refresh_black_24dp"
+                    android:layout_weight="1"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5"/>
+
+                <ImageButton
+                    android:id="@+id/pause_button"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ic_play_arrow_black_24dp"
+                    android:layout_weight="1"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5"/>
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5"/>
+
+                <ImageButton
+                    android:id="@+id/lock_button"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ic_lock_outline_black_24dp"
+                    android:layout_weight="1"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5"/>
+
+                <ImageButton
+                    android:id="@+id/map_button"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ic_terrain_black_24dp"
+                    android:layout_weight="1"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5"/>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
     <!--drawing board-->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="11">
+        android:layout_weight="9">
 
         <!--ELEMENT FROM EXTERNAL LIBRARY TO CREATE GRAPHS IN REAL TIME-->
         <pl.grzegorziwanek.altimeter.app.newgraph.GraphViewWidget
@@ -313,45 +340,45 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="5.5"
-                android:orientation="vertical">
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="5.5"-->
+                <!--android:orientation="vertical">-->
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"/>
+                <!--<FrameLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_weight="1"/>-->
 
-                <ImageButton
-                    android:id="@+id/map_fragment_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:background="@drawable/ic_arrow_forward_white_18dp"
-                    android:layout_weight="0.25" />
+                <!--<ImageButton-->
+                    <!--android:id="@+id/map_fragment_button"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:background="@drawable/ic_arrow_forward_white_18dp"-->
+                    <!--android:layout_weight="0.25" />-->
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"/>
-            </LinearLayout>
+                <!--<FrameLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_weight="1"/>-->
+            <!--</LinearLayout>-->
         </LinearLayout>
 
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.1">
+        <!--<FrameLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="1.1">-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorAccent"
-                android:textAlignment="center"
-                android:textSize="@dimen/text_size_large_30sp"
-                android:text="REKLAMA"/>
-        </FrameLayout>
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:background="@color/colorAccent"-->
+                <!--android:textAlignment="center"-->
+                <!--android:textSize="@dimen/text_size_large_30sp"-->
+                <!--android:text="REKLAMA"/>-->
+        <!--</FrameLayout>-->
     </LinearLayout>
 </LinearLayout>

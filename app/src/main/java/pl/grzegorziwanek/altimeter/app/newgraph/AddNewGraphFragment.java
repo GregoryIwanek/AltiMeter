@@ -26,7 +26,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 
 public class AddNewGraphFragment extends Fragment implements AddNewGraphContract.View {
-
     //ButterKnife
     //TextViews of View, fulled with refactored data from JSON objects and Google Play Service
     @BindView(R.id.current_elevation_label) TextView mCurrElevationTextView;
@@ -38,7 +37,6 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
     @BindView(R.id.distance_numbers) TextView mDistanceTextView;
     @BindView(R.id.reset_button) ImageButton mRefreshButton;
     @BindView(R.id.pause_button) ImageButton mPlayPauseButton;
-    @BindView(R.id.map_fragment_button) ImageButton mMapFragmentButton;
     @BindView(R.id.graph_view) GraphViewWidget mGraphViewWidget;
 
     private AddNewGraphContract.Presenter mPresenter;
@@ -89,11 +87,11 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
     public void onPlayPauseButtonClick() {
         int tag = getButtonTagAsInt(mPlayPauseButton);
         switch (tag) {
-            case R.drawable.ic_play_arrow_white_18dp:
+            case R.drawable.ic_play_arrow_black_24dp:
                 Toast.makeText(this.getActivity(), "PlayPause button clicked", Toast.LENGTH_SHORT).show();
                 mPresenter.startLocationRecording();
                 break;
-            case R.drawable.ic_pause_white_18dp:
+            case R.drawable.ic_pause_black_24dp:
                 Toast.makeText(this.getActivity(), "PlayPause button clicked", Toast.LENGTH_SHORT).show();
                 mPresenter.stopLocationRecording();
                 break;
@@ -109,14 +107,9 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
         mPresenter.resetData();
     }
 
-    @OnClick(R.id.map_fragment_button)
-    public void onMapButtonClick() {
-        Toast.makeText(this.getActivity(), "Map button clicked", Toast.LENGTH_SHORT).show();
-    }
-
     private void initiateButtonsTags() {
-        mRefreshButton.setTag(R.drawable.ic_refresh_white_18dp);
-        mPlayPauseButton.setTag(R.drawable.ic_play_arrow_white_18dp);
+        mRefreshButton.setTag(R.drawable.ic_refresh_black_24dp);
+        mPlayPauseButton.setTag(R.drawable.ic_play_arrow_black_24dp);
     }
 
     private int getButtonTagAsInt(ImageButton imageButton) {

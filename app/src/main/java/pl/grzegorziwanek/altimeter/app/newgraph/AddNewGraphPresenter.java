@@ -21,8 +21,8 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
     private final AddNewGraphContract.View mAddNewGraphView;
     private final LocationCollector mLocationCollector;
     private CallbackResponse.FullLocationInfoCallback callbackFullInfo;
-    private Session mSession;
-    private String mSessionId = "da";
+    private static Session mSession;
+    private String mSessionId;
 
     //TODO-> add ID somewhere, or keep Session instance here (?) or in LocationCollector (?)
     public AddNewGraphPresenter(@NonNull SessionRepository sessionSource,
@@ -32,28 +32,30 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
         mLocationCollector = checkNotNull(locationCollector);
         mAddNewGraphView = checkNotNull(addNewGraphView);
         mAddNewGraphView.setPresenter(this);
-        //setCallbacks();
     }
 
     @Override
     public void start() {
+        setSession();
         initiateSession();
     }
 
+    private void setSession() {
+        mSession = mLocationCollector.getSession();
+    }
+
     private void initiateSession() {
-        Session session = new Session("", "");
-        mSessionRepository.saveSession(session, new SessionDataSource.SaveSessionCallback() {
+        mSessionRepository.saveNewSession(mSession, new SessionDataSource.SaveSessionCallback() {
             @Override
             public void onNewSessionSaved(String id) {
                 mSessionId = id;
-                System.out.println("SESSIONS ID IS: " + mSessionId);
             }
         });
     }
 
     @Override
     public void startLocationRecording() {
-        int tag = R.drawable.ic_pause_white_18dp;
+        int tag = R.drawable.ic_pause_black_24dp;
         updateButton(tag);
 
         callbackFullInfo = new CallbackResponse.FullLocationInfoCallback() {
@@ -61,12 +63,14 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
             public void onFullLocationInfoAcquired(Session session) {
                 mAddNewGraphView.setAddressTextView(session.getAddress());
                 mAddNewGraphView.setElevationTextView(session.getCurrentElevation().toString());
-                mAddNewGraphView.setMinHeightTextView(session.getCurrentElevation().toString());
-                mAddNewGraphView.setDistanceTextView(session.getCurrentElevation().toString());
-                mAddNewGraphView.setMaxHeightTextView(session.getCurrentElevation().toString());
+                mAddNewGraphView.setDistanceTextView(session.getDistanceStr());
+                mAddNewGraphView.setMinHeightTextView(session.getMinHeightStr());
+                mAddNewGraphView.setMaxHeightTextView(session.getMaxHeightStr());
                 mAddNewGraphView.setLatTextView(session.getLatitude());
                 mAddNewGraphView.setLongTextView(session.getLongitude());
                 mAddNewGraphView.drawGraph(session.getLocationList());
+
+                mSessionRepository.updateSessionData(session);
             }
         };
 
@@ -75,7 +79,7 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
 
     @Override
     public void stopLocationRecording() {
-        int tag = R.drawable.ic_play_arrow_white_18dp;
+        int tag = R.drawable.ic_play_arrow_black_24dp;
         updateButton(tag);
 
         mLocationCollector.stopListenForLocations();

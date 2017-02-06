@@ -13,7 +13,7 @@ import pl.grzegorziwanek.altimeter.app.BaseView;
 
 public interface AddNewGraphContract {
 
-    public interface View extends BaseView<Presenter> {
+    interface View extends BaseView<Presenter> {
 
         void setButtonTag(int buttonTag);
 
@@ -40,7 +40,7 @@ public interface AddNewGraphContract {
         void resetGraph();
     }
 
-    public interface Presenter extends BasePresenter {
+    interface Presenter extends BasePresenter {
 
         void startLocationRecording();
 
@@ -49,25 +49,3 @@ public interface AddNewGraphContract {
         void resetData();
     }
 }
-
-//interface View extends BaseView<Presenter> {
-//
-//    void showEmptyTaskError();
-//
-//    void showTasksList();
-//
-//    void setTitle(String title);
-//
-//    void setDescription(String description);
-//
-//    boolean isActive();
-//}
-//
-//interface Presenter extends BasePresenter {
-//
-//    void saveTask(String title, String description);
-//
-//    void populateTask();
-//
-//    boolean isDataMissing();
-//}

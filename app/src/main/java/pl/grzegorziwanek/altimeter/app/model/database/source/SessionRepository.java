@@ -58,7 +58,7 @@ public class SessionRepository implements SessionDataSource {
     }
 
     @Override
-    public void createSession(@NonNull Session session) {
+    public void createSessionRecordsTable(@NonNull Session session) {
 
     }
 
@@ -105,14 +105,17 @@ public class SessionRepository implements SessionDataSource {
     }
 
     @Override
-    public void saveSession(@NonNull Session session, @NonNull final SaveSessionCallback callback) {
+    public void saveNewSession(@NonNull final Session session, @NonNull final SaveSessionCallback callback) {
         //TODO-> consider adding remote data source
         //save to database
+        System.out.println("SESSION REPO SAVE NEW SESSION: " + session.getId());
         checkNotNull(session);
-        mSessionLocalDataSource.saveSession(session, new SaveSessionCallback() {
+        mSessionLocalDataSource.saveNewSession(session, new SaveSessionCallback() {
             @Override
             public void onNewSessionSaved(String id) {
                 callback.onNewSessionSaved(id);
+                System.out.println("SESSION REPO ON NEW SESSION SAVED: " + session.getId());
+                mSessionLocalDataSource.createSessionRecordsTable(session);
             }
         });
 
@@ -122,6 +125,12 @@ public class SessionRepository implements SessionDataSource {
             mCachedSessions = new LinkedHashMap<>();
         }
         mCachedSessions.put(session.getId(), session);
+    }
+
+    @Override
+    public void updateSessionData(@NonNull Session session) {
+        checkNotNull(session);
+        mSessionLocalDataSource.updateSessionData(session);
     }
 
     @Override
@@ -169,7 +178,7 @@ public class SessionRepository implements SessionDataSource {
     private void refreshLocalDataSource(List<Session> sessions) {
         mSessionLocalDataSource.deleteAllSessions();
         for (Session session : sessions) {
-            mSessionLocalDataSource.saveSession(session, null);
+            mSessionLocalDataSource.saveNewSession(session, null);
         }
     }
 

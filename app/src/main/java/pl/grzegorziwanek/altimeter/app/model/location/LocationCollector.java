@@ -3,14 +3,16 @@ package pl.grzegorziwanek.altimeter.app.model.location;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcel;
 import android.os.ResultReceiver;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import pl.grzegorziwanek.altimeter.app.model.Constants;
 import pl.grzegorziwanek.altimeter.app.model.Session;
 import pl.grzegorziwanek.altimeter.app.model.location.services.AddressIntentService;
 import pl.grzegorziwanek.altimeter.app.model.location.services.FetchElevationTask;
@@ -31,13 +33,12 @@ public class LocationCollector implements CallbackResponse {
     private AddressFetchedCallback callbackAddress;
     private AddressResultReceiver mResultReceiver;
     private Context mContext;
-    private Session mSession = null;
+    private static Session mSession = null;
     private Boolean mHasCallback = false;
 
     private LocationCollector(@NonNull Context context) {
         setCallbacks();
         setVariables(context);
-        mSession = new Session("DLA", "CIEBIE");
     }
 
     public static LocationCollector getInstance(@NonNull Context context) {
@@ -48,6 +49,7 @@ public class LocationCollector implements CallbackResponse {
     }
 
     private void setVariables(Context context) {
+        mSession = new Session("","");
         mContext = context;
         mGoogleLocationListener = GoogleLocationListener.getInstance(context, callbackNewLocation);
         mResultReceiver = new AddressResultReceiver(new Handler());
@@ -63,8 +65,7 @@ public class LocationCollector implements CallbackResponse {
         callbackNewLocation = new LocationChangedCallback() {
             @Override
             public void onNewLocationFound(Location location) {
-                setGeoCoordinateStr(location);
-                saveLastLocation(location);
+                saveSessionsLocation(location);
                 fetchCurrentElevation(location);
                 fetchAddress(location);
             }
@@ -74,8 +75,6 @@ public class LocationCollector implements CallbackResponse {
             @Override
             public void onElevationFound(Double elevation) {
                 setCurrentElevation(elevation);
-                mSession.getLastLocation().setAltitude(elevation);
-                mSession.appendOneLocationPoint(mSession.getLastLocation());
                 checkIfHaveFullInfo();
             }
         };
@@ -89,23 +88,14 @@ public class LocationCollector implements CallbackResponse {
         };
     }
 
-    private void checkIfHaveFullInfo() {
-        if (mHasCallback && mSession.getCurrentElevation() != null && mSession.getAddress() != null) {
-            callbackFullInfo.onFullLocationInfoAcquired(mSession);
+    private void saveSessionsLocation(Location location) {
+        //save old, previous location
+        if (mSession.getCurrentLocation() != null) {
+            mSession.setLastLocation(mSession.getCurrentLocation());
         }
-    }
 
-    private void setGeoCoordinateStr(Location location) {
-        String latitudeStr =
-                FormatAndValueConverter.setGeoCoordinateStr(location.getLatitude(), true);
-        String longitudeStr =
-                FormatAndValueConverter.setGeoCoordinateStr(location.getLongitude(), false);
-        mSession.setLatitude(latitudeStr);
-        mSession.setLongitude(longitudeStr);
-    }
-
-    private void saveLastLocation(Location location) {
-        mSession.setLastLocation(location);
+        //save new, current location
+        mSession.setCurrLocation(location);
     }
 
     private void fetchCurrentElevation(Location location) {
@@ -121,12 +111,73 @@ public class LocationCollector implements CallbackResponse {
         mContext.startService(intent);
     }
 
+    private void setCurrentElevation(Double elevation) {
+        mSession.setCurrentElevation(elevation);
+        mSession.getCurrentLocation().setAltitude(elevation);
+        mSession.appendOneLocationPoint(mSession.getCurrentLocation());
+    }
+
     private void setAddress(String address) {
         mSession.setAddress(address);
     }
 
-    private void setCurrentElevation(Double elevation) {
-        mSession.setCurrentElevation(elevation);
+    private void checkIfHaveFullInfo() {
+        if (mHasCallback && mSession.getCurrentElevation() != null && mSession.getAddress() != null) {
+            setFullInfoOfSession();
+            callbackFullInfo.onFullLocationInfoAcquired(mSession);
+        }
+    }
+
+    private void setFullInfoOfSession() {
+        setGeoCoordinateStr();
+        setSessionsDistance();
+        setSessionsHeight();
+    }
+
+    private void setGeoCoordinateStr() {
+        Location location = mSession.getCurrentLocation();
+        String latitudeStr =
+                FormatAndValueConverter.setGeoCoordinateStr(location.getLatitude(), true);
+        String longitudeStr =
+                FormatAndValueConverter.setGeoCoordinateStr(location.getLongitude(), false);
+        mSession.setLatitudeStr(latitudeStr);
+        mSession.setLongitudeStr(longitudeStr);
+    }
+
+    private void setSessionsDistance() {
+        if (mSession.getLastLocation() != null) {
+            Location lastLocation = mSession.getLastLocation();
+            Location currentLocation = mSession.getCurrentLocation();
+            Double currentDistance = mSession.getDistance();
+
+            Double distance = FormatAndValueConverter.updateDistanceValue(
+                    lastLocation, currentLocation, currentDistance);
+            mSession.setDistance(distance);
+
+            String distanceStr =
+                    FormatAndValueConverter.setDistanceStr(distance);
+            mSession.setDistanceStr(distanceStr);
+        }
+    }
+
+    private void setSessionsHeight() {
+        Double currAltitude = mSession.getCurrentElevation();
+        Double minHeight = mSession.getMinHeight();
+        Double maxHeight = mSession.getMaxHeight();
+
+        Double newMinHeight =
+                FormatAndValueConverter.updateMinAltitudeValue(currAltitude, minHeight);
+        Double newMaxHeight =
+                FormatAndValueConverter.updateMaxAltitudeValue(currAltitude, maxHeight);
+        String newMinStr =
+                FormatAndValueConverter.setMinMaxString(newMinHeight);
+        String newMaxStr =
+                FormatAndValueConverter.setMinMaxString(newMaxHeight);
+
+        mSession.setMinHeight(newMinHeight);
+        mSession.setMinHeightStr(newMinStr);
+        mSession.setMaxHeight(newMaxHeight);
+        mSession.setMaxHeightStr(newMaxStr);
     }
 
     @Override
@@ -138,7 +189,18 @@ public class LocationCollector implements CallbackResponse {
     public void startListenForLocations(@Nullable FullLocationInfoCallback callback) {
         callbackFullInfo = callback;
         mHasCallback = true;
+        updateDistanceUnits();
         mGoogleLocationListener.startListenForLocations(null);
+    }
+
+    private void updateDistanceUnits() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String units = sharedPref.getString("pref_set_units", "KILOMETERS");
+        FormatAndValueConverter.setUnitsFormat(units);
+    }
+
+    public Session getSession() {
+        return mSession;
     }
 
     @SuppressLint("ParcelCreator")
