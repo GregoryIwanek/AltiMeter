@@ -38,9 +38,9 @@ public interface SessionDataSource {
         void onNewSessionSaved(String id);
     }
 
-    void createSessionRecordsTable(@NonNull Session session);
+    void createRecordsTable(@NonNull Session session);
 
-    void saveNewSession(@NonNull Session session, @NonNull SaveSessionCallback callback);
+    void createNewSession(@NonNull Session session, @NonNull SaveSessionCallback callback);
 
     void updateSessionData(@NonNull Session session);
 
@@ -48,7 +48,7 @@ public interface SessionDataSource {
 //
 //    void getSession(@NonNull String graphId, @NonNull GetSessionCallback callback);
 //
-//    void saveNewSession(@NonNull Session session);
+//    void createNewSession(@NonNull Session session);
 //
 //    void completeSession(@NonNull Session session);
 //

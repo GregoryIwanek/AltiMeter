@@ -18,11 +18,11 @@ import android.view.MenuItem;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pl.grzegorziwanek.altimeter.app.about.AboutActivity;
+import pl.grzegorziwanek.altimeter.app.about.AboutFragment;
 import pl.grzegorziwanek.altimeter.app.altitudegraph.SessionActivity;
 import pl.grzegorziwanek.altimeter.app.Map.MapActivity;
 import pl.grzegorziwanek.altimeter.app.newgraph.AddNewGraphActivity;
-import pl.grzegorziwanek.altimeter.app.slidingmenu.SettingsFragment;
+import pl.grzegorziwanek.altimeter.app.settings.SettingsFragment;
 import pl.grzegorziwanek.altimeter.app.statistics.StatisticsActivity;
 
 /**
@@ -99,7 +99,7 @@ public abstract class BasicActivity extends AppCompatActivity {
                                 navigateToFragment(SettingsFragment.class);
                                 break;
                             case R.id.about_navigation_menu_item:
-                                navigateToActivity(AboutActivity.class);
+                                navigateToFragment(AboutFragment.class);
                                 break;
                             default:
                                 break;

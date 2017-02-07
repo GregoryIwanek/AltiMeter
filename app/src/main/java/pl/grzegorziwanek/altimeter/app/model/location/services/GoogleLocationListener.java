@@ -98,13 +98,9 @@ public class GoogleLocationListener implements GoogleApiClient.ConnectionCallbac
         Long intervalLong = Long.valueOf(interval);
         locationRequest.setInterval(intervalLong);
 
-        Toast.makeText(mContext, String.valueOf(locationRequest.getInterval()), Toast.LENGTH_LONG);
-        System.out.println("INTERVAL: " + locationRequest.getInterval());
-        System.out.println("FASTEST: " + locationRequest.getFastestInterval());
-
         // set fastest possible interval
-        if (intervalLong < 10000) {
-            locationRequest.setFastestInterval(10000);
+        if (intervalLong < 60000) {
+            locationRequest.setFastestInterval(30000);
         } else {
             locationRequest.setFastestInterval(intervalLong/2);
         }

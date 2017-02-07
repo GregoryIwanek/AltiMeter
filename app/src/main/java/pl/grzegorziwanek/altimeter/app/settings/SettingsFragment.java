@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.slidingmenu;
+package pl.grzegorziwanek.altimeter.app.settings;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;

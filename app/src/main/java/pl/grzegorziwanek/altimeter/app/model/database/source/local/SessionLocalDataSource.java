@@ -37,7 +37,7 @@ public class SessionLocalDataSource implements SessionDataSource {
     }
 
     @Override
-    public void saveNewSession(@NonNull Session session, @NonNull SaveSessionCallback callback) {
+    public void createNewSession(@NonNull Session session, @NonNull SaveSessionCallback callback) {
         checkNotNull(session);
         SQLiteDatabase db = mSessionDbHelper.getWritableDatabase();
 
@@ -51,7 +51,7 @@ public class SessionLocalDataSource implements SessionDataSource {
     }
 
     @Override
-    public void createSessionRecordsTable(@NonNull Session session) {
+    public void createRecordsTable(@NonNull Session session) {
         checkNotNull(session);
         SQLiteDatabase db = mSessionDbHelper.getWritableDatabase();
         int oldVersion = db.getVersion();
@@ -69,9 +69,11 @@ public class SessionLocalDataSource implements SessionDataSource {
         ContentValues valuesSession = getSessionValues(session);
         ContentValues valuesRecord = getRecordValues(session);
 
-        String recordsTableName = "\"" + session.getId() +"\"";
-        insertToDb(db, SessionDbContract.SessionEntry.TABLE_NAME, valuesSession);
-        insertToDb(db, recordsTableName, valuesRecord);
+        String rowSelection = SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID + "=" + "\"" + session.getId() + "\"";
+        updateRowsDb(db, SessionDbContract.SessionEntry.TABLE_NAME, valuesSession, rowSelection);
+
+        String tableNameRecords = "\"" + session.getId() +"\"";
+        insertToDb(db, tableNameRecords, valuesRecord);
         db.close();
     }
 
@@ -98,6 +100,10 @@ public class SessionLocalDataSource implements SessionDataSource {
 
     private void insertToDb(SQLiteDatabase db, String tableName, ContentValues values) {
         db.insert(tableName, null, values);
+    }
+
+    private void updateRowsDb(SQLiteDatabase db, String tableName, ContentValues values, String where) {
+        db.update(tableName, values, where, null);
     }
 
     @Override

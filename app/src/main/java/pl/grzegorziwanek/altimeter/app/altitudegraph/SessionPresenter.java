@@ -40,7 +40,7 @@ public class SessionPresenter implements SessionContract.Presenter {
 
     private void createTask(String title, String description) {
         Session newSession = new Session(title, description);
-        mSessionRepository.saveNewSession(newSession, null);
+        mSessionRepository.createNewSession(newSession, null);
         System.out.println("SESSION SAVED FROM PRESENTER");
     }
 

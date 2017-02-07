@@ -58,7 +58,7 @@ public class SessionRepository implements SessionDataSource {
     }
 
     @Override
-    public void createSessionRecordsTable(@NonNull Session session) {
+    public void createRecordsTable(@NonNull Session session) {
 
     }
 
@@ -105,17 +105,17 @@ public class SessionRepository implements SessionDataSource {
     }
 
     @Override
-    public void saveNewSession(@NonNull final Session session, @NonNull final SaveSessionCallback callback) {
+    public void createNewSession(@NonNull final Session session, @NonNull final SaveSessionCallback callback) {
         //TODO-> consider adding remote data source
         //save to database
         System.out.println("SESSION REPO SAVE NEW SESSION: " + session.getId());
         checkNotNull(session);
-        mSessionLocalDataSource.saveNewSession(session, new SaveSessionCallback() {
+        mSessionLocalDataSource.createNewSession(session, new SaveSessionCallback() {
             @Override
             public void onNewSessionSaved(String id) {
                 callback.onNewSessionSaved(id);
                 System.out.println("SESSION REPO ON NEW SESSION SAVED: " + session.getId());
-                mSessionLocalDataSource.createSessionRecordsTable(session);
+                mSessionLocalDataSource.createRecordsTable(session);
             }
         });
 
@@ -178,7 +178,7 @@ public class SessionRepository implements SessionDataSource {
     private void refreshLocalDataSource(List<Session> sessions) {
         mSessionLocalDataSource.deleteAllSessions();
         for (Session session : sessions) {
-            mSessionLocalDataSource.saveNewSession(session, null);
+            mSessionLocalDataSource.createNewSession(session, null);
         }
     }
 

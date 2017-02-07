@@ -45,7 +45,7 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
     }
 
     private void initiateSession() {
-        mSessionRepository.saveNewSession(mSession, new SessionDataSource.SaveSessionCallback() {
+        mSessionRepository.createNewSession(mSession, new SessionDataSource.SaveSessionCallback() {
             @Override
             public void onNewSessionSaved(String id) {
                 mSessionId = id;

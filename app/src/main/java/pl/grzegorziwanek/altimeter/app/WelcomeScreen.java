@@ -18,9 +18,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pl.grzegorziwanek.altimeter.app.slidingmenu.AboutFragment;
 import pl.grzegorziwanek.altimeter.app.slidingmenu.MenuItemSlider;
-import pl.grzegorziwanek.altimeter.app.slidingmenu.SettingsFragment;
+import pl.grzegorziwanek.altimeter.app.settings.SettingsFragment;
 import pl.grzegorziwanek.altimeter.app.slidingmenu.SlidingMenuAdapter;
 
 public class WelcomeScreen extends AppCompatActivity {
@@ -94,8 +93,6 @@ public class WelcomeScreen extends AppCompatActivity {
     private Fragment setFragment(int posClicked) {
         switch (posClicked) {
             case 0: return new SettingsFragment();
-            case 1: return new AboutFragment();
-            case 2: return new AboutFragment();
             default: return new SettingsFragment();
         }
     }

@@ -29,7 +29,7 @@
         </android.support.design.widget.AppBarLayout>
 
         <FrameLayout
-            android:id="@id/coordinatorContainer"
+            android:id="@+id/coordinatorContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <android.support.design.widget.CoordinatorLayout
