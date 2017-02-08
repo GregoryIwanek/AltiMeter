@@ -41,10 +41,12 @@ public class SessionLocalDataSource implements SessionDataSource {
         checkNotNull(session);
         SQLiteDatabase db = mSessionDbHelper.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID, session.getId());
-
-        db.insert(SessionDbContract.SessionEntry.TABLE_NAME, null, values);
+        String query =
+                "INSERT OR IGNORE INTO " + SessionDbContract.SessionEntry.TABLE_NAME
+                        + " (" + SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID + ")"
+                        + " VALUES (" + "\""+session.getId() +"\")";
+        db.execSQL(query);
+        System.out.println(query);
         db.close();
 
         callback.onNewSessionSaved(session.getId());
@@ -156,13 +158,29 @@ public class SessionLocalDataSource implements SessionDataSource {
     }
 
     @Override
+    public void deleteCheckedSessions(ArrayList<String> sessionsId) {
+        SQLiteDatabase db = mSessionDbHelper.getWritableDatabase();
+        for (String sessionId : sessionsId) {
+            db.execSQL("DROP TABLE IF EXISTS " + setProperName(sessionId));
+            db.execSQL("delete from "+SessionDbContract.SessionEntry.TABLE_NAME + " where "
+            + SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID +"=" + setProperName(sessionId));
+        }
+        db.close();
+    }
+
+    private String setProperName(String id) {
+        return "\"" + id + "\"";
+    }
+
+    @Override
     public void refreshSessions() {
         // Not required because the {@link SessionRepository} handles the logic of refreshing the
         // tasks from all the available data sources. This instance is used as a member of
         // {@link SessionRepository}
     }
 
-    //todo-> doesn null null is required? should be different?
+    //todo-> does null null is required? should be different?
+    //todo -> refactor code here-> deletion of all other tables with records
     @Override
     public void deleteAllSessions() {
         SQLiteDatabase db = mSessionDbHelper.getWritableDatabase();

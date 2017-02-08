@@ -16,6 +16,7 @@ public class SessionDbHelper extends SQLiteOpenHelper {
     private static final String TEXT_TYPE = " TEXT";
     private static final String REAL_TYPE = " REAL";
     private static final String BOOLEAN_TYPE = " INTEGER";
+    private static final String UNIQUE = " UNIQUE";
     private static final String COMMA_SEP = ",";
 
     private static String DROP_TABLE = "DROP TABLE IF EXIST ";
@@ -29,7 +30,7 @@ public class SessionDbHelper extends SQLiteOpenHelper {
     private static String createSQLSessionsEntries() {
         return CREATE_TABLE + SessionDbContract.SessionEntry.TABLE_NAME + " (" +
                 SessionDbContract.SessionEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
-                SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
+                SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + UNIQUE + COMMA_SEP +
                 SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ALTITUDE + REAL_TYPE + COMMA_SEP +
                 SessionDbContract.SessionEntry.COLUMN_NAME_MAX_HEIGHT + REAL_TYPE + COMMA_SEP +
                 SessionDbContract.SessionEntry.COLUMN_NAME_MIN_HEIGHT + REAL_TYPE + COMMA_SEP +
@@ -39,7 +40,7 @@ public class SessionDbHelper extends SQLiteOpenHelper {
     }
 
     private static String createSQLRecordEntries(String sessionId) {
-        return CREATE_TABLE + "\"" + sessionId + "\"" + " (" +
+        return CREATE_TABLE + "IF NOT EXISTS" + "\"" + sessionId + "\"" + " (" +
                 SessionDbContract.RecordsEntry.COLUMN_NAME_ENTRY_ID + BOOLEAN_TYPE + " PRIMARY KEY AUTOINCREMENT NOT NULL," +
                 SessionDbContract.RecordsEntry.COLUMN_NAME_LATITUDE + TEXT_TYPE + COMMA_SEP +
                 SessionDbContract.RecordsEntry.COLUMN_NAME_LONGITUDE + TEXT_TYPE + COMMA_SEP +
@@ -52,8 +53,6 @@ public class SessionDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        System.out.println(createSQLSessionsEntries());
-        System.out.println(createSQLRecordEntries("dadadadadadadadadadada"));
         db.execSQL(createSQLSessionsEntries());
     }
 
@@ -61,7 +60,6 @@ public class SessionDbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d(SessionDbHelper.class.getSimpleName(), "Upgrading database from version " +
                 oldVersion + " to " + newVersion + ", which will destroy all old data...");
-        System.out.println("onUpgrade is: " + ON_UPGRADE);
         db.execSQL(ON_UPGRADE);
         db.setVersion(newVersion);
     }
@@ -69,33 +67,7 @@ public class SessionDbHelper extends SQLiteOpenHelper {
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
-
-    public static String getDropTable() {
-        return DROP_TABLE;
-    }
-
-    public static void setDropTable(String dropTable) {
-        DROP_TABLE = dropTable;
-    }
-
-    public static String getCreateTable() {
-        return CREATE_TABLE;
-    }
-
-    public static void setCreateTable(String sessionId) {
-        ON_UPGRADE = createSQLRecordEntries(sessionId);
-    }
-
-    public static String getOnUpgrade() {
-        return ON_UPGRADE;
-    }
-
     public static void setOnUpgrade(String sessionId) {
         ON_UPGRADE = createSQLRecordEntries(sessionId);
-        System.out.println("ON_UPGRADE IS: " + ON_UPGRADE);
-    }
-
-    public void setDatabaseVersion(int newVersion) {
-        DATABASE_VERSION = newVersion;
     }
 }

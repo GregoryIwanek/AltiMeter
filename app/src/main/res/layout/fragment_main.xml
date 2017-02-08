@@ -39,7 +39,6 @@
                         android:clickable="true"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/ic_refresh_white_18dp"
                         android:layout_weight="1"/>
 
                     <FrameLayout
@@ -52,7 +51,6 @@
                         android:clickable="true"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/ic_play_arrow_white_18dp"
                         android:layout_weight="1"/>
 
                     <FrameLayout
@@ -334,7 +332,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:background="@drawable/ic_arrow_forward_white_18dp"
                         android:layout_weight="0.25" />
 
                     <FrameLayout

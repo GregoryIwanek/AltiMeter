@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.jjoe64.graphview.GraphView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pl.grzegorziwanek.altimeter.app.BasePresenter;
@@ -49,6 +50,10 @@ public interface SessionContract {
 
         boolean isActive();
 
+        void showCheckedSessionsDeleted();
+
+        void showAllSessionsDeleted();
+
         void showFilteringPopUpMenu();
     }
 
@@ -66,11 +71,11 @@ public interface SessionContract {
 
         void activeGraphs(@NonNull GraphView activeGraphs);
 
-        void clearCompletedGraphs();
+        void deleteCheckedSessions(ArrayList<String> sessionsId);
 
-        void setFiltering(SessionFilterType requestType);
+        void deleteAllSessions();
 
-        SessionFilterType getFiltering();
+        void refreshSessions();
     }
 }
 

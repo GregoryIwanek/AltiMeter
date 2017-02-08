@@ -29,7 +29,7 @@
         android:id="@+id/nav_menu_group_utility">
         <item
             android:id="@+id/settings_navigation_menu_item"
-            android:icon="@drawable/ic_settings_black_18dp"
+            android:icon="@drawable/ic_settings_black_24dp"
             android:title="Settings"/>
 
         <item

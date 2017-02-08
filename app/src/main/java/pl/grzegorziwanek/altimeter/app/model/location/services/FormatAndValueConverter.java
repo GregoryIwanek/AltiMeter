@@ -14,7 +14,7 @@ public class FormatAndValueConverter {
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
 
-    //TODO -> kick out mUnitsFrmat and Symbol and move it to Presenter(?), LocationCollector(?)
+    //TODO -> kick out mUnitsFormat and Symbol and move it to Presenter(?), LocationCollector(?)
     private static String mUnitsFormat;
     private static String mUnitsSymbol;
 

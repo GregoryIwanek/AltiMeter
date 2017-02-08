@@ -11,8 +11,9 @@ import java.util.UUID;
  * Model class for Session; Stores location information about graph and session description;
  */
 
-public final class Session {
+public class Session {
 
+    private boolean mCompleted = false;
     private String mId;
     private String mTitle = "TITLE";
     private String mDescription = "DESCRIPTION";
@@ -199,5 +200,13 @@ public final class Session {
 
     public void setCurrLocation(Location currLocation) {
         mCurrLocation = currLocation;
+    }
+
+    public boolean isCompleted() {
+        return mCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        mCompleted = completed;
     }
 }

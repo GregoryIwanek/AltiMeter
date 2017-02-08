@@ -19,8 +19,7 @@ public class SessionRepository implements SessionDataSource {
 
     private static SessionRepository INSTANCE = null;
     private final SessionDataSource mSessionLocalDataSource;
-    //todo-> change from null to real value
-    private final SessionDataSource mSessionRemoteDataSource = null;
+
 
     /**
      * This variable has package local visibility so it can be accessed from tests.
@@ -107,6 +106,7 @@ public class SessionRepository implements SessionDataSource {
     @Override
     public void createNewSession(@NonNull final Session session, @NonNull final SaveSessionCallback callback) {
         //TODO-> consider adding remote data source
+        //TODO-> change form of architecture here
         //save to database
         System.out.println("SESSION REPO SAVE NEW SESSION: " + session.getId());
         checkNotNull(session);
@@ -144,8 +144,12 @@ public class SessionRepository implements SessionDataSource {
     }
 
     @Override
+    public void deleteCheckedSessions(ArrayList<String> sessionsId) {
+        mSessionLocalDataSource.deleteCheckedSessions(sessionsId);
+    }
+
+    @Override
     public void deleteAllSessions() {
-        mSessionRemoteDataSource.deleteAllSessions();
         mSessionLocalDataSource.deleteAllSessions();
 
         if (mCachedSessions == null) {

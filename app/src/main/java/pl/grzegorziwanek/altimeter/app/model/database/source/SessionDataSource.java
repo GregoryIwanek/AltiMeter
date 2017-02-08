@@ -2,6 +2,7 @@ package pl.grzegorziwanek.altimeter.app.model.database.source;
 
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pl.grzegorziwanek.altimeter.app.model.Session;
@@ -61,6 +62,8 @@ public interface SessionDataSource {
 //    void clearCompletedSessions();
 //
     void clearSessionData(@NonNull String sessionId);
+
+    void deleteCheckedSessions(ArrayList<String> sessionsId);
 
     void refreshSessions();
 

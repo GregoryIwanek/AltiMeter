@@ -18,9 +18,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pl.grzegorziwanek.altimeter.app.slidingmenu.MenuItemSlider;
 import pl.grzegorziwanek.altimeter.app.settings.SettingsFragment;
-import pl.grzegorziwanek.altimeter.app.slidingmenu.SlidingMenuAdapter;
 
 public class WelcomeScreen extends AppCompatActivity {
 
@@ -52,25 +50,25 @@ public class WelcomeScreen extends AppCompatActivity {
 
     private void setNavigationMenuSlidingList() {
         mNavigationMenuSlidingList.setItemsCanFocus(false);
-        mNavigationMenuSlidingList.setAdapter(getSlidingMenuAdapter());
+//        mNavigationMenuSlidingList.setAdapter(getSlidingMenuAdapter());
         mNavigationMenuSlidingList.setOnItemClickListener(setMenuListOnClickListener());
     }
 
-    private SlidingMenuAdapter getSlidingMenuAdapter() {
-        return new SlidingMenuAdapter(this, getMenuItemList());
-    }
+//    private SlidingMenuAdapter getSlidingMenuAdapter() {
+//        return new SlidingMenuAdapter(this, getMenuItemList());
+//    }
+//
+//    private List<MenuItemSlider> getMenuItemList() {
+//        List<MenuItemSlider> menuItemList = new ArrayList<>();
+//        populateMenuList(menuItemList);
+//        return menuItemList;
+//    }
 
-    private List<MenuItemSlider> getMenuItemList() {
-        List<MenuItemSlider> menuItemList = new ArrayList<>();
-        populateMenuList(menuItemList);
-        return menuItemList;
-    }
-
-    private void populateMenuList(List<MenuItemSlider> menuItemList) {
-        menuItemList.add(new MenuItemSlider("Settings", R.drawable.ic_settings_black_18dp));
-        menuItemList.add(new MenuItemSlider("About", R.drawable.ic_eject_light_green));
-        menuItemList.add(new MenuItemSlider("Android", R.drawable.ic_android_light_green_a700_18dp));
-    }
+//    private void populateMenuList(List<MenuItemSlider> menuItemList) {
+////        menuItemList.add(new MenuItemSlider("Settings", R.drawable.ic_settings_black_18dp));
+////        menuItemList.add(new MenuItemSlider("About", R.drawable.ic_eject_light_green));
+////        menuItemList.add(new MenuItemSlider("Android", R.drawable.ic_android_light_green_a700_18dp));
+//    }
 
     private AdapterView.OnItemClickListener setMenuListOnClickListener() {
         return new AdapterView.OnItemClickListener() {

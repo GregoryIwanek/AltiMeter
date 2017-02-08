@@ -33,7 +33,7 @@ public class LocationCollector implements CallbackResponse {
     private AddressFetchedCallback callbackAddress;
     private AddressResultReceiver mResultReceiver;
     private Context mContext;
-    private static Session mSession = null;
+    private Session mSession = null;
     private Boolean mHasCallback = false;
 
     private LocationCollector(@NonNull Context context) {
@@ -44,12 +44,18 @@ public class LocationCollector implements CallbackResponse {
     public static LocationCollector getInstance(@NonNull Context context) {
         if (INSTANCE == null) {
             INSTANCE = new LocationCollector(context);
+        } else {
+            INSTANCE.setNewSession();
         }
         return INSTANCE;
     }
 
-    private void setVariables(Context context) {
+    private void setNewSession() {
         mSession = new Session("","");
+    }
+
+    private void setVariables(Context context) {
+        setNewSession();
         mContext = context;
         mGoogleLocationListener = GoogleLocationListener.getInstance(context, callbackNewLocation);
         mResultReceiver = new AddressResultReceiver(new Handler());

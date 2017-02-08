@@ -48,8 +48,7 @@
                 android:id="@+id/noGraphsIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_eject_light_green"/>
+                android:layout_gravity="center" />
 
             <TextView
                 android:id="@+id/noGraphsMain"

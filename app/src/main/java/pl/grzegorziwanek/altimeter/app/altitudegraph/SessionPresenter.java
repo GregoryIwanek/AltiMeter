@@ -26,22 +26,17 @@ public class SessionPresenter implements SessionContract.Presenter {
     public SessionPresenter(@NonNull SessionRepository sessionRepository, @NonNull SessionContract.View sessionView) {
         mSessionRepository = checkNotNull(sessionRepository, "sessionRepository cannot be null");
         mSessionView = checkNotNull(sessionView, "sessionView cannot be null");
-        System.out.println("CALLING if msessionView is active AFTER INITIATION: "+mSessionView.isActive());
         mSessionView.setPresenter(this);
     }
 
     @Override
     public void start() {
-//        for (int i=0; i<10; i++) {
-//            createTask("SESSION", "SESSION");
-//        }
         loadSessions(false);
     }
 
     private void createTask(String title, String description) {
         Session newSession = new Session(title, description);
         mSessionRepository.createNewSession(newSession, null);
-        System.out.println("SESSION SAVED FROM PRESENTER");
     }
 
     @Override
@@ -61,7 +56,6 @@ public class SessionPresenter implements SessionContract.Presenter {
      * @param showLoadingUI Pass in true to display a loading icon in the UI
      */
     private void loadSessions(boolean forceUpdate, final boolean showLoadingUI) {
-        System.out.println("CALLING LOADSESSIONS");
         if (showLoadingUI) {
             mSessionView.setLoadingIndicator(true);
         }
@@ -78,7 +72,6 @@ public class SessionPresenter implements SessionContract.Presenter {
         mSessionRepository.getSessions(new SessionDataSource.LoadSessionsCallback() {
             @Override
             public void onSessionLoaded(List<Session> sessions) {
-                System.out.println("CALLING OnSessionLoaded SPresenter" + sessions.size());
                 List<Session> sessionsToShow = new ArrayList<Session>();
                 // This callback may be called twice, once for the cache and once for loading
                 // the data from the server API, so we check before decrementing, otherwise
@@ -88,35 +81,19 @@ public class SessionPresenter implements SessionContract.Presenter {
 //                    EspressoIdlingResource.decrement(); // Set app as idle.
 //                }
 
-                //TODO-> mCurrentFiltering
-                // We filter the sessions based on the requestType
-                for (Session session : sessions) {
-                    //mCurrentFiltering
-                    switch (1) {
-                        case 1:
-                            sessionsToShow.add(session);
-                            break;
-                        default:
-                            sessionsToShow.add(session);
-                            break;
-                    }
-                }
-                System.out.println("CALLING if msessionView is active: "+mSessionView.isActive());
                 // The view may not be able to handle UI updates anymore
                 if (!mSessionView.isActive()) {
-                    System.out.println("CALLING !mSessionView.isActive() SPresenter");
                     return;
                 }
                 if (showLoadingUI) {
                     mSessionView.setLoadingIndicator(false);
                 }
 
-                processSessions(sessionsToShow);
+                processSessions(sessions);
             }
 
             @Override
             public void onDataNotAvailable() {
-                System.out.println("CALLING OnDataNotAvailable SPresenter");
                 // The view may not be able to handle UI updates anymore
                 if (!mSessionView.isActive()) {
                     return;
@@ -127,14 +104,11 @@ public class SessionPresenter implements SessionContract.Presenter {
     }
 
     private void processSessions(List<Session> sessions) {
-        System.out.println("PROCESS SESSION WILL BE CALLED NOW size()+" + sessions.size());
         if (sessions.isEmpty()) {
             // Show a message indicating there are no tasks for that filter type.
-            System.out.println("PROCESSING EMPTY SESSION SPresenter");
             processEmptySessions();
         } else {
             // Show the list of tasks
-            System.out.println("PROCESSING FULL SESSION SPresenter");
             mSessionView.showSessions(sessions);
             // Set the filter label's text.
             showFilterLabel();
@@ -143,34 +117,10 @@ public class SessionPresenter implements SessionContract.Presenter {
 
     //TODO-> mCurrentFiltering
     private void showFilterLabel() {
-        //mCurrentFiltering
-        switch (1) {
-            case 1:
-                //mSessionView.showActiveFilterLabel();
-                break;
-            case 2:
-                //mSessionView.showCompletedFilterLabel();
-                break;
-            default:
-                //mSessionView.showAllFilterLabel();
-                break;
-        }
     }
 
     //TODO-> mCurrentFiltering
     private void processEmptySessions() {
-        //mCurrentFiltering
-        switch (1) {
-            case 1:
-                //mSessionView.showNoActiveSessions();
-                break;
-            case 2:
-                //mSessionView.showNoCompletedSessions();
-                break;
-            default:
-                //mSessionView.showNoSessions();
-                break;
-        }
     }
 
     @Override
@@ -194,17 +144,19 @@ public class SessionPresenter implements SessionContract.Presenter {
     }
 
     @Override
-    public void clearCompletedGraphs() {
-
+    public void deleteCheckedSessions(ArrayList<String> sessionsId) {
+        mSessionRepository.deleteCheckedSessions(sessionsId);
+        mSessionView.showCheckedSessionsDeleted();
     }
 
     @Override
-    public void setFiltering(SessionFilterType requestType) {
-
+    public void deleteAllSessions() {
+        mSessionRepository.deleteAllSessions();
+        mSessionView.showAllSessionsDeleted();
     }
 
     @Override
-    public SessionFilterType getFiltering() {
-        return null;
+    public void refreshSessions() {
+
     }
 }

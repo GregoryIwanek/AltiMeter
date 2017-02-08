@@ -50,19 +50,7 @@ public class GoogleLocationListener implements GoogleApiClient.ConnectionCallbac
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
-        Log.d(LOG_TAG, " connection suspended triggered!");
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(LOG_TAG, " connection failed triggered!");
-    }
-
-    @Override
     public void onLocationChanged(Location location) {
-        Toast.makeText(mContext, String.valueOf(location.getTime()), Toast.LENGTH_SHORT);
-        System.out.println("TIME IS: " + location.getTime());
         mCallback.onNewLocationFound(location);
     }
 
@@ -137,5 +125,15 @@ public class GoogleLocationListener implements GoogleApiClient.ConnectionCallbac
 
     private SharedPreferences getDefaultPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(mContext);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.d(LOG_TAG, " connection suspended triggered!");
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d(LOG_TAG, " connection failed triggered!");
     }
 }

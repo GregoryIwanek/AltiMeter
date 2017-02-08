@@ -25,7 +25,6 @@ import pl.grzegorziwanek.altimeter.app.utils.ActivityUtils;
  */
 public class SessionActivity extends BasicActivity {
 
-    //private static final String CURRENT_FILTERING_KEY = "CURRENT_FILTERING_KEY";
     private static final String LOG_TAG = SessionActivity.class.getSimpleName();
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
@@ -56,7 +55,6 @@ public class SessionActivity extends BasicActivity {
             mSessionFragment = SessionFragment.newInstance();
             ActivityUtils.addFragmentToActivity(
                     getSupportFragmentManager(), mSessionFragment, R.id.contentFrame);
-            System.out.println("CALL FROM MAIN ACTIVITY IF FRAGMENT IS ACTIVE after initiation from null: " + mSessionFragment.isActive());
         }
     }
 

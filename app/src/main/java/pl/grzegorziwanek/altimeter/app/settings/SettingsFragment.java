@@ -12,7 +12,7 @@ import pl.grzegorziwanek.altimeter.app.R;
 /**
  * Created by Grzegorz Iwanek on 10.12.2016.
  */
-public class SettingsFragment extends PreferenceFragment {
+public final class SettingsFragment extends PreferenceFragment {
 
     public SettingsFragment(){}
 
@@ -26,7 +26,7 @@ public class SettingsFragment extends PreferenceFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         if (view != null) {
-            view.setBackgroundColor(ContextCompat.getColor(this.getActivity(), R.color.colorPrimaryDark));
+            view.setBackgroundColor(ContextCompat.getColor(this.getActivity(), R.color.colorWhite));
         }
         return view;
     }

@@ -185,29 +185,29 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     @OnClick(R.id.pause_button)
     public void onPlayPauseButtonClick() {
         //on click pause play -> switch button image and perform play/pause action;
-        if (sPlayPauseButton.getTag() != null) {
-            //TODO->change condition from checking id of picture to different (connect somehow to styles)
-            if (Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_white_18dp) {
-                sPlayPauseButton.setBackgroundResource(R.drawable.ic_play_arrow_white_18dp);
-                sPlayPauseButton.setTag(R.drawable.ic_play_arrow_white_18dp);
-                Toast.makeText(this.getActivity(), "Paused", Toast.LENGTH_SHORT).show();
-
-                System.out.println(Integer.parseInt((sPlayPauseButton.getTag()).toString()));
-            } else {
-                sPlayPauseButton.setBackgroundResource(R.drawable.ic_pause_white_18dp);
-                sPlayPauseButton.setTag(R.drawable.ic_pause_white_18dp);
-
-                LocationRequest locationRequest = new LocationRequest();
-                locationRequest = setLocationRequest(locationRequest);
-                checkPermissionsAndRequestUpdates(locationRequest);
-
-                updateDistanceUnits();
-
-                Toast.makeText(this.getActivity(), "Resumed", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Log.v(LOG_TAG, "PAUSE BUTTON IMAGE TAG WAS NOT FOUND, ON CLICK OPERATION CANCELED");
-        }
+//        if (sPlayPauseButton.getTag() != null) {
+//            //TODO->change condition from checking id of picture to different (connect somehow to styles)
+//            if (Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_white_18dp) {
+//                sPlayPauseButton.setBackgroundResource(R.drawable.ic_play_arrow_white_18dp);
+//                sPlayPauseButton.setTag(R.drawable.ic_play_arrow_white_18dp);
+//                Toast.makeText(this.getActivity(), "Paused", Toast.LENGTH_SHORT).show();
+//
+//                System.out.println(Integer.parseInt((sPlayPauseButton.getTag()).toString()));
+//            } else {
+////                sPlayPauseButton.setBackgroundResource(R.drawable.ic_pause_white_18dp);
+////                sPlayPauseButton.setTag(R.drawable.ic_pause_white_18dp);
+//
+//                LocationRequest locationRequest = new LocationRequest();
+//                locationRequest = setLocationRequest(locationRequest);
+//                checkPermissionsAndRequestUpdates(locationRequest);
+//
+//                updateDistanceUnits();
+//
+//                Toast.makeText(this.getActivity(), "Resumed", Toast.LENGTH_SHORT).show();
+//            }
+//        } else {
+//            Log.v(LOG_TAG, "PAUSE BUTTON IMAGE TAG WAS NOT FOUND, ON CLICK OPERATION CANCELED");
+//        }
     }
 
     //!!!
@@ -364,15 +364,15 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     private void initiateButtonsTags() {
-        if (isButtonTagUndefined()) {
-            sRefreshButton.setTag(R.drawable.ic_refresh_white_18dp);
-
-            if (isPlayImageOnButton()) {
-                sPlayPauseButton.setTag(R.drawable.ic_play_arrow_white_18dp);
-            } else {
-                sPlayPauseButton.setTag(R.drawable.ic_pause_white_18dp);
-            }
-        }
+//        if (isButtonTagUndefined()) {
+//            sRefreshButton.setTag(R.drawable.ic_refresh_white_18dp);
+//
+//            if (isPlayImageOnButton()) {
+//                sPlayPauseButton.setTag(R.drawable.ic_play_arrow_white_18dp);
+//            } else {
+//                sPlayPauseButton.setTag(R.drawable.ic_pause_white_18dp);
+//            }
+//        }
     }
 
     private boolean isButtonTagUndefined() {
@@ -380,25 +380,26 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     private boolean isPlayImageOnButton() {
-        return sPlayPauseButton.getBackground().equals(
-                ContextCompat.getDrawable(getActivity(), R.drawable.ic_play_arrow_white_18dp));
+//        return sPlayPauseButton.getBackground().equals(
+//                ContextCompat.getDrawable(getActivity(), R.drawable.ic_play_arrow_white_18dp));
+        return true;
     }
 
     //TODO
     private void checkButtonTag(int buttonTag) {
-        switch (buttonTag) {
-            case R.drawable.ic_pause_white_18dp:
-                setButtonTagAndImage(sPlayPauseButton, R.drawable.ic_play_arrow_white_18dp);
-                break;
-            case R.drawable.ic_play_arrow_white_18dp:
-                setButtonTagAndImage(sPlayPauseButton, R.drawable.ic_pause_white_18dp);
-                break;
-            case R.drawable.ic_refresh_white_18dp:
-                changePlayPauseButtonIcon();
-            default:
-                Log.d(LOG_TAG, " checkButtonTag: NO CORRECT BUTTON TAG PROVIDED");
-                break;
-        }
+//        switch (buttonTag) {
+//            case R.drawable.ic_pause_white_18dp:
+//                setButtonTagAndImage(sPlayPauseButton, R.drawable.ic_play_arrow_white_18dp);
+//                break;
+//            case R.drawable.ic_play_arrow_white_18dp:
+//                setButtonTagAndImage(sPlayPauseButton, R.drawable.ic_pause_white_18dp);
+//                break;
+//            case R.drawable.ic_refresh_white_18dp:
+//                changePlayPauseButtonIcon();
+//            default:
+//                Log.d(LOG_TAG, " checkButtonTag: NO CORRECT BUTTON TAG PROVIDED");
+//                break;
+//        }
     }
 
     //TODO
@@ -408,10 +409,10 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     private void changePlayPauseButtonIcon() {
-        if (Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_white_18dp) {
-            sPlayPauseButton.setBackgroundResource(R.drawable.ic_play_arrow_white_18dp);
-            sPlayPauseButton.setTag(R.drawable.ic_play_arrow_white_18dp);
-        }
+//        if (Integer.parseInt((sPlayPauseButton.getTag()).toString()) == R.drawable.ic_pause_white_18dp) {
+//            sPlayPauseButton.setBackgroundResource(R.drawable.ic_play_arrow_white_18dp);
+//            sPlayPauseButton.setTag(R.drawable.ic_play_arrow_white_18dp);
+//        }
     }
 
     private void clearData() {
