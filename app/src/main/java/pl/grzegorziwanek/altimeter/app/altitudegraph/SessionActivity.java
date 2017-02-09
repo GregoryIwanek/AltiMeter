@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 import pl.grzegorziwanek.altimeter.app.BasicActivity;
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.model.database.source.SessionRepository;
-import pl.grzegorziwanek.altimeter.app.model.database.source.local.SessionLocalDataSource;
+import pl.grzegorziwanek.altimeter.app.model.database.source.local.SessionDataSource;
 import pl.grzegorziwanek.altimeter.app.utils.ActivityUtils;
 
 /**
@@ -25,14 +25,11 @@ import pl.grzegorziwanek.altimeter.app.utils.ActivityUtils;
  */
 public class SessionActivity extends BasicActivity {
 
-    private static final String LOG_TAG = SessionActivity.class.getSimpleName();
-
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view) NavigationView mNavigationView;
 
     private SessionFragment mSessionFragment;
-    private SessionPresenter mSessionPresenter;
     private GoogleApiClient client;
 
     @Override
@@ -59,8 +56,8 @@ public class SessionActivity extends BasicActivity {
     }
 
     private void setPresenter() {
-        mSessionPresenter = new SessionPresenter(
-                SessionRepository.getInstance(SessionLocalDataSource.getInstance(getApplicationContext())),
+        SessionPresenter mSessionPresenter = new SessionPresenter(
+                SessionRepository.getInstance(SessionDataSource.getInstance(this)),
                 mSessionFragment);
     }
 
@@ -82,7 +79,6 @@ public class SessionActivity extends BasicActivity {
         client.disconnect();
     }
 
-    //TODO-> learn WTF is that and why was it generated after updating Android Studio to new version
     public Action getIndexApiAction() {
         Thing object = new Thing.Builder()
                 .setName("AltitudeGraph Page") // TODO: Define a title for the content shown.

@@ -11,7 +11,7 @@ import butterknife.ButterKnife;
 import pl.grzegorziwanek.altimeter.app.BasicActivity;
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.model.database.source.SessionRepository;
-import pl.grzegorziwanek.altimeter.app.model.database.source.local.SessionLocalDataSource;
+import pl.grzegorziwanek.altimeter.app.model.database.source.local.SessionDataSource;
 import pl.grzegorziwanek.altimeter.app.model.location.LocationCollector;
 import pl.grzegorziwanek.altimeter.app.utils.ActivityUtils;
 
@@ -26,7 +26,6 @@ public class AddNewGraphActivity extends BasicActivity {
     @BindView(R.id.nav_view) NavigationView mNavigationView;
 
     private AddNewGraphFragment mAddNewGraphFragment;
-    private AddNewGraphPresenter mAddNewGraphPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,8 +50,8 @@ public class AddNewGraphActivity extends BasicActivity {
     }
 
     private void setPresenter() {
-        mAddNewGraphPresenter = new AddNewGraphPresenter(
-                SessionRepository.getInstance(SessionLocalDataSource.getInstance(getApplicationContext())),
+        AddNewGraphPresenter mAddNewGraphPresenter = new AddNewGraphPresenter(
+                SessionRepository.getInstance(SessionDataSource.getInstance(getApplicationContext())),
                 LocationCollector.getInstance(getApplicationContext()), mAddNewGraphFragment);
     }
 }

@@ -19,11 +19,10 @@ public class SessionDbHelper extends SQLiteOpenHelper {
     private static final String UNIQUE = " UNIQUE";
     private static final String COMMA_SEP = ",";
 
-    private static String DROP_TABLE = "DROP TABLE IF EXIST ";
     private static String CREATE_TABLE = "CREATE TABLE ";
     private static String ON_UPGRADE = "";
 
-    public SessionDbHelper(Context context) {
+    SessionDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -67,7 +66,26 @@ public class SessionDbHelper extends SQLiteOpenHelper {
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
-    public static void setOnUpgrade(String sessionId) {
+    static void setOnUpgrade(String sessionId) {
         ON_UPGRADE = createSQLRecordEntries(sessionId);
+    }
+
+    String queryDeleteTables(String tableName) {
+        return "DROP TABLE IF EXISTS " + setProperName(tableName);
+    }
+
+    String queryDeleteRows(String tableName) {
+        return "delete from "+SessionDbContract.SessionEntry.TABLE_NAME + " where "
+                    + SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID +"=" + setProperName(tableName);
+    }
+
+    String queryInsertOrIgnore(String rowValue) {
+        return "INSERT OR IGNORE INTO " + SessionDbContract.SessionEntry.TABLE_NAME
+                + " (" + SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID + ")"
+                + " VALUES (" + setProperName(rowValue) +")";
+    }
+
+    private String setProperName(String name) {
+        return "\"" + name + "\"";
     }
 }

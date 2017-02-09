@@ -2,8 +2,6 @@ package pl.grzegorziwanek.altimeter.app.altitudegraph;
 
 import android.support.annotation.NonNull;
 
-import com.jjoe64.graphview.GraphView;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,13 +15,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Listens to user actions from the UI ({@link SessionFragment}), retrieves the data and updates the
  * UI as required.
  */
-public class SessionPresenter implements SessionContract.Presenter {
+class SessionPresenter implements SessionContract.Presenter {
 
     private final SessionRepository mSessionRepository;
     private final SessionContract.View mSessionView;
     private boolean mFirstLoad = true;
 
-    public SessionPresenter(@NonNull SessionRepository sessionRepository, @NonNull SessionContract.View sessionView) {
+    SessionPresenter(@NonNull SessionRepository sessionRepository, @NonNull SessionContract.View sessionView) {
         mSessionRepository = checkNotNull(sessionRepository, "sessionRepository cannot be null");
         mSessionView = checkNotNull(sessionView, "sessionView cannot be null");
         mSessionView.setPresenter(this);
@@ -37,11 +35,6 @@ public class SessionPresenter implements SessionContract.Presenter {
     private void createTask(String title, String description) {
         Session newSession = new Session(title, description);
         mSessionRepository.createNewSession(newSession, null);
-    }
-
-    @Override
-    public void result(int requestCode, int resultCode) {
-
     }
 
     @Override
@@ -106,7 +99,7 @@ public class SessionPresenter implements SessionContract.Presenter {
     private void processSessions(List<Session> sessions) {
         if (sessions.isEmpty()) {
             // Show a message indicating there are no tasks for that filter type.
-            processEmptySessions();
+            mSessionView.showEmptySessions(sessions);
         } else {
             // Show the list of tasks
             mSessionView.showSessions(sessions);
@@ -119,44 +112,22 @@ public class SessionPresenter implements SessionContract.Presenter {
     private void showFilterLabel() {
     }
 
-    //TODO-> mCurrentFiltering
-    private void processEmptySessions() {
-    }
-
     @Override
     public void addNewSession() {
         mSessionView.showAddSession();
     }
 
     @Override
-    public void openGraphDetails(@NonNull GraphView requestedGraphs) {
-
-    }
-
-    @Override
-    public void completeGraphs(@NonNull GraphView completedGraphs) {
-
-    }
-
-    @Override
-    public void activeGraphs(@NonNull GraphView activeGraphs) {
-
-    }
-
-    @Override
     public void deleteCheckedSessions(ArrayList<String> sessionsId) {
-        mSessionRepository.deleteCheckedSessions(sessionsId);
+        mSessionRepository.deleteSessions(sessionsId, false);
         mSessionView.showCheckedSessionsDeleted();
+        loadSessions(false);
     }
 
     @Override
-    public void deleteAllSessions() {
-        mSessionRepository.deleteAllSessions();
+    public void deleteAllSessions(ArrayList<String> sessionsId) {
+        mSessionRepository.deleteSessions(sessionsId, true);
         mSessionView.showAllSessionsDeleted();
-    }
-
-    @Override
-    public void refreshSessions() {
-
+        loadSessions(false);
     }
 }

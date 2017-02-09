@@ -6,36 +6,34 @@ import android.provider.BaseColumns;
  * Created by Grzegorz Iwanek on 27.01.2017.
  */
 
-public final class SessionDbContract {
+final class SessionDbContract {
 
-    //private constructor, prevents from instantiation of that contract class
     private SessionDbContract() {}
 
     /**
-     *
+     * Sessions table entries. Holds general data about session, as well unique ID.
      */
-    public static abstract class SessionEntry implements BaseColumns {
-        public static final String TABLE_NAME = "records";
-        public static final String COLUMN_NAME_ENTRY_ID = "entryid";
-        public static final String COLUMN_NAME_CURRENT_ALTITUDE = "currentaltitude";
-        public static final String COLUMN_NAME_MAX_HEIGHT = "maxheight";
-        public static final String COLUMN_NAME_MIN_HEIGHT = "minheight";
-        public static final String COLUMN_NAME_CURRENT_DISTANCE = "currentdistance";
-        public static final String COLUMN_NAME_CURRENT_ADDRESS = "currentaddress";
-     }
+    static abstract class SessionEntry implements BaseColumns {
+        static final String TABLE_NAME = "records";
+        static final String COLUMN_NAME_ENTRY_ID = "entryid";
+        static final String COLUMN_NAME_CURRENT_ALTITUDE = "currentaltitude";
+        static final String COLUMN_NAME_MAX_HEIGHT = "maxheight";
+        static final String COLUMN_NAME_MIN_HEIGHT = "minheight";
+        static final String COLUMN_NAME_CURRENT_DISTANCE = "currentdistance";
+        static final String COLUMN_NAME_CURRENT_ADDRESS = "currentaddress";
+    }
 
     /**
-     * Session's records entries. Detailed data about locations.
-     * Name of the table is set as equal to the session's unique ID.
+     * Session's records entries. Detailed data about each location.
+     * Name of the every table is set as equal to the session's unique ID.
      */
-    public static abstract class RecordsEntry implements BaseColumns {
-        public static final String COLUMN_NAME_ENTRY_ID = "entryid";
-        public static final String COLUMN_NAME_LATITUDE = "latitude";
-        public static final String COLUMN_NAME_LONGITUDE = "longitude";
-        public static final String COLUMN_NAME_ALTITUDE = "altitude";
-        public static final String COLUMN_NAME_ADDRESS = "address";
-        public static final String COLUMN_NAME_DATE = "date";
-        public static final String COLUMN_NAME_DISTANCE = "distance";
-        public static final String COLUMN_NAME_RADIUS = "radius";
+    static abstract class RecordsEntry implements BaseColumns {
+        static final String COLUMN_NAME_ENTRY_ID = "entryid";
+        static final String COLUMN_NAME_LATITUDE = "latitude";
+        static final String COLUMN_NAME_LONGITUDE = "longitude";
+        static final String COLUMN_NAME_ALTITUDE = "altitude";
+        static final String COLUMN_NAME_ADDRESS = "address";
+        static final String COLUMN_NAME_DATE = "date";
+        static final String COLUMN_NAME_DISTANCE = "distance";
     }
 }

@@ -12,9 +12,9 @@ import pl.grzegorziwanek.altimeter.app.BaseView;
 import pl.grzegorziwanek.altimeter.app.model.Session;
 
 /**
- * Created by Grzegorz Iwanek on 18.01.2017.
+ * Created by Grzegorz Iwanek on 18.01.2017. That's it
  */
-public interface SessionContract {
+interface SessionContract {
 
     interface View extends BaseView<Presenter> {
 
@@ -22,60 +22,29 @@ public interface SessionContract {
 
         void showSessions(List<Session> sessions);
 
+        void showEmptySessions(List<Session> sessions);
+
         void showAddSession();
 
-        void showGraphDetailsUi(String graphId);
-
-        void showGraphMarkedComplete();
-
-        void showGraphMarkedActive();
-
-        void showCompletedGraphsCleared();
-
         void showLoadingSessionError();
-
-        void showNoSessions();
-
-        void showActiveFilterLabel();
-
-        void showCompletedFilterLabel();
-
-        void showAllFilterLabel();
-
-        void showNoActiveSessions();
-
-        void showNoCompletedSessions();
-
-        void showSuccessfullySavedMessage();
 
         boolean isActive();
 
         void showCheckedSessionsDeleted();
 
         void showAllSessionsDeleted();
-
-        void showFilteringPopUpMenu();
     }
 
     interface Presenter extends BasePresenter {
-
-        void result(int requestCode, int resultCode);
 
         void loadSessions(boolean forceUpdate);
 
         void addNewSession();
 
-        void openGraphDetails(@NonNull GraphView requestedGraphs);
-
-        void completeGraphs(@NonNull GraphView completedGraphs);
-
-        void activeGraphs(@NonNull GraphView activeGraphs);
 
         void deleteCheckedSessions(ArrayList<String> sessionsId);
 
-        void deleteAllSessions();
-
-        void refreshSessions();
+        void deleteAllSessions(ArrayList<String> sessionsId);
     }
 }
 

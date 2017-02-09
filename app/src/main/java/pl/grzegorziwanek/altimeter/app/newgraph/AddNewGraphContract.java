@@ -8,10 +8,10 @@ import pl.grzegorziwanek.altimeter.app.BasePresenter;
 import pl.grzegorziwanek.altimeter.app.BaseView;
 
 /**
- * Created by Grzegorz Iwanek on 31.01.2017.
+ * Created by Grzegorz Iwanek on 31.01.2017. That's it/
  */
 
-public interface AddNewGraphContract {
+interface AddNewGraphContract {
 
     interface View extends BaseView<Presenter> {
 
@@ -35,8 +35,6 @@ public interface AddNewGraphContract {
 
         void drawGraph(ArrayList<Location> locations);
 
-        void updateGraph(ArrayList<Location> locations);
-
         void resetGraph();
     }
 
@@ -46,6 +44,6 @@ public interface AddNewGraphContract {
 
         void stopLocationRecording();
 
-        void resetData();
+        void resetSessionData();
     }
 }

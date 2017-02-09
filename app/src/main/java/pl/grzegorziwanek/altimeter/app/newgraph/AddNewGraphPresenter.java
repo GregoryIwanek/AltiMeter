@@ -24,10 +24,9 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
     private static Session mSession;
     private String mSessionId;
 
-    //TODO-> add ID somewhere, or keep Session instance here (?) or in LocationCollector (?)
     public AddNewGraphPresenter(@NonNull SessionRepository sessionSource,
-                                @NonNull LocationCollector locationCollector,
-                                @NonNull AddNewGraphContract.View addNewGraphView) {
+                         @NonNull LocationCollector locationCollector,
+                         @NonNull AddNewGraphContract.View addNewGraphView) {
         mSessionRepository = checkNotNull(sessionSource);
         mLocationCollector = checkNotNull(locationCollector);
         mAddNewGraphView = checkNotNull(addNewGraphView);
@@ -91,7 +90,7 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
     }
 
     @Override
-    public void resetData() {
+    public void resetSessionData() {
         mAddNewGraphView.resetGraph();
         mSessionRepository.clearSessionData(mSessionId);
     }

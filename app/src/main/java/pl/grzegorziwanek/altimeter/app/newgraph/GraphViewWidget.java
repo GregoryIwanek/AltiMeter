@@ -41,6 +41,7 @@ public class GraphViewWidget extends GraphView {
     private void setGraphViewSettings() {
         defineDiagramAppearance();
         setGraphBounds();
+        //TODO-> add part of code responsible for converting axis values to minutes/hours and kilometers
         setLabelsFormatSymbols("m", "s");
     }
 
@@ -200,7 +201,7 @@ public class GraphViewWidget extends GraphView {
         refreshDrawableState();
     }
 
-    public void setLabelsFormatSymbols(String yFormat, String xFormat){
+    private void setLabelsFormatSymbols(String yFormat, String xFormat){
         final String axisYFormat = yFormat;
         final String axisXFormat = xFormat;
 

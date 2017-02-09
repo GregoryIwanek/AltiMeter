@@ -73,12 +73,6 @@ public class SessionFragment extends Fragment implements SessionContract.View {
         mPresenter = checkNotNull(presenter);
     }
 
-    //TODO-> define that one
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -90,11 +84,20 @@ public class SessionFragment extends Fragment implements SessionContract.View {
         View view = inflater.inflate(R.layout.fragment_graph_altitude, container, false);
 
         ButterKnife.bind(this, view);
+        setSessionsListAdapter();
+        setFloatingActionButton();
+        setProgressIndicator(view);
 
-        //Set up adapter
+        mPresenter.loadSessions(true);
+        setHasOptionsMenu(true);
+        return view;
+    }
+
+    private void setSessionsListAdapter() {
         mListView.setAdapter(mListAdapter);
+    }
 
-        //Set up floating action button
+    private void setFloatingActionButton() {
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.fab_add_session);
         fab.setImageResource(R.drawable.ic_vector_add);
@@ -104,8 +107,9 @@ public class SessionFragment extends Fragment implements SessionContract.View {
                 mPresenter.addNewSession();
             }
         });
+    }
 
-        //Set up progress indicator
+    private void setProgressIndicator(View view) {
         final SwipeRefreshLayoutChild swipeRefreshLayoutChild =
                 (SwipeRefreshLayoutChild) view.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayoutChild.setColorSchemeColors(
@@ -120,47 +124,29 @@ public class SessionFragment extends Fragment implements SessionContract.View {
                 //TODO-> set methods here
             }
         });
-
-        mPresenter.loadSessions(true);
-        setHasOptionsMenu(true);
-
-        return view;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_delete:
-                mPresenter.deleteCheckedSessions(getCheckedId());
+                mPresenter.deleteCheckedSessions(getAdapterCheckedId());
                 break;
             case R.id.menu_delete_all:
-                mPresenter.deleteAllSessions();
+                mPresenter.deleteAllSessions(getAdapterAllId());
                 break;
             case R.id.menu_refresh:
-                try {
-                    copyAppDbToDownloadFolder();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
                 break;
         }
         return true;
     }
 
-    public void copyAppDbToDownloadFolder() throws IOException {
-        File backupDB = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "My_data.db"); // for example "my_data_backup.db"
-        File currentDB = getContext().getApplicationContext().getDatabasePath("Graphs.db"); //databaseName=your current application database name, for example "my_data.db"
-        if (currentDB.exists()) {
-            FileChannel src = new FileInputStream(currentDB).getChannel();
-            FileChannel dst = new FileOutputStream(backupDB).getChannel();
-            dst.transferFrom(src, 0, src.size());
-            src.close();
-            dst.close();
-        }
+    private ArrayList<String> getAdapterCheckedId() {
+        return mListAdapter.getCheckedId();
     }
 
-    private ArrayList<String> getCheckedId() {
-        return mListAdapter.getCheckedId();
+    private ArrayList<String> getAdapterAllId() {
+        return mListAdapter.getAllId();
     }
 
     @Override
@@ -174,17 +160,7 @@ public class SessionFragment extends Fragment implements SessionContract.View {
     //TODO-> populate this instance with code
     SessionItemListener mSessionItemListener = new SessionItemListener() {
         @Override
-        public void onGraphClick(Session clickedSession) {
-
-        }
-
-        @Override
-        public void onCompleteGraphClick(Session completedSession) {
-
-        }
-
-        @Override
-        public void onActivateGraphClick(Session activatedSession) {
+        public void onSessionClick(Session clickedSession) {
 
         }
     };
@@ -202,33 +178,16 @@ public class SessionFragment extends Fragment implements SessionContract.View {
     }
 
     @Override
+    public void showEmptySessions(List<Session> sessions) {
+        mListAdapter.replaceData(sessions);
+        mSessionView.setVisibility(View.GONE);
+        mNoSessionsView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void showAddSession() {
         Intent intent = new Intent(getContext(), AddNewGraphActivity.class);
         startActivity(intent);
-    }
-
-    private void showMessage(String message) {
-        Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void showGraphDetailsUi(String graphId) {
-
-    }
-
-    @Override
-    public void showGraphMarkedComplete() {
-
-    }
-
-    @Override
-    public void showGraphMarkedActive() {
-
-    }
-
-    @Override
-    public void showCompletedGraphsCleared() {
-
     }
 
     @Override
@@ -236,39 +195,8 @@ public class SessionFragment extends Fragment implements SessionContract.View {
 
     }
 
-    @Override
-    public void showNoSessions() {
-
-    }
-
-    @Override
-    public void showActiveFilterLabel() {
-
-    }
-
-    @Override
-    public void showCompletedFilterLabel() {
-
-    }
-
-    @Override
-    public void showAllFilterLabel() {
-
-    }
-
-    @Override
-    public void showNoActiveSessions() {
-
-    }
-
-    @Override
-    public void showNoCompletedSessions() {
-
-    }
-
-    @Override
-    public void showSuccessfullySavedMessage() {
-
+    private void showMessage(String message) {
+        Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -286,15 +214,10 @@ public class SessionFragment extends Fragment implements SessionContract.View {
         showMessage("All sessions deleted");
     }
 
-    @Override
-    public void showFilteringPopUpMenu() {
-
-    }
-
     private static class SessionAdapter extends BaseAdapter {
 
         private List<Session> mSessions;
-        private SessionItemListener mItemListener;
+        private final SessionItemListener mItemListener;
 
         SessionAdapter(List<Session> sessions, SessionItemListener itemListener) {
             setList(sessions);
@@ -307,7 +230,7 @@ public class SessionFragment extends Fragment implements SessionContract.View {
         }
 
         private void setList(List<Session> sessions) {
-            mSessions = checkNotNull(sessions);
+            mSessions = sessions;
         }
 
         ArrayList<String> getCheckedId() {
@@ -316,6 +239,14 @@ public class SessionFragment extends Fragment implements SessionContract.View {
                 if (session.isCompleted()) {
                     list.add(session.getId());
                 }
+            }
+            return list;
+        }
+
+        ArrayList<String> getAllId() {
+            ArrayList<String> list = new ArrayList<>();
+            for (Session session : mSessions) {
+                list.add(session.getId());
             }
             return list;
         }
@@ -348,8 +279,8 @@ public class SessionFragment extends Fragment implements SessionContract.View {
             TextView graphText = (TextView) rowView.findViewById(R.id.title);
             graphText.setText(session.getId());
 
-            //TODO-> remove checkbox?
             CheckBox removeItemCB = (CheckBox) rowView.findViewById(R.id.removeItem);
+            removeItemCB.setChecked(session.isCompleted());
 
             //TODO->set code inside
             removeItemCB.setOnClickListener(new View.OnClickListener() {
@@ -366,9 +297,10 @@ public class SessionFragment extends Fragment implements SessionContract.View {
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mItemListener.onGraphClick(session);
+                    mItemListener.onSessionClick(session);
                 }
             });
+
             return rowView;
         }
     }
@@ -376,10 +308,32 @@ public class SessionFragment extends Fragment implements SessionContract.View {
     //TODO-> refactor this code
     public interface SessionItemListener {
 
-        void onGraphClick(Session clickedSession);
-
-        void onCompleteGraphClick(Session completedSession);
-
-        void onActivateGraphClick(Session activatedSession);
+        void onSessionClick(Session clickedSession);
     }
 }
+
+//    /**TODO-> remove that in final version, or move to neutral place
+//     * Database inspection.
+//     * Step 1, this code: copy existing app's database on Android device to accessible location inside of the device (Downloads).
+//     * Step 2, user: copy it through android's app Total Commander to visible folder.
+//     * Step 3, user: check with SQLite Browser.
+//     * @throws IOException
+//     */
+//    private void copyAppDbToDownloadFolder() throws IOException {
+//        File backupDB = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "My_data.db");
+//        File currentDB = getContext().getApplicationContext().getDatabasePath("Graphs.db");
+//        if (currentDB.exists()) {
+//            FileChannel src = new FileInputStream(currentDB).getChannel();
+//            FileChannel dst = new FileOutputStream(backupDB).getChannel();
+//            dst.transferFrom(src, 0, src.size());
+//            src.close();
+//            dst.close();
+//        }
+//
+////          assign this to call above (for example to a "refresh" click in menu)
+////        try {
+////            copyAppDbToDownloadFolder();
+////        } catch (IOException e) {
+////            e.printStackTrace();
+////        }
+//    }

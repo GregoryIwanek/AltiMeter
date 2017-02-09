@@ -3,14 +3,12 @@ package pl.grzegorziwanek.altimeter.app.newgraph;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -22,12 +20,10 @@ import pl.grzegorziwanek.altimeter.app.R;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Created by Grzegorz Iwanek on 31.01.2017.
+ * Created by Grzegorz Iwanek on 31.01.2017. That's it.
  */
 
 public class AddNewGraphFragment extends Fragment implements AddNewGraphContract.View {
-    //ButterKnife
-    //TextViews of View, fulled with refactored data from JSON objects and Google Play Service
     @BindView(R.id.current_elevation_label) TextView mCurrElevationTextView;
     @BindView(R.id.current_latitude_value) TextView mCurrLatitudeTextView;
     @BindView(R.id.current_longitude_value) TextView mCurrLongitudeTextView;
@@ -48,24 +44,9 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         mPresenter.start();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 
     @Override
@@ -88,23 +69,19 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
         int tag = getButtonTagAsInt(mPlayPauseButton);
         switch (tag) {
             case R.drawable.ic_play_arrow_black_24dp:
-                Toast.makeText(this.getActivity(), "PlayPause button clicked", Toast.LENGTH_SHORT).show();
                 mPresenter.startLocationRecording();
                 break;
             case R.drawable.ic_pause_black_24dp:
-                Toast.makeText(this.getActivity(), "PlayPause button clicked", Toast.LENGTH_SHORT).show();
                 mPresenter.stopLocationRecording();
                 break;
             default:
-                Toast.makeText(this.getActivity(), "Error occur, no play pause button available", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
 
     @OnClick(R.id.reset_button)
     public void onResetButtonClick() {
-        Toast.makeText(this.getActivity(), "Reset button clicked", Toast.LENGTH_SHORT).show();
-        mPresenter.resetData();
+        mPresenter.resetSessionData();
     }
 
     private void initiateButtonsTags() {
@@ -163,11 +140,6 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
 
     @Override
     public void drawGraph(ArrayList<Location> locations) {
-        mGraphViewWidget.deliverGraph(locations);
-    }
-
-    @Override
-    public void updateGraph(ArrayList<Location> locations) {
         mGraphViewWidget.deliverGraph(locations);
     }
 

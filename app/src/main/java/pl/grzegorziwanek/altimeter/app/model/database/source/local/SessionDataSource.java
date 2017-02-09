@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.grzegorziwanek.altimeter.app.model.Session;
-import pl.grzegorziwanek.altimeter.app.model.database.source.SessionDataSource;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -18,20 +17,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Created by Grzegorz Iwanek on 27.01.2017.
  */
 
-public class SessionLocalDataSource implements SessionDataSource {
+public class SessionDataSource implements pl.grzegorziwanek.altimeter.app.model.database.source.SessionDataSource {
 
-    private static SessionLocalDataSource INSTANCE = null;
+    private static SessionDataSource INSTANCE = null;
     private SessionDbHelper mSessionDbHelper;
 
     //Private to prevent direct instantiation.
-    private SessionLocalDataSource(@NonNull Context context) {
+    private SessionDataSource(@NonNull Context context) {
         checkNotNull(context);
         mSessionDbHelper = new SessionDbHelper(context);
     }
 
-    public static SessionLocalDataSource getInstance(@NonNull Context context) {
+    public static SessionDataSource getInstance(@NonNull Context context) {
         if (INSTANCE == null) {
-            INSTANCE = new SessionLocalDataSource(context);
+            INSTANCE = new SessionDataSource(context);
         }
         return INSTANCE;
     }
@@ -41,12 +40,8 @@ public class SessionLocalDataSource implements SessionDataSource {
         checkNotNull(session);
         SQLiteDatabase db = mSessionDbHelper.getWritableDatabase();
 
-        String query =
-                "INSERT OR IGNORE INTO " + SessionDbContract.SessionEntry.TABLE_NAME
-                        + " (" + SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID + ")"
-                        + " VALUES (" + "\""+session.getId() +"\")";
-        db.execSQL(query);
-        System.out.println(query);
+        String insertOrIgnore = mSessionDbHelper.queryInsertOrIgnore(session.getId());
+        db.execSQL(insertOrIgnore);
         db.close();
 
         callback.onNewSessionSaved(session.getId());
@@ -80,24 +75,24 @@ public class SessionLocalDataSource implements SessionDataSource {
     }
 
     private ContentValues getRecordValues(Session session) {
-        ContentValues valuesRecord = new ContentValues();
-        valuesRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_LATITUDE, session.getLatitude());
-        valuesRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_LONGITUDE, session.getLongitude());
-        valuesRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_ALTITUDE, session.getCurrentElevation());
-        valuesRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_DATE, session.getCurrentLocation().getTime());
-        valuesRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_ADDRESS, session.getAddress());
-        valuesRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_DISTANCE, session.getDistance());
-        return valuesRecord;
+        ContentValues vRecord = new ContentValues();
+        vRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_LATITUDE, session.getLatitude());
+        vRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_LONGITUDE, session.getLongitude());
+        vRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_ALTITUDE, session.getCurrentElevation());
+        vRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_DATE, session.getCurrentLocation().getTime());
+        vRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_ADDRESS, session.getAddress());
+        vRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_DISTANCE, session.getDistance());
+        return vRecord;
     }
 
     private ContentValues getSessionValues(Session session) {
-        ContentValues valuesSession = new ContentValues();
-        valuesSession.put(SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ALTITUDE, session.getCurrentElevation());
-        valuesSession.put(SessionDbContract.SessionEntry.COLUMN_NAME_MAX_HEIGHT, session.getMaxHeight());
-        valuesSession.put(SessionDbContract.SessionEntry.COLUMN_NAME_MIN_HEIGHT, session.getMinHeight());
-        valuesSession.put(SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ADDRESS, session.getAddress());
-        valuesSession.put(SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_DISTANCE, session.getDistance());
-        return valuesSession;
+        ContentValues vSession = new ContentValues();
+        vSession.put(SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ALTITUDE, session.getCurrentElevation());
+        vSession.put(SessionDbContract.SessionEntry.COLUMN_NAME_MAX_HEIGHT, session.getMaxHeight());
+        vSession.put(SessionDbContract.SessionEntry.COLUMN_NAME_MIN_HEIGHT, session.getMinHeight());
+        vSession.put(SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ADDRESS, session.getAddress());
+        vSession.put(SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_DISTANCE, session.getDistance());
+        return vSession;
     }
 
     private void insertToDb(SQLiteDatabase db, String tableName, ContentValues values) {
@@ -144,12 +139,7 @@ public class SessionLocalDataSource implements SessionDataSource {
 
         db.close();
 
-        if (sessions.isEmpty()) {
-            // This will be called if the table is new or just empty...
-            callback.onDataNotAvailable();
-        } else {
-            callback.onSessionLoaded(sessions);
-        }
+        callback.onSessionLoaded(sessions);
     }
 
     @Override
@@ -158,18 +148,13 @@ public class SessionLocalDataSource implements SessionDataSource {
     }
 
     @Override
-    public void deleteCheckedSessions(ArrayList<String> sessionsId) {
+    public void deleteSessions(ArrayList<String> sessionsId, boolean isDeleteAll) {
         SQLiteDatabase db = mSessionDbHelper.getWritableDatabase();
         for (String sessionId : sessionsId) {
-            db.execSQL("DROP TABLE IF EXISTS " + setProperName(sessionId));
-            db.execSQL("delete from "+SessionDbContract.SessionEntry.TABLE_NAME + " where "
-            + SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID +"=" + setProperName(sessionId));
+            db.execSQL(mSessionDbHelper.queryDeleteTables(sessionId));
+            db.execSQL(mSessionDbHelper.queryDeleteRows(sessionId));
         }
         db.close();
-    }
-
-    private String setProperName(String id) {
-        return "\"" + id + "\"";
     }
 
     @Override
@@ -177,19 +162,5 @@ public class SessionLocalDataSource implements SessionDataSource {
         // Not required because the {@link SessionRepository} handles the logic of refreshing the
         // tasks from all the available data sources. This instance is used as a member of
         // {@link SessionRepository}
-    }
-
-    //todo-> does null null is required? should be different?
-    //todo -> refactor code here-> deletion of all other tables with records
-    @Override
-    public void deleteAllSessions() {
-        SQLiteDatabase db = mSessionDbHelper.getWritableDatabase();
-        db.delete(SessionDbContract.SessionEntry.TABLE_NAME, null, null);
-        db.close();
-    }
-
-    @Override
-    public void deleteSession(@NonNull String sessionId) {
-
     }
 }
