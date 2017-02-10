@@ -17,6 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 
+import pl.grzegorziwanek.altimeter.app.model.Constants;
 import pl.grzegorziwanek.altimeter.app.model.location.CallbackResponse;
 
 /**
@@ -26,9 +27,8 @@ import pl.grzegorziwanek.altimeter.app.model.location.CallbackResponse;
 
 public class FetchElevationTask extends AsyncTask<Void, Void, Void> {
     private final String LOG_TAG = FetchElevationTask.class.getSimpleName();
-    final String APPID_KEY = "AIzaSyDz8OSO03MnSdoE-0FFN9sZaIyFRlpf79Y"; // TODO move that to config
-    private String mLocationsStr;
     private CallbackResponse.ElevationFetchedCallback mCallback;
+    private String mLocationsStr;
     private Double mCurrentEleValue;
 
     public FetchElevationTask(CallbackResponse.ElevationFetchedCallback callback) {
@@ -40,111 +40,75 @@ public class FetchElevationTask extends AsyncTask<Void, Void, Void> {
         mLocationsStr = Double.toString(record.getLatitude()) + "," + Double.toString(record.getLongitude());
     }
 
-    //download data from web as a background task
     @Override
     protected Void doInBackground(Void... Void) {
-        //help class to connect to web and get data
         HttpURLConnection urlConnection = null;
-        //reads data from given input stream (this case-> data from web to string format)
         BufferedReader bufferedReader = null;
         String altitudeJsonStr = null;
 
         try {
-            //setp 1: construction of the URL query for google maps API, have to add personal API key to use gooogle maps API
-            //TODO move it to a different subclass or abstract class
-            //google maps API takes form: https://maps.googleapis.com/maps/api/elevation/outputFormat?parameters
-            //example: https://maps.googleapis.com/maps/api/elevation/json?locations=39.7391536,-104.9847034&key=AIzaSyDz8OSO03MnSdoE-0FFN9sZaIyFRlpf79Y
-            final int URL_LENGTH_LIMIT = 8192;
-            final String GOOGLEMAPS_BASE_URL = "https://maps.googleapis.com/maps/api/elevation/json?";
-            final String OUTPUT_FORMAT = "json";
-            final String PARAMETERS_LOCATIONS = "locations";
-            final String PARAMETERS_PATH = "path";
-            final String APPID_PARAM = "key";
-
-            //important: use android.net URI class, not JAVA!!!
-            //parse base url -> build instance of builder -> append query parameters -> build url
-            Uri buildUri = Uri.parse(GOOGLEMAPS_BASE_URL).buildUpon()
-                    .appendQueryParameter(PARAMETERS_LOCATIONS, mLocationsStr)
-                    .appendQueryParameter(APPID_PARAM, APPID_KEY)
-                    .build();
-
-            //check how generated uri looks like
-            Log.v(LOG_TAG, "URI has been built: " + buildUri.toString());
-
-            //build string url
+            // construction of the URL query for google maps API
+            Uri buildUri = parseGoogleUri();
             URL url = new URL(buildUri.toString());
 
-            //step 2: creation of request to google maps API, opening connection with web
-            //incompatible type if without (HttpURLConnection call)
+            // construction of request to google maps API, opening connection with web
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
-            //step 3: read input stream from web by getting stream from opened connection
-            // get input stream from url connection -> create StringBuffer instance ->
-            // define BufferedReader here with InputStreamReader -> append strings to the StringBuffer in a loop ->
-            // define string to show as StringBuffer.toString();
+            // read input stream from web by getting stream from opened connection
             InputStream inputStream = urlConnection.getInputStream();
             if (inputStream == null) {
                 //set as null if no data to show
-                Log.v(LOG_TAG, "Input stream was empty, no data to shown, return null");
                 return null;
             }
-
-            StringBuffer stringBuffer = new StringBuffer();
-
-            //define BufferedReader by got input stream
             bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-            //have to use additional string (line) to call readLine() just once ( so lines from stream won't be losed and empty)
             String line;
+            StringBuilder stringBuilder = new StringBuilder();
             while ((line = bufferedReader.readLine()) != null) {
-                //append "line" instead calling readLine() again
-                stringBuffer.append(line + "\n");
+                // append new line to builder
+                stringBuilder.append(line + "\n");
             }
 
-            if (stringBuffer.length() == 0) {
-                //string stream was empty, so no point in further parsing-> return null so no data is shown
-                Log.v(LOG_TAG, "String stream was empty, no data to shown, return null");
+            if (stringBuilder.length() == 0) {
+                // string stream was empty, end with null
                 return null;
             }
 
-            //define altitude string
-            altitudeJsonStr = stringBuffer.toString();
-
-            //log message with result string
-            Log.v(LOG_TAG, "altitude string generated: " + altitudeJsonStr);
+            // define altitude string
+            altitudeJsonStr = stringBuilder.toString();
         } catch (IOException e) {
-            //if error occur, code didn't get data from web so no point in performing further data parsing, return null
-            Log.v(LOG_TAG, "Error, at getting data from web:", e);
             return null;
         } finally {
-            //close opened url connection
+            // close opened url connection
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
-            //try to close opened buffered reader
             if (bufferedReader != null) {
                 try {
                     bufferedReader.close();
                 } catch (IOException e) {
-                    Log.v(LOG_TAG, "Error, at BufferedReaded closing:", e);
                     e.printStackTrace();
                 }
             }
         }
 
-        try
-        {
-            //TODO change num of points from fixed to method generated
+        try {
             getAltitudeDataFromJson(altitudeJsonStr, 1);
-        } catch (JSONException e)
-        {
-            Log.v(LOG_TAG, "Error occur, getting data from defined JSON string: ", e);
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
         return null;
+    }
+
+    private Uri parseGoogleUri() {
+        String APPID_KEY = "AIzaSyDz8OSO03MnSdoE-0FFN9sZaIyFRlpf79Y";
+        return Uri.parse(Constants.GOOGLEMAPS_BASE_URL).buildUpon()
+                .appendQueryParameter(Constants.PARAMETERS_LOCATIONS, mLocationsStr)
+                .appendQueryParameter(Constants.APPID_PARAM, APPID_KEY)
+                .build();
     }
 
     //method to extract data in correct form from given Json String;
@@ -204,7 +168,6 @@ public class FetchElevationTask extends AsyncTask<Void, Void, Void> {
             //round elevation value (to set precision to meters)
             mCurrentEleValue = (double) Math.round(mCurrentEleValue);
 
-            //pass data to MainFragment through CallbackResponse interface
             mCallback.onElevationFound(mCurrentEleValue);
         } else {
             Log.v(LOG_TAG, " onPostExecute, current elevation wasn't fetched from JSON, stopped");

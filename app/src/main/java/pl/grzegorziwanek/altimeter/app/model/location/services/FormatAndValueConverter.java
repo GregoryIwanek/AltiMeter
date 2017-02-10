@@ -1,7 +1,6 @@
 package pl.grzegorziwanek.altimeter.app.model.location.services;
 
 import android.location.Location;
-import android.util.Log;
 
 import java.text.DecimalFormat;
 
@@ -174,7 +173,7 @@ public class FormatAndValueConverter {
 
     /** Set min/max elevation string
      * @param altitude value to create string from
-     * @return
+     * @return str
      * example: 13.23 m n.p.m.
      */
     public static String setMinMaxString(Double altitude) {

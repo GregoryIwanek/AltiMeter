@@ -24,7 +24,9 @@ interface SessionContract {
 
         void showEmptySessions(List<Session> sessions);
 
-        void showAddSession();
+        void showAddSessionUi();
+
+        void showSessionDetailsUi(String sessionId);
 
         void showLoadingSessionError();
 
@@ -41,6 +43,7 @@ interface SessionContract {
 
         void addNewSession();
 
+        void openSessionDetails(String sessionId);
 
         void deleteCheckedSessions(ArrayList<String> sessionsId);
 

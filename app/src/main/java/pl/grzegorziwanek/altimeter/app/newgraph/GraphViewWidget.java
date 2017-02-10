@@ -41,6 +41,7 @@ public class GraphViewWidget extends GraphView {
     private void setGraphViewSettings() {
         defineDiagramAppearance();
         setGraphBounds();
+        setLabelsTextSize();
         //TODO-> add part of code responsible for converting axis values to minutes/hours and kilometers
         setLabelsFormatSymbols("m", "s");
     }
@@ -215,6 +216,10 @@ public class GraphViewWidget extends GraphView {
                 }
             }
         });
+    }
+
+    private void setLabelsTextSize() {
+        getGridLabelRenderer().setTextSize(20);
     }
 
     public void clearData() {

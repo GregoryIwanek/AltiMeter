@@ -33,6 +33,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.grzegorziwanek.altimeter.app.R;
+import pl.grzegorziwanek.altimeter.app.details.DetailsActivity;
 import pl.grzegorziwanek.altimeter.app.model.Session;
 import pl.grzegorziwanek.altimeter.app.newgraph.AddNewGraphActivity;
 
@@ -121,7 +122,7 @@ public class SessionFragment extends Fragment implements SessionContract.View {
         swipeRefreshLayoutChild.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //TODO-> set methods here
+                mPresenter.loadSessions(false);
             }
         });
     }
@@ -161,7 +162,7 @@ public class SessionFragment extends Fragment implements SessionContract.View {
     SessionItemListener mSessionItemListener = new SessionItemListener() {
         @Override
         public void onSessionClick(Session clickedSession) {
-
+            mPresenter.openSessionDetails(clickedSession.getId());
         }
     };
 
@@ -185,8 +186,14 @@ public class SessionFragment extends Fragment implements SessionContract.View {
     }
 
     @Override
-    public void showAddSession() {
+    public void showAddSessionUi() {
         Intent intent = new Intent(getContext(), AddNewGraphActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showSessionDetailsUi(String sessionId) {
+        Intent intent = new Intent(getContext(), DetailsActivity.class);
         startActivity(intent);
     }
 
@@ -281,8 +288,6 @@ public class SessionFragment extends Fragment implements SessionContract.View {
 
             CheckBox removeItemCB = (CheckBox) rowView.findViewById(R.id.removeItem);
             removeItemCB.setChecked(session.isCompleted());
-
-            //TODO->set code inside
             removeItemCB.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

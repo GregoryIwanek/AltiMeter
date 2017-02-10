@@ -78,6 +78,7 @@ class SessionPresenter implements SessionContract.Presenter {
                 if (!mSessionView.isActive()) {
                     return;
                 }
+
                 if (showLoadingUI) {
                     mSessionView.setLoadingIndicator(false);
                 }
@@ -114,7 +115,12 @@ class SessionPresenter implements SessionContract.Presenter {
 
     @Override
     public void addNewSession() {
-        mSessionView.showAddSession();
+        mSessionView.showAddSessionUi();
+    }
+
+    @Override
+    public void openSessionDetails(String sessionId) {
+        mSessionView.showSessionDetailsUi(sessionId);
     }
 
     @Override

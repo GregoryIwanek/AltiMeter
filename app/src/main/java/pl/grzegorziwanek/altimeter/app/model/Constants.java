@@ -13,18 +13,18 @@ public final class Constants {
     public static final String RESULT_DATA_KEY = PACKAGE_NAME + ".RESULT_DATA_KEY";
     public static final String LOCATION_DATA = PACKAGE_NAME + ".LOCATION_DATA";
 
-    //time constants (used to define intervals between two location request, depends on chosen settings)
-    public static final int ONE_SECOND = 1000;
-    public static final int FIVE_SECONDS = 1000 * 5;
-    public static final int THIRTY_SECONDS = 1000 * 30;
-    public static final int ONE_MINUTE = 1000 * 60;
-    public static final int TWO_MINUTES = 1000 * 60 * 2;
+    //JSON elevation google service
+    public static final int URL_LENGTH_LIMIT = 8192;
+    public static final String GOOGLEMAPS_BASE_URL = "https://maps.googleapis.com/maps/api/elevation/json?";
+    public static final String OUTPUT_FORMAT = "json";
+    public static final String PARAMETERS_LOCATIONS = "locations";
+    public static final String PARAMETERS_PATH = "path";
+    public static final String APPID_PARAM = "key";
 
     //Shared preferences default
     public static final int ALTITUDE_MIN = 20000;
     public static final int ALTITUDE_MAX = -20000;
     public static final int DISTANCE_DEFAULT = 0;
-
     public static final String DEFAULT_TEXT = "...";
 
     public static String sessionId = "";

@@ -87,8 +87,10 @@ public class GoogleLocationListener implements GoogleApiClient.ConnectionCallbac
         locationRequest.setInterval(intervalLong);
 
         // set fastest possible interval
-        if (intervalLong < 60000) {
-            locationRequest.setFastestInterval(30000);
+        //TODO-> switch back to different values
+        //60000 and 30000
+        if (intervalLong < 20000) {
+            locationRequest.setFastestInterval(10000);
         } else {
             locationRequest.setFastestInterval(intervalLong/2);
         }
