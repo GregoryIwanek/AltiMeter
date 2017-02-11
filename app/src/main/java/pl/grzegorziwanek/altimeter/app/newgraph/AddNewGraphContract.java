@@ -19,6 +19,12 @@ interface AddNewGraphContract {
 
         void setButtonPicture(int imageId);
 
+        void showSessionLocked();
+
+        void showRecordingPaused();
+
+        void showRecordingData();
+
         void setAddressTextView(String address);
 
         void setElevationTextView(String elevation);
@@ -45,5 +51,9 @@ interface AddNewGraphContract {
         void stopLocationRecording();
 
         void resetSessionData();
+
+        void lockSession();
+
+        void generateMap();
     }
 }

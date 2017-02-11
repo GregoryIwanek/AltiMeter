@@ -3,6 +3,8 @@ package pl.grzegorziwanek.altimeter.app.newgraph;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.grzegorziwanek.altimeter.app.R;
+import pl.grzegorziwanek.altimeter.app.utils.NoticeDialogFragment;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -23,7 +26,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Created by Grzegorz Iwanek on 31.01.2017. That's it.
  */
 
-public class AddNewGraphFragment extends Fragment implements AddNewGraphContract.View {
+public class AddNewGraphFragment extends Fragment implements AddNewGraphContract.View,
+        NoticeDialogFragment.NoticeDialogListener {
     @BindView(R.id.current_elevation_label) TextView mCurrElevationTextView;
     @BindView(R.id.current_latitude_value) TextView mCurrLatitudeTextView;
     @BindView(R.id.current_longitude_value) TextView mCurrLongitudeTextView;
@@ -33,6 +37,8 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
     @BindView(R.id.distance_numbers) TextView mDistanceTextView;
     @BindView(R.id.reset_button) ImageButton mRefreshButton;
     @BindView(R.id.pause_button) ImageButton mPlayPauseButton;
+    @BindView(R.id.lock_button) ImageButton mLockButton;
+    @BindView(R.id.map_button) ImageButton mMapButton;
     @BindView(R.id.graph_view) GraphViewWidget mGraphViewWidget;
 
     private AddNewGraphContract.Presenter mPresenter;
@@ -81,7 +87,40 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
 
     @OnClick(R.id.reset_button)
     public void onResetButtonClick() {
-        mPresenter.resetSessionData();
+        showUpDialog("Reset session. Are you sure?");
+    }
+
+    @OnClick(R.id.lock_button)
+    public void onLockButtonCLick() {
+        showUpDialog("Lock session. Are you sure?");
+    }
+
+    @OnClick(R.id.map_button)
+    public void onMapButtonClick() {
+        showUpDialog("Generate map?");
+    }
+
+    private void showUpDialog(String title) {
+        Bundle args = new Bundle();
+        args.putString("title", title);
+        DialogFragment ndf = new NoticeDialogFragment();
+        ndf.setArguments(args);
+        ndf.show(getChildFragmentManager(), "NoticeDialogFragment");
+    }
+
+    @Override
+    public void onDialogPositiveClick(String callbackCode) {
+        switch (callbackCode) {
+            case "Reset session. Are you sure?":
+                mPresenter.resetSessionData();
+                break;
+            case "Lock session. Are you sure?":
+                mPresenter.lockSession();
+                break;
+            case "Generate map?":
+                mPresenter.generateMap();
+                break;
+        }
     }
 
     private void initiateButtonsTags() {
@@ -101,6 +140,25 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
     @Override
     public void setButtonPicture(int imageId) {
         mPlayPauseButton.setBackgroundResource(imageId);
+    }
+
+    @Override
+    public void showSessionLocked() {
+        showMessage("Session locked");
+    }
+
+    @Override
+    public void showRecordingPaused() {
+        showMessage("Paused");
+    }
+
+    @Override
+    public void showRecordingData() {
+        showMessage("Recording data");
+    }
+
+    private void showMessage(String message) {
+        Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -145,6 +203,7 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
 
     @Override
     public void resetGraph() {
+        mPresenter.stopLocationRecording();
         mGraphViewWidget.clearData();
     }
 }

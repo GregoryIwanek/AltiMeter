@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -55,7 +54,7 @@ public class GoogleLocationListener implements GoogleApiClient.ConnectionCallbac
     }
 
     @Override
-    public void startListenForLocations(@Nullable FullLocationInfoCallback callback) {
+    public void startListenForLocations(@Nullable FullInfoCallback callback) {
         // set location request
         LocationRequest locationRequest = new LocationRequest();
         locationRequest = setLocationRequest(locationRequest);
@@ -66,6 +65,11 @@ public class GoogleLocationListener implements GoogleApiClient.ConnectionCallbac
 
         // check for location permissions
         checkLocationPermissions(mContext, locationRequest);
+    }
+
+    @Override
+    public void clearSessionData() {
+        //nothing to do, LocationCollector deals with clear
     }
 
     @Override

@@ -21,7 +21,7 @@ public final class AboutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
        View view = inflater.inflate(R.layout.fragment_about, container, false);
         if (view != null) {
-            view.setBackgroundColor(ContextCompat.getColor(this.getActivity(), R.color.colorWhite));
+            view.setBackgroundColor(ContextCompat.getColor(this.getActivity(), R.color.colorBlack));
         }
         return view;
     }

@@ -2,13 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="pl.grzegorziwanek.altimeter.app">
 
-    <!--PERMISSION TO ACCESS INTER: MUST HAVE-->
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <!--Google play service permission-> to use real time location update-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCCESS_COARSE_LOCATION"/>
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
@@ -17,11 +13,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--portrait orientation is set in BasicActivity parent class-->
         <activity
             android:name=".altitudegraph.SessionActivity">
             <intent-filter>
-                <!--key lines for setting launcher activity-->
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
@@ -42,8 +36,6 @@
             android:name=".model.location.services.AddressIntentService"
             android:exported="false"
             android:enabled="true"/>
-        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

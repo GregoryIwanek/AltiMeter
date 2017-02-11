@@ -21,7 +21,6 @@ public class SessionRepository implements SessionDataSource {
     private static SessionRepository INSTANCE = null;
     private final SessionDataSource mSessionLocalDataSource;
 
-
     /**
      * This variable has package local visibility so it can be accessed from tests.
      */
@@ -134,18 +133,24 @@ public class SessionRepository implements SessionDataSource {
 
     @Override
     public void clearSessionData(@NonNull String sessionId) {
-        //TODO -> delete data of one session from database
+        mSessionLocalDataSource.clearSessionData(sessionId);
     }
 
     @Override
-    public void deleteSessions(ArrayList<String> sessionsId, boolean isDeleteAll) {
-        mSessionLocalDataSource.deleteSessions(sessionsId, isDeleteAll);
+    public void deleteSessions(ArrayList<String> sessionsId, boolean isDeleteAll,
+                               @NonNull DeleteSessionCallback callback) {
+        mSessionLocalDataSource.deleteSessions(sessionsId, isDeleteAll, callback);
         deleteFromCache(sessionsId, isDeleteAll);
+        callback.onSessionsDeleted();
+    }
+
+    @Override
+    public void setSessionChecked(String sessionId, boolean isCompleted) {
+        setSessionCompleted(sessionId, isCompleted);
     }
 
     private void deleteFromCache(ArrayList<String> sessionsId, boolean isDeleteAll) {
         initiateCache();
-
         if (isDeleteAll) {
             deleteAllCache();
         } else {
@@ -176,16 +181,26 @@ public class SessionRepository implements SessionDataSource {
         }
     }
 
+    //TODO-> refactor this to change value of session in database
+    //TODO-> add column in Record table (isCompleted)
+    private void setSessionCompleted(String sessionId, boolean isCompleted) {
+        for (Map.Entry<String, Session> entry : mCachedSessions.entrySet()) {
+            if (entry.getValue().getId().equals(sessionId)) {
+                mCachedSessions.get(sessionId).setCompleted(isCompleted);
+                break;
+            }
+        }
+    }
+
     //todo -> finish that one
     private void refreshCache(List<Session> sessions) {
         if (mCachedSessions == null) {
             mCachedSessions = new LinkedHashMap<>();
         }
+
         mCachedSessions.clear();
         for (Session session : sessions) {
             mCachedSessions.put(session.getId(), session);
-            System.out.println("ADD NEW SESSION IN TO CACHE: " + session.getId());
-            System.out.println("Session id: " + session.getId());
         }
         mCacheIsDirty = false;
     }

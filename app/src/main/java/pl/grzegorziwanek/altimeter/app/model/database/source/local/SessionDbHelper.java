@@ -79,6 +79,10 @@ public class SessionDbHelper extends SQLiteOpenHelper {
                     + SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID +"=" + setProperName(tableName);
     }
 
+    String queryClearRecordsTable(String tableName) {
+        return "delete from " + setProperName(tableName);
+    }
+
     String queryInsertOrIgnore(String rowValue) {
         return "INSERT OR IGNORE INTO " + SessionDbContract.SessionEntry.TABLE_NAME
                 + " (" + SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID + ")"

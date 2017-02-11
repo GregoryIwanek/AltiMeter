@@ -21,91 +21,111 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/activity_padding_bottom_16dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/about_what_does_it_do"/>
-                <TextView
-                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
+                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/activity_padding_bottom_16dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/about_what_does_it_do"/>
-                <TextView
-                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
+                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/activity_padding_bottom_16dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/about_what_does_it_do"/>
-                <TextView
-                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
+                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/activity_padding_bottom_16dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/about_what_does_it_do"/>
-                <TextView
-                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
+                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/activity_padding_bottom_16dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/about_what_does_it_do"/>
-                <TextView
-                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
+                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/activity_padding_bottom_16dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/about_what_does_it_do"/>
-                <TextView
-                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
+                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/activity_padding_bottom_16dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/about_what_does_it_do"/>
-                <TextView
-                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
+                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/activity_padding_bottom_16dp"
+                    android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:text="@string/about_what_does_it_do"/>
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/about_first"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/about_first"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/about_first"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/about_first"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/about_first"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/about_first"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/about_first"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/about_first"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/about_first"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
             </LinearLayout>
         </LinearLayout>

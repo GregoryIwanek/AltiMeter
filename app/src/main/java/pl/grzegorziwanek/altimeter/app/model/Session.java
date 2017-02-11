@@ -21,8 +21,8 @@ public class Session {
     private String mLatitudeStr = "00°00'00''X";
     private String mLongitudeStr = "00°00'00''Y";
     private String mAddress = "Solar System," +'\n'+ "Milky Way," +'\n'+ "Laniakea";
-    private String mMinHeightStr = null;
-    private String mMaxHeightStr = null;
+    private String mMinHeightStr = "";
+    private String mMaxHeightStr = "";
     private String mDistanceStr = "0 m";
 
     private Double mDistance = (double) 0;
@@ -208,5 +208,26 @@ public class Session {
 
     public void setCompleted(boolean completed) {
         mCompleted = completed;
+    }
+
+    public void clearData() {
+        mCompleted = false;
+        mTitle = "TITLE";
+        mDescription = "DESCRIPTION";
+
+        mLatitudeStr = "00°00'00''X";
+        mLongitudeStr = "00°00'00''Y";
+        mAddress = "Solar System," + '\n' + "Milky Way," + '\n' + "Laniakea";
+        mMinHeightStr = null;
+        mMaxHeightStr = null;
+        mDistanceStr = "0 m";
+
+        mDistance = (double) 0;
+        mCurrElevation = null;
+        mMinHeight = (double) 10000;
+        mMaxHeight = (double) -10000;
+        mLastLocation = null;
+        mCurrLocation = null;
+        mLocationList.clear();
     }
 }

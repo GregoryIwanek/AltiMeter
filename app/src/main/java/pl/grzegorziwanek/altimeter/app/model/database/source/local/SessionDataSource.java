@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,17 +145,25 @@ public class SessionDataSource implements pl.grzegorziwanek.altimeter.app.model.
 
     @Override
     public void clearSessionData(@NonNull String sessionId) {
-
+        SQLiteDatabase db = mSessionDbHelper.getWritableDatabase();
+        db.execSQL(mSessionDbHelper.queryClearRecordsTable(sessionId));
+        db.close();
     }
 
     @Override
-    public void deleteSessions(ArrayList<String> sessionsId, boolean isDeleteAll) {
+    public void deleteSessions(ArrayList<String> sessionsId, boolean isDeleteAll,
+                               @Nullable DeleteSessionCallback callback) {
         SQLiteDatabase db = mSessionDbHelper.getWritableDatabase();
         for (String sessionId : sessionsId) {
             db.execSQL(mSessionDbHelper.queryDeleteTables(sessionId));
             db.execSQL(mSessionDbHelper.queryDeleteRows(sessionId));
         }
         db.close();
+    }
+
+    @Override
+    public void setSessionChecked(String sessionId, boolean isCompleted) {
+        //TODO-> add column to table records, set there if session completed, change that after this is called
     }
 
     @Override

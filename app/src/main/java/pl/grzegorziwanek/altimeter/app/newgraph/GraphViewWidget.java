@@ -12,6 +12,8 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.ArrayList;
 
+import pl.grzegorziwanek.altimeter.app.R;
+
 /**
  *  Created by Grzegorz Iwanek on 01.12.2016.
  *  Consist extension of external library class GraphView (http://www.android-graphview.org/) and required customized methods;
@@ -19,7 +21,7 @@ import java.util.ArrayList;
  */
 public class GraphViewWidget extends GraphView {
 
-    private final LineGraphSeries<DataPoint> mDiagramSeries = new LineGraphSeries<>();
+    private LineGraphSeries<DataPoint> mDiagramSeries = new LineGraphSeries<>();
     private int mCurSeriesCount = 0;
     private Long mRecordingStartTime = null;
 
@@ -39,14 +41,13 @@ public class GraphViewWidget extends GraphView {
     }
 
     private void setGraphViewSettings() {
-        defineDiagramAppearance();
+        setDiagramAppearance();
+        setGridAppearance();
         setGraphBounds();
-        setLabelsTextSize();
-        //TODO-> add part of code responsible for converting axis values to minutes/hours and kilometers
-        setLabelsFormatSymbols("m", "s");
+        setTextAppearance();
     }
 
-    private void defineDiagramAppearance() {
+    private void setDiagramAppearance() {
         setDiagramLine();
         setDiagramBackground();
     }
@@ -61,6 +62,11 @@ public class GraphViewWidget extends GraphView {
         int colorId = Color.argb(65, 0, 255, 255);
         mDiagramSeries.setDrawBackground(true);
         mDiagramSeries.setBackgroundColor(colorId);
+    }
+
+    private void setGridAppearance() {
+        int colorId = Color.rgb(255, 255, 255);
+        getGridLabelRenderer().setGridColor(colorId);
     }
 
     private void setGraphBounds() {
@@ -157,9 +163,17 @@ public class GraphViewWidget extends GraphView {
     }
 
     public void deliverGraph(ArrayList<Location> locationsList) {
+        checkIsSeriesNull();
         setRecordingStartTime(locationsList.get(0).getTime());
         drawGraph(locationsList);
         refreshGraphLook();
+    }
+
+    private void checkIsSeriesNull() {
+        if (mDiagramSeries == null) {
+            mDiagramSeries = new LineGraphSeries<>();
+            setGraphViewSettings();
+        }
     }
 
     private void setRecordingStartTime(Long startTime) {
@@ -202,6 +216,16 @@ public class GraphViewWidget extends GraphView {
         refreshDrawableState();
     }
 
+    private void setTextAppearance() {
+        setLabelsTextSize();
+        setTextColor();
+        setLabelsFormatSymbols("m", "s");
+    }
+
+    private void setLabelsTextSize() {
+        getGridLabelRenderer().setTextSize(20);
+    }
+
     private void setLabelsFormatSymbols(String yFormat, String xFormat){
         final String axisYFormat = yFormat;
         final String axisXFormat = xFormat;
@@ -218,14 +242,20 @@ public class GraphViewWidget extends GraphView {
         });
     }
 
-    private void setLabelsTextSize() {
-        getGridLabelRenderer().setTextSize(20);
+    private void setTextColor() {
+        int colorId = Color.rgb(255, 255, 255);
+        getGridLabelRenderer().setHorizontalLabelsColor(colorId);
+        getGridLabelRenderer().setVerticalLabelsColor(colorId);
+        getGridLabelRenderer().setHorizontalAxisTitleColor(colorId);
+        getGridLabelRenderer().setVerticalAxisTitleColor(colorId);
+        getGridLabelRenderer().setVerticalLabelsSecondScaleColor(colorId);
     }
 
     public void clearData() {
-        getSeries().clear();
-        //TODO -> find way to reset data in mDiagramSeries (wtf is that class??)
+        removeSeries(mDiagramSeries);
+        mDiagramSeries = null;
         mCurSeriesCount = 0;
         mRecordingStartTime = null;
+        onDataChanged(false, false);
     }
 }

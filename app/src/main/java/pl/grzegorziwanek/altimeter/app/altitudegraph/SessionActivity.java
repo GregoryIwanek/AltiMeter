@@ -18,6 +18,7 @@ import pl.grzegorziwanek.altimeter.app.BasicActivity;
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.model.database.source.SessionRepository;
 import pl.grzegorziwanek.altimeter.app.model.database.source.local.SessionDataSource;
+import pl.grzegorziwanek.altimeter.app.settings.SettingsFragment;
 import pl.grzegorziwanek.altimeter.app.utils.ActivityUtils;
 
 /**

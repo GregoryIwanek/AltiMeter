@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBlack"
     android:orientation="vertical">
 
     <!--location label, current height label, geographic direction label-->
@@ -19,6 +20,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
 
+            android:textColor="@color/colorWhite"
             android:text="@string/current_no_value"
             android:textAppearance="?android:textAppearanceLarge"
             android:textSize="@dimen/text_size_16sp"
@@ -38,6 +40,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
 
+                android:textColor="@color/colorWhite"
                 android:text="@string/current_no_value"
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textSize="@dimen/text_size_large_30sp"
@@ -50,6 +53,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.25"
 
+                android:textColor="@color/colorWhite"
                 android:text="@string/meters_short_text"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:singleLine="false"
@@ -134,7 +138,7 @@
                     android:clickable="true"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/ic_terrain_black_24dp"
+                    android:background="@drawable/ic_terrain_graph_black_24dp"
                     android:layout_weight="1"/>
 
                 <FrameLayout
@@ -184,6 +188,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
 
+                    android:textColor="@color/colorWhite"
                     android:text="@string/min_height_text"
                     android:textAppearance="?android:textAppearanceMedium"
                     android:gravity="center"
@@ -194,6 +199,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
 
+                    android:textColor="@color/colorWhite"
                     android:text="@string/current_no_value"
                     android:textAppearance="?android:textAppearanceSmall"
                     android:gravity="center"
@@ -212,16 +218,19 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
 
+                    android:textColor="@color/colorWhite"
                     android:text="@string/distance_text"
                     android:textAppearance="?android:textAppearanceMedium"
                     android:gravity="center"
                     android:textAlignment="center"/>
+
                 <TextView
                     android:id="@+id/distance_numbers"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
 
+                    android:textColor="@color/colorWhite"
                     android:text="@string/current_no_value"
                     android:textAppearance="?android:textAppearanceSmall"
                     android:gravity="center"
@@ -240,16 +249,19 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
 
+                    android:textColor="@color/colorWhite"
                     android:text="@string/max_height_text"
                     android:textAppearance="?android:textAppearanceMedium"
                     android:gravity="center"
                     android:textAlignment="center"/>
+
                 <TextView
                     android:id="@+id/max_height_numbers"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
 
+                    android:textColor="@color/colorWhite"
                     android:text="@string/current_no_value"
                     android:textAppearance="?android:textAppearanceSmall"
                     android:gravity="center"
@@ -287,6 +299,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
 
+                        android:textColor="@color/colorWhite"
                         android:text="@string/current_latitude_label"
                         android:textAppearance="?android:textAppearanceLarge"
                         android:gravity="center"
@@ -298,6 +311,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
 
+                        android:textColor="@color/colorWhite"
                         android:text="@string/current_longitude_label"
                         android:textAppearance="?android:textAppearanceLarge"
                         android:gravity="center"
@@ -322,6 +336,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
 
+                        android:textColor="@color/colorWhite"
                         android:text="@string/current_no_value"
                         android:textAppearance="?android:textAppearanceMedium"
                         android:gravity="center"
@@ -333,52 +348,13 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
 
+                        android:textColor="@color/colorWhite"
                         android:text="@string/current_no_value"
                         android:textAppearance="?android:textAppearanceMedium"
                         android:gravity="center"
                         android:textAlignment="center"/>
                 </LinearLayout>
             </LinearLayout>
-
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_weight="5.5"-->
-                <!--android:orientation="vertical">-->
-
-                <!--<FrameLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_weight="1"/>-->
-
-                <!--<ImageButton-->
-                    <!--android:id="@+id/map_fragment_button"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_gravity="center"-->
-                    <!--android:background="@drawable/ic_arrow_forward_white_18dp"-->
-                    <!--android:layout_weight="0.25" />-->
-
-                <!--<FrameLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_weight="1"/>-->
-            <!--</LinearLayout>-->
         </LinearLayout>
-
-
-        <!--<FrameLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="1.1">-->
-
-            <!--<TextView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:background="@color/colorAccent"-->
-                <!--android:textAlignment="center"-->
-                <!--android:textSize="@dimen/text_size_large_30sp"-->
-                <!--android:text="REKLAMA"/>-->
-        <!--</FrameLayout>-->
     </LinearLayout>
 </LinearLayout>

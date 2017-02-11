@@ -26,7 +26,7 @@ public final class SettingsFragment extends PreferenceFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         if (view != null) {
-            view.setBackgroundColor(ContextCompat.getColor(this.getActivity(), R.color.colorWhite));
+            view.setBackgroundColor(ContextCompat.getColor(this.getActivity(), R.color.colorBlack));
         }
         return view;
     }

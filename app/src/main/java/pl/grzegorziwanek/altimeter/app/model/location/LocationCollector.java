@@ -27,7 +27,7 @@ public class LocationCollector implements CallbackResponse {
 
     private static LocationCollector INSTANCE = null;
     private CallbackResponse mGoogleLocationListener;
-    private FullLocationInfoCallback callbackFullInfo;
+    private FullInfoCallback callbackFullInfo;
     private LocationChangedCallback callbackNewLocation;
     private ElevationFetchedCallback callbackElevation;
     private AddressFetchedCallback callbackAddress;
@@ -130,7 +130,7 @@ public class LocationCollector implements CallbackResponse {
     private void checkIfHaveFullInfo() {
         if (mHasCallback && mSession.getCurrentElevation() != null && mSession.getAddress() != null) {
             setFullInfoOfSession();
-            callbackFullInfo.onFullLocationInfoAcquired(mSession);
+            callbackFullInfo.onFullInfoAcquired(mSession);
         }
     }
 
@@ -192,11 +192,17 @@ public class LocationCollector implements CallbackResponse {
     }
 
     @Override
-    public void startListenForLocations(@Nullable FullLocationInfoCallback callback) {
+    public void startListenForLocations(@Nullable FullInfoCallback callback) {
         callbackFullInfo = callback;
         mHasCallback = true;
         updateDistanceUnits();
         mGoogleLocationListener.startListenForLocations(null);
+    }
+
+    @Override
+    public void clearSessionData() {
+        mSession.clearData();
+        callbackFullInfo.onFullInfoAcquired(mSession);
     }
 
     private void updateDistanceUnits() {

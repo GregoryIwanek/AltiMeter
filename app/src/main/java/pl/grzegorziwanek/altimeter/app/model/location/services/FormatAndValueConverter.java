@@ -96,7 +96,8 @@ public class FormatAndValueConverter {
         }
     }
 
-    /** Set new value of the distance
+    /** Set new value of the distance.
+     *  Gives up distance update if displacement is smaller than 5 meters.
      * @param lastLocation last known location
      * @param currLocation current location
      */
@@ -105,7 +106,9 @@ public class FormatAndValueConverter {
             float[] results = new float[1];
             Location.distanceBetween(lastLocation.getLatitude(), lastLocation.getLongitude(),
                     currLocation.getLatitude(), currLocation.getLongitude(), results);
-            distance += results[0];
+            if (results[0] > 5) {
+                distance += results[0];
+            }
         }
         return distance;
     }

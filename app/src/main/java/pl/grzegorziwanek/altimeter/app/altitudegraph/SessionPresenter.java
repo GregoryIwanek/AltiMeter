@@ -20,11 +20,13 @@ class SessionPresenter implements SessionContract.Presenter {
     private final SessionRepository mSessionRepository;
     private final SessionContract.View mSessionView;
     private boolean mFirstLoad = true;
+    private SessionDataSource.DeleteSessionCallback callbackDelete;
 
     SessionPresenter(@NonNull SessionRepository sessionRepository, @NonNull SessionContract.View sessionView) {
         mSessionRepository = checkNotNull(sessionRepository, "sessionRepository cannot be null");
         mSessionView = checkNotNull(sessionView, "sessionView cannot be null");
         mSessionView.setPresenter(this);
+        setCallbacks();
     }
 
     @Override
@@ -42,6 +44,15 @@ class SessionPresenter implements SessionContract.Presenter {
         // Simplification for sample: a network reload will be forced on first load.
         loadSessions(forceUpdate || mFirstLoad, true);
         mFirstLoad = false;
+    }
+
+    private void setCallbacks() {
+        callbackDelete = new SessionDataSource.DeleteSessionCallback() {
+            @Override
+            public void onSessionsDeleted() {
+                mSessionView.onSessionsDeleted();
+            }
+        };
     }
 
     /**
@@ -125,15 +136,20 @@ class SessionPresenter implements SessionContract.Presenter {
 
     @Override
     public void deleteCheckedSessions(ArrayList<String> sessionsId) {
-        mSessionRepository.deleteSessions(sessionsId, false);
+        mSessionRepository.deleteSessions(sessionsId, false, callbackDelete);
         mSessionView.showCheckedSessionsDeleted();
         loadSessions(false);
     }
 
     @Override
     public void deleteAllSessions(ArrayList<String> sessionsId) {
-        mSessionRepository.deleteSessions(sessionsId, true);
+        mSessionRepository.deleteSessions(sessionsId, true, callbackDelete);
         mSessionView.showAllSessionsDeleted();
         loadSessions(false);
+    }
+
+    @Override
+    public void setSessionCompleted(String sessionId, boolean isCompleted) {
+        mSessionRepository.setSessionChecked(sessionId, isCompleted);
     }
 }

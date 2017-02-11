@@ -25,12 +25,14 @@ public interface CallbackResponse {
         void onElevationFound(Double elevation);
     }
 
-    interface FullLocationInfoCallback {
+    interface FullInfoCallback {
 
-        void onFullLocationInfoAcquired(Session session);
+        void onFullInfoAcquired(Session session);
     }
 
     void stopListenForLocations();
 
-    void startListenForLocations(@Nullable FullLocationInfoCallback callback);
+    void startListenForLocations(@Nullable FullInfoCallback callback);
+
+    void clearSessionData();
 }

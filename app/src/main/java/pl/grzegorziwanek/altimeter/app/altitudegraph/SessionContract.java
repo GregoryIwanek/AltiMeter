@@ -35,6 +35,8 @@ interface SessionContract {
         void showCheckedSessionsDeleted();
 
         void showAllSessionsDeleted();
+
+        void onSessionsDeleted();
     }
 
     interface Presenter extends BasePresenter {
@@ -48,6 +50,8 @@ interface SessionContract {
         void deleteCheckedSessions(ArrayList<String> sessionsId);
 
         void deleteAllSessions(ArrayList<String> sessionsId);
+
+        void setSessionCompleted(String sessionId, boolean isCompleted);
     }
 }
 

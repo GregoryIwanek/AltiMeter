@@ -1,6 +1,7 @@
 package pl.grzegorziwanek.altimeter.app.model.database.source;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,11 @@ public interface SessionDataSource {
         void onNewSessionSaved(String id);
     }
 
+    interface DeleteSessionCallback {
+
+        void onSessionsDeleted();
+    }
+
     void createRecordsTable(@NonNull Session session);
 
     void createNewSession(@NonNull Session session, @NonNull SaveSessionCallback callback);
@@ -36,6 +42,8 @@ public interface SessionDataSource {
 
     void refreshSessions();
 
-    void deleteSessions(ArrayList<String> sessionsId, boolean isDeleteAll);
+    void deleteSessions(ArrayList<String> sessionsId, boolean isDeleteAll, @Nullable DeleteSessionCallback callback);
+
+    void setSessionChecked(String sessionId, boolean isCompleted);
 }
 
