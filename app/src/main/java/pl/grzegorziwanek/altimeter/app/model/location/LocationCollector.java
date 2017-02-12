@@ -187,16 +187,23 @@ public class LocationCollector implements CallbackResponse {
     }
 
     @Override
-    public void stopListenForLocations() {
-        mGoogleLocationListener.stopListenForLocations();
-    }
-
-    @Override
     public void startListenForLocations(@Nullable FullInfoCallback callback) {
         callbackFullInfo = callback;
         mHasCallback = true;
         updateDistanceUnits();
         mGoogleLocationListener.startListenForLocations(null);
+    }
+
+    @Override
+    public void stopListenForLocations(boolean isLocked) {
+        mGoogleLocationListener.stopListenForLocations(isLocked);
+        if (isLocked) {
+            lockSession();
+        }
+    }
+
+    private void lockSession() {
+        mSession.setLocked(true);
     }
 
     @Override

@@ -89,7 +89,7 @@ public class SessionDbHelper extends SQLiteOpenHelper {
                 + " VALUES (" + setProperName(rowValue) +")";
     }
 
-    private String setProperName(String name) {
+    public String setProperName(String name) {
         return "\"" + name + "\"";
     }
 }

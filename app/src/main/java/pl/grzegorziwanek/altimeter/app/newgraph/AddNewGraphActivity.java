@@ -11,7 +11,7 @@ import butterknife.ButterKnife;
 import pl.grzegorziwanek.altimeter.app.BasicActivity;
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.model.database.source.SessionRepository;
-import pl.grzegorziwanek.altimeter.app.model.database.source.local.SessionDataSource;
+import pl.grzegorziwanek.altimeter.app.model.database.source.local.SessionLocalDataSource;
 import pl.grzegorziwanek.altimeter.app.model.location.LocationCollector;
 import pl.grzegorziwanek.altimeter.app.utils.ActivityUtils;
 
@@ -51,7 +51,7 @@ public class AddNewGraphActivity extends BasicActivity {
 
     private void setPresenter() {
         AddNewGraphPresenter mAddNewGraphPresenter = new AddNewGraphPresenter(
-                SessionRepository.getInstance(SessionDataSource.getInstance(getApplicationContext())),
+                SessionRepository.getInstance(SessionLocalDataSource.getInstance(getApplicationContext())),
                 LocationCollector.getInstance(getApplicationContext()), mAddNewGraphFragment);
     }
 }

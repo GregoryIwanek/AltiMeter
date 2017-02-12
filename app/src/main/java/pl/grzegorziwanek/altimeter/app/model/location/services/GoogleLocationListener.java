@@ -73,8 +73,11 @@ public class GoogleLocationListener implements GoogleApiClient.ConnectionCallbac
     }
 
     @Override
-    public void stopListenForLocations() {
+    public void stopListenForLocations(boolean isLocked) {
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        if (isLocked) {
+            mGoogleApiClient.disconnect();
+        }
     }
 
     private LocationRequest setLocationRequest(LocationRequest locationRequest) {

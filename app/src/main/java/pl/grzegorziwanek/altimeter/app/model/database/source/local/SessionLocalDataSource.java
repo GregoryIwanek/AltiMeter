@@ -4,13 +4,16 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.grzegorziwanek.altimeter.app.model.Details;
 import pl.grzegorziwanek.altimeter.app.model.Session;
+import pl.grzegorziwanek.altimeter.app.model.database.source.SessionDataSource;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -18,20 +21,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Created by Grzegorz Iwanek on 27.01.2017.
  */
 
-public class SessionDataSource implements pl.grzegorziwanek.altimeter.app.model.database.source.SessionDataSource {
+public class SessionLocalDataSource implements SessionDataSource {
 
-    private static SessionDataSource INSTANCE = null;
+    private static SessionLocalDataSource INSTANCE = null;
     private SessionDbHelper mSessionDbHelper;
 
     //Private to prevent direct instantiation.
-    private SessionDataSource(@NonNull Context context) {
+    private SessionLocalDataSource(@NonNull Context context) {
         checkNotNull(context);
         mSessionDbHelper = new SessionDbHelper(context);
     }
 
-    public static SessionDataSource getInstance(@NonNull Context context) {
+    public static SessionLocalDataSource getInstance(@NonNull Context context) {
         if (INSTANCE == null) {
-            INSTANCE = new SessionDataSource(context);
+            INSTANCE = new SessionLocalDataSource(context);
         }
         return INSTANCE;
     }
@@ -171,5 +174,101 @@ public class SessionDataSource implements pl.grzegorziwanek.altimeter.app.model.
         // Not required because the {@link SessionRepository} handles the logic of refreshing the
         // tasks from all the available data sources. This instance is used as a member of
         // {@link SessionRepository}
+    }
+
+    /** //TODO-> get details of clicked object in SessionFragment list and print in new DetailsFragment
+     * 1-> getDetails(...)
+     * 1.1-> call for new Details object and populate it depending on given parameter (sessionId)
+     * 1.2-> call back gotten Details object to SessionPresenter instance
+     *
+     * 2-> populateDetails(...)
+     * 2.1-> get readable database to read from
+     * 2.2.1-> get information from table "sessions"
+     * 2.2.2-> formulate projection String[] with names of columns and cursor with query
+     * 2.2.3-> fetch data from cursor and populate Details member fields
+     * 2.2.4-> close cursor, keep database open
+     *
+     * 2.3.1-> get information from corresponding table "records"
+     * 2.3.2-> connect to corresponding table by using "sessionsId"
+     * 2.3.3-> formulate projection String[] with names of columns and cursor with query, add clause "WHERE"
+     * 2.3.4-> fetch demanded rows form table (first and last row's recording time, number of records)
+     * 2.3.5-> fetch data from cursor and populate missing Details member fields
+     * 2.3.6-> close cursor, close database
+     *
+     * 3-> Or use RxJava and stop to fucking around with that super lame Cursor classes??
+     */
+    @Override
+    public void getDetails(@NonNull String sessionId, @NonNull DetailsSessionCallback callback) {
+
+        Details details = populateDetails(sessionId);
+        Bundle args = new Bundle();
+        callback.onDetailsLoaded(args);
+    }
+
+    private Details populateDetails(String sessionId) {
+        SQLiteDatabase db = mSessionDbHelper.getReadableDatabase();
+        Details details = new Details();
+
+        //TABLE SESSIONS
+        String[] projectionSession = {
+                SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID,
+                SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ALTITUDE,
+                SessionDbContract.SessionEntry.COLUMN_NAME_MAX_HEIGHT,
+                SessionDbContract.SessionEntry.COLUMN_NAME_MIN_HEIGHT,
+                SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ADDRESS,
+                SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_DISTANCE
+        };
+
+        String cursorSelection = SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID
+                + "=" + mSessionDbHelper.setProperName(sessionId);
+        Cursor c = db.query(
+                SessionDbContract.SessionEntry.TABLE_NAME, projectionSession,
+                cursorSelection, null, null, null, null
+        );
+
+        if (c != null && c.getCount() > 0) {
+            while (c.moveToNext()) {
+                String itemId = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID));
+                String itemAlt = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ALTITUDE));
+                String itemMaxHeight = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_MAX_HEIGHT));
+                String itemMinHeight = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_MIN_HEIGHT));
+                String itemAddress = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ADDRESS));
+                String itemDistance = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_DISTANCE));
+                details.setTitle("Title. TODO");
+                details.setDescription("Description. TODO");
+                details.setUniqueId(itemId);
+                details.setDistance(itemDistance);
+                details.setMinHeight(itemMinHeight);
+                details.setMaxHeight(itemMaxHeight);
+                details.setLastAddress(itemAddress);
+            }
+        }
+        if (c != null) {
+            c.close();
+        }
+
+        //TABLE RECORDS
+        String[] projectionRecords = {
+                SessionDbContract.RecordsEntry.COLUMN_NAME_DATE
+        };
+
+        Cursor cRecords = db.query(
+                mSessionDbHelper.setProperName(sessionId), projectionRecords,
+                null, null, null, null, null);
+        int numb = cRecords.getCount();
+        details.setNumOfPoints(numb);
+
+        cRecords.moveToFirst();
+        String dateStart = cRecords.getString(cRecords.getColumnIndexOrThrow(SessionDbContract.RecordsEntry.COLUMN_NAME_DATE));
+        cRecords.moveToLast();
+        String dateEnd = cRecords.getString(cRecords.getColumnIndexOrThrow(SessionDbContract.RecordsEntry.COLUMN_NAME_DATE));
+        details.setTimeStart(dateStart);
+        details.setTimeEnd(dateEnd);
+
+        return details;
+    }
+
+    private Bundle setDetailsBundle(Details details) {
+        return new Bundle();
     }
 }

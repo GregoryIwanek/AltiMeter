@@ -14,6 +14,7 @@ import java.util.UUID;
 public class Session {
 
     private boolean mCompleted = false;
+    private boolean mLocked = false;
     private String mId;
     private String mTitle = "TITLE";
     private String mDescription = "DESCRIPTION";
@@ -229,5 +230,13 @@ public class Session {
         mLastLocation = null;
         mCurrLocation = null;
         mLocationList.clear();
+    }
+
+    public boolean ismLocked() {
+        return mLocked;
+    }
+
+    public void setLocked(boolean locked) {
+        mLocked = locked;
     }
 }

@@ -96,12 +96,21 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
     }
 
     @Override
-    public void stopLocationRecording() {
+    public void pauseLocationRecording() {
         int tag = R.drawable.ic_play_arrow_black_24dp;
         updateButton(tag);
 
         mAddNewGraphView.showRecordingPaused();
-        mLocationCollector.stopListenForLocations();
+        mLocationCollector.stopListenForLocations(false);
+    }
+
+    @Override
+    public void lockSession() {
+        int tag = R.drawable.ic_play_arrow_black_24dp;
+        updateButton(tag);
+
+        mAddNewGraphView.showSessionLocked();
+        mLocationCollector.stopListenForLocations(true);
     }
 
     private void updateButton(int drawableId) {
@@ -114,11 +123,6 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
         mSessionRepository.clearSessionData(mSessionId);
         mLocationCollector.clearSessionData();
         mAddNewGraphView.resetGraph();
-    }
-
-    @Override
-    public void lockSession() {
-
     }
 
     @Override

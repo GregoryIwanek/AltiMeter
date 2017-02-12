@@ -30,7 +30,11 @@ public interface CallbackResponse {
         void onFullInfoAcquired(Session session);
     }
 
-    void stopListenForLocations();
+    /**
+     * Terminates or pauses location recording, depending on clicked button form view (pause / lock button)
+     * @param isLocked true if session can't be modified further
+     */
+    void stopListenForLocations(boolean isLocked);
 
     void startListenForLocations(@Nullable FullInfoCallback callback);
 

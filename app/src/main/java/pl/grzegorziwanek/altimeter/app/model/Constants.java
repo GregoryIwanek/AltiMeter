@@ -29,7 +29,6 @@ public final class Constants {
 
     public static String sessionId = "";
 
-    public static String Title = "";
     public static final String POSITIVE = "OK";
     public static final String CANCEL = "CANCEL";
 }

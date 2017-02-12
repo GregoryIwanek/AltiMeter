@@ -48,7 +48,7 @@ interface AddNewGraphContract {
 
         void startLocationRecording();
 
-        void stopLocationRecording();
+        void pauseLocationRecording();
 
         void resetSessionData();
 

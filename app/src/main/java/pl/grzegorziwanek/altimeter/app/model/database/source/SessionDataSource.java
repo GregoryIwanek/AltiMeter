@@ -1,11 +1,13 @@
 package pl.grzegorziwanek.altimeter.app.model.database.source;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.grzegorziwanek.altimeter.app.model.Details;
 import pl.grzegorziwanek.altimeter.app.model.Session;
 
 /**
@@ -30,6 +32,11 @@ public interface SessionDataSource {
         void onSessionsDeleted();
     }
 
+    interface DetailsSessionCallback {
+
+        void onDetailsLoaded(Bundle bundle);
+    }
+
     void createRecordsTable(@NonNull Session session);
 
     void createNewSession(@NonNull Session session, @NonNull SaveSessionCallback callback);
@@ -41,6 +48,8 @@ public interface SessionDataSource {
     void clearSessionData(@NonNull String sessionId);
 
     void refreshSessions();
+
+    void getDetails(@NonNull String sessionId, @NonNull DetailsSessionCallback callback);
 
     void deleteSessions(ArrayList<String> sessionsId, boolean isDeleteAll, @Nullable DeleteSessionCallback callback);
 

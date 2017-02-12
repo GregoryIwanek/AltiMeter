@@ -1,10 +1,12 @@
 package pl.grzegorziwanek.altimeter.app.altitudegraph;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.grzegorziwanek.altimeter.app.model.Details;
 import pl.grzegorziwanek.altimeter.app.model.Session;
 import pl.grzegorziwanek.altimeter.app.model.database.source.SessionDataSource;
 import pl.grzegorziwanek.altimeter.app.model.database.source.SessionRepository;
@@ -21,6 +23,7 @@ class SessionPresenter implements SessionContract.Presenter {
     private final SessionContract.View mSessionView;
     private boolean mFirstLoad = true;
     private SessionDataSource.DeleteSessionCallback callbackDelete;
+    private SessionDataSource.DetailsSessionCallback callbackDetails;
 
     SessionPresenter(@NonNull SessionRepository sessionRepository, @NonNull SessionContract.View sessionView) {
         mSessionRepository = checkNotNull(sessionRepository, "sessionRepository cannot be null");
@@ -51,6 +54,13 @@ class SessionPresenter implements SessionContract.Presenter {
             @Override
             public void onSessionsDeleted() {
                 mSessionView.onSessionsDeleted();
+            }
+        };
+
+        callbackDetails = new SessionDataSource.DetailsSessionCallback() {
+            @Override
+            public void onDetailsLoaded(Bundle args) {
+                mSessionView.showSessionDetailsUi(args);
             }
         };
     }
@@ -129,9 +139,10 @@ class SessionPresenter implements SessionContract.Presenter {
         mSessionView.showAddSessionUi();
     }
 
+    //TODO-> define session details module
     @Override
     public void openSessionDetails(String sessionId) {
-        mSessionView.showSessionDetailsUi(sessionId);
+        mSessionRepository.getDetails(sessionId, callbackDetails);
     }
 
     @Override

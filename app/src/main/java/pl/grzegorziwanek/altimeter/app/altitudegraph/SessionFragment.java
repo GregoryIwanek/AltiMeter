@@ -227,8 +227,9 @@ public class SessionFragment extends Fragment implements SessionContract.View,
     }
 
     @Override
-    public void showSessionDetailsUi(String sessionId) {
+    public void showSessionDetailsUi(Bundle bundle) {
         Intent intent = new Intent(getContext(), DetailsActivity.class);
+        intent.putExtra("bundle", bundle);
         startActivity(intent);
     }
 

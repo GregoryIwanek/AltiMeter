@@ -17,8 +17,7 @@ import butterknife.ButterKnife;
 import pl.grzegorziwanek.altimeter.app.BasicActivity;
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.model.database.source.SessionRepository;
-import pl.grzegorziwanek.altimeter.app.model.database.source.local.SessionDataSource;
-import pl.grzegorziwanek.altimeter.app.settings.SettingsFragment;
+import pl.grzegorziwanek.altimeter.app.model.database.source.local.SessionLocalDataSource;
 import pl.grzegorziwanek.altimeter.app.utils.ActivityUtils;
 
 /**
@@ -58,7 +57,7 @@ public class SessionActivity extends BasicActivity {
 
     private void setPresenter() {
         SessionPresenter mSessionPresenter = new SessionPresenter(
-                SessionRepository.getInstance(SessionDataSource.getInstance(this)),
+                SessionRepository.getInstance(SessionLocalDataSource.getInstance(this)),
                 mSessionFragment);
     }
 

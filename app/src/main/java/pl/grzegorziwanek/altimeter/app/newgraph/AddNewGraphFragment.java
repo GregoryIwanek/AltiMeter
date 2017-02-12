@@ -78,7 +78,7 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
                 mPresenter.startLocationRecording();
                 break;
             case R.drawable.ic_pause_black_24dp:
-                mPresenter.stopLocationRecording();
+                mPresenter.pauseLocationRecording();
                 break;
             default:
                 break;
@@ -92,7 +92,7 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
 
     @OnClick(R.id.lock_button)
     public void onLockButtonCLick() {
-        showUpDialog("Lock session. Are you sure?");
+        showUpDialog("Lock session. Recording will be terminated. Are you sure?");
     }
 
     @OnClick(R.id.map_button)
@@ -114,7 +114,7 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
             case "Reset session. Are you sure?":
                 mPresenter.resetSessionData();
                 break;
-            case "Lock session. Are you sure?":
+            case "Lock session. Recording will be terminated. Are you sure?":
                 mPresenter.lockSession();
                 break;
             case "Generate map?":
@@ -203,7 +203,7 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
 
     @Override
     public void resetGraph() {
-        mPresenter.stopLocationRecording();
+        mPresenter.pauseLocationRecording();
         mGraphViewWidget.clearData();
     }
 }

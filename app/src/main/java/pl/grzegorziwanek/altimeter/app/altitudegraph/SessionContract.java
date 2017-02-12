@@ -1,5 +1,6 @@
 package pl.grzegorziwanek.altimeter.app.altitudegraph;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.jjoe64.graphview.GraphView;
@@ -26,7 +27,7 @@ interface SessionContract {
 
         void showAddSessionUi();
 
-        void showSessionDetailsUi(String sessionId);
+        void showSessionDetailsUi(Bundle bundle);
 
         void showLoadingSessionError();
 
