@@ -1,7 +1,9 @@
 package pl.grzegorziwanek.altimeter.app.altitudegraph;
 
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -19,6 +21,7 @@ import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.model.database.source.SessionRepository;
 import pl.grzegorziwanek.altimeter.app.model.database.source.local.SessionLocalDataSource;
 import pl.grzegorziwanek.altimeter.app.utils.ActivityUtils;
+import pl.grzegorziwanek.altimeter.app.utils.FormatAndValueConverter;
 
 /**
  * Created by Grzegorz Iwanek on 18.01.2017.
@@ -41,6 +44,7 @@ public class SessionActivity extends BasicActivity {
         ButterKnife.bind(this);
         setSessionFragment();
         setPresenter();
+        readPreferences();
         setGoogleApiClient();
     }
 
@@ -88,5 +92,11 @@ public class SessionActivity extends BasicActivity {
                 .setObject(object)
                 .setActionStatus(Action.STATUS_TYPE_COMPLETED)
                 .build();
+    }
+
+    private void readPreferences() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String units = sharedPref.getString("pref_set_units", "KILOMETERS");
+        FormatAndValueConverter.setUnitsFormat(units);
     }
 }

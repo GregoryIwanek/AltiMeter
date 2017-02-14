@@ -4,10 +4,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.grzegorziwanek.altimeter.app.model.Details;
 import pl.grzegorziwanek.altimeter.app.model.Session;
 
 /**
@@ -20,6 +21,11 @@ public interface SessionDataSource {
         void onSessionLoaded(List<Session> sessions);
 
         void onDataNotAvailable();
+    }
+
+    interface LoadMapDataCallback {
+
+        void onMapDataLoaded(List<LatLng> positions);
     }
 
     interface SaveSessionCallback {
@@ -48,6 +54,8 @@ public interface SessionDataSource {
     void clearSessionData(@NonNull String sessionId);
 
     void refreshSessions();
+
+    void getMapData(@NonNull String sessionId, @NonNull LoadMapDataCallback callback);
 
     void getDetails(@NonNull String sessionId, @NonNull DetailsSessionCallback callback);
 

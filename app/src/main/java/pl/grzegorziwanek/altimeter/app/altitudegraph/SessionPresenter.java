@@ -23,7 +23,6 @@ class SessionPresenter implements SessionContract.Presenter {
     private final SessionContract.View mSessionView;
     private boolean mFirstLoad = true;
     private SessionDataSource.DeleteSessionCallback callbackDelete;
-    private SessionDataSource.DetailsSessionCallback callbackDetails;
 
     SessionPresenter(@NonNull SessionRepository sessionRepository, @NonNull SessionContract.View sessionView) {
         mSessionRepository = checkNotNull(sessionRepository, "sessionRepository cannot be null");
@@ -56,13 +55,6 @@ class SessionPresenter implements SessionContract.Presenter {
                 mSessionView.onSessionsDeleted();
             }
         };
-
-        callbackDetails = new SessionDataSource.DetailsSessionCallback() {
-            @Override
-            public void onDetailsLoaded(Bundle args) {
-                mSessionView.showSessionDetailsUi(args);
-            }
-        };
     }
 
     /**
@@ -86,7 +78,6 @@ class SessionPresenter implements SessionContract.Presenter {
         mSessionRepository.getSessions(new SessionDataSource.LoadSessionsCallback() {
             @Override
             public void onSessionLoaded(List<Session> sessions) {
-                List<Session> sessionsToShow = new ArrayList<Session>();
                 // This callback may be called twice, once for the cache and once for loading
                 // the data from the server API, so we check before decrementing, otherwise
                 // it throws "Counter has been corrupted!" exception.
@@ -142,7 +133,7 @@ class SessionPresenter implements SessionContract.Presenter {
     //TODO-> define session details module
     @Override
     public void openSessionDetails(String sessionId) {
-        mSessionRepository.getDetails(sessionId, callbackDetails);
+        mSessionView.showSessionDetailsUi(sessionId);
     }
 
     @Override

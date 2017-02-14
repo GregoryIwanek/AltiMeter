@@ -27,7 +27,7 @@ interface SessionContract {
 
         void showAddSessionUi();
 
-        void showSessionDetailsUi(Bundle bundle);
+        void showSessionDetailsUi(String clickedSessionId);
 
         void showLoadingSessionError();
 

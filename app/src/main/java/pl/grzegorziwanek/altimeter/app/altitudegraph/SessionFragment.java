@@ -227,9 +227,9 @@ public class SessionFragment extends Fragment implements SessionContract.View,
     }
 
     @Override
-    public void showSessionDetailsUi(Bundle bundle) {
+    public void showSessionDetailsUi(String clickedSessionId) {
         Intent intent = new Intent(getContext(), DetailsActivity.class);
-        intent.putExtra("bundle", bundle);
+        intent.putExtra("sessionId", clickedSessionId);
         startActivity(intent);
     }
 
@@ -329,7 +329,7 @@ public class SessionFragment extends Fragment implements SessionContract.View,
             final Session session = getItem(i);
 
             TextView graphText = (TextView) rowView.findViewById(R.id.title);
-            graphText.setText(session.getId());
+            graphText.setText(session.getTitle());
 
             CheckBox removeItemCB = (CheckBox) rowView.findViewById(R.id.removeItem);
             removeItemCB.setChecked(isChecked(session.getId()));

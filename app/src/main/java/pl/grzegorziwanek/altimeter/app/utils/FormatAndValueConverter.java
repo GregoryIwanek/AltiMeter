@@ -1,8 +1,13 @@
-package pl.grzegorziwanek.altimeter.app.model.location.services;
+package pl.grzegorziwanek.altimeter.app.utils;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
+import android.preference.PreferenceManager;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * Created by Grzegorz Iwanek on 27.11.2016.
@@ -28,7 +33,7 @@ public class FormatAndValueConverter {
     /** Set geographical coordinates string (this is entry point into this section)
      * @param coordinate geographic coordinate to forge
      * @param isLatitude define if given coordinate is latitude or longitude
-     * @return
+     * @return formatted geographical coordinate string
      * example: 51°23'13''N*
      */
     public static String setGeoCoordinateStr(Double coordinate, boolean isLatitude) {
@@ -115,7 +120,7 @@ public class FormatAndValueConverter {
 
     /** Set distance string
      * @param currDistance value of distance to forge into string
-     * @return distanceStr
+     * @return formatted distance string
      * example: 13.23 mi*
      */
     public static String setDistanceStr(Double currDistance) {
@@ -131,7 +136,6 @@ public class FormatAndValueConverter {
         distanceStr = subtractDistanceStr(distanceStr, indexOfPointInStr);
         distanceStr = appendUnitSymbol(distanceStr);
 
-        System.out.println("DISTANCE STRING " +distanceStr);
         return distanceStr;
     }
 
@@ -174,9 +178,19 @@ public class FormatAndValueConverter {
         return str + " " + mUnitsSymbol;
     }
 
+    /**
+     * Set date string
+     * @param millis recorded time in milliseconds
+     * @return formatted date string
+     * example: 2017.02.14 at 21:48:23
+     */
+    public static String setDateString(long millis) {
+        return new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss").format(millis);
+    }
+
     /** Set min/max elevation string
      * @param altitude value to create string from
-     * @return str
+     * @return string
      * example: 13.23 m n.p.m.
      */
     public static String setMinMaxString(Double altitude) {
@@ -197,7 +211,7 @@ public class FormatAndValueConverter {
     /** Set new value of maximum altitude in a session
      * @param currAltitude new value to compare
      * @param currMaxAltitude old value to compare
-     * @return
+     * @return maximum altitude value
      */
     public static Double updateMaxAltitudeValue(Double currAltitude, Double currMaxAltitude) {
         if (currAltitude > currMaxAltitude) {
@@ -210,7 +224,7 @@ public class FormatAndValueConverter {
     /** Set new value of minimum altitude in a session
      * @param currAltitude new value to compare
      * @param currMinAltitude old min value to compare
-     * @return
+     * @return minimum altitude value
      */
     public static Double updateMinAltitudeValue(Double currAltitude, Double currMinAltitude) {
         if (currAltitude < currMinAltitude) {

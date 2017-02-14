@@ -1,6 +1,7 @@
 package pl.grzegorziwanek.altimeter.app.newgraph;
 
 import android.location.Location;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 
@@ -25,6 +26,8 @@ interface AddNewGraphContract {
 
         void showRecordingData();
 
+        void showSessionMap(@NonNull String sessionId);
+
         void setAddressTextView(String address);
 
         void setElevationTextView(String elevation);
@@ -46,6 +49,8 @@ interface AddNewGraphContract {
 
     interface Presenter extends BasePresenter {
 
+        void openSessionMap();
+
         void startLocationRecording();
 
         void pauseLocationRecording();
@@ -53,7 +58,5 @@ interface AddNewGraphContract {
         void resetSessionData();
 
         void lockSession();
-
-        void generateMap();
     }
 }

@@ -63,8 +63,8 @@ public class AddressIntentService extends IntentService {
             //thrown in case of wrong given coordinates
             //errorMessage = getString(R.string.invalid_lat_long_used);
             errorMessage = "Solar System," +'\n'+ "Milky Way," +'\n'+ "Laniakea";
-            //Log.e(LOG_TAG, errorMessage + ", " + "Latitude: " + location.getLatitude()
-            //        + " , " + "Longitude: " + location.getLongitude(), illegalArgumentException);
+            //Log.e(LOG_TAG, errorMessage + ", " + "Latitude: " + location.getLatitudeStr()
+            //        + " , " + "Longitude: " + location.getLongitudeStr(), illegalArgumentException);
         }
 
         //check for case of no address found

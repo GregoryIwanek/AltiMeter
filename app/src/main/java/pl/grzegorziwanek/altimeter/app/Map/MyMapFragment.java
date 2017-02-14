@@ -49,6 +49,7 @@ public class MyMapFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
         ButterKnife.bind(this, view);
+
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
 
@@ -138,7 +139,7 @@ public class MyMapFragment extends Fragment
 //                        int number = 0;
 //                        for (Location location : locationArrayList)
 //                        {
-//                            LatLng anotherPosition = new LatLng(location.getLatitude(), location.getLongitude());
+//                            LatLng anotherPosition = new LatLng(location.getLatitudeStr(), location.getLongitudeStr());
 //                            mGoogleMap.addMarker(new MarkerOptions().position(anotherPosition).title("Number " + number).snippet("Number " + number));
 //                            number++;
 //                        }

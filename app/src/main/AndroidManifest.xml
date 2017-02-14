@@ -23,8 +23,10 @@
         <activity android:name=".newgraph.AddNewGraphActivity"/>
         <activity android:name=".WelcomeScreen"/>
         <activity android:name=".Map.MapActivity"/>
-        <activity android:name=".details.DetailsActivity"/>
         <activity android:name=".statistics.StatisticsActivity"/>
+        <activity android:name=".details.DetailsActivity"
+            android:windowSoftInputMode="adjustNothing"/>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDz8OSO03MnSdoE-0FFN9sZaIyFRlpf79Y" />

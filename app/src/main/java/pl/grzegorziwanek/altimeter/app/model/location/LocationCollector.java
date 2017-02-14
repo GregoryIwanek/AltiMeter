@@ -16,7 +16,7 @@ import pl.grzegorziwanek.altimeter.app.model.Constants;
 import pl.grzegorziwanek.altimeter.app.model.Session;
 import pl.grzegorziwanek.altimeter.app.model.location.services.AddressIntentService;
 import pl.grzegorziwanek.altimeter.app.model.location.services.FetchElevationTask;
-import pl.grzegorziwanek.altimeter.app.model.location.services.FormatAndValueConverter;
+import pl.grzegorziwanek.altimeter.app.utils.FormatAndValueConverter;
 import pl.grzegorziwanek.altimeter.app.model.location.services.GoogleLocationListener;
 
 /**
@@ -50,15 +50,19 @@ public class LocationCollector implements CallbackResponse {
         return INSTANCE;
     }
 
-    private void setNewSession() {
-        mSession = new Session("","");
-    }
-
     private void setVariables(Context context) {
         setNewSession();
         mContext = context;
         mGoogleLocationListener = GoogleLocationListener.getInstance(context, callbackNewLocation);
         mResultReceiver = new AddressResultReceiver(new Handler());
+    }
+
+    private void setNewSession() {
+        if (mSession != null) {
+            System.out.println("SESSION IS NOT NULL!!!");
+        }
+        //TODO -> refactor here, analyse if Session need constructor with Title and Description parameters
+        mSession = new Session("","");
     }
 
     /**

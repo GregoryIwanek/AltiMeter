@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import static pl.grzegorziwanek.altimeter.app.model.database.source.local.SessionDbContract.*;
+
 /**
  * Created by Grzegorz Iwanek on 26.01.2017.
  */
@@ -27,26 +29,28 @@ public class SessionDbHelper extends SQLiteOpenHelper {
     }
 
     private static String createSQLSessionsEntries() {
-        return CREATE_TABLE + SessionDbContract.SessionEntry.TABLE_NAME + " (" +
-                SessionDbContract.SessionEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
-                SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + UNIQUE + COMMA_SEP +
-                SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ALTITUDE + REAL_TYPE + COMMA_SEP +
-                SessionDbContract.SessionEntry.COLUMN_NAME_MAX_HEIGHT + REAL_TYPE + COMMA_SEP +
-                SessionDbContract.SessionEntry.COLUMN_NAME_MIN_HEIGHT + REAL_TYPE + COMMA_SEP +
-                SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ADDRESS + TEXT_TYPE + COMMA_SEP +
-                SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_DISTANCE + REAL_TYPE +
+        return CREATE_TABLE + SessionEntry.TABLE_NAME + " (" +
+                SessionEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
+                SessionEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + UNIQUE + COMMA_SEP +
+                SessionEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
+                SessionEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
+                SessionEntry.COLUMN_NAME_CURRENT_ALTITUDE + REAL_TYPE + COMMA_SEP +
+                SessionEntry.COLUMN_NAME_MAX_HEIGHT + REAL_TYPE + COMMA_SEP +
+                SessionEntry.COLUMN_NAME_MIN_HEIGHT + REAL_TYPE + COMMA_SEP +
+                SessionEntry.COLUMN_NAME_CURRENT_ADDRESS + TEXT_TYPE + COMMA_SEP +
+                SessionEntry.COLUMN_NAME_CURRENT_DISTANCE + REAL_TYPE +
                 " )";
     }
 
     private static String createSQLRecordEntries(String sessionId) {
         return CREATE_TABLE + "IF NOT EXISTS" + "\"" + sessionId + "\"" + " (" +
-                SessionDbContract.RecordsEntry.COLUMN_NAME_ENTRY_ID + BOOLEAN_TYPE + " PRIMARY KEY AUTOINCREMENT NOT NULL," +
-                SessionDbContract.RecordsEntry.COLUMN_NAME_LATITUDE + TEXT_TYPE + COMMA_SEP +
-                SessionDbContract.RecordsEntry.COLUMN_NAME_LONGITUDE + TEXT_TYPE + COMMA_SEP +
-                SessionDbContract.RecordsEntry.COLUMN_NAME_ALTITUDE + REAL_TYPE + COMMA_SEP +
-                SessionDbContract.RecordsEntry.COLUMN_NAME_DATE + TEXT_TYPE + COMMA_SEP +
-                SessionDbContract.RecordsEntry.COLUMN_NAME_ADDRESS + TEXT_TYPE + COMMA_SEP +
-                SessionDbContract.RecordsEntry.COLUMN_NAME_DISTANCE + REAL_TYPE +
+                RecordsEntry.COLUMN_NAME_ENTRY_ID + BOOLEAN_TYPE + " PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                RecordsEntry.COLUMN_NAME_LATITUDE + TEXT_TYPE + COMMA_SEP +
+                RecordsEntry.COLUMN_NAME_LONGITUDE + TEXT_TYPE + COMMA_SEP +
+                RecordsEntry.COLUMN_NAME_ALTITUDE + REAL_TYPE + COMMA_SEP +
+                RecordsEntry.COLUMN_NAME_DATE + TEXT_TYPE + COMMA_SEP +
+                RecordsEntry.COLUMN_NAME_ADDRESS + TEXT_TYPE + COMMA_SEP +
+                RecordsEntry.COLUMN_NAME_DISTANCE + REAL_TYPE +
                 " )";
     }
 
@@ -75,8 +79,8 @@ public class SessionDbHelper extends SQLiteOpenHelper {
     }
 
     String queryDeleteRows(String tableName) {
-        return "delete from "+SessionDbContract.SessionEntry.TABLE_NAME + " where "
-                    + SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID +"=" + setProperName(tableName);
+        return "delete from "+ SessionEntry.TABLE_NAME + " where "
+                + SessionEntry.COLUMN_NAME_ENTRY_ID +"=" + setProperName(tableName);
     }
 
     String queryClearRecordsTable(String tableName) {
@@ -84,12 +88,40 @@ public class SessionDbHelper extends SQLiteOpenHelper {
     }
 
     String queryInsertOrIgnore(String rowValue) {
-        return "INSERT OR IGNORE INTO " + SessionDbContract.SessionEntry.TABLE_NAME
-                + " (" + SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID + ")"
+        return "INSERT OR IGNORE INTO " + SessionEntry.TABLE_NAME
+                + " (" + SessionEntry.COLUMN_NAME_ENTRY_ID + ")"
                 + " VALUES (" + setProperName(rowValue) +")";
     }
 
     public String setProperName(String name) {
         return "\"" + name + "\"";
+    }
+
+    public String[] getProjectionsSessions() {
+        return new String[] {
+                SessionEntry.COLUMN_NAME_ENTRY_ID,
+                SessionEntry.COLUMN_NAME_TITLE,
+                SessionEntry.COLUMN_NAME_DESCRIPTION,
+                SessionEntry.COLUMN_NAME_CURRENT_ALTITUDE,
+                SessionEntry.COLUMN_NAME_MAX_HEIGHT,
+                SessionEntry.COLUMN_NAME_MIN_HEIGHT,
+                SessionEntry.COLUMN_NAME_CURRENT_ADDRESS,
+                SessionEntry.COLUMN_NAME_CURRENT_DISTANCE
+        };
+    }
+
+
+    //TODO-> refactor this part, somehow merge below methods
+    public String[] getProjectionsRecordsDate() {
+        return new String[] {
+                RecordsEntry.COLUMN_NAME_DATE
+        };
+    }
+
+    public String[] getProjectionRecordsLatLng() {
+        return new String[] {
+                RecordsEntry.COLUMN_NAME_LATITUDE,
+                RecordsEntry.COLUMN_NAME_LONGITUDE
+        };
     }
 }

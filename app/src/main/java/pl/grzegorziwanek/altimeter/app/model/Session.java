@@ -95,6 +95,10 @@ public class Session {
         return mTitle;
     }
 
+    public void setTitle(String title) {
+        mTitle = title;
+    }
+
     public String getDescription() {
         return mDescription;
     }
@@ -103,16 +107,24 @@ public class Session {
         mDescription = description;
     }
 
-    public String getLatitude() {
+    public String getLatitudeStr() {
         return mLatitudeStr;
+    }
+
+    public String getLatNumericStr() {
+        return String.valueOf(mCurrLocation.getLatitude());
     }
 
     public void setLatitudeStr(String latitude) {
         mLatitudeStr = latitude;
     }
 
-    public String getLongitude() {
+    public String getLongitudeStr() {
         return mLongitudeStr;
+    }
+
+    public String getLongNumericStr() {
+        return String.valueOf(mCurrLocation.getLongitude());
     }
 
     public void setLongitudeStr(String longitude) {

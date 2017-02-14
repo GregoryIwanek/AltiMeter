@@ -8,14 +8,19 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-import pl.grzegorziwanek.altimeter.app.model.Details;
 import pl.grzegorziwanek.altimeter.app.model.Session;
 import pl.grzegorziwanek.altimeter.app.model.database.source.SessionDataSource;
+import pl.grzegorziwanek.altimeter.app.model.database.source.local.SessionDbContract.SessionEntry;
+import pl.grzegorziwanek.altimeter.app.utils.FormatAndValueConverter;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static pl.grzegorziwanek.altimeter.app.model.database.source.local.SessionDbContract.*;
 
 /**
  * Created by Grzegorz Iwanek on 27.01.2017.
@@ -44,8 +49,14 @@ public class SessionLocalDataSource implements SessionDataSource {
         checkNotNull(session);
         SQLiteDatabase db = mSessionDbHelper.getWritableDatabase();
 
+        session.setTitle(adjustStrIfEmpty(session.getTitle()));
+        session.setDescription(adjustStrIfEmpty(session.getDescription()));
+
         String insertOrIgnore = mSessionDbHelper.queryInsertOrIgnore(session.getId());
         db.execSQL(insertOrIgnore);
+
+        updateSessionRow(db, session);
+
         db.close();
 
         callback.onNewSessionSaved(session.getId());
@@ -67,35 +78,45 @@ public class SessionLocalDataSource implements SessionDataSource {
         checkNotNull(session);
         SQLiteDatabase db = mSessionDbHelper.getWritableDatabase();
 
-        ContentValues valuesSession = getSessionValues(session);
-        ContentValues valuesRecord = getRecordValues(session);
+        updateSessionRow(db, session);
+        updateRecordsRow(db, session);
 
-        String rowSelection = SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID + "=" + "\"" + session.getId() + "\"";
-        updateRowsDb(db, SessionDbContract.SessionEntry.TABLE_NAME, valuesSession, rowSelection);
-
-        String tableNameRecords = "\"" + session.getId() +"\"";
-        insertToDb(db, tableNameRecords, valuesRecord);
         db.close();
     }
 
+    private void updateSessionRow(SQLiteDatabase db, Session session) {
+        ContentValues valuesSession = getSessionValues(session);
+        String rowSelection = SessionEntry.COLUMN_NAME_ENTRY_ID + "=" + "\"" + session.getId() + "\"";
+        updateRowsDb(db, SessionEntry.TABLE_NAME, valuesSession, rowSelection);
+    }
+
+    private void updateRecordsRow(SQLiteDatabase db, Session session) {
+        ContentValues valuesRecord = getRecordValues(session);
+        String tableNameRecords = "\"" + session.getId() +"\"";
+        insertToDb(db, tableNameRecords, valuesRecord);
+    }
+
     private ContentValues getRecordValues(Session session) {
+        //TODO -> add new two columns to keep formatted longitude and latitude?
         ContentValues vRecord = new ContentValues();
-        vRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_LATITUDE, session.getLatitude());
-        vRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_LONGITUDE, session.getLongitude());
-        vRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_ALTITUDE, session.getCurrentElevation());
-        vRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_DATE, session.getCurrentLocation().getTime());
-        vRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_ADDRESS, session.getAddress());
-        vRecord.put(SessionDbContract.RecordsEntry.COLUMN_NAME_DISTANCE, session.getDistance());
+        vRecord.put(RecordsEntry.COLUMN_NAME_LATITUDE, session.getLatNumericStr());
+        vRecord.put(RecordsEntry.COLUMN_NAME_LONGITUDE, session.getLongNumericStr());
+        vRecord.put(RecordsEntry.COLUMN_NAME_ALTITUDE, session.getCurrentElevation());
+        vRecord.put(RecordsEntry.COLUMN_NAME_DATE, session.getCurrentLocation().getTime());
+        vRecord.put(RecordsEntry.COLUMN_NAME_ADDRESS, session.getAddress());
+        vRecord.put(RecordsEntry.COLUMN_NAME_DISTANCE, session.getDistance());
         return vRecord;
     }
 
     private ContentValues getSessionValues(Session session) {
         ContentValues vSession = new ContentValues();
-        vSession.put(SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ALTITUDE, session.getCurrentElevation());
-        vSession.put(SessionDbContract.SessionEntry.COLUMN_NAME_MAX_HEIGHT, session.getMaxHeight());
-        vSession.put(SessionDbContract.SessionEntry.COLUMN_NAME_MIN_HEIGHT, session.getMinHeight());
-        vSession.put(SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ADDRESS, session.getAddress());
-        vSession.put(SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_DISTANCE, session.getDistance());
+        vSession.put(SessionEntry.COLUMN_NAME_TITLE, session.getTitle());
+        vSession.put(SessionEntry.COLUMN_NAME_DESCRIPTION, session.getDescription());
+        vSession.put(SessionEntry.COLUMN_NAME_CURRENT_ALTITUDE, session.getCurrentElevation());
+        vSession.put(SessionEntry.COLUMN_NAME_MAX_HEIGHT, session.getMaxHeight());
+        vSession.put(SessionEntry.COLUMN_NAME_MIN_HEIGHT, session.getMinHeight());
+        vSession.put(SessionEntry.COLUMN_NAME_CURRENT_ADDRESS, session.getAddress());
+        vSession.put(SessionEntry.COLUMN_NAME_CURRENT_DISTANCE, session.getDistance());
         return vSession;
     }
 
@@ -113,37 +134,74 @@ public class SessionLocalDataSource implements SessionDataSource {
         SQLiteDatabase db = mSessionDbHelper.getReadableDatabase();
 
         String[] projection = {
-                SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID,
-                SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ALTITUDE,
-                SessionDbContract.SessionEntry.COLUMN_NAME_MAX_HEIGHT,
-                SessionDbContract.SessionEntry.COLUMN_NAME_MIN_HEIGHT,
-                SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ADDRESS,
-                SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_DISTANCE
+                SessionEntry.COLUMN_NAME_ENTRY_ID,
+                SessionEntry.COLUMN_NAME_TITLE,
+                SessionEntry.COLUMN_NAME_DESCRIPTION,
+                SessionEntry.COLUMN_NAME_CURRENT_ALTITUDE,
+                SessionEntry.COLUMN_NAME_MAX_HEIGHT,
+                SessionEntry.COLUMN_NAME_MIN_HEIGHT,
+                SessionEntry.COLUMN_NAME_CURRENT_ADDRESS,
+                SessionEntry.COLUMN_NAME_CURRENT_DISTANCE
         };
 
         Cursor c = db.query(
-                SessionDbContract.SessionEntry.TABLE_NAME, projection, null, null, null, null, null
+                SessionEntry.TABLE_NAME, projection, null, null, null, null, null
         );
 
         if (c != null && c.getCount() > 0) {
             while (c.moveToNext()) {
-                String itemId = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID));
-//                String itemLatitude = c.getString(c.getColumnIndexOrThrow(SessionDbContract.RecordsEntry.COLUMN_NAME_LATITUDE));
-//                String itemLongitue = c.getString(c.getColumnIndexOrThrow(SessionDbContract.RecordsEntry.COLUMN_NAME_LONGITUDE));
-//                String itemAltitude = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_ALTITUDE));
-//                String itemDate = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_DATE));
-//                String itemRadius = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_RADIUS));
-                Session session = new Session("DADA", "WRWA", itemId);
+                String itemId = getCursorStr(c, SessionEntry.COLUMN_NAME_ENTRY_ID);
+                String itemTitle = getCursorStr(c, SessionEntry.COLUMN_NAME_TITLE);
+                String itemDescription = getCursorStr(c, SessionEntry.COLUMN_NAME_DESCRIPTION);
+                itemTitle = adjustStrIfEmpty(itemTitle);
+                itemDescription = adjustStrIfEmpty(itemDescription);
+                Session session = new Session(itemTitle, itemDescription, itemId);
                 sessions.add(session);
             }
         }
-        if (c != null) {
-            c.close();
-        }
+        closeCursor(c);
 
         db.close();
 
         callback.onSessionLoaded(sessions);
+    }
+
+    private String adjustStrIfEmpty(String str) {
+        if (isStringEmpty(str)) {
+            return rollNewStr();
+        } else {
+            return str;
+        }
+    }
+
+    private boolean isStringEmpty(String str) {
+        return str == null || str.equals("");
+    }
+
+    private String rollNewStr() {
+        int roll = new Random().nextInt(8);
+        String str;
+        switch (roll) {
+            case 0: str = "Unknown and waiting";
+                break;
+            case 1: str = "Click me to set";
+                break;
+            case 2: str = "Waiting to be set";
+                break;
+            case 3: str = "Undefined, set me";
+                break;
+            case 4: str = "Waiting for click";
+                break;
+            case 5: str = "Click to crash app";
+                break;
+            case 6: str = "Call 911";
+                break;
+            case 7: str = "Don't click it";
+                break;
+            default: str = "Error 404";
+        }
+
+        return str;
     }
 
     @Override
@@ -176,99 +234,154 @@ public class SessionLocalDataSource implements SessionDataSource {
         // {@link SessionRepository}
     }
 
-    /** //TODO-> get details of clicked object in SessionFragment list and print in new DetailsFragment
-     * 1-> getDetails(...)
-     * 1.1-> call for new Details object and populate it depending on given parameter (sessionId)
-     * 1.2-> call back gotten Details object to SessionPresenter instance
-     *
-     * 2-> populateDetails(...)
-     * 2.1-> get readable database to read from
-     * 2.2.1-> get information from table "sessions"
-     * 2.2.2-> formulate projection String[] with names of columns and cursor with query
-     * 2.2.3-> fetch data from cursor and populate Details member fields
-     * 2.2.4-> close cursor, keep database open
-     *
-     * 2.3.1-> get information from corresponding table "records"
-     * 2.3.2-> connect to corresponding table by using "sessionsId"
-     * 2.3.3-> formulate projection String[] with names of columns and cursor with query, add clause "WHERE"
-     * 2.3.4-> fetch demanded rows form table (first and last row's recording time, number of records)
-     * 2.3.5-> fetch data from cursor and populate missing Details member fields
-     * 2.3.6-> close cursor, close database
-     *
-     * 3-> Or use RxJava and stop to fucking around with that super lame Cursor classes??
-     */
+    @Override
+    public void getMapData(@NonNull String sessionId, @NonNull LoadMapDataCallback callback) {
+        List<LatLng> positions = populateMapData(sessionId);
+        callback.onMapDataLoaded(positions);
+    }
+
+    private List<LatLng> populateMapData(String sessionId) {
+        SQLiteDatabase db = mSessionDbHelper.getReadableDatabase();
+        List<LatLng> positions  = populateMapDataFromRecords(db, sessionId);
+        db.close();
+        return positions;
+    }
+
+    private List<LatLng> populateMapDataFromRecords(SQLiteDatabase db, String sessionId) {
+        String[] projectionRecords = mSessionDbHelper.getProjectionRecordsLatLng();
+        String tableName = mSessionDbHelper.setProperName(sessionId);
+        Cursor cLatLng = getDetailsCursor(db, tableName, projectionRecords, null);
+        return populateMapFromRecords(cLatLng);
+    }
+
+    private List<LatLng> populateMapFromRecords(Cursor c) {
+        List<LatLng> positions = new ArrayList<>();
+        if (isCursorNotEmpty(c)) {
+            while (c.moveToNext()) {
+                Double lat = Double.valueOf(getCursorStr(c, RecordsEntry.COLUMN_NAME_LATITUDE));
+                Double lng = Double.valueOf(getCursorStr(c, RecordsEntry.COLUMN_NAME_LONGITUDE));
+                LatLng position = new LatLng(lat, lng);
+                positions.add(position);
+            }
+        }
+        closeCursor(c);
+
+        return positions;
+    }
+
     @Override
     public void getDetails(@NonNull String sessionId, @NonNull DetailsSessionCallback callback) {
-
-        Details details = populateDetails(sessionId);
-        Bundle args = new Bundle();
+        Bundle args = populateDetails(sessionId);
         callback.onDetailsLoaded(args);
     }
 
-    private Details populateDetails(String sessionId) {
+    private Bundle populateDetails(String sessionId) {
+        Bundle args = new Bundle();
         SQLiteDatabase db = mSessionDbHelper.getReadableDatabase();
-        Details details = new Details();
+        args = populateDetailsFromSession(db, args, sessionId);
+        args = populateDetailsFromRecords(db, args, sessionId);
+        db.close();
 
-        //TABLE SESSIONS
-        String[] projectionSession = {
-                SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID,
-                SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ALTITUDE,
-                SessionDbContract.SessionEntry.COLUMN_NAME_MAX_HEIGHT,
-                SessionDbContract.SessionEntry.COLUMN_NAME_MIN_HEIGHT,
-                SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ADDRESS,
-                SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_DISTANCE
-        };
+        return args;
+    }
 
-        String cursorSelection = SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID
-                + "=" + mSessionDbHelper.setProperName(sessionId);
-        Cursor c = db.query(
-                SessionDbContract.SessionEntry.TABLE_NAME, projectionSession,
-                cursorSelection, null, null, null, null
-        );
+    private Bundle populateDetailsFromSession(SQLiteDatabase db, Bundle args, String id) {
+        String[] projectionSession = mSessionDbHelper.getProjectionsSessions();
+        String cursorSelection = SessionEntry.COLUMN_NAME_ENTRY_ID
+                + "=" + mSessionDbHelper.setProperName(id);
+        String name = SessionEntry.TABLE_NAME;
+        Cursor cSession = getDetailsCursor(db, name, projectionSession, cursorSelection);
+        args = populateFromSession(cSession, args);
+        closeCursor(cSession);
 
-        if (c != null && c.getCount() > 0) {
-            while (c.moveToNext()) {
-                String itemId = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_ENTRY_ID));
-                String itemAlt = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ALTITUDE));
-                String itemMaxHeight = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_MAX_HEIGHT));
-                String itemMinHeight = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_MIN_HEIGHT));
-                String itemAddress = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_ADDRESS));
-                String itemDistance = c.getString(c.getColumnIndexOrThrow(SessionDbContract.SessionEntry.COLUMN_NAME_CURRENT_DISTANCE));
-                details.setTitle("Title. TODO");
-                details.setDescription("Description. TODO");
-                details.setUniqueId(itemId);
-                details.setDistance(itemDistance);
-                details.setMinHeight(itemMinHeight);
-                details.setMaxHeight(itemMaxHeight);
-                details.setLastAddress(itemAddress);
-            }
+        return args;
+    }
+
+    private Bundle populateDetailsFromRecords(SQLiteDatabase db, Bundle args, String id) {
+        String[] projectionRecords = mSessionDbHelper.getProjectionsRecordsDate();
+        String tableName = mSessionDbHelper.setProperName(id);
+        Cursor cRecords = getDetailsCursor(db, tableName, projectionRecords, null);
+        args = populateFromRecords(cRecords, args);
+        closeCursor(cRecords);
+
+        return args;
+    }
+
+    private Cursor getDetailsCursor(SQLiteDatabase db, String tableName, String[] projection, String selection) {
+        return db.query(tableName, projection, selection,
+                null, null, null, null);
+    }
+
+    private Bundle populateFromSession(Cursor c, Bundle args) {
+        c.moveToNext();
+        String itemId = getCursorStr(c, SessionEntry.COLUMN_NAME_ENTRY_ID);
+        String itemTitle = getCursorStr(c, SessionEntry.COLUMN_NAME_TITLE);
+        String itemDescription = getCursorStr(c, SessionEntry.COLUMN_NAME_DESCRIPTION);
+        String itemMaxHeight = getCursorStr(c, SessionEntry.COLUMN_NAME_MAX_HEIGHT);
+        String itemMinHeight = getCursorStr(c, SessionEntry.COLUMN_NAME_MIN_HEIGHT);
+        String itemAddress = getCursorStr(c, SessionEntry.COLUMN_NAME_CURRENT_ADDRESS);
+        String itemDistance = getCursorStr(c, SessionEntry.COLUMN_NAME_CURRENT_DISTANCE);
+
+        args.putString("title", itemTitle);
+        args.putString("description", itemDescription);
+        args.putString("id", itemId);
+        args.putString("distance", FormatAndValueConverter.setDistanceStr(Double.valueOf(itemDistance)));
+        args.putString("maxHeight", itemMaxHeight);
+        args.putString("minHeight", itemMinHeight);
+        args.putString("address", itemAddress);
+
+        return args;
+    }
+
+    private Bundle populateFromRecords(Cursor c, Bundle args) {
+        getNumOfPoints(c, args);
+        getRecordingTime(c, args);
+        return args;
+    }
+
+    private Bundle getNumOfPoints(Cursor c, Bundle args) {
+        int numb = c.getCount();
+        args.putString("numOfPoints", String.valueOf(numb));
+
+        return args;
+    }
+
+    private Bundle getRecordingTime(Cursor c, Bundle args) {
+        if (isCursorNotEmpty(c)) {
+            c.moveToFirst();
+            String timeStartStr = getCursorStr(c, RecordsEntry.COLUMN_NAME_DATE);
+            long timeStart = convertTimeToNumeric(timeStartStr);
+            timeStartStr = FormatAndValueConverter.setDateString(timeStart);
+            args.putString("timeStart", timeStartStr);
+
+            c.moveToLast();
+            String timeEndStr = getCursorStr(c, RecordsEntry.COLUMN_NAME_DATE);
+            long timeEnd = convertTimeToNumeric(timeEndStr);
+            timeEndStr = FormatAndValueConverter.setDateString(timeEnd);
+            args.putString("timeEnd", timeEndStr);
+        } else {
+            args.putString("timeStart", "something is wrong");
+            args.putString("timeEnd", "something is wrong");
         }
+
+        return args;
+    }
+
+    private boolean isCursorNotEmpty(Cursor c) {
+        return c!= null && c.getCount()>0;
+    }
+
+    private String getCursorStr(Cursor c, String entry) {
+        return c.getString(c.getColumnIndexOrThrow(entry));
+    }
+
+    private long convertTimeToNumeric(String time) {
+        return Long.valueOf(time);
+    }
+
+    private void closeCursor(Cursor c) {
         if (c != null) {
             c.close();
         }
-
-        //TABLE RECORDS
-        String[] projectionRecords = {
-                SessionDbContract.RecordsEntry.COLUMN_NAME_DATE
-        };
-
-        Cursor cRecords = db.query(
-                mSessionDbHelper.setProperName(sessionId), projectionRecords,
-                null, null, null, null, null);
-        int numb = cRecords.getCount();
-        details.setNumOfPoints(numb);
-
-        cRecords.moveToFirst();
-        String dateStart = cRecords.getString(cRecords.getColumnIndexOrThrow(SessionDbContract.RecordsEntry.COLUMN_NAME_DATE));
-        cRecords.moveToLast();
-        String dateEnd = cRecords.getString(cRecords.getColumnIndexOrThrow(SessionDbContract.RecordsEntry.COLUMN_NAME_DATE));
-        details.setTimeStart(dateStart);
-        details.setTimeEnd(dateEnd);
-
-        return details;
-    }
-
-    private Bundle setDetailsBundle(Details details) {
-        return new Bundle();
     }
 }

@@ -1,5 +1,6 @@
 package pl.grzegorziwanek.altimeter.app.newgraph;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pl.grzegorziwanek.altimeter.app.Map.MapActivity;
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.utils.NoticeDialogFragment;
 
@@ -118,7 +120,7 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
                 mPresenter.lockSession();
                 break;
             case "Generate map?":
-                mPresenter.generateMap();
+                mPresenter.openSessionMap();
                 break;
         }
     }
@@ -155,6 +157,13 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
     @Override
     public void showRecordingData() {
         showMessage("Recording data");
+    }
+
+    @Override
+    public void showSessionMap(@NonNull String sessionId) {
+        Intent intent = new Intent(getContext(), MapActivity.class);
+        intent.putExtra("sessionId", sessionId);
+        startActivity(intent);
     }
 
     private void showMessage(String message) {

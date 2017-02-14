@@ -22,7 +22,6 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
     private final LocationCollector mLocationCollector;
     private CallbackResponse.FullInfoCallback callbackFullInfo;
     private static Session mSession;
-    private String mSessionId;
 
     public AddNewGraphPresenter(@NonNull SessionRepository sessionSource,
                                 @NonNull LocationCollector locationCollector,
@@ -47,9 +46,14 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
         mSessionRepository.createNewSession(mSession, new SessionDataSource.SaveSessionCallback() {
             @Override
             public void onNewSessionSaved(String id) {
-                mSessionId = id;
             }
         });
+    }
+
+    @Override
+    public void openSessionMap() {
+        String id = mSession.getId();
+        mAddNewGraphView.showSessionMap(id);
     }
 
     @Override
@@ -78,8 +82,8 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
         mAddNewGraphView.setDistanceTextView(session.getDistanceStr());
         mAddNewGraphView.setMinHeightTextView(session.getMinHeightStr());
         mAddNewGraphView.setMaxHeightTextView(session.getMaxHeightStr());
-        mAddNewGraphView.setLatTextView(session.getLatitude());
-        mAddNewGraphView.setLongTextView(session.getLongitude());
+        mAddNewGraphView.setLatTextView(session.getLatitudeStr());
+        mAddNewGraphView.setLongTextView(session.getLongitudeStr());
         mAddNewGraphView.drawGraph(session.getLocationList());
 
         mSessionRepository.updateSessionData(session);
@@ -120,13 +124,8 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
 
     @Override
     public void resetSessionData() {
-        mSessionRepository.clearSessionData(mSessionId);
+        mSessionRepository.clearSessionData(mSession.getId());
         mLocationCollector.clearSessionData();
         mAddNewGraphView.resetGraph();
-    }
-
-    @Override
-    public void generateMap() {
-
     }
 }

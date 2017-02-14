@@ -16,6 +16,8 @@ final class SessionDbContract {
     static abstract class SessionEntry implements BaseColumns {
         static final String TABLE_NAME = "records";
         static final String COLUMN_NAME_ENTRY_ID = "entryid";
+        static final String COLUMN_NAME_TITLE = "title";
+        static final String COLUMN_NAME_DESCRIPTION = "description";
         static final String COLUMN_NAME_CURRENT_ALTITUDE = "currentaltitude";
         static final String COLUMN_NAME_MAX_HEIGHT = "maxheight";
         static final String COLUMN_NAME_MIN_HEIGHT = "minheight";

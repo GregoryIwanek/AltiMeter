@@ -132,6 +132,11 @@ public class SessionRepository implements SessionDataSource {
     }
 
     @Override
+    public void getMapData(@NonNull String sessionId, @NonNull LoadMapDataCallback callback) {
+        mSessionLocalDataSource.getMapData(sessionId, callback);
+    }
+
+    @Override
     public void getDetails(@NonNull String sessionId, @NonNull DetailsSessionCallback callback) {
         mSessionLocalDataSource.getDetails(sessionId, callback);
     }
