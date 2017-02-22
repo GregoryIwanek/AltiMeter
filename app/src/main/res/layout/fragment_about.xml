@@ -3,7 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/coordinatorContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:theme="@style/Theme_Altitude_Graphs">
+
     <ScrollView
         android:id="@+id/contentFrame"
         android:orientation="vertical"
@@ -23,109 +25,91 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/colorWhite"
                     android:text="@string/about_first"/>
             </LinearLayout>
         </LinearLayout>

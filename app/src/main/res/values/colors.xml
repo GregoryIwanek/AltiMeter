@@ -4,6 +4,28 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorWhite">#ffffff</color>
-    <color name="colorBlack">#000000</color>
     <color name="colorRed">#ff0004</color>
+
+    <!--color palette Neon Tones and Sharp Contrast-->
+    <color name="colorVoid">#0E0B16</color>
+    <color name="colorFuschia">#A239CA</color>
+    <color name="colorJewel">#4717F6</color>
+    <color name="colorStark">#E7DFDD</color>
+
+    <!--color palette Warm and Bold-->
+    <color name="colorBlack">#000000</color>
+    <color name="colorInk">#062F4F</color>
+    <color name="colorPosy">#813772</color>
+    <color name="colorEmbers">#B82601</color>
+
+    <!--color palette Cool vs. Warm-->
+    <color name="colorNavyBlue">#18121E</color>
+    <color name="colorGunmetal">#233237</color>
+    <color name="colorRustyRed">#984B43</color>
+    <color name="colorWarmYellow">#EAC67A</color>
+    
+    <color name="colorElectricLime">#88D317</color>
+    <color name="colorPalm">#1B7B34</color>
+    <color name="colorSilk">#DCD0C0</color>
+    <color name="colorCharcoal">#373737</color>
 </resources>

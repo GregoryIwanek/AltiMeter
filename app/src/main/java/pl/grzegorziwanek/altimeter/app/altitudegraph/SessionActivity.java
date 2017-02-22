@@ -18,8 +18,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.grzegorziwanek.altimeter.app.BasicActivity;
 import pl.grzegorziwanek.altimeter.app.R;
-import pl.grzegorziwanek.altimeter.app.model.database.source.SessionRepository;
-import pl.grzegorziwanek.altimeter.app.model.database.source.local.SessionLocalDataSource;
+import pl.grzegorziwanek.altimeter.app.data.database.source.SessionRepository;
+import pl.grzegorziwanek.altimeter.app.data.database.source.local.SessionLocalDataSource;
 import pl.grzegorziwanek.altimeter.app.utils.ActivityUtils;
 import pl.grzegorziwanek.altimeter.app.utils.FormatAndValueConverter;
 

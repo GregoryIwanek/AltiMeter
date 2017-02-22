@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.model.database.source;
+package pl.grzegorziwanek.altimeter.app.data.database.source;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,8 +8,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import pl.grzegorziwanek.altimeter.app.model.Session;
+import pl.grzegorziwanek.altimeter.app.data.Session;
 
 /**
  * Entry point for accessing data.
@@ -41,6 +42,8 @@ public interface SessionDataSource {
     interface DetailsSessionCallback {
 
         void onDetailsLoaded(Bundle bundle);
+
+        void onChangesSaved();
     }
 
     void createRecordsTable(@NonNull Session session);
@@ -62,5 +65,7 @@ public interface SessionDataSource {
     void deleteSessions(ArrayList<String> sessionsId, boolean isDeleteAll, @Nullable DeleteSessionCallback callback);
 
     void setSessionChecked(String sessionId, boolean isCompleted);
+
+    void updateDetailsChanges(@NonNull DetailsSessionCallback callback, Map<String, String> changes);
 }
 

@@ -44,4 +44,10 @@
     <string name="pref_language_summary">Set preferred language</string>
     <string name="pref_style_name">Set style</string>
     <string name="pref_style_summary">Set visual style</string>
+    <string name="altitude_graphs">Altitude Graphs</string>
+    <string name="new_graph">New Graph</string>
+    <string name="map">Map</string>
+    <string name="statistics">Statistics</string>
+    <string name="settings">Settings</string>
+    <string name="about">About</string>
 </resources>

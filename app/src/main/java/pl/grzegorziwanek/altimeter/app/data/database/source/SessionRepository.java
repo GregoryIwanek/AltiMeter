@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.model.database.source;
+package pl.grzegorziwanek.altimeter.app.data.database.source;
 
 import android.support.annotation.NonNull;
 
@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import pl.grzegorziwanek.altimeter.app.model.Session;
+import pl.grzegorziwanek.altimeter.app.data.Session;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -157,6 +157,11 @@ public class SessionRepository implements SessionDataSource {
     @Override
     public void setSessionChecked(String sessionId, boolean isCompleted) {
         setSessionCompleted(sessionId, isCompleted);
+    }
+
+    @Override
+    public void updateDetailsChanges(@NonNull DetailsSessionCallback callback, Map<String, String> changes) {
+        mSessionLocalDataSource.updateDetailsChanges(callback, changes);
     }
 
     private void deleteFromCache(ArrayList<String> sessionsId, boolean isDeleteAll) {

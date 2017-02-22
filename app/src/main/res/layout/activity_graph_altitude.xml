@@ -22,7 +22,6 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorRed"
                 android:minHeight="?attr/actionBarSize"
                 android:theme="@style/Toolbar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
@@ -47,7 +46,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_16dp"
-                    android:background="@color/colorRed"
                     android:src="@drawable/ic_vector_add"
                     app:fabSize="normal"
                     app:layout_anchor="@id/contentFrame"
@@ -58,6 +56,7 @@
 
     <!-- Navigation Drawer -->
     <android.support.design.widget.NavigationView
+        android:theme="@style/Theme_Navigation_List"
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

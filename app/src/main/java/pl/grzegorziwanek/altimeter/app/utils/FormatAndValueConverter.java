@@ -1,13 +1,13 @@
 package pl.grzegorziwanek.altimeter.app.utils;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.location.Location;
-import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by Grzegorz Iwanek on 27.11.2016.
@@ -18,7 +18,7 @@ public class FormatAndValueConverter {
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
 
-    //TODO -> kick out mUnitsFormat and Symbol and move it to Presenter(?), LocationCollector(?)
+    //TODO -> kick out mUnitsFormat and Symbol and move it to Presenter(?), LocationUpdateManager(?)
     private static String mUnitsFormat;
     private static String mUnitsSymbol;
 
@@ -233,4 +233,79 @@ public class FormatAndValueConverter {
             return currMinAltitude;
         }
     }
+
+    /**
+     * Sets Airport API radius string (int radius in miles, longitude, latitude)
+     * ATTENTION: latitude and longitude are reversed; first longitude, then latitude
+     * @param latitude of current known location
+     * @param longitude of current known location
+     * @return radius str, with information about current location
+     * and radius in miles (1,61 km) to search for airports in proximity
+     */
+    public static String setRadialDistanceString(Double latitude, Double longitude) {
+        String str;
+        str = "100;";
+        str += longitude.toString();
+        str += ",";
+        str += latitude.toString();
+        return str;
+    }
+
+    /**
+     * Sets new, bigger radius value to search for airports in proximity. Is called when there are
+     * no airports in radius distance, or airports have no data.
+     * @param radialDistStr old string query
+     * @return radius str, with information about current location
+     * and radius in miles to search for airports in proximity
+     */
+    public static String increaseRadialDistanceString(String radialDistStr) {
+        int indexOfSemicolon = getIndexOfSemicolon(radialDistStr);
+        int radiusValue = getRadiusValue(radialDistStr, indexOfSemicolon);
+        radialDistStr = setNewRadialDistance(radialDistStr, indexOfSemicolon, radiusValue);
+        return radialDistStr;
+    }
+
+    private static int getIndexOfSemicolon(String str) {
+        if (str.contains(";")) {
+            return str.indexOf(";");
+        } else {
+            return 0;
+        }
+    }
+
+    private static int getRadiusValue(String str, int semicolonIndex) {
+        String start = TextUtils.substring(str, 0, semicolonIndex);
+        return Integer.valueOf(start);
+    }
+
+    private static String setNewRadialDistance(String radialDist, int semicolonIndex, int oldValue) {
+        String strRest = TextUtils.substring(radialDist, semicolonIndex, radialDist.length()-1);
+        int newRadius = oldValue + 100;
+        return String.valueOf(newRadius) + ";" + strRest;
+    }
+
+    /**
+     * Converts inch of mercury [inHg] pressure to hectopascal [hPa] value (used in Android)
+     * @param hgPressure at the station data is coming from;
+     * @param temperature of the location data is coming from; if no temperature is available,
+     * standard temperature is used instead [0°C]
+     * @return pressure value converted to hectopascals
+     */
+    //// TODO: 20.02.2017 -> finish it when information about impact of temperature on pressure value is collected and explained
+    public static float convertHgPressureToHPa(@NonNull Double hgPressure, Double temperature) {
+        checkNotNull(hgPressure);
+
+        return 10;
+    }
+
+    /**
+     * Round given numeric value
+     * @param value numeric value to round
+     * @return rounded value
+     * e.g. 160
+     */
+    public static Double roundValue(Double value) {
+        return (double) Math.round(value);
+    }
 }
+

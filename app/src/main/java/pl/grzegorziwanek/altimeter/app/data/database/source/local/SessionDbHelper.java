@@ -1,11 +1,11 @@
-package pl.grzegorziwanek.altimeter.app.model.database.source.local;
+package pl.grzegorziwanek.altimeter.app.data.database.source.local;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import static pl.grzegorziwanek.altimeter.app.model.database.source.local.SessionDbContract.*;
+import static pl.grzegorziwanek.altimeter.app.data.database.source.local.SessionDbContract.*;
 
 /**
  * Created by Grzegorz Iwanek on 26.01.2017.

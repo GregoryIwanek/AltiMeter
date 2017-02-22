@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.model.location.services;
+package pl.grzegorziwanek.altimeter.app.data.location.services.helpers;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import pl.grzegorziwanek.altimeter.app.model.Constants;
+import pl.grzegorziwanek.altimeter.app.data.Constants;
 
 /**
  * Created by Grzegorz Iwanek on 30.11.2016.
@@ -23,16 +23,16 @@ import pl.grzegorziwanek.altimeter.app.model.Constants;
  * Returns address through use of geocoder class;
  */
 //TODO -> forge it into a AsyncTask
-public class AddressIntentService extends IntentService {
+public class AddressService extends IntentService {
 
-    private static final String LOG_TAG = AddressIntentService.class.getSimpleName();
+    private static final String LOG_TAG = AddressService.class.getSimpleName();
     private ResultReceiver mResultReceiver;
 
-    public AddressIntentService() {
+    public AddressService() {
         super("EMPTY CONSTRUCTOR");
     }
 
-    public AddressIntentService(String name) {
+    public AddressService(String name) {
         super(name);
     }
 
@@ -58,22 +58,17 @@ public class AddressIntentService extends IntentService {
             //thrown in case of service offline
             //errorMessage = getString(R.string.service_not_available);
             errorMessage = "Solar System," +'\n'+ "Milky Way," +'\n'+ "Laniakea";
-            //Log.e(LOG_TAG, errorMessage, ioException);
         } catch (IllegalArgumentException illegalArgumentException) {
             //thrown in case of wrong given coordinates
             //errorMessage = getString(R.string.invalid_lat_long_used);
             errorMessage = "Solar System," +'\n'+ "Milky Way," +'\n'+ "Laniakea";
-            //Log.e(LOG_TAG, errorMessage + ", " + "Latitude: " + location.getLatitudeStr()
-            //        + " , " + "Longitude: " + location.getLongitudeStr(), illegalArgumentException);
         }
 
         //check for case of no address found
         if (addresses == null || addresses.size() == 0) {
             //check if different error has already occur
             if(errorMessage.isEmpty()) {
-                //errorMessage = getString(R.string.no_address_found);
                 errorMessage = "Solar System," +'\n'+ "Milky Way," +'\n'+ "Laniakea";
-                //Log.e(LOG_TAG, errorMessage);
             }
 
             //deliver info about failure
@@ -87,7 +82,6 @@ public class AddressIntentService extends IntentService {
             for (int i=0; i<address.getMaxAddressLineIndex(); i++) {
                 addressLines.add(address.getAddressLine(i));
             }
-            //Log.i(LOG_TAG, getString(R.string.address_found));
 
             //delivering address to the receiver
             String combinedAddress = TextUtils.join(System.getProperty("line.separator"), addressLines);

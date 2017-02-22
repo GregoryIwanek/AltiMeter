@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.model.database.source.local;
+package pl.grzegorziwanek.altimeter.app.data.database.source.local;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,15 +12,16 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
-import pl.grzegorziwanek.altimeter.app.model.Session;
-import pl.grzegorziwanek.altimeter.app.model.database.source.SessionDataSource;
-import pl.grzegorziwanek.altimeter.app.model.database.source.local.SessionDbContract.SessionEntry;
+import pl.grzegorziwanek.altimeter.app.data.Session;
+import pl.grzegorziwanek.altimeter.app.data.database.source.SessionDataSource;
+import pl.grzegorziwanek.altimeter.app.data.database.source.local.SessionDbContract.SessionEntry;
 import pl.grzegorziwanek.altimeter.app.utils.FormatAndValueConverter;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static pl.grzegorziwanek.altimeter.app.model.database.source.local.SessionDbContract.*;
+import static pl.grzegorziwanek.altimeter.app.data.database.source.local.SessionDbContract.*;
 
 /**
  * Created by Grzegorz Iwanek on 27.01.2017.
@@ -225,6 +226,36 @@ public class SessionLocalDataSource implements SessionDataSource {
     @Override
     public void setSessionChecked(String sessionId, boolean isCompleted) {
         //TODO-> add column to table records, set there if session completed, change that after this is called
+    }
+
+
+    //TODO-> merge similar functions into one form update changed details section
+    @Override
+    public void updateDetailsChanges(@NonNull DetailsSessionCallback callback, Map<String, String> changes) {
+        updateDetails(changes);
+        callback.onChangesSaved();
+    }
+
+    private void updateDetails(Map<String, String> changes) {
+        checkNotNull(changes);
+        SQLiteDatabase db = mSessionDbHelper.getWritableDatabase();
+
+        updateChangedDetails(db, changes);
+
+        db.close();
+    }
+
+    private void updateChangedDetails(SQLiteDatabase db, Map<String, String> changes) {
+        ContentValues valuesChanges = getChangedDetailsValues(changes);
+        String rowSelection = SessionEntry.COLUMN_NAME_ENTRY_ID + "=" + "\"" + changes.get("id") + "\"";
+        updateRowsDb(db, SessionEntry.TABLE_NAME, valuesChanges, rowSelection);
+    }
+
+    private ContentValues getChangedDetailsValues(Map<String, String> changes) {
+        ContentValues vChanges = new ContentValues();
+        vChanges.put(SessionEntry.COLUMN_NAME_TITLE, changes.get("title"));
+        vChanges.put(SessionEntry.COLUMN_NAME_DESCRIPTION, changes.get("description"));
+        return vChanges;
     }
 
     @Override

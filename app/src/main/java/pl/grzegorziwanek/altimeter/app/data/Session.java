@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.model;
+package pl.grzegorziwanek.altimeter.app.data;
 
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -33,6 +33,9 @@ public class Session {
     private Location mLastLocation = null;
     private Location mCurrLocation = null;
     private ArrayList<Location> mLocationList = null;
+    private ArrayList<GraphPoint> mGraphList = null;
+
+    private Double mBarometerAlt = null;
 
     /**
      * Use this constructor to create new recording session. Unique ID generated automatically.
@@ -54,6 +57,7 @@ public class Session {
         mDescription = description;
         mId = id;
         mLocationList = new ArrayList<>();
+        mGraphList = new ArrayList<>();
     }
 
     public boolean isEmpty() {
@@ -147,6 +151,10 @@ public class Session {
         mCurrElevation = elevation;
     }
 
+    public void setElevationOnList(Double elevation) {
+        mLocationList.get(mLocationList.size()-1).setAltitude(elevation);
+    }
+
     public ArrayList<Location> getLocationList() {
         return mLocationList;
     }
@@ -223,6 +231,22 @@ public class Session {
         mCompleted = completed;
     }
 
+    public boolean ismLocked() {
+        return mLocked;
+    }
+
+    public void setLocked(boolean locked) {
+        mLocked = locked;
+    }
+
+    public Double getBarometerAlt() {
+        return mBarometerAlt;
+    }
+
+    public void setBarometerAlt(Double barometerAlt) {
+        mBarometerAlt = barometerAlt;
+    }
+
     public void clearData() {
         mCompleted = false;
         mTitle = "TITLE";
@@ -244,11 +268,26 @@ public class Session {
         mLocationList.clear();
     }
 
-    public boolean ismLocked() {
-        return mLocked;
+    public void appendGraphPoint(double xValue, double yValue) {
+        GraphPoint point = new GraphPoint(xValue, yValue);
+        mGraphList.add(point);
     }
 
-    public void setLocked(boolean locked) {
-        mLocked = locked;
+    private class GraphPoint {
+        private double xTime;
+        private double yAltitude;
+
+        GraphPoint(double xValue, double yValue) {
+            xTime = xValue;
+            yAltitude = yValue;
+        }
+
+        public double getXValue() {
+            return xTime;
+        }
+
+        public double getYValue() {
+            return yAltitude;
+        }
     }
 }

@@ -1,16 +1,11 @@
 package pl.grzegorziwanek.altimeter.app.altitudegraph;
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-
-import com.jjoe64.graphview.GraphView;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import pl.grzegorziwanek.altimeter.app.BasePresenter;
 import pl.grzegorziwanek.altimeter.app.BaseView;
-import pl.grzegorziwanek.altimeter.app.model.Session;
+import pl.grzegorziwanek.altimeter.app.data.Session;
 
 /**
  * Created by Grzegorz Iwanek on 18.01.2017. That's it

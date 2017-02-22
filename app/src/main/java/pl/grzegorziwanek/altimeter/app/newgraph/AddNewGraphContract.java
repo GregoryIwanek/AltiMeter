@@ -16,9 +16,9 @@ interface AddNewGraphContract {
 
     interface View extends BaseView<Presenter> {
 
-        void setButtonTag(int buttonTag);
+        void setButtonTagAndPicture(int pictureId);
 
-        void setButtonPicture(int imageId);
+        void checkDataSourceOpen();
 
         void showSessionLocked();
 
@@ -42,6 +42,12 @@ interface AddNewGraphContract {
 
         void setLongTextView(String longitude);
 
+        void setGpsTextView(String gpsAlt);
+
+        void setNetworkTextView(String networkAlt);
+
+        void setBarometerTextView(String barometerAlt);
+
         void drawGraph(ArrayList<Location> locations);
 
         void resetGraph();
@@ -51,9 +57,23 @@ interface AddNewGraphContract {
 
         void openSessionMap();
 
+        void callStartLocationRecording();
+
         void startLocationRecording();
 
         void pauseLocationRecording();
+
+        void enableGps();
+
+        void disableGps();
+
+        void enableNetwork();
+
+        void disableNetwork();
+
+        void enableBarometer();
+
+        void disableBarometer();
 
         void resetSessionData();
 

@@ -30,6 +30,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class AddNewGraphFragment extends Fragment implements AddNewGraphContract.View,
         NoticeDialogFragment.NoticeDialogListener {
+
     @BindView(R.id.current_elevation_label) TextView mCurrElevationTextView;
     @BindView(R.id.current_latitude_value) TextView mCurrLatitudeTextView;
     @BindView(R.id.current_longitude_value) TextView mCurrLongitudeTextView;
@@ -42,6 +43,12 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
     @BindView(R.id.lock_button) ImageButton mLockButton;
     @BindView(R.id.map_button) ImageButton mMapButton;
     @BindView(R.id.graph_view) GraphViewWidget mGraphViewWidget;
+    @BindView(R.id.gps_button) ImageButton mGpsButton;
+    @BindView(R.id.network_button) ImageButton mNetworkButton;
+    @BindView(R.id.barometer_button) ImageButton mBarometerButton;
+    @BindView(R.id.gps_value_label) TextView mGpsValueTextView;
+    @BindView(R.id.network_value_label) TextView mNetworkValueTextView;
+    @BindView(R.id.barometer_value_label) TextView mBarometerValueTextView;
 
     private AddNewGraphContract.Presenter mPresenter;
 
@@ -77,7 +84,7 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
         int tag = getButtonTagAsInt(mPlayPauseButton);
         switch (tag) {
             case R.drawable.ic_play_arrow_black_24dp:
-                mPresenter.startLocationRecording();
+                mPresenter.callStartLocationRecording();
                 break;
             case R.drawable.ic_pause_black_24dp:
                 mPresenter.pauseLocationRecording();
@@ -100,6 +107,78 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
     @OnClick(R.id.map_button)
     public void onMapButtonClick() {
         showUpDialog("Generate map?");
+    }
+
+    @OnClick(R.id.gps_button)
+    public void onGpsButtonClick() {
+        int tag = getButtonTagAsInt(mGpsButton);
+        switch (tag) {
+            case R.drawable.ic_gps_lock_24dp:
+                if (isRunning()) {
+                    showStopSession();
+                } else {
+                    mPresenter.enableGps();
+                }
+                break;
+            case R.drawable.ic_gps_open_24dp:
+                if (isRunning()) {
+                    showStopSession();
+                } else {
+                    mPresenter.disableGps();
+                }
+                break;
+        }
+    }
+
+    @OnClick(R.id.network_button)
+    public void onNetworkButtonClick() {
+        int tag = getButtonTagAsInt(mNetworkButton);
+        switch (tag) {
+            case R.drawable.ic_network_lock_24dp:
+                if (isRunning()) {
+                    showStopSession();
+                } else {
+                    mPresenter.enableNetwork();
+                }
+                break;
+            case R.drawable.ic_network_open_24dp:
+                if (isRunning()) {
+                    showStopSession();
+                } else {
+                    mPresenter.disableNetwork();
+                }
+                break;
+        }
+    }
+
+    @OnClick(R.id.barometer_button)
+    public void onBarometerButtonClick() {
+        int tag = getButtonTagAsInt(mBarometerButton);
+        switch (tag) {
+            case R.drawable.ic_barometer_lock_24dp:
+                if (isRunning()) {
+                    showStopSession();
+                } else {
+                    mPresenter.enableBarometer();
+                }
+                break;
+            case R.drawable.ic_barometer_open_24dp:
+                if (isRunning()) {
+                    showStopSession();
+                } else {
+                    mPresenter.disableBarometer();
+                }
+                break;
+        }
+    }
+
+    private boolean isRunning() {
+        return getButtonTagAsInt(mPlayPauseButton)
+                == R.drawable.ic_pause_black_24dp;
+    }
+
+    private void showStopSession() {
+        showMessage("You must stop session first.");
     }
 
     private void showUpDialog(String title) {
@@ -126,8 +205,10 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
     }
 
     private void initiateButtonsTags() {
-        mRefreshButton.setTag(R.drawable.ic_refresh_black_24dp);
         mPlayPauseButton.setTag(R.drawable.ic_play_arrow_black_24dp);
+        mGpsButton.setTag(R.drawable.ic_gps_lock_24dp);
+        mNetworkButton.setTag(R.drawable.ic_network_lock_24dp);
+        mBarometerButton.setTag(R.drawable.ic_barometer_lock_24dp);
     }
 
     private int getButtonTagAsInt(ImageButton imageButton) {
@@ -135,13 +216,44 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
     }
 
     @Override
-    public void setButtonTag(int buttonTag) {
-        mPlayPauseButton.setTag(buttonTag);
+    public void setButtonTagAndPicture(int pictureId) {
+        switch (pictureId) {
+            case R.drawable.ic_play_arrow_black_24dp:
+            case R.drawable.ic_pause_black_24dp:
+                mPlayPauseButton.setTag(pictureId);
+                mPlayPauseButton.setBackgroundResource(pictureId);
+                break;
+            case R.drawable.ic_gps_lock_24dp:
+            case R.drawable.ic_gps_open_24dp:
+                mGpsButton.setTag(pictureId);
+                mGpsButton.setBackgroundResource(pictureId);
+                break;
+            case R.drawable.ic_network_lock_24dp:
+            case R.drawable.ic_network_open_24dp:
+                mNetworkButton.setTag(pictureId);
+                mNetworkButton.setBackgroundResource(pictureId);
+                break;
+            case R.drawable.ic_barometer_lock_24dp:
+            case R.drawable.ic_barometer_open_24dp:
+                mBarometerButton.setTag(pictureId);
+                mBarometerButton.setBackgroundResource(pictureId);
+                break;
+        }
     }
 
     @Override
-    public void setButtonPicture(int imageId) {
-        mPlayPauseButton.setBackgroundResource(imageId);
+    public void checkDataSourceOpen() {
+        if (isAnyDataSourceOpen()) {
+            mPresenter.startLocationRecording();
+        } else {
+            showMessage("Turn on at least one data source");
+        }
+    }
+
+    private boolean isAnyDataSourceOpen() {
+        return getButtonTagAsInt(mGpsButton) == R.drawable.ic_gps_open_24dp
+                || getButtonTagAsInt(mNetworkButton) == R.drawable.ic_network_open_24dp
+                || getButtonTagAsInt(mBarometerButton) == R.drawable.ic_barometer_open_24dp;
     }
 
     @Override
@@ -206,6 +318,21 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
     }
 
     @Override
+    public void setGpsTextView(String gpsAlt) {
+        mGpsValueTextView.setText(gpsAlt);
+    }
+
+    @Override
+    public void setNetworkTextView(String networkAlt) {
+        mNetworkValueTextView.setText(networkAlt);
+    }
+
+    @Override
+    public void setBarometerTextView(String barometerAlt) {
+        mBarometerValueTextView.setText(barometerAlt);
+    }
+
+    @Override
     public void drawGraph(ArrayList<Location> locations) {
         mGraphViewWidget.deliverGraph(locations);
     }
@@ -216,3 +343,4 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
         mGraphViewWidget.clearData();
     }
 }
+

@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.model.location.services;
+package pl.grzegorziwanek.altimeter.app.data.location.services.elevation;
 
 import android.location.Location;
 import android.net.Uri;
@@ -17,21 +17,21 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 
-import pl.grzegorziwanek.altimeter.app.model.Constants;
-import pl.grzegorziwanek.altimeter.app.model.location.CallbackResponse;
+import pl.grzegorziwanek.altimeter.app.data.Constants;
+import pl.grzegorziwanek.altimeter.app.data.location.LocationResponse;
 
 /**
  *Inner class responsible for background update, have to extend AsyncTask<params, progress, result>
  *ASyncTask <params, progress, result> -> params: given entry data to work on; progress: data to show progress; result: result of background execution
  */
 
-public class FetchElevationTask extends AsyncTask<Void, Void, Void> {
-    private final String LOG_TAG = FetchElevationTask.class.getSimpleName();
-    private CallbackResponse.ElevationFetchedCallback mCallback;
+public class GoogleMapsTask extends AsyncTask<Void, Void, Void> {
+    private final String LOG_TAG = GoogleMapsTask.class.getSimpleName();
+    private LocationResponse.NetworkElevationCallback mCallback;
     private String mLocationsStr;
     private Double mCurrentEleValue;
 
-    public FetchElevationTask(CallbackResponse.ElevationFetchedCallback callback) {
+    public GoogleMapsTask(LocationResponse.NetworkElevationCallback callback) {
         mCallback = callback;
     }
 
@@ -49,6 +49,7 @@ public class FetchElevationTask extends AsyncTask<Void, Void, Void> {
         try {
             // construction of the URL query for google maps API
             Uri buildUri = parseGoogleUri();
+            System.out.println(buildUri);
             URL url = new URL(buildUri.toString());
 
             // construction of request to google maps API, opening connection with web
@@ -104,10 +105,8 @@ public class FetchElevationTask extends AsyncTask<Void, Void, Void> {
     }
 
     private Uri parseGoogleUri() {
-        String APPID_KEY = "AIzaSyDz8OSO03MnSdoE-0FFN9sZaIyFRlpf79Y";
         return Uri.parse(Constants.GOOGLEMAPS_BASE_URL).buildUpon()
                 .appendQueryParameter(Constants.PARAMETERS_LOCATIONS, mLocationsStr)
-                .appendQueryParameter(Constants.APPID_PARAM, APPID_KEY)
                 .build();
     }
 
@@ -168,7 +167,7 @@ public class FetchElevationTask extends AsyncTask<Void, Void, Void> {
             //round elevation value (to set precision to meters)
             mCurrentEleValue = (double) Math.round(mCurrentEleValue);
 
-            mCallback.onElevationFound(mCurrentEleValue);
+            mCallback.onNetworkElevationFound(mCurrentEleValue);
         } else {
             Log.v(LOG_TAG, " onPostExecute, current elevation wasn't fetched from JSON, stopped");
         }

@@ -1,13 +1,17 @@
 package pl.grzegorziwanek.altimeter.app.details;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,6 +30,7 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
     @BindView(R.id.time_start_value_label) TextView mTimeStartTV;
     @BindView(R.id.time_end_value_label) TextView mTimeEndTV;
     @BindView(R.id.distance_value_label) TextView mDistanceTV;
+    @BindView(R.id.save_button) Button mSaveButton;
 
     private DetailsContract.Presenter mPresenter;
 
@@ -39,6 +44,7 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_details, container, false);
         ButterKnife.bind(this, view);
+
         return view;
     }
 
@@ -67,6 +73,29 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
     @OnClick(R.id.description_value_label)
     public void onDescriptionClick() {
 
+    }
+
+    @OnClick(R.id.save_button)
+    public void onSaveButtonClick() {
+        mPresenter.saveTextChanges();
+    }
+
+    @Override
+    public void sendChanges() {
+        Map<String, String> changesMap = new ArrayMap<>();
+        changesMap.put("id", mIdTV.getText().toString());
+        changesMap.put("title", mTitleTV.getText().toString());
+        changesMap.put("description", mDescriptionTV.getText().toString());
+        mPresenter.saveChanges(changesMap);
+    }
+
+    @Override
+    public void showChangesSaved() {
+        showMessage("Changes saved");
+    }
+
+    private void showMessage(String message) {
+        Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

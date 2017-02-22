@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
-import pl.grzegorziwanek.altimeter.app.model.Constants;
+import pl.grzegorziwanek.altimeter.app.data.Constants;
 
 /**
  * Created by Grzegorz Iwanek on 10.02.2017.

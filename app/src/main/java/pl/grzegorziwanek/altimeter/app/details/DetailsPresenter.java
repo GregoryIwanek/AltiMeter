@@ -3,8 +3,10 @@ package pl.grzegorziwanek.altimeter.app.details;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import pl.grzegorziwanek.altimeter.app.model.database.source.SessionDataSource;
-import pl.grzegorziwanek.altimeter.app.model.database.source.SessionRepository;
+import java.util.Map;
+
+import pl.grzegorziwanek.altimeter.app.data.database.source.SessionDataSource;
+import pl.grzegorziwanek.altimeter.app.data.database.source.SessionRepository;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -12,16 +14,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Created by Grzegorz Iwanek on 09.02.2017.
  */
 
-public class DetailsPresenter implements DetailsContract.Presenter {
+class DetailsPresenter implements DetailsContract.Presenter {
 
     private SessionDataSource.DetailsSessionCallback callbackDetails;
     private DetailsFragment mDetailsView;
     private final SessionRepository mSessionRepository;
     private String sessionId;
 
-    public DetailsPresenter(String id,
-                            @NonNull SessionRepository sessionRepository,
-                            @NonNull DetailsFragment detailsFragment) {
+    DetailsPresenter(String id,
+                     @NonNull SessionRepository sessionRepository,
+                     @NonNull DetailsFragment detailsFragment) {
         sessionId = id;
         mSessionRepository = sessionRepository;
         mDetailsView = checkNotNull(detailsFragment);
@@ -41,11 +43,26 @@ public class DetailsPresenter implements DetailsContract.Presenter {
                 mDetailsView.setTimeEndTextView(args.getString("timeEnd"));
                 mDetailsView.setDistanceTextView(args.getString("distance"));
             }
+
+            @Override
+            public void onChangesSaved() {
+                mDetailsView.showChangesSaved();
+            }
         };
     }
 
     @Override
     public void start() {
         mSessionRepository.getDetails(sessionId, callbackDetails);
+    }
+
+    @Override
+    public void saveTextChanges() {
+        mDetailsView.sendChanges();
+    }
+
+    @Override
+    public void saveChanges(Map<String, String> changes) {
+        mSessionRepository.updateDetailsChanges(callbackDetails, changes);
     }
 }

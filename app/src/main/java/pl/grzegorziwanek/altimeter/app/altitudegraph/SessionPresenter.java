@@ -1,15 +1,13 @@
 package pl.grzegorziwanek.altimeter.app.altitudegraph;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.grzegorziwanek.altimeter.app.model.Details;
-import pl.grzegorziwanek.altimeter.app.model.Session;
-import pl.grzegorziwanek.altimeter.app.model.database.source.SessionDataSource;
-import pl.grzegorziwanek.altimeter.app.model.database.source.SessionRepository;
+import pl.grzegorziwanek.altimeter.app.data.Session;
+import pl.grzegorziwanek.altimeter.app.data.database.source.SessionDataSource;
+import pl.grzegorziwanek.altimeter.app.data.database.source.SessionRepository;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -123,6 +121,7 @@ class SessionPresenter implements SessionContract.Presenter {
 
     //TODO-> mCurrentFiltering
     private void showFilterLabel() {
+
     }
 
     @Override

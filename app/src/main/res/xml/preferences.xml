@@ -13,7 +13,7 @@
             android:summary="@string/pref_user_name_summary"
             android:key="prefUsername"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
         <ListPreference
             android:title="@string/pref_language"

@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.model.database.source.local;
+package pl.grzegorziwanek.altimeter.app.data.database.source.local;
 
 import android.provider.BaseColumns;
 

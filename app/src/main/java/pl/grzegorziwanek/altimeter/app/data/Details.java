@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.model;
+package pl.grzegorziwanek.altimeter.app.data;
 
 /**
  * Created by Grzegorz Iwanek on 12.02.2017.

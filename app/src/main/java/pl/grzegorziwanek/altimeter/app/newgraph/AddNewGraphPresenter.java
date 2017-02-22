@@ -3,11 +3,14 @@ package pl.grzegorziwanek.altimeter.app.newgraph;
 import android.support.annotation.NonNull;
 
 import pl.grzegorziwanek.altimeter.app.R;
-import pl.grzegorziwanek.altimeter.app.model.Session;
-import pl.grzegorziwanek.altimeter.app.model.database.source.SessionDataSource;
-import pl.grzegorziwanek.altimeter.app.model.database.source.SessionRepository;
-import pl.grzegorziwanek.altimeter.app.model.location.CallbackResponse;
-import pl.grzegorziwanek.altimeter.app.model.location.LocationCollector;
+import pl.grzegorziwanek.altimeter.app.data.Session;
+import pl.grzegorziwanek.altimeter.app.data.database.source.SessionDataSource;
+import pl.grzegorziwanek.altimeter.app.data.database.source.SessionRepository;
+import pl.grzegorziwanek.altimeter.app.data.location.LocationResponse;
+import pl.grzegorziwanek.altimeter.app.data.location.LocationUpdateManager;
+import pl.grzegorziwanek.altimeter.app.data.location.managers.BarometerManager;
+import pl.grzegorziwanek.altimeter.app.data.location.managers.GpsManager;
+import pl.grzegorziwanek.altimeter.app.data.location.managers.NetworkManager;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -19,15 +22,15 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
 
     private final SessionRepository mSessionRepository;
     private final AddNewGraphContract.View mAddNewGraphView;
-    private final LocationCollector mLocationCollector;
-    private CallbackResponse.FullInfoCallback callbackFullInfo;
+    private final LocationUpdateManager mLocationUpdateManager;
+    private LocationResponse.FullInfoCallback callbackFullInfo;
     private static Session mSession;
 
     public AddNewGraphPresenter(@NonNull SessionRepository sessionSource,
-                                @NonNull LocationCollector locationCollector,
+                                @NonNull LocationUpdateManager locationUpdateManager,
                                 @NonNull AddNewGraphContract.View addNewGraphView) {
         mSessionRepository = checkNotNull(sessionSource);
-        mLocationCollector = checkNotNull(locationCollector);
+        mLocationUpdateManager = checkNotNull(locationUpdateManager);
         mAddNewGraphView = checkNotNull(addNewGraphView);
         mAddNewGraphView.setPresenter(this);
     }
@@ -39,7 +42,7 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
     }
 
     private void setSession() {
-        mSession = mLocationCollector.getSession();
+        mSession = mLocationUpdateManager.getSession();
     }
 
     private void initiateSession() {
@@ -57,11 +60,16 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
     }
 
     @Override
+    public void callStartLocationRecording() {
+        mAddNewGraphView.checkDataSourceOpen();
+    }
+
+    @Override
     public void startLocationRecording() {
         int tag = R.drawable.ic_pause_black_24dp;
         updateButton(tag);
 
-        callbackFullInfo = new CallbackResponse.FullInfoCallback() {
+        callbackFullInfo = new LocationResponse.FullInfoCallback() {
             @Override
             public void onFullInfoAcquired(Session session) {
                 if (session.getCurrentLocation() != null) {
@@ -70,10 +78,26 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
                     updateAfterCleared();
                 }
             }
+
+            //TODO-> merge this into one system of location management
+            @Override
+            public void onBarometerInfoAcquired(String barometerAlt) {
+                mAddNewGraphView.setBarometerTextView(barometerAlt);
+            }
+
+            @Override
+            public void onGpsInfoAcquired(String gpsAlt) {
+                mAddNewGraphView.setGpsTextView(gpsAlt);
+            }
+
+            @Override
+            public void onNetworkInfoAcquired(String networkAlt) {
+                mAddNewGraphView.setNetworkTextView(networkAlt);
+            }
         };
 
         mAddNewGraphView.showRecordingData();
-        mLocationCollector.startListenForLocations(callbackFullInfo);
+        mLocationUpdateManager.startListenForLocations(callbackFullInfo);
     }
 
     private void updateView(Session session) {
@@ -105,7 +129,54 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
         updateButton(tag);
 
         mAddNewGraphView.showRecordingPaused();
-        mLocationCollector.stopListenForLocations(false);
+        mLocationUpdateManager.stopListenForLocations(false);
+    }
+
+    @Override
+    public void enableGps() {
+        updateManager(GpsManager.class, true);
+        int tag = R.drawable.ic_gps_open_24dp;
+        updateButton(tag);
+    }
+
+    @Override
+    public void disableGps() {
+        updateManager(GpsManager.class, false);
+        int tag = R.drawable.ic_gps_lock_24dp;
+        updateButton(tag);
+
+    }
+
+    @Override
+    public void enableNetwork() {
+        updateManager(NetworkManager.class, true);
+        int tag = R.drawable.ic_network_open_24dp;
+        updateButton(tag);
+    }
+
+    @Override
+    public void disableNetwork() {
+        updateManager(NetworkManager.class, false);
+        int tag = R.drawable.ic_network_lock_24dp;
+        updateButton(tag);
+    }
+
+    @Override
+    public void enableBarometer() {
+        updateManager(BarometerManager.class, true);
+        int tag = R.drawable.ic_barometer_open_24dp;
+        updateButton(tag);
+    }
+
+    @Override
+    public void disableBarometer() {
+        updateManager(BarometerManager.class, false);
+        int tag = R.drawable.ic_barometer_lock_24dp;
+        updateButton(tag);
+    }
+
+    private void updateManager(Class<?> manager, boolean isEnabled) {
+        mLocationUpdateManager.setManagerState(manager, isEnabled);
     }
 
     @Override
@@ -114,18 +185,17 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
         updateButton(tag);
 
         mAddNewGraphView.showSessionLocked();
-        mLocationCollector.stopListenForLocations(true);
+        mLocationUpdateManager.stopListenForLocations(true);
     }
 
     private void updateButton(int drawableId) {
-        mAddNewGraphView.setButtonTag(drawableId);
-        mAddNewGraphView.setButtonPicture(drawableId);
+        mAddNewGraphView.setButtonTagAndPicture(drawableId);
     }
 
     @Override
     public void resetSessionData() {
         mSessionRepository.clearSessionData(mSession.getId());
-        mLocationCollector.clearSessionData();
+        mLocationUpdateManager.clearSessionData();
         mAddNewGraphView.resetGraph();
     }
 }

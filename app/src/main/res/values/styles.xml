@@ -2,13 +2,35 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorBlack</item>
-        <item name="colorPrimaryDark">@color/colorBlack</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <!--<item name="android:background">@color/colorBlack</item>-->
-        <!--<item name="android:textColorTertiary">@color/colorWhite</item>-->
-        <!--<item name="android:textColor">@color/colorWhite</item>-->
+        <item name="colorPrimary">@color/colorJewel</item>
+        <item name="colorPrimaryDark">@color/colorVoid</item>
+        <item name="colorAccent">@color/colorFuschia</item>
+        <item name="android:textColor">@color/colorStark</item>
+        <item name="android:textColorSecondary">@color/colorStark</item>
+        <item name="android:itemBackground">@color/colorInk</item>
     </style>
 
-    <style name="Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme_Altitude_Graphs" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorJewel</item>
+        <item name="colorPrimaryDark">@color/colorVoid</item>
+        <item name="colorAccent">@color/colorFuschia</item>
+        <item name="android:background">@color/colorVoid</item>
+        <item name="android:textColor">@color/colorStark</item>
+        <item name="android:listDivider">@color/colorStark</item>
+        <item name="android:editTextColor">@color/colorStark</item>
+        <item name="colorButtonNormal">@color/colorJewel</item>
+    </style>
+
+    <style name="Theme_Navigation_List" parent="ThemeOverlay.AppCompat.Dark">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorJewel</item>
+        <item name="colorPrimaryDark">@color/colorVoid</item>
+        <item name="colorAccent">@color/colorFuschia</item>
+        <item name="android:background">@color/colorInk</item>
+        <item name="android:textColor">@color/colorStark</item>
+        <item name="android:listDivider">@color/colorStark</item>
+    </style>
+
+    <style name="Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 </resources>

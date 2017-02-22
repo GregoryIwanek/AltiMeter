@@ -14,14 +14,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -35,14 +33,13 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import pl.grzegorziwanek.altimeter.app.Map.MyMapFragment;
 
 /**
  * Created by XXX XXX on 23.11.2016.
  * Consist main UI fragment within, extension of Fragment;
  * Implements:
  * google's api location client (ConnectionCallbacks, OnConnectionFailedListener, LocationListener);
- * customized CallbackResponse interface (to return location data through AsyncTask's onPostExecute method);
+ * customized LocationResponse interface (to return location data through AsyncTask's onPostExecute method);
  * inner class to catch data from AddressIntentServicee;
  * Uses ButcherKnife outer library;
  */
@@ -89,7 +86,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     private static AddressResultReceiver sResultReceiver;
 
     //map section
-    private static MyMapFragment myMapFragment;
+    //private static MyMapFragment myMapFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -167,7 +164,7 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
 //        }
     }
 
-    //CallbackResponse interface methods (send data back to this activity from AsyncTask's onPostExecute method)
+    //LocationResponse interface methods (send data back to this activity from AsyncTask's onPostExecute method)
     @Override
     public void processAccurateElevation(Double elevation) {
         updateMinMaxAltitude(elevation);
@@ -431,11 +428,11 @@ public class MainFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     private void setMapFragment() {
-        if (myMapFragment == null) {
-            myMapFragment = new MyMapFragment();
-            myMapFragment.setListOfPoints(mLocationList);
-            myMapFragment.updateMap();
-        }
+//        if (myMapFragment == null) {
+//            myMapFragment = new MyMapFragment();
+//            myMapFragment.setListOfPoints(mLocationList);
+//            myMapFragment.updateMap();
+//        }
     }
 
     private void replaceFragmentWithMap() {

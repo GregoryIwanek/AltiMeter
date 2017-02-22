@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBlack"
+    android:theme="@style/Theme_Altitude_Graphs"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
     <LinearLayout
@@ -16,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:layout_weight="1">
+            android:layout_weight="0.95">
 
             <TextView
                 android:id="@+id/title_label"
@@ -28,7 +29,6 @@
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
-                android:textColor="@color/colorWhite"
                 android:paddingLeft="@dimen/margin_16dp"
                 android:paddingRight="@dimen/margin_16dp"/>
 
@@ -39,10 +39,10 @@
                 android:layout_weight="1"
 
                 android:text="..."
+                android:inputType="textCapWords|textMultiLine"
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="right|center_vertical"
-                android:textColor="@color/colorWhite"
                 android:paddingLeft="@dimen/margin_16dp"
                 android:paddingRight="@dimen/margin_16dp"/>
         </LinearLayout>
@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:layout_weight="1">
+            android:layout_weight="0.95">
 
             <TextView
                 android:id="@+id/description_label"
@@ -64,7 +64,6 @@
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
-                android:textColor="@color/colorWhite"
                 android:paddingLeft="@dimen/margin_16dp"
                 android:paddingRight="@dimen/margin_16dp"/>
 
@@ -75,12 +74,40 @@
                 android:layout_weight="1"
 
                 android:text="..."
+                android:inputType="textCapWords|textMultiLine"
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="right|center_vertical"
-                android:textColor="@color/colorWhite"
                 android:paddingLeft="@dimen/margin_16dp"
                 android:paddingRight="@dimen/margin_16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/changes_label"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                android:text="SAVE CHANGES"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textSize="@dimen/text_size_16sp"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/margin_16dp"
+                android:paddingRight="@dimen/margin_16dp"/>
+
+            <Button
+                android:id="@+id/save_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="8dp"
+
+                android:text="OK"/>
         </LinearLayout>
 
         <LinearLayout
@@ -99,7 +126,6 @@
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
-                android:textColor="@color/colorWhite"
                 android:paddingLeft="@dimen/margin_16dp"
                 android:paddingRight="@dimen/margin_16dp"/>
 
@@ -113,7 +139,6 @@
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="right|center_vertical"
-                android:textColor="@color/colorWhite"
                 android:paddingLeft="@dimen/margin_16dp"
                 android:paddingRight="@dimen/margin_16dp"/>
         </LinearLayout>
@@ -134,7 +159,6 @@
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
-                android:textColor="@color/colorWhite"
                 android:paddingLeft="@dimen/margin_16dp"
                 android:paddingRight="@dimen/margin_16dp"/>
 
@@ -148,7 +172,6 @@
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="right|center_vertical"
-                android:textColor="@color/colorWhite"
                 android:paddingLeft="@dimen/margin_16dp"
                 android:paddingRight="@dimen/margin_16dp"/>
 
@@ -170,7 +193,6 @@
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
-                android:textColor="@color/colorWhite"
                 android:paddingLeft="@dimen/margin_16dp"
                 android:paddingRight="@dimen/margin_16dp"/>
 
@@ -184,7 +206,6 @@
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="right|center_vertical"
-                android:textColor="@color/colorWhite"
                 android:paddingLeft="@dimen/margin_16dp"
                 android:paddingRight="@dimen/margin_16dp"/>
         </LinearLayout>
@@ -205,7 +226,6 @@
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
-                android:textColor="@color/colorWhite"
                 android:paddingLeft="@dimen/margin_16dp"
                 android:paddingRight="@dimen/margin_16dp"/>
 
@@ -219,7 +239,6 @@
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="right|center_vertical"
-                android:textColor="@color/colorWhite"
                 android:paddingLeft="@dimen/margin_16dp"
                 android:paddingRight="@dimen/margin_16dp"/>
         </LinearLayout>
@@ -240,7 +259,6 @@
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
-                android:textColor="@color/colorWhite"
                 android:paddingLeft="@dimen/margin_16dp"
                 android:paddingRight="@dimen/margin_16dp"/>
 
@@ -254,15 +272,8 @@
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="right|center_vertical"
-                android:textColor="@color/colorWhite"
                 android:paddingLeft="@dimen/margin_16dp"
                 android:paddingRight="@dimen/margin_16dp"/>
         </LinearLayout>
     </LinearLayout>
-
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="20">
-    </ListView>
 </LinearLayout>

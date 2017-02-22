@@ -29,8 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.details.DetailsActivity;
-import pl.grzegorziwanek.altimeter.app.model.Constants;
-import pl.grzegorziwanek.altimeter.app.model.Session;
+import pl.grzegorziwanek.altimeter.app.data.Session;
 import pl.grzegorziwanek.altimeter.app.newgraph.AddNewGraphActivity;
 import pl.grzegorziwanek.altimeter.app.utils.NoticeDialogFragment;
 
@@ -173,10 +172,6 @@ public class SessionFragment extends Fragment implements SessionContract.View,
         inflater.inflate(R.menu.fragment_menu, menu);
     }
 
-    /**
-     * Listener for clicks on tasks in the ListView.
-     */
-    //TODO-> populate this instance with code
     SessionItemListener mSessionItemListener = new SessionItemListener() {
         @Override
         public void onSessionClick(Session clickedSession) {

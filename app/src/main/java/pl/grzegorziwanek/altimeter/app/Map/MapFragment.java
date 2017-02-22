@@ -2,14 +2,18 @@ package pl.grzegorziwanek.altimeter.app.Map;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -18,7 +22,8 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,106 +70,7 @@ public class MapFragment extends Fragment implements MapContract.View {
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
 
-//        try {
-//            MapsInitializer.initialize(getActivity().getApplicationContext());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        mMapView.getMapAsync(new OnMapReadyCallback() {
-//            @Override
-//            public void onMapReady(GoogleMap mMap) {
-//                mGoogleMap = mMap;
-//
-//                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-//                        && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-//                {
-//                    // TODO: Consider calling
-//                    //    ActivityCompat#requestPermissions
-//                    // here to request the missing permissions, and then overriding
-//                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//                    //                                          int[] grantResults)
-//                    // to handle the case where the user grants the permission. See the documentation
-//                    // for ActivityCompat#requestPermissions for more details.
-//                    return;
-//                }
-//                else
-//                {
-//                    mGoogleMap.setMyLocationEnabled(true);
-//
-//                    LatLng position = new LatLng(51.7971276, 22.2376661);
-//                    if (locationArrayList != null)
-//                    {
-//                        int number = 0;
-//                        for (Location location : locationArrayList)
-//                        {
-//                            LatLng anotherPosition = new LatLng(location.getLatitude(), location.getLongitude());
-//                            mGoogleMap.addMarker(new MarkerOptions().position(anotherPosition).title("Number " + number).snippet("Number " + number));
-//                            number++;
-//                        }
-//                    }
-//                    else
-//                    {
-//                        mGoogleMap.addMarker(new MarkerOptions().position(position).title("Marker Title").snippet("Marker Description"));
-//                    }
-//                    CameraPosition cameraPosition = new CameraPosition.Builder().target(position).zoom(12).build();
-//                    mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-//                }
-//            }
-//        });
-
         return view;
-    }
-
-    public void updateMap()
-    {
-//        try {
-//            MapsInitializer.initialize(getActivity().getApplicationContext());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        mMapView.getMapAsync(new OnMapReadyCallback() {
-//            @Override
-//            public void onMapReady(GoogleMap mMap) {
-//                mGoogleMap = mMap;
-//
-//                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-//                        && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-//                {
-//                    // TODO: Consider calling
-//                    //    ActivityCompat#requestPermissions
-//                    // here to request the missing permissions, and then overriding
-//                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//                    //                                          int[] grantResults)
-//                    // to handle the case where the user grants the permission. See the documentation
-//                    // for ActivityCompat#requestPermissions for more details.
-//                    return;
-//                }
-//                else
-//                {
-//                    mGoogleMap.setMyLocationEnabled(true);
-//
-//                    LatLng position = new LatLng(51.7971276, 22.2376661);
-//                    if (locationArrayList != null)
-//                    {
-//                        int number = 0;
-//                        for (Location location : locationArrayList)
-//                        {
-//                            LatLng anotherPosition = new LatLng(location.getLatitudeStr(), location.getLongitudeStr());
-//                            mGoogleMap.addMarker(new MarkerOptions().position(anotherPosition).title("Number " + number).snippet("Number " + number));
-//                            number++;
-//                        }
-//                    }
-//                    else
-//                    {
-//                        mGoogleMap.addMarker(new MarkerOptions().position(position).title("Marker Title").snippet("Marker Description"));
-//                    }
-//                    CameraPosition cameraPosition = new CameraPosition.Builder().target(position).zoom(12).build();
-//                    mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -180,13 +86,6 @@ public class MapFragment extends Fragment implements MapContract.View {
             e.printStackTrace();
         }
 
-        System.out.println("UPDATE GOOGLE MAPS");
-        System.out.println("UPDATE GOOGLE MAPS");
-        System.out.println("UPDATE GOOGLE MAPS");
-        System.out.println("UPDATE GOOGLE MAPS");
-        System.out.println("UPDATE GOOGLE MAPS");
-        System.out.println("UPDATE GOOGLE MAPS");
-        System.out.println("UPDATE GOOGLE MAPS");
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap mMap) {
@@ -194,8 +93,7 @@ public class MapFragment extends Fragment implements MapContract.View {
 
                 CameraPosition cameraPosition = null;
                 if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-                {
+                        && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    ActivityCompat#requestPermissions
                     // here to request the missing permissions, and then overriding
@@ -204,29 +102,63 @@ public class MapFragment extends Fragment implements MapContract.View {
                     // to handle the case where the user grants the permission. See the documentation
                     // for ActivityCompat#requestPermissions for more details.
                     return;
-                }
-                else
-                {
+                } else {
                     mGoogleMap.setMyLocationEnabled(true);
 
-                    if (positions != null)
-                    {
-                        int number = 0;
-                        for (LatLng position : positions)
-                        {
-                            mGoogleMap.addMarker(new MarkerOptions().position(position).title("Number " + number).snippet("Number " + number));
-                            cameraPosition = new CameraPosition.Builder().target(position).zoom(5).build();
-                            number++;
-                        }
-                    }
-                    else
-                    {
+                    List<LatLng> positionsFixed = new ArrayList<>();
+                    positionsFixed.add(new LatLng(51.830208, 21.803741));
+                    positionsFixed.add(new LatLng(52.830208, 21.803741));
+                    positionsFixed.add(new LatLng(53.830208, 21.803741));
+                    positionsFixed.add(new LatLng(54.830208, 21.803741));
+                    positionsFixed.add(new LatLng(55.830208, 21.803741));
+                    positionsFixed.add(new LatLng(56.830208, 21.803741));
+                    positionsFixed.add(new LatLng(57.830208, 21.803741));
+                    positionsFixed.add(new LatLng(58.830208, 21.803741));
+                    positionsFixed.add(new LatLng(59.830208, 21.803741));
+                    positionsFixed.add(new LatLng(60.830208, 21.803741));
+                    positionsFixed.add(new LatLng(61.830208, 21.803741));
+                    positionsFixed.add(new LatLng(62.830208, 21.803741));
+                    positionsFixed.add(new LatLng(63.830208, 21.803741));
+                    positionsFixed.add(new LatLng(64.830208, 21.803741));
+                    positionsFixed.add(new LatLng(64.830208, 22.803741));
+                    positionsFixed.add(new LatLng(64.830208, 23.803741));
+                    positionsFixed.add(new LatLng(64.830208, 24.803741));
+                    positionsFixed.add(new LatLng(64.830208, 25.803741));
+                    positionsFixed.add(new LatLng(64.830208, 26.803741));
+                    positionsFixed.add(new LatLng(64.830208, 27.803741));
+                    positionsFixed.add(new LatLng(64.830208, 28.803741));
+                    positionsFixed.add(new LatLng(64.830208, 29.803741));
+                    positionsFixed.add(new LatLng(64.830208, 30.803741));
+                    positionsFixed.add(new LatLng(64.830208, 31.803741));
+                    positionsFixed.add(new LatLng(64.830208, 32.803741));
+                    positionsFixed.add(new LatLng(64.830208, 33.803741));
 
-                    }
+                    int colorId = Color.argb(150, 50, 50, 255);
+
+                    PolylineOptions polylineOptions = new PolylineOptions().addAll(positions);
+                    polylineOptions.color(colorId);
+
+                    mGoogleMap.addPolyline(polylineOptions);
+                    //cameraPosition = new CameraPosition.Builder().target(position).zoom(8).build();
                     //CameraPosition cameraPosition = new CameraPosition.Builder().target(position).zoom(12).build();
-                    mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    //mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
             }
         });
     }
+
+    @Override
+    public void showMapEmpty() {
+        showMessage("Session has no points to show on a map...");
+    }
+
+    @Override
+    public void showMapLoaded() {
+        showMessage("Map loaded successfully");
+    }
+
+    private void showMessage(String message) {
+        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
+    }
 }
+

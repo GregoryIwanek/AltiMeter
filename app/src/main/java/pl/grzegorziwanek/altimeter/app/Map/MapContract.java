@@ -1,7 +1,10 @@
 package pl.grzegorziwanek.altimeter.app.Map;
 
+import android.location.Location;
+
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pl.grzegorziwanek.altimeter.app.BasePresenter;
@@ -16,6 +19,10 @@ interface MapContract {
     interface View extends BaseView<Presenter> {
 
         void updateMap(List<LatLng> positions);
+
+        void showMapEmpty();
+
+        void showMapLoaded();
     }
 
     interface Presenter extends BasePresenter {

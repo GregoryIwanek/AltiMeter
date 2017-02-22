@@ -6,8 +6,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
-import pl.grzegorziwanek.altimeter.app.model.database.source.SessionDataSource;
-import pl.grzegorziwanek.altimeter.app.model.database.source.SessionRepository;
+import pl.grzegorziwanek.altimeter.app.data.database.source.SessionDataSource;
+import pl.grzegorziwanek.altimeter.app.data.database.source.SessionRepository;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -40,8 +40,21 @@ public class MapPresenter implements MapContract.Presenter {
         mSessionRepository.getMapData(mId, new SessionDataSource.LoadMapDataCallback() {
             @Override
             public void onMapDataLoaded(List<LatLng> positions) {
-                mMapView.updateMap(positions);
+                checkMapData(positions);
             }
         });
+    }
+
+    private void checkMapData(List<LatLng> positions) {
+        if (isMapDataEmpty(positions)) {
+            mMapView.showMapEmpty();
+        } else {
+            mMapView.updateMap(positions);
+            mMapView.showMapLoaded();
+        }
+    }
+
+    private boolean isMapDataEmpty(List<LatLng> positions) {
+        return positions.isEmpty();
     }
 }
