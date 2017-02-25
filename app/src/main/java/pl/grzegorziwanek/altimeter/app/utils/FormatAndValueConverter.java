@@ -1,11 +1,19 @@
 package pl.grzegorziwanek.altimeter.app.utils;
 
 import android.location.Location;
+import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Xml;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import pl.grzegorziwanek.altimeter.app.data.location.services.helpers.xmlparser.XmlAirportValues;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -285,17 +293,79 @@ public class FormatAndValueConverter {
     }
 
     /**
+     * Gets string of symbols of airports in proximity.
+     * @param airportsList list of values of airports in proximity
+     * @return returns string with id symbols of airports from list
+     * e.g. "EPLB EPWA EPMO "
+     */
+    public static String getAirportsSymbolString(List<XmlAirportValues> airportsList) {
+        String symbolStr = "";
+        if (!airportsList.isEmpty()) {
+            for (XmlAirportValues values : airportsList) {
+                symbolStr += values.getId() + " ";
+            }
+        }
+        return symbolStr;
+    }
+
+    /**
+     * Set airports distance values. Distance is measured as distance between user's position (or any
+     * given position) and airport.
+     * @param airportsList list of airports to calculate distance between them and current user position
+     * @param lat latitude of user's position
+     * @param lon longitude of user's position
+     */
+    public static void setAirportsDistance(List<XmlAirportValues> airportsList, double lat, double lon) {
+        for (XmlAirportValues values : airportsList) {
+            float [] results = new float[1];
+            Location.distanceBetween(values.getLatitude(), values.getLongitude(),
+                    lat, lon, results);
+            values.setDistance(results[0]);
+        }
+    }
+
+    /**
+     * Sort list of closest airports by distance to user. Values increments from lowest index to highest.
+     * @param airportsList list of airports to sort by distance to user
+     */
+    public static void sortAirportsByDistance(List<XmlAirportValues> airportsList) {
+        Collections.sort(airportsList, new Comparator<XmlAirportValues>() {
+            @Override
+            public int compare(XmlAirportValues airport1, XmlAirportValues airport2) {
+                if (airport1.getDistance() > airport2.getDistance()) {
+                    return 1;
+                }
+                if (airport1.getDistance() < airport2.getDistance()) {
+                    return -1;
+                }
+                return 0;
+            }
+        });
+    }
+
+    /**
+     * Get pressure of closest airport from sorted list. Checks if there is pressure value.
+     * @param airportsList list of the airports to fetch pressure from.
+     * @return returns pressure of closest airport (goes from lowest index to highest if
+     * there is no value of pressure), returns 0 if there is no pressure value at all.
+     */
+    public static float getClosestAirportPressure(List<XmlAirportValues> airportsList) {
+        double pressure = 0;
+        for (XmlAirportValues values : airportsList) {
+            if (values.getPressureInHg() != 0) {
+                pressure = values.getPressureInHg();
+                break;
+            }
+        }
+        return (float) pressure;
+    }
+    /**
      * Converts inch of mercury [inHg] pressure to hectopascal [hPa] value (used in Android)
      * @param hgPressure at the station data is coming from;
-     * @param temperature of the location data is coming from; if no temperature is available,
-     * standard temperature is used instead [0°C]
      * @return pressure value converted to hectopascals
      */
-    //// TODO: 20.02.2017 -> finish it when information about impact of temperature on pressure value is collected and explained
-    public static float convertHgPressureToHPa(@NonNull Double hgPressure, Double temperature) {
-        checkNotNull(hgPressure);
-
-        return 10;
+    public static float convertHgPressureToHPa(float hgPressure) {
+        return (float) (hgPressure*Constants.MULTIPLIER_HPA);
     }
 
     /**

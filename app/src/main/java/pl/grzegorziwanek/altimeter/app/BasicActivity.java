@@ -19,9 +19,9 @@ import android.view.MenuItem;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.grzegorziwanek.altimeter.app.about.AboutFragment;
-import pl.grzegorziwanek.altimeter.app.altitudegraph.SessionActivity;
-import pl.grzegorziwanek.altimeter.app.Map.MapActivity;
-import pl.grzegorziwanek.altimeter.app.newgraph.AddNewGraphActivity;
+import pl.grzegorziwanek.altimeter.app.mainview.SessionActivity;
+import pl.grzegorziwanek.altimeter.app.mapp.MapActivity;
+import pl.grzegorziwanek.altimeter.app.recordingsession.RecordingSessionActivity;
 import pl.grzegorziwanek.altimeter.app.settings.SettingsFragment;
 import pl.grzegorziwanek.altimeter.app.statistics.StatisticsActivity;
 
@@ -76,7 +76,6 @@ public abstract class BasicActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //TODO to finish later
     private void setupDrawerContent(final NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -87,7 +86,7 @@ public abstract class BasicActivity extends AppCompatActivity {
                                 navigateToActivity(SessionActivity.class);
                                 break;
                             case R.id.new_graph_navigation_menu_item:
-                                navigateToActivity(AddNewGraphActivity.class);
+                                navigateToActivity(RecordingSessionActivity.class);
                                 break;
                             case R.id.map_navigation_menu_item:
                                 navigateToActivity(MapActivity.class);

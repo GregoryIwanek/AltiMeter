@@ -30,8 +30,8 @@ public class CombinedLocationModel {
             }
         }
         if (NetworkManager.isNetworkEnabled()) {
-            if (GoogleMapAltitudeModel.getAltitude() != 0) {
-                altitude += GoogleMapAltitudeModel.getAltitude();
+            if (NetworkAltitudeModel.getAltitude() != 0) {
+                altitude += NetworkAltitudeModel.getAltitude();
                 count++;
             }
         }
@@ -50,6 +50,10 @@ public class CombinedLocationModel {
 
     public static double getCombinedAltitude() {
         return mCombinedAltitude;
+    }
+
+    public static void setUpdateTime(long updateTime) {
+        mUpdateTime = updateTime;
     }
     
     public static long getUpdateTime() {

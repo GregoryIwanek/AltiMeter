@@ -12,20 +12,19 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_terrain_black_24dp"
+        android:icon="@drawable/ic_logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".altitudegraph.SessionActivity">
+            android:name=".mainview.SessionActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".newgraph.AddNewGraphActivity"/>
-        <activity android:name=".WelcomeScreen"/>
-        <activity android:name=".Map.MapActivity"/>
+        <activity android:name=".recordingsession.RecordingSessionActivity"/>
+        <activity android:name=".mapp.MapActivity"/>
         <activity android:name=".statistics.StatisticsActivity"/>
         <activity android:name=".details.DetailsActivity"
             android:windowSoftInputMode="adjustNothing"/>
@@ -33,10 +32,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDz8OSO03MnSdoE-0FFN9sZaIyFRlpf79Y" />
-        <service
-            android:name=".AddressIntentServicee"
-            android:exported="false"
-            android:enabled="true"/>
         <service
             android:name=".data.location.services.helpers.AddressService"
             android:exported="false"

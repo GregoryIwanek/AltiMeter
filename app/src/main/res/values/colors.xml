@@ -28,4 +28,6 @@
     <color name="colorPalm">#1B7B34</color>
     <color name="colorSilk">#DCD0C0</color>
     <color name="colorCharcoal">#373737</color>
+
+    <color name="colorTransparent">#00000000</color>
 </resources>

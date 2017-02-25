@@ -19,7 +19,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 
 import java.io.IOException;
 
-import pl.grzegorziwanek.altimeter.app.data.Constants;
+import pl.grzegorziwanek.altimeter.app.utils.Constants;
 import pl.grzegorziwanek.altimeter.app.data.location.LocationResponse;
 import pl.grzegorziwanek.altimeter.app.utils.EarthGravitationalModel;
 
@@ -35,7 +35,6 @@ public class GpsLocationListener implements GoogleApiClient.ConnectionCallbacks,
     private final Context mContext;
     private GoogleApiClient mGoogleApiClient;
     private EarthGravitationalModel mGravitationModel;
-    private int mCount = 0;
     private boolean isFastLocationRequest = false;
 
     private GpsLocationListener(Context context, LocationChangedCallback callback, GpsElevationCallback gpsCallback) {

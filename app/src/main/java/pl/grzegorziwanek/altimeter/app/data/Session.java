@@ -12,7 +12,6 @@ import java.util.UUID;
  */
 
 public class Session {
-
     private boolean mCompleted = false;
     private boolean mLocked = false;
     private String mId;
@@ -34,8 +33,6 @@ public class Session {
     private Location mCurrLocation = null;
     private ArrayList<Location> mLocationList = null;
     private ArrayList<GraphPoint> mGraphList = null;
-
-    private Double mBarometerAlt = null;
 
     /**
      * Use this constructor to create new recording session. Unique ID generated automatically.
@@ -60,35 +57,21 @@ public class Session {
         mGraphList = new ArrayList<>();
     }
 
-    public boolean isEmpty() {
-        return mLocationList.isEmpty();
-    }
-
-    public void appendOneLocationPoint(Location location) {
+    public void appendLocationPoint(Location location) {
         mLocationList.add(location);
     }
 
-    public void appendManyLocationPoints(ArrayList<Location> locations) {
-        for (Location l : locations) {
-            mLocationList.add(l);
-        }
+    public ArrayList<Location> getLocationList() {
+        return mLocationList;
     }
 
-    public void removeOneLocationPoint(int id) {
-        mLocationList.remove(id);
+    public void appendGraphPoint(long xValue, double yValue) {
+        GraphPoint point = new GraphPoint(xValue, yValue);
+        mGraphList.add(point);
     }
 
-    public void removeManyLocationPoints(int fromId, int toId) {
-        if (fromId >= 0 && toId <= mLocationList.size()-1) {
-            removePoints(fromId, toId);
-        }
-        //TODO-> add toast for "else": wrong given range, correct input id data
-    }
-
-    private void removePoints(int fromId, int toId) {
-        for (int i=toId; i>fromId; i--) {
-            mLocationList.remove(i);
-        }
+    public ArrayList<GraphPoint> getGraphList() {
+        return mGraphList;
     }
 
     public String getId() {
@@ -153,10 +136,6 @@ public class Session {
 
     public void setElevationOnList(Double elevation) {
         mLocationList.get(mLocationList.size()-1).setAltitude(elevation);
-    }
-
-    public ArrayList<Location> getLocationList() {
-        return mLocationList;
     }
 
     public Location getLastLocation() {
@@ -239,14 +218,6 @@ public class Session {
         mLocked = locked;
     }
 
-    public Double getBarometerAlt() {
-        return mBarometerAlt;
-    }
-
-    public void setBarometerAlt(Double barometerAlt) {
-        mBarometerAlt = barometerAlt;
-    }
-
     public void clearData() {
         mCompleted = false;
         mTitle = "TITLE";
@@ -266,28 +237,6 @@ public class Session {
         mLastLocation = null;
         mCurrLocation = null;
         mLocationList.clear();
-    }
-
-    public void appendGraphPoint(double xValue, double yValue) {
-        GraphPoint point = new GraphPoint(xValue, yValue);
-        mGraphList.add(point);
-    }
-
-    private class GraphPoint {
-        private double xTime;
-        private double yAltitude;
-
-        GraphPoint(double xValue, double yValue) {
-            xTime = xValue;
-            yAltitude = yValue;
-        }
-
-        public double getXValue() {
-            return xTime;
-        }
-
-        public double getYValue() {
-            return yAltitude;
-        }
+        mGraphList.clear();
     }
 }

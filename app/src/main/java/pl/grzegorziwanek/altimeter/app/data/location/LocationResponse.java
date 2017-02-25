@@ -12,8 +12,6 @@ public interface LocationResponse {
 
     interface LocationChangedCallback {
 
-        void onNewLocationFound(Location location, boolean isHeightEmpty);
-
         void onInitialLocationIdentified(Location location);
     }
 
@@ -25,6 +23,8 @@ public interface LocationResponse {
     interface AirportsCallback {
 
         void onNearestAirportsFound();
+
+        void onAirportPressureFound();
     }
 
     interface AddressFoundCallback {

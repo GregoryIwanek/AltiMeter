@@ -1,13 +1,14 @@
-package pl.grzegorziwanek.altimeter.app.newgraph;
+package pl.grzegorziwanek.altimeter.app.recordingsession;
 
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -18,18 +19,19 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import pl.grzegorziwanek.altimeter.app.Map.MapActivity;
+import pl.grzegorziwanek.altimeter.app.mapp.MapActivity;
 import pl.grzegorziwanek.altimeter.app.R;
-import pl.grzegorziwanek.altimeter.app.utils.NoticeDialogFragment;
+import pl.grzegorziwanek.altimeter.app.data.GraphPoint;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static pl.grzegorziwanek.altimeter.app.utils.NoticeDialogFragment.*;
 
 /**
  * Created by Grzegorz Iwanek on 31.01.2017. That's it.
  */
 
-public class AddNewGraphFragment extends Fragment implements AddNewGraphContract.View,
-        NoticeDialogFragment.NoticeDialogListener {
+public class RecordingSessionFragment extends Fragment implements RecordingSessionContract.View,
+        NoticeDialogFragmentV4.NoticeDialogListener {
 
     @BindView(R.id.current_elevation_label) TextView mCurrElevationTextView;
     @BindView(R.id.current_latitude_value) TextView mCurrLatitudeTextView;
@@ -50,12 +52,12 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
     @BindView(R.id.network_value_label) TextView mNetworkValueTextView;
     @BindView(R.id.barometer_value_label) TextView mBarometerValueTextView;
 
-    private AddNewGraphContract.Presenter mPresenter;
+    private RecordingSessionContract.Presenter mPresenter;
 
-    public AddNewGraphFragment() {}
+    public RecordingSessionFragment() {}
 
-    public static AddNewGraphFragment newInstance() {
-        return new AddNewGraphFragment();
+    public static RecordingSessionFragment newInstance() {
+        return new RecordingSessionFragment();
     }
 
     @Override
@@ -71,12 +73,18 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
         ButterKnife.bind(this, view);
         initiateButtonsTags();
 
+        setHasOptionsMenu(true);
         return view;
     }
 
     @Override
-    public void setPresenter(@NonNull AddNewGraphContract.Presenter presenter) {
+    public void setPresenter(@NonNull RecordingSessionContract.Presenter presenter) {
         mPresenter = checkNotNull(presenter);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_share_menu, menu);
     }
 
     @OnClick(R.id.pause_button)
@@ -184,7 +192,7 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
     private void showUpDialog(String title) {
         Bundle args = new Bundle();
         args.putString("title", title);
-        DialogFragment ndf = new NoticeDialogFragment();
+        DialogFragment ndf = new NoticeDialogFragmentV4();
         ndf.setArguments(args);
         ndf.show(getChildFragmentManager(), "NoticeDialogFragment");
     }
@@ -333,13 +341,12 @@ public class AddNewGraphFragment extends Fragment implements AddNewGraphContract
     }
 
     @Override
-    public void drawGraph(ArrayList<Location> locations) {
-        mGraphViewWidget.deliverGraph(locations);
+    public void drawGraph(ArrayList<GraphPoint> graphPoints) {
+        mGraphViewWidget.deliverGraph(graphPoints);
     }
 
     @Override
     public void resetGraph() {
-        mPresenter.pauseLocationRecording();
         mGraphViewWidget.clearData();
     }
 }

@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.data;
+package pl.grzegorziwanek.altimeter.app.utils;
 
 /**
  * Created by Grzegorz Iwanek on 30.11.2016.
@@ -40,9 +40,9 @@ public final class Constants {
     public static final String AVIATION_REQUEST_TYPE = "requestType";
     public static final String AVIATION_FORMAT = "format";
     public static final String AVIATION_RADIAL_DISTANCE = "radialDistance";
-    public static final String AVIATION_MOST_RECENT = "mostRecent";
     public static final String AVIATION_HOURS_PERIOD = "hoursBeforeNow";
     public static final String AVIATION_STATION = "stationString";
+    public static final String AVIATION_MOST_RECENT_FOR_EACH = "mostRecentForEachStation";
 
     //Shared preferences default (TODO-> delete?)
     public static final int ALTITUDE_MIN = 20000;
@@ -60,9 +60,10 @@ public final class Constants {
     public static final int GPS_INTERVAL_VALUE = 20000;
     public static final int GPS_FASTEST_INTERVAL_VALUE = 10000;
     public static final int ONE_HOUR = 3600000;
+    public static final int HALF_HOUR = 1800000;
 
     // hectopascals <-> mercurial pressure multiplier
-    public static final double MULTIPLIER_HPA = 33.8638866667;
+    public static final double MULTIPLIER_HPA = 33.8638;
 }
 
 //String APPID_KEY = "AIzaSyDz8OSO03MnSdoE-0FFN9sZaIyFRlpf79Y";

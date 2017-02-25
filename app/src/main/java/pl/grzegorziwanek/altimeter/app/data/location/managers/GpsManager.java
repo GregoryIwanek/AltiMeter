@@ -7,7 +7,7 @@ package pl.grzegorziwanek.altimeter.app.data.location.managers;
 public class GpsManager {
     private static GpsManager gpsManager;
     private static boolean mGpsEnabled;
-    private static long mMeasureTime;
+    private static long mMeasureTime = 0;
 
     public static GpsManager getInstance() {
         if (gpsManager == null) {
@@ -30,6 +30,11 @@ public class GpsManager {
 
     public static void setMeasureTime(long measureTime) {
         mMeasureTime = measureTime;
+    }
+
+    public static void resetData() {
+        mGpsEnabled = false;
+        mMeasureTime = 0;
     }
 }
 

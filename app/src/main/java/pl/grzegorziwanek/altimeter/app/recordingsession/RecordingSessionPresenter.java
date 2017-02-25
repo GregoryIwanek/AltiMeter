@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.newgraph;
+package pl.grzegorziwanek.altimeter.app.recordingsession;
 
 import android.support.annotation.NonNull;
 
@@ -18,21 +18,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Created by Grzegorz Iwanek on 31.01.2017.
  */
 
-public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
+public class RecordingSessionPresenter implements RecordingSessionContract.Presenter {
 
     private final SessionRepository mSessionRepository;
-    private final AddNewGraphContract.View mAddNewGraphView;
+    private final RecordingSessionContract.View mRecordingSessionView;
     private final LocationUpdateManager mLocationUpdateManager;
     private LocationResponse.FullInfoCallback callbackFullInfo;
     private static Session mSession;
 
-    public AddNewGraphPresenter(@NonNull SessionRepository sessionSource,
-                                @NonNull LocationUpdateManager locationUpdateManager,
-                                @NonNull AddNewGraphContract.View addNewGraphView) {
+    public RecordingSessionPresenter(@NonNull SessionRepository sessionSource,
+                                     @NonNull LocationUpdateManager locationUpdateManager,
+                                     @NonNull RecordingSessionContract.View addNewGraphView) {
         mSessionRepository = checkNotNull(sessionSource);
         mLocationUpdateManager = checkNotNull(locationUpdateManager);
-        mAddNewGraphView = checkNotNull(addNewGraphView);
-        mAddNewGraphView.setPresenter(this);
+        mRecordingSessionView = checkNotNull(addNewGraphView);
+        mRecordingSessionView.setPresenter(this);
     }
 
     @Override
@@ -56,12 +56,12 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
     @Override
     public void openSessionMap() {
         String id = mSession.getId();
-        mAddNewGraphView.showSessionMap(id);
+        mRecordingSessionView.showSessionMap(id);
     }
 
     @Override
     public void callStartLocationRecording() {
-        mAddNewGraphView.checkDataSourceOpen();
+        mRecordingSessionView.checkDataSourceOpen();
     }
 
     @Override
@@ -82,53 +82,57 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
             //TODO-> merge this into one system of location management
             @Override
             public void onBarometerInfoAcquired(String barometerAlt) {
-                mAddNewGraphView.setBarometerTextView(barometerAlt);
+                mRecordingSessionView.setBarometerTextView(barometerAlt);
             }
 
             @Override
             public void onGpsInfoAcquired(String gpsAlt) {
-                mAddNewGraphView.setGpsTextView(gpsAlt);
+                mRecordingSessionView.setGpsTextView(gpsAlt);
             }
 
             @Override
             public void onNetworkInfoAcquired(String networkAlt) {
-                mAddNewGraphView.setNetworkTextView(networkAlt);
+                mRecordingSessionView.setNetworkTextView(networkAlt);
             }
         };
 
-        mAddNewGraphView.showRecordingData();
+        mRecordingSessionView.showRecordingData();
         mLocationUpdateManager.startListenForLocations(callbackFullInfo);
     }
 
     private void updateView(Session session) {
-        mAddNewGraphView.setAddressTextView(session.getAddress());
-        mAddNewGraphView.setElevationTextView(session.getCurrentElevation().toString());
-        mAddNewGraphView.setDistanceTextView(session.getDistanceStr());
-        mAddNewGraphView.setMinHeightTextView(session.getMinHeightStr());
-        mAddNewGraphView.setMaxHeightTextView(session.getMaxHeightStr());
-        mAddNewGraphView.setLatTextView(session.getLatitudeStr());
-        mAddNewGraphView.setLongTextView(session.getLongitudeStr());
-        mAddNewGraphView.drawGraph(session.getLocationList());
+        mRecordingSessionView.setAddressTextView(session.getAddress());
+
+        mRecordingSessionView.setElevationTextView(session.getCurrentElevation().toString());
+
+        mRecordingSessionView.setDistanceTextView(session.getDistanceStr());
+
+        mRecordingSessionView.setMinHeightTextView(session.getMinHeightStr());
+        mRecordingSessionView.setMaxHeightTextView(session.getMaxHeightStr());
+
+        mRecordingSessionView.setLatTextView(session.getLatitudeStr());
+        mRecordingSessionView.setLongTextView(session.getLongitudeStr());
+
+        mRecordingSessionView.drawGraph(session.getGraphList());
 
         mSessionRepository.updateSessionData(session);
     }
 
     private void updateAfterCleared() {
-        mAddNewGraphView.setAddressTextView("...");
-        mAddNewGraphView.setElevationTextView("...");
-        mAddNewGraphView.setDistanceTextView("...");
-        mAddNewGraphView.setMinHeightTextView("...");
-        mAddNewGraphView.setMaxHeightTextView("...");
-        mAddNewGraphView.setLatTextView("...");
-        mAddNewGraphView.setLongTextView("...");
+        mRecordingSessionView.setAddressTextView("...");
+        mRecordingSessionView.setElevationTextView("...");
+        mRecordingSessionView.setDistanceTextView("...");
+        mRecordingSessionView.setMinHeightTextView("...");
+        mRecordingSessionView.setMaxHeightTextView("...");
+        mRecordingSessionView.setLatTextView("...");
+        mRecordingSessionView.setLongTextView("...");
     }
 
     @Override
     public void pauseLocationRecording() {
         int tag = R.drawable.ic_play_arrow_black_24dp;
         updateButton(tag);
-
-        mAddNewGraphView.showRecordingPaused();
+        mRecordingSessionView.showRecordingPaused();
         mLocationUpdateManager.stopListenForLocations(false);
     }
 
@@ -184,18 +188,26 @@ public class AddNewGraphPresenter implements AddNewGraphContract.Presenter {
         int tag = R.drawable.ic_play_arrow_black_24dp;
         updateButton(tag);
 
-        mAddNewGraphView.showSessionLocked();
+        mRecordingSessionView.showSessionLocked();
         mLocationUpdateManager.stopListenForLocations(true);
     }
 
     private void updateButton(int drawableId) {
-        mAddNewGraphView.setButtonTagAndPicture(drawableId);
+        mRecordingSessionView.setButtonTagAndPicture(drawableId);
     }
 
     @Override
     public void resetSessionData() {
+        pauseLocationRecording();
+        disableServices();
         mSessionRepository.clearSessionData(mSession.getId());
         mLocationUpdateManager.clearSessionData();
-        mAddNewGraphView.resetGraph();
+        mRecordingSessionView.resetGraph();
+    }
+
+    private void disableServices() {
+        disableGps();
+        disableNetwork();
+        disableBarometer();
     }
 }

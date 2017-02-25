@@ -7,7 +7,7 @@ package pl.grzegorziwanek.altimeter.app.data.location.managers;
 public class NetworkManager {
     private static NetworkManager mNetworkManager;
     private static boolean mNetworkEnabled;
-    private static long mMeasureTime;
+    private static long mMeasureTime = 0;
 
     public static NetworkManager getInstance() {
         if (mNetworkManager == null) {
@@ -30,5 +30,10 @@ public class NetworkManager {
 
     public static void setMeasureTime(long measureTime) {
         mMeasureTime = measureTime;
+    }
+
+    public static void resetData() {
+        mNetworkEnabled = false;
+        mMeasureTime = 0;
     }
 }

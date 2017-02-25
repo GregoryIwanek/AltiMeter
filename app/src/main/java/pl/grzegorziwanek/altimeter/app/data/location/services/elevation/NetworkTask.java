@@ -17,7 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 
-import pl.grzegorziwanek.altimeter.app.data.Constants;
+import pl.grzegorziwanek.altimeter.app.utils.Constants;
 import pl.grzegorziwanek.altimeter.app.data.location.LocationResponse;
 
 /**
@@ -25,13 +25,13 @@ import pl.grzegorziwanek.altimeter.app.data.location.LocationResponse;
  *ASyncTask <params, progress, result> -> params: given entry data to work on; progress: data to show progress; result: result of background execution
  */
 
-public class GoogleMapsTask extends AsyncTask<Void, Void, Void> {
-    private final String LOG_TAG = GoogleMapsTask.class.getSimpleName();
+public class NetworkTask extends AsyncTask<Void, Void, Void> {
+    private final String LOG_TAG = NetworkTask.class.getSimpleName();
     private LocationResponse.NetworkElevationCallback mCallback;
     private String mLocationsStr;
     private Double mCurrentEleValue;
 
-    public GoogleMapsTask(LocationResponse.NetworkElevationCallback callback) {
+    public NetworkTask(LocationResponse.NetworkElevationCallback callback) {
         mCallback = callback;
     }
 
@@ -120,7 +120,6 @@ public class GoogleMapsTask extends AsyncTask<Void, Void, Void> {
         final String OMW_LATITUDE = "lat";
         final String OMW_LONGITUDE = "lng";
         final String OMW_RESOLUTION = "resolution";
-        final String OMW_STATUS = "status";
 
         //create Json object and array with data, assign given Json string parameter to object
         JSONObject altitudeJson = new JSONObject(altitudeJsonStr);

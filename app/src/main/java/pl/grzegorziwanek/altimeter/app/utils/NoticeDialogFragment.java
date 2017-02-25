@@ -1,5 +1,6 @@
 package pl.grzegorziwanek.altimeter.app.utils;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,63 +9,94 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
-import pl.grzegorziwanek.altimeter.app.data.Constants;
-
 /**
  * Created by Grzegorz Iwanek on 10.02.2017.
  */
 
-public class NoticeDialogFragment extends DialogFragment {
+public class NoticeDialogFragment {
 
-    private String mTitle;
-    private String mMessage;
-    private NoticeDialogListener mListener;
+    /**
+     * Notice dialog to use with fragments "import android.support.v4.app.Fragment"
+     */
+    public static class NoticeDialogFragmentV4 extends DialogFragment {
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+        private String mTitle;
+        private String mMessage;
+        private NoticeDialogListener mListener;
 
-        try {
-            mListener = (NoticeDialogListener) getParentFragment();
-        } catch (ClassCastException e) {
-            e.printStackTrace();
+        @Override
+        public void onAttach(Context context) {
+            super.onAttach(context);
+
+            try {
+                mListener = (NoticeDialogListener) getParentFragment();
+            } catch (ClassCastException e) {
+                e.printStackTrace();
+            }
+
+            getBundleArguments();
         }
 
-        getBundleArguments();
+        private void getBundleArguments() {
+            Bundle args = getArguments();
+            mTitle = args.getString("title");
+        }
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(mTitle)
+                    .setPositiveButton(Constants.POSITIVE, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            setCallbackMessage(mTitle);
+                            mListener.onDialogPositiveClick(mMessage);
+                        }
+                    })
+                    .setNegativeButton(Constants.CANCEL, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //nothing happens, action canceled
+                        }
+                    });
+            return builder.create();
+        }
+
+        private void setCallbackMessage(String message) {
+            mMessage = message;
+        }
+
+        public interface NoticeDialogListener {
+
+            void onDialogPositiveClick(String callbackCode);
+        }
     }
 
-    private void getBundleArguments() {
-        Bundle args = getArguments();
-        mTitle = args.getString("title");
-    }
+    /**
+     * Notice Dialog for use with fragments "import android.app.Fragment"
+     */
+    public static class NoticeDialogFragmentApp extends android.app.DialogFragment {
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(mTitle)
-                .setPositiveButton(Constants.POSITIVE, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        setCallbackMessage(mTitle);
-                        mListener.onDialogPositiveClick(mMessage);
-                    }
-                })
-                .setNegativeButton(Constants.CANCEL, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //nothing happens, action canceled
-                    }
-                });
-        return builder.create();
-    }
+        private String mTitle;
 
-    public void setCallbackMessage(String message) {
-        mMessage = message;
-    }
+        @Override
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
+            getBundleArguments();
+        }
 
-    public interface NoticeDialogListener {
+        private void getBundleArguments() {
+            Bundle args = getArguments();
+            mTitle = args.getString("title");
+        }
 
-        void onDialogPositiveClick(String callbackCode);
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(mTitle);
+            return builder.create();
+        }
     }
 }

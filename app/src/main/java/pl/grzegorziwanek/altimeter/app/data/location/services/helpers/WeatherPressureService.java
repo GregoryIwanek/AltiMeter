@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import pl.grzegorziwanek.altimeter.app.data.Constants;
+import pl.grzegorziwanek.altimeter.app.utils.Constants;
 
 /**
  * Created by Grzegorz Iwanek on 18.02.2017.

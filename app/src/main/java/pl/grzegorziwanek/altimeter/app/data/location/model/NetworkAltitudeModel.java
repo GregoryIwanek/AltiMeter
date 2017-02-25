@@ -4,16 +4,16 @@ package pl.grzegorziwanek.altimeter.app.data.location.model;
  * Created by Grzegorz Iwanek on 21.02.2017.
  */
 
-public class GoogleMapAltitudeModel {
-    private static GoogleMapAltitudeModel googleMapAltitudeModel;
+public class NetworkAltitudeModel {
+    private static NetworkAltitudeModel networkAltitudeModel;
     private static double mAltitude = 0;
     private static long mMeasureTime;
 
-    public static GoogleMapAltitudeModel getInstance() {
-        if (googleMapAltitudeModel == null) {
-            googleMapAltitudeModel = new GoogleMapAltitudeModel();
+    public static NetworkAltitudeModel getInstance() {
+        if (networkAltitudeModel == null) {
+            networkAltitudeModel = new NetworkAltitudeModel();
         }
-        return googleMapAltitudeModel;
+        return networkAltitudeModel;
     }
 
     public static double getAltitude() {

@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.altitudegraph;
+package pl.grzegorziwanek.altimeter.app.mainview;
 
 import android.content.SharedPreferences;
 import android.net.Uri;

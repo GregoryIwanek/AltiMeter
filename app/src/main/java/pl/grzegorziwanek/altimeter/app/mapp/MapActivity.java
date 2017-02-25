@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.newgraph;
+package pl.grzegorziwanek.altimeter.app.mapp;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,46 +12,46 @@ import pl.grzegorziwanek.altimeter.app.BasicActivity;
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.data.database.source.SessionRepository;
 import pl.grzegorziwanek.altimeter.app.data.database.source.local.SessionLocalDataSource;
-import pl.grzegorziwanek.altimeter.app.data.location.LocationUpdateManager;
 import pl.grzegorziwanek.altimeter.app.utils.ActivityUtils;
 
 /**
  * Created by Grzegorz Iwanek on 21.01.2017.
  */
 
-public class AddNewGraphActivity extends BasicActivity {
+public class MapActivity extends BasicActivity {
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view) NavigationView mNavigationView;
 
-    private AddNewGraphFragment mAddNewGraphFragment;
+    private MapFragment mMapFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_graph);
+        setContentView(R.layout.activity_map);
 
         super.initiateUI();
-        ButterKnife.bind(this);
-        setAddNewGraphFragment();
+        setMapFragment();
         setPresenter();
+        ButterKnife.bind(this);
     }
 
-    private void setAddNewGraphFragment() {
-        mAddNewGraphFragment =
-                (AddNewGraphFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+    private void setMapFragment() {
+        mMapFragment =
+                (MapFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
 
-        if (mAddNewGraphFragment == null) {
-            mAddNewGraphFragment = AddNewGraphFragment.newInstance();
+        if (mMapFragment == null) {
+            mMapFragment = MapFragment.newInstance();
             ActivityUtils.addFragmentToActivity(
-                    getSupportFragmentManager(), mAddNewGraphFragment, R.id.contentFrame);
+                    getSupportFragmentManager(), mMapFragment, R.id.contentFrame);
         }
     }
 
     private void setPresenter() {
-        AddNewGraphPresenter mAddNewGraphPresenter = new AddNewGraphPresenter(
+        String id = getIntent().getStringExtra("sessionId");
+        MapPresenter mMapPresenter = new MapPresenter(id,
                 SessionRepository.getInstance(SessionLocalDataSource.getInstance(getApplicationContext())),
-                LocationUpdateManager.getInstance(getApplicationContext()), mAddNewGraphFragment);
+                mMapFragment);
     }
 }

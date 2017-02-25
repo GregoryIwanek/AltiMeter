@@ -50,4 +50,22 @@
     <string name="statistics">Statistics</string>
     <string name="settings">Settings</string>
     <string name="about">About</string>
+    <string name="net">net</string>
+    <string name="hpa">hPa</string>
+    <string name="gps">gps</string>
+    <string name="about_menu_description">Navigation menu button</string>
+    <string name="about_title">Title</string>
+    <string name="about_share_button">Share menu button.</string>
+    <string name="about_address_label">Address of the last checked location</string>
+    <string name="about_current_elevation">Elevation of the last checked location</string>
+    <string name="about_recording_buttons">Session\'s control buttons</string>
+    <string name="about_graph">Graph presenting recorded elevation in time</string>
+    <string name="about_gps_button">Gps button. Allow to use GPS to get location</string>
+    <string name="about_network_button">Network button. Allow to use network to get very accurate elevation</string>
+    <string name="about_pressure_button">Barometer button. Allow to use barometer sensor to evaluate altitude</string>
+    <string name="about_min_height">Minimum height recorded during a session</string>
+    <string name="about_distance">Distance travelled during a session</string>
+    <string name="about_max_height">Maximum height recorded during a session</string>
+    <string name="about_latitude">Latitude of the last checked location</string>
+    <string name="about_longitude">Longitude of the last checked location</string>
 </resources>

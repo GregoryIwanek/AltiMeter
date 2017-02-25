@@ -1,11 +1,8 @@
-package pl.grzegorziwanek.altimeter.app;
+package pl.grzegorziwanek.altimeter.app.recordingsession;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.location.Location;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
@@ -14,38 +11,42 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.ArrayList;
 
-/**
- * Created by Grzegorz Iwanek on 01.12.2016.
- * Consist extension of external library class GraphView (http://www.android-graphview.org/) and required customized methods
- */
-public class GraphViewDrawTask extends GraphView {
+import pl.grzegorziwanek.altimeter.app.data.GraphPoint;
 
-    private final LineGraphSeries<DataPoint> mDiagramSeries = new LineGraphSeries<>();
+/**
+ *  Created by Grzegorz Iwanek on 01.12.2016.
+ *  Consist extension of external library class GraphView (http://www.android-graphview.org/) and required customized methods;
+ *  Takes list with locations as a parameter to draw or update altitude graph inside a widget.
+ */
+public class GraphViewWidget extends GraphView {
+
+    private LineGraphSeries<DataPoint> mDiagramSeries = new LineGraphSeries<>();
     private int mCurSeriesCount = 0;
     private Long mRecordingStartTime = null;
 
-    public GraphViewDrawTask(Context context) {
+    public GraphViewWidget(Context context) {
         super(context);
         setGraphViewSettings();
     }
 
-    public GraphViewDrawTask(Context context, AttributeSet attrs) {
+    public GraphViewWidget(Context context, AttributeSet attrs) {
         super(context, attrs);
         setGraphViewSettings();
     }
 
-    public GraphViewDrawTask(Context context, AttributeSet attrs, int defStyle) {
+    public GraphViewWidget(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setGraphViewSettings();
     }
 
     private void setGraphViewSettings() {
-        defineDiagramAppearance();
+        setDiagramAppearance();
+        setGridAppearance();
         setGraphBounds();
-        setLabelsFormatSymbols("m", "s");
+        setTextAppearance();
     }
 
-    private void defineDiagramAppearance() {
+    private void setDiagramAppearance() {
         setDiagramLine();
         setDiagramBackground();
     }
@@ -60,6 +61,11 @@ public class GraphViewDrawTask extends GraphView {
         int colorId = Color.argb(65, 0, 255, 255);
         mDiagramSeries.setDrawBackground(true);
         mDiagramSeries.setBackgroundColor(colorId);
+    }
+
+    private void setGridAppearance() {
+        int colorId = Color.rgb(255, 255, 255);
+        getGridLabelRenderer().setGridColor(colorId);
     }
 
     private void setGraphBounds() {
@@ -155,10 +161,18 @@ public class GraphViewDrawTask extends GraphView {
         setGraphBoundsValues();
     }
 
-    public void deliverGraph(ArrayList<Location> locationsList) {
-        setRecordingStartTime(locationsList.get(0).getTime());
-        drawGraph(locationsList);
+    public void deliverGraph(ArrayList<GraphPoint> graphPointList) {
+        checkIsSeriesNull();
+        setRecordingStartTime(graphPointList.get(0).getXValue());
+        drawGraph(graphPointList);
         refreshGraphLook();
+    }
+
+    private void checkIsSeriesNull() {
+        if (mDiagramSeries == null) {
+            mDiagramSeries = new LineGraphSeries<>();
+            setGraphViewSettings();
+        }
     }
 
     private void setRecordingStartTime(Long startTime) {
@@ -167,12 +181,12 @@ public class GraphViewDrawTask extends GraphView {
         }
     }
 
-    private void drawGraph(ArrayList<Location> locationsList) {
-        int listSize = locationsList.size();
-        for (int i=mCurSeriesCount; i<locationsList.size(); i++) {
-            Long recordingTime = getRecordingTime(locationsList.get(i).getTime());
+    private void drawGraph(ArrayList<GraphPoint> graphPointList) {
+        int listSize = graphPointList.size();
+        for (int i=mCurSeriesCount; i<graphPointList.size(); i++) {
+            Long recordingTime = getRecordingTime(graphPointList.get(i).getXValue());
             if (recordingTime > mDiagramSeries.getHighestValueX() || recordingTime == 0) {
-                double yValue = locationsList.get(i).getAltitude();
+                double yValue = graphPointList.get(i).getYValue();
                 appendPointToSeries(listSize, yValue, recordingTime);
             }
         }
@@ -201,7 +215,17 @@ public class GraphViewDrawTask extends GraphView {
         refreshDrawableState();
     }
 
-    public void setLabelsFormatSymbols(String yFormat, String xFormat){
+    private void setTextAppearance() {
+        setLabelsTextSize();
+        setTextColor();
+        setLabelsFormatSymbols("m", "s");
+    }
+
+    private void setLabelsTextSize() {
+        getGridLabelRenderer().setTextSize(20);
+    }
+
+    private void setLabelsFormatSymbols(String yFormat, String xFormat){
         final String axisYFormat = yFormat;
         final String axisXFormat = xFormat;
 
@@ -215,5 +239,22 @@ public class GraphViewDrawTask extends GraphView {
                 }
             }
         });
+    }
+
+    private void setTextColor() {
+        int colorId = Color.rgb(255, 255, 255);
+        getGridLabelRenderer().setHorizontalLabelsColor(colorId);
+        getGridLabelRenderer().setVerticalLabelsColor(colorId);
+        getGridLabelRenderer().setHorizontalAxisTitleColor(colorId);
+        getGridLabelRenderer().setVerticalAxisTitleColor(colorId);
+        getGridLabelRenderer().setVerticalLabelsSecondScaleColor(colorId);
+    }
+
+    public void clearData() {
+        removeSeries(mDiagramSeries);
+        mDiagramSeries = null;
+        mCurSeriesCount = 0;
+        mRecordingStartTime = null;
+        onDataChanged(false, false);
     }
 }

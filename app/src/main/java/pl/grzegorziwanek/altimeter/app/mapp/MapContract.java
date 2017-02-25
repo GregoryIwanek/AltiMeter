@@ -1,10 +1,7 @@
-package pl.grzegorziwanek.altimeter.app.Map;
-
-import android.location.Location;
+package pl.grzegorziwanek.altimeter.app.mapp;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pl.grzegorziwanek.altimeter.app.BasePresenter;

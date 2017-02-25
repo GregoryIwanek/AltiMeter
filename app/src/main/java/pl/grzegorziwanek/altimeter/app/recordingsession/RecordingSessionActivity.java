@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.Map;
+package pl.grzegorziwanek.altimeter.app.recordingsession;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,46 +12,46 @@ import pl.grzegorziwanek.altimeter.app.BasicActivity;
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.data.database.source.SessionRepository;
 import pl.grzegorziwanek.altimeter.app.data.database.source.local.SessionLocalDataSource;
+import pl.grzegorziwanek.altimeter.app.data.location.LocationUpdateManager;
 import pl.grzegorziwanek.altimeter.app.utils.ActivityUtils;
 
 /**
  * Created by Grzegorz Iwanek on 21.01.2017.
  */
 
-public class MapActivity extends BasicActivity {
+public class RecordingSessionActivity extends BasicActivity {
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view) NavigationView mNavigationView;
 
-    private MapFragment mMapFragment;
+    private RecordingSessionFragment mRecordingSessionFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map);
+        setContentView(R.layout.activity_new_graph);
 
         super.initiateUI();
-        setMapFragment();
-        setPresenter();
         ButterKnife.bind(this);
+        setAddNewGraphFragment();
+        setPresenter();
     }
 
-    private void setMapFragment() {
-        mMapFragment =
-                (MapFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+    private void setAddNewGraphFragment() {
+        mRecordingSessionFragment =
+                (RecordingSessionFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
 
-        if (mMapFragment == null) {
-            mMapFragment = MapFragment.newInstance();
+        if (mRecordingSessionFragment == null) {
+            mRecordingSessionFragment = RecordingSessionFragment.newInstance();
             ActivityUtils.addFragmentToActivity(
-                    getSupportFragmentManager(), mMapFragment, R.id.contentFrame);
+                    getSupportFragmentManager(), mRecordingSessionFragment, R.id.contentFrame);
         }
     }
 
     private void setPresenter() {
-        String id = getIntent().getStringExtra("sessionId");
-        MapPresenter mMapPresenter = new MapPresenter(id,
+        RecordingSessionPresenter mRecordingSessionPresenter = new RecordingSessionPresenter(
                 SessionRepository.getInstance(SessionLocalDataSource.getInstance(getApplicationContext())),
-                mMapFragment);
+                LocationUpdateManager.getInstance(getApplicationContext()), mRecordingSessionFragment);
     }
 }

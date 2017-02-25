@@ -14,18 +14,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import pl.grzegorziwanek.altimeter.app.data.Constants;
+import pl.grzegorziwanek.altimeter.app.utils.Constants;
 
 /**
  * Created by Grzegorz Iwanek on 30.11.2016.
- * Consist code responsible for reversed geocoding (getting adrress possible to retrieve through passing latitude and longitude)
+ * Consist code responsible for reversed geocoding (getting address possible to retrieve through passing latitude and longitude)
  * Implements IntentService; Has to be included in manifest file in corresponding activity section;
  * Returns address through use of geocoder class;
  */
 //TODO -> forge it into a AsyncTask
 public class AddressService extends IntentService {
 
-    private static final String LOG_TAG = AddressService.class.getSimpleName();
     private ResultReceiver mResultReceiver;
 
     public AddressService() {
@@ -54,13 +53,9 @@ public class AddressService extends IntentService {
         try {
             //try to assign allowed number of addresses to a list; have to
             addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-        } catch (IOException ioException) {
+        } catch (IOException | IllegalArgumentException ioException) {
             //thrown in case of service offline
             //errorMessage = getString(R.string.service_not_available);
-            errorMessage = "Solar System," +'\n'+ "Milky Way," +'\n'+ "Laniakea";
-        } catch (IllegalArgumentException illegalArgumentException) {
-            //thrown in case of wrong given coordinates
-            //errorMessage = getString(R.string.invalid_lat_long_used);
             errorMessage = "Solar System," +'\n'+ "Milky Way," +'\n'+ "Laniakea";
         }
 

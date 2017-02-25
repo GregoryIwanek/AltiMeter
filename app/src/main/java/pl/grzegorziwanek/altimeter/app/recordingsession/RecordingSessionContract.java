@@ -1,18 +1,18 @@
-package pl.grzegorziwanek.altimeter.app.newgraph;
+package pl.grzegorziwanek.altimeter.app.recordingsession;
 
-import android.location.Location;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 
 import pl.grzegorziwanek.altimeter.app.BasePresenter;
 import pl.grzegorziwanek.altimeter.app.BaseView;
+import pl.grzegorziwanek.altimeter.app.data.GraphPoint;
 
 /**
  * Created by Grzegorz Iwanek on 31.01.2017. That's it/
  */
 
-interface AddNewGraphContract {
+interface RecordingSessionContract {
 
     interface View extends BaseView<Presenter> {
 
@@ -48,7 +48,7 @@ interface AddNewGraphContract {
 
         void setBarometerTextView(String barometerAlt);
 
-        void drawGraph(ArrayList<Location> locations);
+        void drawGraph(ArrayList<GraphPoint> graphPoints);
 
         void resetGraph();
     }

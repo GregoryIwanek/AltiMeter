@@ -174,7 +174,7 @@
         android:layout_weight="9.5">
 
         <!--ELEMENT FROM EXTERNAL LIBRARY TO CREATE GRAPHS IN REAL TIME-->
-        <pl.grzegorziwanek.altimeter.app.newgraph.GraphViewWidget
+        <pl.grzegorziwanek.altimeter.app.recordingsession.GraphViewWidget
             android:id="@+id/graph_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
@@ -200,18 +200,28 @@
                 android:orientation="horizontal"
                 android:layout_weight="1">
 
-                <FrameLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:orientation="vertical"
                     android:layout_weight="1.5">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:text="@string/gps"
+                        android:textSize="14sp"
+                        android:gravity="end|bottom"
+                        android:layout_marginBottom="@dimen/margin_8dp"/>
+
                     <TextView
                         android:id="@+id/gps_value_label"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="20dp"
                         android:text="@string/current_no_value"
+                        android:textSize="14sp"
                         android:gravity="end|bottom"
                         android:layout_marginBottom="@dimen/margin_8dp"/>
-                </FrameLayout>
+                </LinearLayout>
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -238,19 +248,29 @@
                 android:orientation="horizontal"
                 android:layout_weight="1">
 
-                <FrameLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:orientation="vertical"
                     android:layout_weight="1.5">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:text="@string/net"
+                        android:textSize="14sp"
+                        android:gravity="end|bottom"
+                        android:layout_marginBottom="@dimen/margin_8dp" />
 
                     <TextView
                         android:id="@+id/network_value_label"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="20dp"
                         android:text="@string/current_no_value"
+                        android:textSize="14sp"
                         android:gravity="end|bottom"
                         android:layout_marginBottom="@dimen/margin_8dp" />
-                </FrameLayout>
+                </LinearLayout>
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -276,18 +296,29 @@
                 android:orientation="horizontal"
                 android:layout_weight="1">
 
-                <FrameLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:orientation="vertical"
                     android:layout_weight="1.5">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:text="@string/hpa"
+                        android:textSize="14sp"
+                        android:gravity="end|bottom"
+                        android:layout_marginBottom="@dimen/margin_8dp" />
+
                     <TextView
                         android:id="@+id/barometer_value_label"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="20dp"
                         android:text="@string/current_no_value"
+                        android:textSize="14sp"
                         android:gravity="end|bottom"
                         android:layout_marginBottom="@dimen/margin_8dp"/>
-                </FrameLayout>
+                </LinearLayout>
 
                 <FrameLayout
                     android:layout_width="match_parent"

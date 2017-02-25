@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.Map;
+package pl.grzegorziwanek.altimeter.app.mapp;
 
 import android.support.annotation.NonNull;
 

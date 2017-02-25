@@ -8,6 +8,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 import pl.grzegorziwanek.altimeter.app.data.location.LocationResponse;
+import pl.grzegorziwanek.altimeter.app.data.location.managers.BarometerManager;
 
 /**
  * Created by Grzegorz Iwanek on 18.02.2017.
@@ -42,9 +43,8 @@ public class BarometerListener implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        System.out.println("SENSOR CHANGED : ");
         String altitude = String.valueOf(SensorManager.getAltitude(
-                996, event.values[0]));
+                getPressure(), event.values[0]));
         mCallback.onBarometerElevationFound(Double.valueOf(altitude));
     }
 
@@ -64,6 +64,14 @@ public class BarometerListener implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    private float getPressure() {
+        if (BarometerManager.getClosestAirportPressure() == 0) {
+            return (float) 1013.5;
+        } else {
+            return (float) BarometerManager.getClosestAirportPressure();
+        }
     }
 }
 

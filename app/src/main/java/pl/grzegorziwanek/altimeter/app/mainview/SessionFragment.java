@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.altitudegraph;
+package pl.grzegorziwanek.altimeter.app.mainview;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,8 +30,9 @@ import butterknife.ButterKnife;
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.details.DetailsActivity;
 import pl.grzegorziwanek.altimeter.app.data.Session;
-import pl.grzegorziwanek.altimeter.app.newgraph.AddNewGraphActivity;
+import pl.grzegorziwanek.altimeter.app.recordingsession.RecordingSessionActivity;
 import pl.grzegorziwanek.altimeter.app.utils.NoticeDialogFragment;
+import pl.grzegorziwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDialogFragmentV4;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -39,7 +40,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Created by Grzegorz Iwanek on 18.01.2017.
  */
 public class SessionFragment extends Fragment implements SessionContract.View,
-        NoticeDialogFragment.NoticeDialogListener {
+        NoticeDialogFragmentV4.NoticeDialogListener {
 
     @BindView(R.id.graphs_list) ListView mListView;
     @BindView(R.id.graphsLL) LinearLayout mSessionView;
@@ -154,7 +155,7 @@ public class SessionFragment extends Fragment implements SessionContract.View,
     private void showUpDialog(String title) {
         Bundle args = new Bundle();
         args.putString("title", title);
-        DialogFragment ndf = new NoticeDialogFragment();
+        DialogFragment ndf = new NoticeDialogFragmentV4();
         ndf.setArguments(args);
         ndf.show(getChildFragmentManager(), "NoticeDialogFragment");
     }
@@ -217,7 +218,7 @@ public class SessionFragment extends Fragment implements SessionContract.View,
 
     @Override
     public void showAddSessionUi() {
-        Intent intent = new Intent(getContext(), AddNewGraphActivity.class);
+        Intent intent = new Intent(getContext(), RecordingSessionActivity.class);
         startActivity(intent);
     }
 
