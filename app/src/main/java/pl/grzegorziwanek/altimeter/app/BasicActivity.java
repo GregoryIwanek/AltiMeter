@@ -20,7 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.grzegorziwanek.altimeter.app.about.AboutFragment;
 import pl.grzegorziwanek.altimeter.app.mainview.SessionActivity;
-import pl.grzegorziwanek.altimeter.app.mapp.MapActivity;
+import pl.grzegorziwanek.altimeter.app.map.MapActivity;
 import pl.grzegorziwanek.altimeter.app.recordingsession.RecordingSessionActivity;
 import pl.grzegorziwanek.altimeter.app.settings.SettingsFragment;
 import pl.grzegorziwanek.altimeter.app.statistics.StatisticsActivity;

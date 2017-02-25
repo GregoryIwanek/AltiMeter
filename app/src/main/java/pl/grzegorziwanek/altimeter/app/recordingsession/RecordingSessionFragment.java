@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import pl.grzegorziwanek.altimeter.app.mapp.MapActivity;
+import pl.grzegorziwanek.altimeter.app.map.MapActivity;
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.data.GraphPoint;
 

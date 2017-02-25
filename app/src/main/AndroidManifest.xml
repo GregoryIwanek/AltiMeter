@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".recordingsession.RecordingSessionActivity"/>
-        <activity android:name=".mapp.MapActivity"/>
+        <activity android:name=".map.MapActivity"/>
         <activity android:name=".statistics.StatisticsActivity"/>
         <activity android:name=".details.DetailsActivity"
             android:windowSoftInputMode="adjustNothing"/>

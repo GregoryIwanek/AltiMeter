@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.mapp;
+package pl.grzegorziwanek.altimeter.app.map;
 
 import com.google.android.gms.maps.model.LatLng;
 
