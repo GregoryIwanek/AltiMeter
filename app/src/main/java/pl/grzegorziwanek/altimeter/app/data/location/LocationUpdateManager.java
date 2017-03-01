@@ -156,6 +156,7 @@ public class LocationUpdateManager implements LocationResponse {
                 mSession.getLocationList().get(mSession.getLocationList().size()-1).setAltitude(CombinedLocationModel.getCombinedAltitude());
                 CombinedLocationModel.setUpdateTime(System.currentTimeMillis());
                 mSession.appendGraphPoint(CombinedLocationModel.getUpdateTime(), CombinedLocationModel.getCombinedAltitude());
+                mSession.setCurrentElevation(FormatAndValueConverter.roundValue(mSession.getCurrentElevation()));
                 callbackFullInfo.onFullInfoAcquired(mSession);
                 handler.postDelayed(mDataCombinedRunnable, 20000);
             }
@@ -180,11 +181,10 @@ public class LocationUpdateManager implements LocationResponse {
 
                         @Override
                         public void onNext(Double barAltitude) {
-                            BarometerAltitudeModel.setAltitude(barAltitude);
                             mBarometerListener.unregisterListener();
+                            BarometerAltitudeModel.setAltitude(barAltitude);
                             barAltitude = FormatAndValueConverter.roundValue(barAltitude);
-                            String altitude = String.valueOf(barAltitude);
-                            callbackFullInfo.onBarometerInfoAcquired(altitude);
+                            callbackFullInfo.onBarometerInfoAcquired(String.valueOf(barAltitude));
                             CombinedLocationModel.updateCombinedAltitude();
                             handler.postDelayed(mBarometerRunnable, 20000);
                         }
