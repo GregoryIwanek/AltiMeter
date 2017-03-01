@@ -304,8 +304,23 @@ public class FormatAndValueConverter {
         return symbolStr;
     }
 
+
     /**
-     * Set airports distance values. Distance is measured as distance between user's position (or any
+     *
+     * @param airportsList
+     * @param lat
+     * @param lon
+     * @return
+     */
+    public static float fetchAirportPressure(List<XmlAirportValues> airportsList, double lat, double lon) {
+        setAirportsDistance(airportsList, lat, lon);
+        sortAirportsByDistance(airportsList);
+        float pressure = getClosestAirportPressure(airportsList);
+        return convertHgPressureToHPa(pressure);
+    }
+
+    /**
+     * Set airports distance values. Distance is measured as a distance between user's position (or any
      * given position) and airport.
      * @param airportsList list of airports to calculate distance between them and current user position
      * @param lat latitude of user's position
@@ -324,7 +339,7 @@ public class FormatAndValueConverter {
      * Sort list of closest airports by distance to user. Values increments from lowest index to highest.
      * @param airportsList list of airports to sort by distance to user
      */
-    public static void sortAirportsByDistance(List<XmlAirportValues> airportsList) {
+    private static void sortAirportsByDistance(List<XmlAirportValues> airportsList) {
         Collections.sort(airportsList, new Comparator<XmlAirportValues>() {
             @Override
             public int compare(XmlAirportValues airport1, XmlAirportValues airport2) {
@@ -345,7 +360,7 @@ public class FormatAndValueConverter {
      * @return returns pressure of closest airport (goes from lowest index to highest if
      * there is no value of pressure), returns 0 if there is no pressure value at all.
      */
-    public static float getClosestAirportPressure(List<XmlAirportValues> airportsList) {
+    private static float getClosestAirportPressure(List<XmlAirportValues> airportsList) {
         double pressure = 0;
         for (XmlAirportValues values : airportsList) {
             if (values.getPressureInHg() != 0) {
@@ -360,7 +375,7 @@ public class FormatAndValueConverter {
      * @param hgPressure at the station data is coming from;
      * @return pressure value converted to hectopascals
      */
-    public static float convertHgPressureToHPa(float hgPressure) {
+    private static float convertHgPressureToHPa(float hgPressure) {
         return (float) (hgPressure*Constants.MULTIPLIER_HPA);
     }
 

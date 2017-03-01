@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.preference.PreferenceManager;
 
+import pl.grzegorziwanek.altimeter.app.data.Session;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.BarometerManager;
 import pl.grzegorziwanek.altimeter.app.utils.FormatAndValueConverter;
 
@@ -12,7 +13,7 @@ import pl.grzegorziwanek.altimeter.app.utils.FormatAndValueConverter;
  * Created by Grzegorz Iwanek on 01.03.2017.
  */
 
-class LocationUpdateModel {
+abstract class SessionUpdateModel {
 
     /**
      *
@@ -73,5 +74,63 @@ class LocationUpdateModel {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         String units = sharedPref.getString("pref_set_units", "KILOMETERS");
         FormatAndValueConverter.setUnitsFormat(units);
+    }
+
+    /**
+     *
+     * @param session
+     */
+    static void setSessionsHeight(Session session) {
+        Double currAltitude = session.getCurrentElevation();
+        Double minHeight = session.getMinHeight();
+        Double maxHeight = session.getMaxHeight();
+
+        Double newMinHeight =
+                FormatAndValueConverter.updateMinAltitudeValue(currAltitude, minHeight);
+        Double newMaxHeight =
+                FormatAndValueConverter.updateMaxAltitudeValue(currAltitude, maxHeight);
+        String newMinStr =
+                FormatAndValueConverter.setMinMaxString(newMinHeight);
+        String newMaxStr =
+                FormatAndValueConverter.setMinMaxString(newMaxHeight);
+
+        session.setMinHeight(newMinHeight);
+        session.setMinHeightStr(newMinStr);
+        session.setMaxHeight(newMaxHeight);
+        session.setMaxHeightStr(newMaxStr);
+    }
+
+    /**
+     *
+     * @param session
+     */
+    static void setSessionsDistance(Session session) {
+        if (session.getLastLocation() != null) {
+            Location lastLocation = session.getLastLocation();
+            Location currentLocation = session.getCurrentLocation();
+            Double currentDistance = session.getDistance();
+
+            Double distance = FormatAndValueConverter.updateDistanceValue(
+                    lastLocation, currentLocation, currentDistance);
+            session.setDistance(distance);
+
+            String distanceStr =
+                    FormatAndValueConverter.setDistanceStr(distance);
+            session.setDistanceStr(distanceStr);
+        }
+    }
+
+    /**
+     *
+     * @param session
+     */
+    static void setGeoCoordinateStr(Session session) {
+        Location location = session.getCurrentLocation();
+        String latitudeStr =
+                FormatAndValueConverter.setGeoCoordinateStr(location.getLatitude(), true);
+        String longitudeStr =
+                FormatAndValueConverter.setGeoCoordinateStr(location.getLongitude(), false);
+        session.setLatitudeStr(latitudeStr);
+        session.setLongitudeStr(longitudeStr);
     }
 }
