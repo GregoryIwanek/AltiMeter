@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/activity_padding_bottom_12dp"
+        android:layout_marginRight="@dimen/activity_padding_bottom_12dp"
+        android:background="@color/colorTransparent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Recorded Sessions Screen"
+            android:paddingBottom="@dimen/margin_8dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:paddingBottom="@dimen/activity_padding_bottom_12dp"
+            android:text="Shows recorded sessions in form of list."/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:paddingBottom="@dimen/margin_8dp"
+            android:text="Features:"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:text="- delete all or chosen sessions"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:text="- gives access to details screen of session"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/activity_padding_bottom_12dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:text="- allows to start a new session"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:paddingBottom="@dimen/margin_8dp"
+            android:text="Click on UI element to get specific information"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_gravity="center"
+        android:layout_width="300dp"
+        android:layout_height="500dp"
+        android:orientation="vertical"
+        android:background="@drawable/main_view">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="20"
+            android:background="@color/colorTransparent"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="45"
+            android:orientation="horizontal"
+            android:background="@color/colorTransparent">
+
+            <RelativeLayout
+                android:clickable="true"
+                android:id="@+id/about_menu_button_main"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="45"
+                android:background="@drawable/customborder"/>
+
+            <RelativeLayout
+                android:clickable="true"
+                android:id="@+id/about_title_label_main"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="125"
+                android:background="@drawable/customborder"/>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="80"
+                android:background="@color/colorTransparent"/>
+
+            <RelativeLayout
+                android:clickable="true"
+                android:id="@+id/about_actions_button_main"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="50"
+                android:background="@drawable/customborder"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="310"
+            android:orientation="horizontal"
+            android:background="@color/colorTransparent">
+
+            <RelativeLayout
+                android:clickable="true"
+                android:id="@+id/about_checkbox_main"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="45"
+                android:background="@drawable/customborder"/>
+
+            <RelativeLayout
+                android:clickable="true"
+                android:id="@+id/about_rows_main"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="245"
+                android:background="@drawable/customborder"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="100"
+            android:orientation="horizontal"
+            android:background="@color/colorTransparent">
+
+            <RelativeLayout
+                android:clickable="true"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="235"
+                android:background="@color/colorTransparent"/>
+
+            <RelativeLayout
+                android:clickable="true"
+                android:id="@+id/about_button_add_main"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="65"
+                android:background="@drawable/customborder"/>
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="35"
+            android:background="@color/colorTransparent"/>
+    </LinearLayout>
+</LinearLayout>

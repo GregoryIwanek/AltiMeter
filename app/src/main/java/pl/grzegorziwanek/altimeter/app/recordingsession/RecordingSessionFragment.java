@@ -1,14 +1,19 @@
 package pl.grzegorziwanek.altimeter.app.recordingsession;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -53,6 +58,7 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
     @BindView(R.id.barometer_value_label) TextView mBarometerValueTextView;
 
     private RecordingSessionContract.Presenter mPresenter;
+    private ShareActionProvider mShareActionProvider;
 
     public RecordingSessionFragment() {}
 
@@ -78,6 +84,12 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.activityDestroyedUnsubscribeRx();
+    }
+
+    @Override
     public void setPresenter(@NonNull RecordingSessionContract.Presenter presenter) {
         mPresenter = checkNotNull(presenter);
     }
@@ -85,6 +97,21 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.fragment_share_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+        show();
+        return true;
+    }
+
+    private void show() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, "SHARE"));
     }
 
     @OnClick(R.id.pause_button)

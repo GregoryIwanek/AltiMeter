@@ -55,10 +55,18 @@
     <string name="gps">gps</string>
     <string name="about_menu_description">Navigation menu button</string>
     <string name="about_title">Title</string>
+    <string name="about_actions_main">Actions button. \nDelete all \nDelete checked</string>
     <string name="about_share_button">Share menu button.</string>
     <string name="about_address_label">Address of the last checked location</string>
+    <string name="about_checkbox_main">Checkboxes. Check to delete specific sessions.</string>
+    <string name="about_labels_details">Details info</string>
     <string name="about_current_elevation">Elevation of the last checked location</string>
+    <string name="about_rows_main">Session rows. Click to see details.</string>
+    <string name="about_edit_details">Title and description edit box</string>
     <string name="about_recording_buttons">Session\'s control buttons</string>
+    <string name="about_button_add_main">Create new session button.</string>
+    <string name="about_button_save_details">Save title and description button</string>
+    <string name="about_info_details">Information about session</string>
     <string name="about_graph">Graph presenting recorded elevation in time</string>
     <string name="about_gps_button">Gps button. Allow to use GPS to get location</string>
     <string name="about_network_button">Network button. Allow to use network to get very accurate elevation</string>
@@ -68,4 +76,11 @@
     <string name="about_max_height">Maximum height recorded during a session</string>
     <string name="about_latitude">Latitude of the last checked location</string>
     <string name="about_longitude">Longitude of the last checked location</string>
+    <string name="new_graph_screen">New Graph Screen</string>
+    <string name="graphs">G\nR\nA\nP\nH\nS</string>
+    <string name="new_button">N\nE\nW</string>
+    <string name="details">D\nE\nT\nA\nI\nL</string>
+    <string name="stats">S\nT\nA\nT\nS</string>
+    <string name="map_button">M\nA\nP</string>
+    <string name="author">A\nU\nT\nH\nO\nR</string>
 </resources>

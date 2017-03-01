@@ -7,4 +7,5 @@ import pl.grzegorziwanek.altimeter.app.BasicActivity;
  */
 
 public class ShareActivity extends BasicActivity {
+
 }

@@ -12,22 +12,30 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.List;
+
 import pl.grzegorziwanek.altimeter.app.data.Session;
 import pl.grzegorziwanek.altimeter.app.data.StaticHandler;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.BarometerManager;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.GpsManager;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.NetworkManager;
-import pl.grzegorziwanek.altimeter.app.data.location.model.BarometerAltitudeModel;
-import pl.grzegorziwanek.altimeter.app.data.location.model.CombinedLocationModel;
-import pl.grzegorziwanek.altimeter.app.data.location.model.GpsAltitudeModel;
-import pl.grzegorziwanek.altimeter.app.data.location.model.NetworkAltitudeModel;
+import pl.grzegorziwanek.altimeter.app.data.location.managers.models.BarometerAltitudeModel;
+import pl.grzegorziwanek.altimeter.app.data.location.managers.models.CombinedLocationModel;
+import pl.grzegorziwanek.altimeter.app.data.location.managers.models.GpsAltitudeModel;
+import pl.grzegorziwanek.altimeter.app.data.location.managers.models.NetworkAltitudeModel;
 import pl.grzegorziwanek.altimeter.app.data.location.services.elevation.BarometerListener;
 import pl.grzegorziwanek.altimeter.app.data.location.services.elevation.GpsLocationListener;
-import pl.grzegorziwanek.altimeter.app.data.location.services.elevation.NetworkTask;
+import pl.grzegorziwanek.altimeter.app.data.location.services.elevation.NetworkTaskRx;
 import pl.grzegorziwanek.altimeter.app.data.location.services.helpers.AddressService;
-import pl.grzegorziwanek.altimeter.app.data.location.services.helpers.PressureAirportTask;
+import pl.grzegorziwanek.altimeter.app.data.location.services.helpers.airporttask.AirportsTaskRx;
+import pl.grzegorziwanek.altimeter.app.data.location.services.helpers.airporttask.AirportsWithDataTaskRx;
+import pl.grzegorziwanek.altimeter.app.data.location.services.helpers.airporttask.xmlparser.XmlAirportValues;
 import pl.grzegorziwanek.altimeter.app.utils.Constants;
 import pl.grzegorziwanek.altimeter.app.utils.FormatAndValueConverter;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by ... on 01.02.2017.
@@ -37,10 +45,7 @@ public class LocationUpdateManager implements LocationResponse {
     private static LocationUpdateManager INSTANCE = null;
     private static FullInfoCallback callbackFullInfo;
     private LocationChangedCallback callbackInitiation;
-    private NetworkElevationCallback callbackNetwork;
     private AddressFoundCallback callbackAddress;
-    private BarometerElevationCallback callbackBarometer;
-    private AirportsCallback callbackAirport;
     private GpsElevationCallback callbackGps;
     private AddressResultReceiver mResultReceiver;
     private LocationResponse mGpsLocationListener;
@@ -52,20 +57,20 @@ public class LocationUpdateManager implements LocationResponse {
     private Runnable mNetworkRunnable;
     private Runnable mDataCombinedRunnable;
     private static Session mSession = null;
+    private Subscription mBarometerSubscription = null;
 
     private LocationUpdateManager(@NonNull Context context) {
         setCallbacks();
         setVariables(context);
         setManagers();
         setRunnable();
-        mBarometerListener = BarometerListener.getInstance(context, callbackBarometer);
+        mBarometerListener = BarometerListener.getInstance(context);
     }
 
     public static LocationUpdateManager getInstance(@NonNull Context context) {
         if (INSTANCE == null) {
             INSTANCE = new LocationUpdateManager(context);
         } else {
-            //INSTANCE.setNewSession();
             INSTANCE = new LocationUpdateManager(context);
         }
         return INSTANCE;
@@ -93,9 +98,7 @@ public class LocationUpdateManager implements LocationResponse {
             @Override
             public void run() {
                 if (NetworkManager.isNetworkEnabled()) {
-                    NetworkTask task = new NetworkTask(callbackNetwork);
-                    task.setLocationsStr(mSession.getCurrentLocation());
-                    task.execute();
+                    fetchCurrentElevationRx(mSession.getCurrentLocation());
                 }
             }
         };
@@ -119,12 +122,6 @@ public class LocationUpdateManager implements LocationResponse {
         mSession = new Session("","");
     }
 
-    /**
-     * Callbacks used to communicate between THIS {@link LocationUpdateManager} and members:
-     * {@link GpsLocationListener}   sends back updates of location,
-     * {@link NetworkTask}       sends back elevation of location,
-     * {@link AddressService}     sends back closest address of location.
-     */
     private void setCallbacks() {
         callbackInitiation = new LocationChangedCallback() {
             @Override
@@ -137,54 +134,10 @@ public class LocationUpdateManager implements LocationResponse {
             }
         };
 
-        callbackNetwork = new NetworkElevationCallback() {
-            @Override
-            public void onNetworkElevationFound(Double elevation) {
-                appendLocationToList();
-                setTextViewStrings();
-
-                NetworkAltitudeModel.setAltitude(elevation);
-                NetworkAltitudeModel.setMeasureTime(System.currentTimeMillis());
-
-                elevation = FormatAndValueConverter.roundValue(elevation);
-                String alt = String.valueOf(elevation);
-                callbackFullInfo.onNetworkInfoAcquired(alt);
-
-                CombinedLocationModel.updateCombinedAltitude();
-                setCurrentElevation(CombinedLocationModel.getCombinedAltitude());
-                handler.postDelayed(mNetworkRunnable, Constants.NETWORK_INTERVAL_VALUE);
-
-                if (!GpsManager.isGpsEnabled()) {
-                    identifyCurrentLocation();
-                }
-            }
-        };
-
         callbackAddress = new AddressFoundCallback() {
             @Override
             public void onAddressFound(String address) {
                 setAddress(address);
-            }
-        };
-
-        callbackAirport = new AirportsCallback() {
-            @Override
-            public void onNearestAirportsFound() {
-                if (!isAirportsListEmpty()) {
-                    fetchAirportsPressure();
-                }
-            }
-
-            @Override
-            public void onAirportPressureFound() {
-                FormatAndValueConverter.setAirportsDistance(BarometerManager.getAirportsList(),
-                        BarometerManager.getUpdateLatitude(), BarometerManager.getUpdateLongitude());
-                FormatAndValueConverter.sortAirportsByDistance(BarometerManager.getAirportsList());
-                float pressure = FormatAndValueConverter.getClosestAirportPressure(BarometerManager.getAirportsList());
-                pressure = FormatAndValueConverter.convertHgPressureToHPa(pressure);
-                BarometerManager.setClosestAirportPressure(pressure);
-                saveAirportPressure();
-                BarometerManager.resetList();
             }
         };
 
@@ -207,27 +160,14 @@ public class LocationUpdateManager implements LocationResponse {
                 }
             }
         };
-
-        callbackBarometer = new BarometerElevationCallback() {
-            @Override
-            public void onBarometerElevationFound(Double barAltitude) {
-                BarometerAltitudeModel.setAltitude(barAltitude);
-                mBarometerListener.unregisterListener();
-                barAltitude = FormatAndValueConverter.roundValue(barAltitude);
-                String altitude = String.valueOf(barAltitude);
-                callbackFullInfo.onBarometerInfoAcquired(altitude);
-                CombinedLocationModel.updateCombinedAltitude();
-                handler.postDelayed(mBarometerRunnable, 20000);
-            }
-        };
     }
 
     private void setManagers() {
         GpsManager.setGpsEnabled(false);
         NetworkManager.setNetworkEnabled(false);
         BarometerManager.setBarometerEnabled(false);
-        readAirportUpdateLocation();
-        readAirportPressure();
+        LocationUpdateModel.readAirportUpdateLocation(mContext);
+        LocationUpdateModel.readAirportPressure(mContext);
     }
 
     public void setManagerState(Class<?> manager, boolean isEnabled) {
@@ -240,23 +180,78 @@ public class LocationUpdateManager implements LocationResponse {
         }
     }
 
-    private void saveSessionsLocation(Location location) {
-        //save old, previous location
-        if (mSession.getCurrentLocation() != null) {
-            mSession.setLastLocation(mSession.getCurrentLocation());
-        }
+    private void fetchBarometerAltitudeRx() {
+        if (mBarometerSubscription == null) {
+            mBarometerSubscription = mBarometerListener.getPressureAltitudePublishSubject()
+                    .observeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<Double>() {
+                        @Override
+                        public void onCompleted() {
 
-        //save new, current location
-        mSession.setCurrLocation(location);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onNext(Double barAltitude) {
+                            BarometerAltitudeModel.setAltitude(barAltitude);
+                            mBarometerListener.unregisterListener();
+                            barAltitude = FormatAndValueConverter.roundValue(barAltitude);
+                            String altitude = String.valueOf(barAltitude);
+                            callbackFullInfo.onBarometerInfoAcquired(altitude);
+                            CombinedLocationModel.updateCombinedAltitude();
+                            handler.postDelayed(mBarometerRunnable, 20000);
+                        }
+                    });
+        }
     }
 
-    private void fetchCurrentElevation(Location location, boolean isHeightEmpty) {
-        if (isHeightEmpty) {
-            NetworkTask task = new NetworkTask(callbackNetwork);
-            task.setLocationsStr(location);
-            task.execute();
-        }
+    private void fetchCurrentElevationRx(Location location) {
+        NetworkTaskRx taskRx = new NetworkTaskRx();
+        taskRx.setLocationsStr(location);
+        taskRx.getElevationObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Double>() {
+                    @Override
+                    public void onCompleted() {
+                        this.unsubscribe();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Double elevation) {
+                        //round elevation value (to set precision to meters)
+                        elevation = (double) Math.round(elevation);
+                        appendLocationToList();
+                        setTextViewStrings();
+
+                        NetworkAltitudeModel.setAltitude(elevation);
+                        NetworkAltitudeModel.setMeasureTime(System.currentTimeMillis());
+
+                        elevation = FormatAndValueConverter.roundValue(elevation);
+                        String alt = String.valueOf(elevation);
+                        callbackFullInfo.onNetworkInfoAcquired(alt);
+
+                        CombinedLocationModel.updateCombinedAltitude();
+                        setCurrentElevation(CombinedLocationModel.getCombinedAltitude());
+                        handler.postDelayed(mNetworkRunnable, Constants.NETWORK_INTERVAL_VALUE);
+
+                        if (!GpsManager.isGpsEnabled()) {
+                            identifyCurrentLocation();
+                        }
+                    }
+                });
     }
+
 
     private void fetchAddress(Location location) {
         Intent intent = new Intent(mContext, AddressService.class);
@@ -265,22 +260,82 @@ public class LocationUpdateManager implements LocationResponse {
         mContext.startService(intent);
     }
 
-    private void fetchNearestAirports(Location location) {
+    private void fetchNearestAirportsRx(Location location) {
         String airportRadialDistance = FormatAndValueConverter.setRadialDistanceString(
                 location.getLatitude(), location.getLongitude());
-        PressureAirportTask task = new PressureAirportTask(callbackAirport);
-        task.setFetchingStations(true);
-        task.setRadialDistanceStr(airportRadialDistance);
-        task.execute();
+
+        AirportsTaskRx taskRx = new AirportsTaskRx();
+        taskRx.setRadialDistanceStr(airportRadialDistance);
+        taskRx.getNearestAirportsObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<XmlAirportValues>>() {
+                    @Override
+                    public void onCompleted() {
+                        this.unsubscribe();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<XmlAirportValues> values) {
+                        BarometerManager.setAirportsList(values);
+                        if (!BarometerManager.isAirportsListEmpty()) {
+                            fetchAirportsPressureRx();
+                        }
+                    }
+                });
     }
 
-    private void fetchAirportsPressure() {
+    private void fetchAirportsPressureRx() {
         String airportsSymbols =
                 FormatAndValueConverter.getAirportsSymbolString(BarometerManager.getAirportsList());
-        PressureAirportTask task = new PressureAirportTask(callbackAirport);
-        task.setFetchingStations(false);
-        task.setStationsString(airportsSymbols);
-        task.execute();
+
+        AirportsWithDataTaskRx taskRx = new AirportsWithDataTaskRx();
+        taskRx.setStationsString(airportsSymbols);
+        taskRx.getAirportsWithDataObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<XmlAirportValues>>() {
+                    @Override
+                    public void onCompleted() {
+                        this.unsubscribe();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<XmlAirportValues> xmlAirportValues) {
+                        BarometerManager.setAirportsList(xmlAirportValues);
+                        FormatAndValueConverter.setAirportsDistance(BarometerManager.getAirportsList(),
+                                BarometerManager.getUpdateLatitude(), BarometerManager.getUpdateLongitude());
+                        FormatAndValueConverter.sortAirportsByDistance(BarometerManager.getAirportsList());
+                        float pressure = FormatAndValueConverter.getClosestAirportPressure(BarometerManager.getAirportsList());
+                        pressure = FormatAndValueConverter.convertHgPressureToHPa(pressure);
+                        BarometerManager.setClosestAirportPressure(pressure);
+                        LocationUpdateModel.saveAirportPressure(mContext);
+                        BarometerManager.resetList();
+                    }
+                });
+    }
+
+    private void saveSessionsLocation(Location location) {
+        if (mSession.getCurrentLocation() != null) {
+            mSession.setLastLocation(mSession.getCurrentLocation());
+        }
+        mSession.setCurrLocation(location);
+    }
+
+    public void unsubscribeOnDestroy() {
+        mBarometerSubscription.unsubscribe();
+        mBarometerSubscription = null;
+        resetAllData();
     }
 
     private boolean isAirportsListEmpty() {
@@ -302,34 +357,7 @@ public class LocationUpdateManager implements LocationResponse {
 
     private void checkIfHaveFullInfo() {
         if (mHasCallback && mSession.getCurrentElevation() != null && mSession.getAddress() != null) {
-            //setFullInfoOfSession();
             callbackFullInfo.onFullInfoAcquired(mSession);
-        }
-    }
-
-    private void setFullInfoOfSession() {
-        setGeoCoordinateStr();
-        setSessionsDistance();
-        setSessionsHeight();
-
-        Double alt = (double) 0;
-        int count = 0;
-        if (NetworkManager.isNetworkEnabled() && NetworkAltitudeModel.getAltitude() != 0) {
-            alt += NetworkAltitudeModel.getAltitude();
-            count++;
-        }
-        if (BarometerManager.isBarometerEnabled() && BarometerAltitudeModel.getAltitude() != 0) {
-            alt += BarometerAltitudeModel.getAltitude();
-            count++;
-        }
-        if (GpsManager.isGpsEnabled() && GpsAltitudeModel.getAltitude() != 0) {
-            alt += GpsAltitudeModel.getAltitude();
-            count++;
-        }
-        if (count != 0) {
-            alt = alt/count;
-            mSession.setCurrentElevation(FormatAndValueConverter.roundValue(alt));
-            mSession.setElevationOnList(FormatAndValueConverter.roundValue(alt));
         }
     }
 
@@ -391,19 +419,20 @@ public class LocationUpdateManager implements LocationResponse {
     public void startListenForLocations(@Nullable FullInfoCallback callback) {
         callbackFullInfo = callback;
         mHasCallback = true;
-        updateDistanceUnits();
+        LocationUpdateModel.updateDistanceUnits(mContext);
 
         if (GpsManager.isGpsEnabled()) {
             mGpsLocationListener.startListenForLocations(null);
         }
 
         if (NetworkManager.isNetworkEnabled()) {
-            fetchCurrentElevation(mSession.getCurrentLocation(), true);
+            fetchCurrentElevationRx(mSession.getCurrentLocation());
             NetworkManager.setMeasureTime(mSession.getCurrentLocation().getTime());
         }
 
         if (BarometerManager.isBarometerEnabled()) {
             if (!mBarometerListener.isBarometerListenerRegistered()) {
+                fetchBarometerAltitudeRx();
                 mBarometerListener.registerListener();
             }
         }
@@ -420,7 +449,7 @@ public class LocationUpdateManager implements LocationResponse {
     public void stopListenForLocations(boolean isLocked) {
         mGpsLocationListener.stopListenForLocations(isLocked);
         mBarometerListener.unregisterListener();
-        handler.removeCallbacks(mDataCombinedRunnable);
+        resetHandlers();
         if (isLocked) {
             lockSession();
         }
@@ -431,24 +460,26 @@ public class LocationUpdateManager implements LocationResponse {
     }
 
     @Override
-    public void clearSessionData() {
+    public void resetAllData() {
         mSession.clearData();
         callbackFullInfo.onFullInfoAcquired(mSession);
-        removeHandlers();
         resetDataSourceTextView();
+        resetHandlers();
         resetListeners();
-    }
 
-    private void removeHandlers() {
-        handler.removeCallbacks(mBarometerRunnable);
-        handler.removeCallbacks(mNetworkRunnable);
-        handler.removeCallbacks(mDataCombinedRunnable);
+        identifyCurrentLocation();
     }
 
     private void resetDataSourceTextView() {
         callbackFullInfo.onGpsInfoAcquired(Constants.DEFAULT_TEXT);
         callbackFullInfo.onNetworkInfoAcquired(Constants.DEFAULT_TEXT);
         callbackFullInfo.onBarometerInfoAcquired(Constants.DEFAULT_TEXT);
+    }
+
+    private void resetHandlers() {
+        handler.removeCallbacks(mBarometerRunnable);
+        handler.removeCallbacks(mNetworkRunnable);
+        handler.removeCallbacks(mDataCombinedRunnable);
     }
 
     private void resetListeners() {
@@ -466,47 +497,13 @@ public class LocationUpdateManager implements LocationResponse {
     private void updateAirportInfo(Location location) {
         if (isAirportUpdateRequired(location.getTime())) {
             BarometerManager.setAirportMeasureTime(location.getTime());
-            saveAirportUpdateLocation(location);
-            fetchNearestAirports(location);
+            LocationUpdateModel.saveAirportUpdateLocation(location, mContext);
+            fetchNearestAirportsRx(location);
         }
     }
 
     private boolean isAirportUpdateRequired(double currentTime) {
         return (currentTime - BarometerManager.getAirportMeasureTime()) > Constants.HALF_HOUR;
-    }
-
-    private void saveAirportUpdateLocation(Location location) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("measureTime", String.valueOf(location.getTime()));
-        editor.putFloat("updateLatitude", (float) location.getLatitude());
-        editor.putFloat("updateLongitude", (float) location.getLongitude());
-        editor.apply();
-    }
-
-    private void readAirportUpdateLocation() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String str = sharedPref.getString("measureTime", "0");
-        long time = Long.valueOf(str);
-        float lat = sharedPref.getFloat("updateLatitude", 0);
-        float lon = sharedPref.getFloat("updateLongitude", 0);
-        BarometerManager.setAirportMeasureTime(time);
-        BarometerManager.setUpdateLatitude(lat);
-        BarometerManager.setUpdateLongitude(lon);
-    }
-
-    private void saveAirportPressure() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("airportPressure", String.valueOf(BarometerManager.getClosestAirportPressure()));
-        editor.apply();
-    }
-
-    private void readAirportPressure() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String pressureStr = sharedPref.getString("airportPressure", "0");
-        double pressure = Double.valueOf(pressureStr);
-        BarometerManager.setClosestAirportPressure(pressure);
     }
 
     public Session getSession() {

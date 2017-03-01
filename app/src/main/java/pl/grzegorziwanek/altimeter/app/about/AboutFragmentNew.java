@@ -4,53 +4,25 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.utils.NoticeDialogFragment;
 
 /**
- * Created by Grzegorz Iwanek on 21.01.2017.
+ * Created by Grzegorz Iwanek on 26.02.2017.
  */
 
-public final class AboutFragment extends Fragment {
-    @BindView(R.id.about_menu_button) RelativeLayout mFieldMenuButton;
-    @BindView(R.id.about_title_label) RelativeLayout mFieldTitleLabel;
-    @BindView(R.id.about_share_button) RelativeLayout mFieldShareButton;
-
-    @BindView(R.id.about_address) RelativeLayout mFieldAddress;
-    @BindView(R.id.about_current_elevation) RelativeLayout mFieldCurrentElevation;
-    @BindView(R.id.about_recording_buttons) RelativeLayout mFieldRecordingButtons;
-
-    @BindView(R.id.about_graph) LinearLayout mFieldGraph;
-
-    @BindView(R.id.about_button_gps) RelativeLayout mFieldButtonGps;
-    @BindView(R.id.about_button_network) RelativeLayout mFieldButtonNetwork;
-    @BindView(R.id.about_button_pressure) RelativeLayout mFieldButtonPressure;
-
-    @BindView(R.id.about_min_altitude) RelativeLayout mFieldMinAltitude;
-    @BindView(R.id.about_distance_label) RelativeLayout mFieldDistanceLabel;
-    @BindView(R.id.about_max_altitude) RelativeLayout mFieldMaxAltitude;
-
-    @BindView(R.id.about_latitude_label) RelativeLayout mFieldLatitude;
-    @BindView(R.id.about_longitude_label) RelativeLayout mFieldLongitude;
+public class AboutFragmentNew extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_about, container, false);
-        if (view != null) {
-            view.setBackgroundColor(ContextCompat.getColor(this.getActivity(), R.color.colorBlack));
-        }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_about_newgraph, container, false);
 
         ButterKnife.bind(this, view);
         return view;
@@ -91,7 +63,7 @@ public final class AboutFragment extends Fragment {
 
     @OnClick(R.id.about_recording_buttons)
     public void onFieldRecordingButtonsClick() {
-       showUpDialog(getString(R.string.about_recording_buttons));
+        showUpDialog(getString(R.string.about_recording_buttons));
     }
 
     @OnClick(R.id.about_graph)
@@ -139,4 +111,3 @@ public final class AboutFragment extends Fragment {
         showUpDialog(getString(R.string.about_longitude));
     }
 }
-

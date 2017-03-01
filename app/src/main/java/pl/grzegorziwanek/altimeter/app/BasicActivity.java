@@ -5,10 +5,12 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -18,7 +20,7 @@ import android.view.MenuItem;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pl.grzegorziwanek.altimeter.app.about.AboutFragment;
+import pl.grzegorziwanek.altimeter.app.about.AboutFragmentMain;
 import pl.grzegorziwanek.altimeter.app.mainview.SessionActivity;
 import pl.grzegorziwanek.altimeter.app.map.MapActivity;
 import pl.grzegorziwanek.altimeter.app.recordingsession.RecordingSessionActivity;
@@ -65,6 +67,11 @@ public abstract class BasicActivity extends AppCompatActivity {
         }
     }
 
+    protected void setShareIcon() {
+        Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_share_24dp);
+        mToolbar.setOverflowIcon(drawable);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -98,7 +105,7 @@ public abstract class BasicActivity extends AppCompatActivity {
                                 navigateToFragment(SettingsFragment.class);
                                 break;
                             case R.id.about_navigation_menu_item:
-                                navigateToFragment(AboutFragment.class);
+                                navigateToFragment(AboutFragmentMain.class);
                                 break;
                             default:
                                 break;

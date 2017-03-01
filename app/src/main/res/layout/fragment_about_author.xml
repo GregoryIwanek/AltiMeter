@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="300dp"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/margin_16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:paddingBottom="@dimen/margin_8dp"
+        android:text="AltiMeter"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:text="AltiMeter app measures elevation and location of the device using the build-in device sensors and internet."/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:text="AltiMeter can be used for all outdoor and indoor activities, such as climbing, trekking, hiking and even stair climbing."/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:paddingBottom="@dimen/activity_padding_bottom_12dp"
+        android:text="All sessions are saved to local database with option to share their content."/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:paddingBottom="@dimen/margin_8dp"
+        android:text="Author"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:paddingBottom="@dimen/activity_padding_bottom_12dp"
+        android:text="Grzegorz Iwanek"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:paddingBottom="@dimen/margin_8dp"
+        android:text="Contact"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:paddingBottom="@dimen/activity_padding_bottom_12dp"
+        android:text="iwanekgregory@gmail.com"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:paddingBottom="@dimen/margin_8dp"
+        android:text="Version"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:paddingBottom="@dimen/activity_padding_bottom_12dp"
+        android:text="Beta, Android learning project"/>
+</LinearLayout>

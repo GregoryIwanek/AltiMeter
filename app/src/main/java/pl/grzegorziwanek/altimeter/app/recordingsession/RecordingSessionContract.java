@@ -78,5 +78,7 @@ interface RecordingSessionContract {
         void resetSessionData();
 
         void lockSession();
+
+        void activityDestroyedUnsubscribeRx();
     }
 }

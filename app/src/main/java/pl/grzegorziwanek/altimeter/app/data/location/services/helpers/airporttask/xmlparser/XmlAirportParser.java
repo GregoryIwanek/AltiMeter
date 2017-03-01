@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.data.location.services.helpers.xmlparser;
+package pl.grzegorziwanek.altimeter.app.data.location.services.helpers.airporttask.xmlparser;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -36,17 +36,24 @@ public class XmlAirportParser extends DefaultHandler {
     public void startDocument() throws SAXException {
         if (list == null) {
             list = new ArrayList<>();
-            BarometerManager.setAirportsList(list);
         }
     }
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        // Create StringBuilder object to store xml node value
-        builder=new StringBuilder();
+        // Create or reset StringBuilder object to store xml node value
+        setBuilder();
 
         if(localName.equals("Station")){
             airportsValues = new XmlAirportValues();
+        }
+    }
+
+    private void setBuilder() {
+        if (builder == null) {
+            builder = new StringBuilder();
+        } else {
+            builder.setLength(0);
         }
     }
 
@@ -57,7 +64,6 @@ public class XmlAirportParser extends DefaultHandler {
         } else if (isModeMetar()) {
             appendInMetarMode(localName);
         }
-        BarometerManager.setAirportsList(list);
     }
 
     @Override
@@ -112,20 +118,20 @@ public class XmlAirportParser extends DefaultHandler {
         }
     }
 
-    public List<XmlAirportValues> getList() {
-        return list;
-    }
-
     public void setMode(String mode) {
         xmlMode = mode;
     }
 
     private boolean isModeStations() {
-        return xmlMode.equals("STATIONS");
+        return xmlMode.equals("GET_STATIONS");
     }
 
     private boolean isModeMetar() {
-        return xmlMode.equals("METAR");
+        return xmlMode.equals("GET_METAR");
+    }
+
+    public List<XmlAirportValues> getAirportsList() {
+        return list;
     }
 
     public void clearList() {

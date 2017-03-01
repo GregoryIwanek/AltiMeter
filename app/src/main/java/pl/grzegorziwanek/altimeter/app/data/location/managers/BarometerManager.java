@@ -2,7 +2,7 @@ package pl.grzegorziwanek.altimeter.app.data.location.managers;
 
 import java.util.List;
 
-import pl.grzegorziwanek.altimeter.app.data.location.services.helpers.xmlparser.XmlAirportValues;
+import pl.grzegorziwanek.altimeter.app.data.location.services.helpers.airporttask.xmlparser.XmlAirportValues;
 
 /**
  * Created by Grzegorz Iwanek on 21.02.2017.
@@ -92,5 +92,9 @@ public class BarometerManager {
 
     public static void setClosestAirportPressure(double closestAirportPressure) {
         mClosestAirportPressure = closestAirportPressure;
+    }
+
+    public static boolean isAirportsListEmpty() {
+        return mAirportsList.isEmpty();
     }
 }

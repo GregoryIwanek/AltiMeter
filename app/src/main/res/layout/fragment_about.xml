@@ -1,239 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/coordinatorContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="horizontal"
     android:theme="@style/Theme_Altitude_Graphs">
 
+    <LinearLayout
+        android:layout_width="45dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/about_button_graphs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/about_button_selector"
+            android:text="@string/graphs"
+            android:textSize="10sp"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/about_button_new_graph"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/about_button_selector"
+            android:text="@string/new_button"
+            android:textSize="10sp"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/about_button_details"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/about_button_selector"
+            android:text="@string/details"
+            android:textSize="10sp"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/about_button_stats"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/about_button_selector"
+            android:text="@string/stats"
+            android:textSize="10sp"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/about_button_map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/about_button_selector"
+            android:text="@string/map_button"
+            android:textSize="10sp"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/about_button_author"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/about_button_selector"
+            android:text="@string/author"
+            android:textSize="10sp"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
     <ScrollView
-        android:id="@+id/contentFrame"
+        android:id="@+id/contentFrameAbout"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-                <FrameLayout
-                    android:layout_gravity="center"
-                    android:layout_width="300dp"
-                    android:layout_height="500dp"
-                    android:background="@drawable/recording_session">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:background="@color/colorTransparent">
-
-                        <FrameLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="20"
-                            android:background="@color/colorTransparent">
-                        </FrameLayout>
-
-                        <!--65dp-->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="45"
-                            android:orientation="horizontal"
-                            android:background="@color/colorTransparent">
-
-                            <RelativeLayout
-                                android:clickable="true"
-                                android:id="@+id/about_menu_button"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="45"
-                                android:background="@color/colorTransparent">
-
-                            </RelativeLayout>
-
-                            <RelativeLayout
-                                android:clickable="true"
-                                android:id="@+id/about_title_label"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="125"
-                                android:background="@color/colorTransparent">
-
-                            </RelativeLayout>
-
-                            <RelativeLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="80"
-                                android:background="@color/colorTransparent"/>
-
-                            <RelativeLayout
-                                android:clickable="true"
-                                android:id="@+id/about_share_button"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="50"
-                                android:background="@color/colorTransparent">
-
-                            </RelativeLayout>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="75"
-                            android:orientation="horizontal"
-                            android:background="@color/colorTransparent">
-
-                            <RelativeLayout
-                                android:clickable="true"
-                                android:id="@+id/about_address"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="110"
-                                android:background="@color/colorTransparent"/>
-
-                            <RelativeLayout
-                                android:clickable="true"
-                                android:id="@+id/about_current_elevation"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="85"
-                                android:background="@color/colorTransparent"/>
-
-                            <RelativeLayout
-                                android:clickable="true"
-                                android:id="@+id/about_recording_buttons"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="105"
-                                android:background="@color/colorTransparent"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:clickable="true"
-                            android:id="@+id/about_graph"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="170"
-                            android:orientation="horizontal"
-                            android:background="@color/colorTransparent">
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="40"
-                            android:orientation="horizontal"
-                            android:background="@color/colorTransparent">
-
-                            <RelativeLayout
-                                android:clickable="true"
-                                android:id="@+id/about_button_gps"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="100"
-                                android:background="@color/colorTransparent"/>
-
-                            <RelativeLayout
-                                android:clickable="true"
-                                android:id="@+id/about_button_network"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="100"
-                                android:background="@color/colorTransparent"/>
-
-                            <RelativeLayout
-                                android:clickable="true"
-                                android:id="@+id/about_button_pressure"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="100"
-                                android:background="@color/colorTransparent"/>
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="55"
-                            android:orientation="horizontal"
-                            android:background="@color/colorTransparent">
-
-                            <RelativeLayout
-                                android:clickable="true"
-                                android:id="@+id/about_min_altitude"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="100"
-                                android:background="@color/colorTransparent"/>
-
-                            <RelativeLayout
-                                android:clickable="true"
-                                android:id="@+id/about_distance_label"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="100"
-                                android:background="@color/colorTransparent"/>
-
-                            <RelativeLayout
-                                android:clickable="true"
-                                android:id="@+id/about_max_altitude"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="100"
-                                android:background="@color/colorTransparent"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="55"
-                            android:orientation="horizontal"
-                            android:background="@color/colorTransparent">
-
-                            <RelativeLayout
-                                android:clickable="true"
-                                android:id="@+id/about_latitude_label"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="150"
-                                android:background="@color/colorTransparent"/>
-
-                            <RelativeLayout
-                                android:clickable="true"
-                                android:id="@+id/about_longitude_label"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="150"
-                                android:background="@color/colorTransparent"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="35"
-                            android:orientation="horizontal"
-                            android:background="@color/colorTransparent">
-                        </LinearLayout>
-                    </LinearLayout>
-                </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/margin_16dp">
-
-                <FrameLayout
-                    android:layout_gravity="center"
-                    android:layout_width="300dp"
-                    android:layout_height="500dp"
-                    android:background="@drawable/recording_session"/>
-            </FrameLayout>
-        </LinearLayout>
     </ScrollView>
-</FrameLayout>
+</LinearLayout>
 
 

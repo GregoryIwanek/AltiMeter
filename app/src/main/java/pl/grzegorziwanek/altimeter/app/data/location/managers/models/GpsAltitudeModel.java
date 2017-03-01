@@ -1,19 +1,19 @@
-package pl.grzegorziwanek.altimeter.app.data.location.model;
+package pl.grzegorziwanek.altimeter.app.data.location.managers.models;
 
 /**
  * Created by Grzegorz Iwanek on 21.02.2017.
  */
 
-public class NetworkAltitudeModel {
-    private static NetworkAltitudeModel networkAltitudeModel;
+public class GpsAltitudeModel {
+    private static GpsAltitudeModel gpsAltitudeModel;
     private static double mAltitude = 0;
     private static long mMeasureTime;
 
-    public static NetworkAltitudeModel getInstance() {
-        if (networkAltitudeModel == null) {
-            networkAltitudeModel = new NetworkAltitudeModel();
+    public static GpsAltitudeModel getInstance() {
+        if (gpsAltitudeModel == null) {
+            gpsAltitudeModel = new GpsAltitudeModel();
         }
-        return networkAltitudeModel;
+        return gpsAltitudeModel;
     }
 
     public static double getAltitude() {

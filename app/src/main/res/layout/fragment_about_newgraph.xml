@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/activity_padding_bottom_12dp"
+        android:layout_marginRight="@dimen/activity_padding_bottom_12dp"
+        android:background="@color/colorTransparent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/new_graph_screen"
+            android:paddingBottom="@dimen/margin_8dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:paddingBottom="@dimen/activity_padding_bottom_12dp"
+            android:text="New graph screen is a section responsible for holding new session's operations."/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:paddingBottom="@dimen/margin_8dp"
+            android:text="Features:"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:text="- recording altitude by GPS, internet and barometer"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:text="- limiting number of sources to take data from"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:text="- drawing altitude in time graph"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:text="- printing information about location"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/activity_padding_bottom_12dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:text="- generating map with recorded locations"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:paddingBottom="@dimen/margin_8dp"
+            android:text="Click on UI element to get specific information"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_gravity="center"
+        android:layout_width="300dp"
+        android:layout_height="500dp"
+        android:background="@drawable/recording_session">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/colorTransparent">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="20"
+                android:background="@color/colorTransparent">
+            </FrameLayout>
+
+            <!--65dp-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="45"
+                android:orientation="horizontal"
+                android:background="@color/colorTransparent">
+
+                <RelativeLayout
+                    android:clickable="true"
+                    android:id="@+id/about_menu_button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="45"
+                    android:background="@drawable/customborder"/>
+
+                <RelativeLayout
+                    android:clickable="true"
+                    android:id="@+id/about_title_label"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="125"
+                    android:background="@drawable/customborder"/>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="80"
+                    android:background="@color/colorTransparent"/>
+
+                <RelativeLayout
+                    android:clickable="true"
+                    android:id="@+id/about_share_button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:background="@drawable/customborder"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="75"
+                android:orientation="horizontal"
+                android:background="@color/colorTransparent">
+
+                <RelativeLayout
+                    android:clickable="true"
+                    android:id="@+id/about_address"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="110"
+                    android:background="@drawable/customborder"/>
+
+                <RelativeLayout
+                    android:clickable="true"
+                    android:id="@+id/about_current_elevation"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="85"
+                    android:background="@drawable/customborder"/>
+
+                <RelativeLayout
+                    android:clickable="true"
+                    android:id="@+id/about_recording_buttons"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="105"
+                    android:background="@drawable/customborder"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:clickable="true"
+                android:id="@+id/about_graph"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="170"
+                android:orientation="horizontal"
+                android:background="@drawable/customborder">
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="40"
+                android:orientation="horizontal"
+                android:background="@color/colorTransparent">
+
+                <RelativeLayout
+                    android:clickable="true"
+                    android:id="@+id/about_button_gps"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="100"
+                    android:background="@drawable/customborder"/>
+
+                <RelativeLayout
+                    android:clickable="true"
+                    android:id="@+id/about_button_network"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="100"
+                    android:background="@drawable/customborder"/>
+
+                <RelativeLayout
+                    android:clickable="true"
+                    android:id="@+id/about_button_pressure"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="100"
+                    android:background="@drawable/customborder"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="55"
+                android:orientation="horizontal"
+                android:background="@color/colorTransparent">
+
+                <RelativeLayout
+                    android:clickable="true"
+                    android:id="@+id/about_min_altitude"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="100"
+                    android:background="@drawable/customborder"/>
+
+                <RelativeLayout
+                    android:clickable="true"
+                    android:id="@+id/about_distance_label"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="100"
+                    android:background="@drawable/customborder"/>
+
+                <RelativeLayout
+                    android:clickable="true"
+                    android:id="@+id/about_max_altitude"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="100"
+                    android:background="@drawable/customborder"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="55"
+                android:orientation="horizontal"
+                android:background="@color/colorTransparent">
+
+                <RelativeLayout
+                    android:clickable="true"
+                    android:id="@+id/about_latitude_label"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="150"
+                    android:background="@drawable/customborder"/>
+
+                <RelativeLayout
+                    android:clickable="true"
+                    android:id="@+id/about_longitude_label"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="150"
+                    android:background="@drawable/customborder"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="35"
+                android:orientation="horizontal"
+                android:background="@color/colorTransparent">
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

@@ -134,8 +134,6 @@ public class SessionFragment extends Fragment implements SessionContract.View,
             case R.id.menu_delete_all:
                 showUpDialog("Delete all?");
                 break;
-            case R.id.menu_refresh:
-                break;
         }
         return true;
     }

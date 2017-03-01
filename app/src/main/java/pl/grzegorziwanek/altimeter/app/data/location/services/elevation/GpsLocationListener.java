@@ -22,6 +22,7 @@ import java.io.IOException;
 import pl.grzegorziwanek.altimeter.app.utils.Constants;
 import pl.grzegorziwanek.altimeter.app.data.location.LocationResponse;
 import pl.grzegorziwanek.altimeter.app.utils.EarthGravitationalModel;
+import rx.Observer;
 
 /**
  * Created by on 02.02.2017.
@@ -102,7 +103,7 @@ public class GpsLocationListener implements GoogleApiClient.ConnectionCallbacks,
 
     private double fixByOffset(double lat, double lon, double altitudeWgs84) {
         double altitudeOffset = 0;
-        // Calculate the offset between the ellipsoid and geoid of the surface
+        // Calculate the offset between the ellipsoid and geoid of the earth surface
         try {
             altitudeOffset = mGravitationModel.heightOffset(lat, lon, altitudeWgs84);
         } catch (Exception e) {
@@ -133,7 +134,7 @@ public class GpsLocationListener implements GoogleApiClient.ConnectionCallbacks,
     }
 
     @Override
-    public void clearSessionData() {
+    public void resetAllData() {
         //nothing to do, LocationUpdateManager deals with clear
     }
 
@@ -150,7 +151,7 @@ public class GpsLocationListener implements GoogleApiClient.ConnectionCallbacks,
     }
 
     private LocationRequest setStandardLocationRequest(LocationRequest request) {
-        request.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         request.setInterval(Constants.GPS_INTERVAL_VALUE);
         request.setFastestInterval(Constants.GPS_FASTEST_INTERVAL_VALUE);
         return request;

@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.data.location.model;
+package pl.grzegorziwanek.altimeter.app.data.location.managers.models;
 
 import pl.grzegorziwanek.altimeter.app.data.location.managers.BarometerManager;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.GpsManager;

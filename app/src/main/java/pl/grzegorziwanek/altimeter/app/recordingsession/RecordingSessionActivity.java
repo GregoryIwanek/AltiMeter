@@ -33,6 +33,7 @@ public class RecordingSessionActivity extends BasicActivity {
         setContentView(R.layout.activity_new_graph);
 
         super.initiateUI();
+        super.setShareIcon();
         ButterKnife.bind(this);
         setAddNewGraphFragment();
         setPresenter();

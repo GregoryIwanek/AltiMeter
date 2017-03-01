@@ -192,6 +192,11 @@ public class RecordingSessionPresenter implements RecordingSessionContract.Prese
         mLocationUpdateManager.stopListenForLocations(true);
     }
 
+    @Override
+    public void activityDestroyedUnsubscribeRx() {
+        mLocationUpdateManager.unsubscribeOnDestroy();
+    }
+
     private void updateButton(int drawableId) {
         mRecordingSessionView.setButtonTagAndPicture(drawableId);
     }
@@ -201,7 +206,7 @@ public class RecordingSessionPresenter implements RecordingSessionContract.Prese
         pauseLocationRecording();
         disableServices();
         mSessionRepository.clearSessionData(mSession.getId());
-        mLocationUpdateManager.clearSessionData();
+        mLocationUpdateManager.resetAllData();
         mRecordingSessionView.resetGraph();
     }
 

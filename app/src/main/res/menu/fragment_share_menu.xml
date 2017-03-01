@@ -4,18 +4,7 @@
 
     <item
         android:id="@+id/share_facebook"
-        android:title="Share facebook"
+        android:title="Share"
+        android:actionProviderClass="android.widget.ShareActionProvider"
         app:showAsAction="never"/>
-    <item
-        android:id="@+id/share_gmail"
-        android:title="Share gmail"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/share_sms"
-        android:title="Share sms"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/share_whatsapp"
-        android:title="Share WhatsApp"
-        app:showAsAction="never" />
 </menu>

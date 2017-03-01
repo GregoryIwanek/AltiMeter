@@ -1,19 +1,15 @@
 package pl.grzegorziwanek.altimeter.app.utils;
 
 import android.location.Location;
-import android.support.annotation.FloatRange;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Xml;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import pl.grzegorziwanek.altimeter.app.data.location.services.helpers.xmlparser.XmlAirportValues;
+import pl.grzegorziwanek.altimeter.app.data.location.services.helpers.airporttask.xmlparser.XmlAirportValues;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

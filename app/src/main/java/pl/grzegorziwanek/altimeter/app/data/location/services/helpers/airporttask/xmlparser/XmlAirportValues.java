@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.data.location.services.helpers.xmlparser;
+package pl.grzegorziwanek.altimeter.app.data.location.services.helpers.airporttask.xmlparser;
 
 /**
  * Created by Grzegorz Iwanek on 24.02.2017.
@@ -11,7 +11,6 @@ public class XmlAirportValues {
     private float latitude;
     private float longitude;
     private float elevation;
-    private float temp;
     private double pressureInHg;
     private float distance = 10000;
 
@@ -61,14 +60,6 @@ public class XmlAirportValues {
 
     public void setElevation(float elevation) {
         this.elevation = elevation;
-    }
-
-    public float getTemp() {
-        return temp;
-    }
-
-    public void setTemp(float temp) {
-        this.temp = temp;
     }
 
     public double getPressureInHg() {

@@ -32,6 +32,7 @@ public class MapActivity extends BasicActivity {
         setContentView(R.layout.activity_map);
 
         super.initiateUI();
+        super.setShareIcon();
         setMapFragment();
         setPresenter();
         ButterKnife.bind(this);

@@ -15,18 +15,6 @@ public interface LocationResponse {
         void onInitialLocationIdentified(Location location);
     }
 
-    interface BarometerElevationCallback {
-
-        void onBarometerElevationFound(Double barAltitude);
-    }
-
-    interface AirportsCallback {
-
-        void onNearestAirportsFound();
-
-        void onAirportPressureFound();
-    }
-
     interface AddressFoundCallback {
 
         void onAddressFound(String address);
@@ -35,11 +23,6 @@ public interface LocationResponse {
     interface GpsElevationCallback {
 
         void onGpsLocationFound(Location location);
-    }
-
-    interface NetworkElevationCallback {
-
-        void onNetworkElevationFound(Double elevation);
     }
 
     interface FullInfoCallback {
@@ -63,5 +46,5 @@ public interface LocationResponse {
 
     void identifyCurrentLocation();
 
-    void clearSessionData();
+    void resetAllData();
 }

@@ -7,23 +7,10 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_height="match_parent">
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/map"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="2">
-
-        <!--ELEMENT FROM EXTERNAL LIBRARY TO CREATE GRAPHS IN REAL TIME-->
-        <pl.grzegorziwanek.altimeter.app.recordingsession.GraphViewWidget
-            android:id="@+id/graph_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </FrameLayout>

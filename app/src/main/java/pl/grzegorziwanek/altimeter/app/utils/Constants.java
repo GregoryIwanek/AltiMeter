@@ -69,3 +69,13 @@ public final class Constants {
 //String APPID_KEY = "AIzaSyDz8OSO03MnSdoE-0FFN9sZaIyFRlpf79Y";
 //.appendQueryParameter(Constants.APPID_ELEVATION_PARAM, APPID_KEY)
 
+/**
+ * US service (WORKS ONLY FOR US TERRITORY!!!) USGS GOV DATA
+ * http://ned.usgs.gov/epqs/pqs.php?x=%2$f&y=%1$f&units=Meters&output=json
+ * where x = longitude e.g -90.23, y = latitude e.g. 40.23332
+ * units = Meters / Feet , output = json / xml
+ * e.g. query:
+ * USA, longitude -92.323, latitude 32.332
+ * units Meters, output format json
+ * http://ned.usgs.gov/epqs/pqs.php?x=-92.323&y=32.332&units=Meters&output=json
+ */

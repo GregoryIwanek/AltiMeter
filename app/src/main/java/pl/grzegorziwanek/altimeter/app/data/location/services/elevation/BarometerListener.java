@@ -9,6 +9,7 @@ import android.hardware.SensorManager;
 
 import pl.grzegorziwanek.altimeter.app.data.location.LocationResponse;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.BarometerManager;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by Grzegorz Iwanek on 18.02.2017.
@@ -17,21 +18,21 @@ import pl.grzegorziwanek.altimeter.app.data.location.managers.BarometerManager;
 public class BarometerListener implements SensorEventListener {
 
     private static BarometerListener barometerListener;
+    private final PublishSubject<Double> mAltitudePublishSubject;
     private final Context mContext;
-    private final LocationResponse.BarometerElevationCallback mCallback;
     private Sensor mSensor;
     private boolean isListenerRegistered = false;
     private SensorManager sensorManager;
 
-    private BarometerListener(Context context, LocationResponse.BarometerElevationCallback callback) {
+    private BarometerListener(Context context) {
         mContext = context;
-        mCallback = callback;
+        mAltitudePublishSubject = PublishSubject.create();
         setPressureSensor();
     }
 
-    public static BarometerListener getInstance(Context context, LocationResponse.BarometerElevationCallback callback) {
+    public static BarometerListener getInstance(Context context) {
         if (barometerListener == null) {
-            barometerListener = new BarometerListener(context, callback);
+            barometerListener = new BarometerListener(context);
         }
         return barometerListener;
     }
@@ -41,11 +42,15 @@ public class BarometerListener implements SensorEventListener {
         mSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
     }
 
+    public PublishSubject<Double> getPressureAltitudePublishSubject() {
+        return mAltitudePublishSubject;
+    }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         String altitude = String.valueOf(SensorManager.getAltitude(
                 getPressure(), event.values[0]));
-        mCallback.onBarometerElevationFound(Double.valueOf(altitude));
+        mAltitudePublishSubject.onNext(Double.valueOf(altitude));
     }
 
     public void registerListener() {

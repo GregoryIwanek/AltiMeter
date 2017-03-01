@@ -21,6 +21,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
@@ -61,7 +62,6 @@ public class MapFragment extends Fragment implements MapContract.View {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-
 
         ButterKnife.bind(this, view);
 
@@ -110,39 +110,50 @@ public class MapFragment extends Fragment implements MapContract.View {
                     mGoogleMap.setMyLocationEnabled(true);
 
                     List<LatLng> positionsFixed = new ArrayList<>();
-                    positionsFixed.add(new LatLng(51.830208, 21.803741));
-                    positionsFixed.add(new LatLng(52.830208, 21.803741));
-                    positionsFixed.add(new LatLng(53.830208, 21.803741));
-                    positionsFixed.add(new LatLng(54.830208, 21.803741));
-                    positionsFixed.add(new LatLng(55.830208, 21.803741));
-                    positionsFixed.add(new LatLng(56.830208, 21.803741));
-                    positionsFixed.add(new LatLng(57.830208, 21.803741));
-                    positionsFixed.add(new LatLng(58.830208, 21.803741));
-                    positionsFixed.add(new LatLng(59.830208, 21.803741));
-                    positionsFixed.add(new LatLng(60.830208, 21.803741));
-                    positionsFixed.add(new LatLng(61.830208, 21.803741));
-                    positionsFixed.add(new LatLng(62.830208, 21.803741));
-                    positionsFixed.add(new LatLng(63.830208, 21.803741));
-                    positionsFixed.add(new LatLng(64.830208, 21.803741));
-                    positionsFixed.add(new LatLng(64.830208, 22.803741));
-                    positionsFixed.add(new LatLng(64.830208, 23.803741));
-                    positionsFixed.add(new LatLng(64.830208, 24.803741));
-                    positionsFixed.add(new LatLng(64.830208, 25.803741));
-                    positionsFixed.add(new LatLng(64.830208, 26.803741));
-                    positionsFixed.add(new LatLng(64.830208, 27.803741));
-                    positionsFixed.add(new LatLng(64.830208, 28.803741));
-                    positionsFixed.add(new LatLng(64.830208, 29.803741));
-                    positionsFixed.add(new LatLng(64.830208, 30.803741));
-                    positionsFixed.add(new LatLng(64.830208, 31.803741));
-                    positionsFixed.add(new LatLng(64.830208, 32.803741));
-                    positionsFixed.add(new LatLng(64.830208, 33.803741));
+                    positionsFixed.add(new LatLng(52.287638, 21.001133));
+                    positionsFixed.add(new LatLng(52.285669, 21.003386));
+                    positionsFixed.add(new LatLng(52.283661, 21.005242));
+                    positionsFixed.add(new LatLng(52.281429, 21.006841));
+                    positionsFixed.add(new LatLng(52.278718, 21.008418));
+                    positionsFixed.add(new LatLng(52.276178, 21.009491));
+                    positionsFixed.add(new LatLng(52.273769, 21.010382));
+                    positionsFixed.add(new LatLng(52.270138, 21.011766));
+                    positionsFixed.add(new LatLng(52.267519, 21.012710));
+                    positionsFixed.add(new LatLng(52.264886, 21.013504));
+                    positionsFixed.add(new LatLng(52.263750, 21.013804));
+                    positionsFixed.add(new LatLng(52.262962, 21.013321));
+                    positionsFixed.add(new LatLng(52.262535, 21.012828));
+                    positionsFixed.add(new LatLng(52.261589, 21.013654));
+                    positionsFixed.add(new LatLng(52.262607, 21.016358));
+                    positionsFixed.add(new LatLng(52.261149, 21.010661));
+                    positionsFixed.add(new LatLng(52.259961, 21.006895));
+                    positionsFixed.add(new LatLng(52.258831, 21.002442));
+                    positionsFixed.add(new LatLng(52.258634, 20.997915));
+                    positionsFixed.add(new LatLng(52.258391, 20.997786));
+                    positionsFixed.add(new LatLng(52.257170, 20.997164));
+                    positionsFixed.add(new LatLng(52.255475, 20.998247));
+                    positionsFixed.add(new LatLng(52.253952, 20.999685));
+                    positionsFixed.add(new LatLng(52.252809, 21.000801));
+                    positionsFixed.add(new LatLng(52.253321, 21.002389));
+                    positionsFixed.add(new LatLng(52.253794, 21.004105));
+                    positionsFixed.add(new LatLng(52.252980, 21.005285));
+                    positionsFixed.add(new LatLng(52.253485, 21.006873));
+                    positionsFixed.add(new LatLng(52.252336, 21.010017));
+                    positionsFixed.add(new LatLng(52.251646, 21.011068));
+                    positionsFixed.add(new LatLng(52.252086, 21.012442));
+                    positionsFixed.add(new LatLng(52.252980, 21.012045));
+
+                    LatLng start = new LatLng(52.287638, 21.001133);
+                    LatLng end = new LatLng(52.252980, 21.012045);
 
                     int colorId = Color.argb(150, 50, 50, 255);
 
-                    PolylineOptions polylineOptions = new PolylineOptions().addAll(positions);
+                    PolylineOptions polylineOptions = new PolylineOptions().addAll(positionsFixed);
                     polylineOptions.color(colorId);
 
                     mGoogleMap.addPolyline(polylineOptions);
+                    mGoogleMap.addMarker(new MarkerOptions().position(start).title("Start").snippet("Distance 0.0 km \nElevation 84.0 m"));
+                    mGoogleMap.addMarker(new MarkerOptions().position(end).title("End").snippet("Distance 4.53 km \nElevation 85.0 m"));
                     //cameraPosition = new CameraPosition.Builder().target(position).zoom(8).build();
                     //CameraPosition cameraPosition = new CameraPosition.Builder().target(position).zoom(12).build();
                     //mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
