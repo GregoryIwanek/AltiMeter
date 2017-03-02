@@ -61,6 +61,7 @@ public final class Constants {
     public static final int GPS_FASTEST_INTERVAL_VALUE = 10000;
     public static final int ONE_HOUR = 3600000;
     public static final int HALF_HOUR = 1800000;
+    public static final int TWENTY_SECONDS = 20000;
 
     // hectopascals <-> mercurial pressure multiplier
     public static final double MULTIPLIER_HPA = 33.8638;

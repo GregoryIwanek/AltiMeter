@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 
 import pl.grzegorziwanek.altimeter.app.data.Session;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.BarometerManager;
+import pl.grzegorziwanek.altimeter.app.data.location.managers.models.CombinedLocationModel;
 import pl.grzegorziwanek.altimeter.app.utils.FormatAndValueConverter;
 
 /**
@@ -81,13 +82,13 @@ abstract class SessionUpdateModel {
      * @param session
      */
     static void setSessionsHeight(Session session) {
-        Double currAltitude = session.getCurrentElevation();
-        Double minHeight = session.getMinHeight();
-        Double maxHeight = session.getMaxHeight();
+        double currAltitude = session.getCurrentElevation();
+        double minHeight = session.getMinHeight();
+        double maxHeight = session.getMaxHeight();
 
-        Double newMinHeight =
+        double newMinHeight =
                 FormatAndValueConverter.updateMinAltitudeValue(currAltitude, minHeight);
-        Double newMaxHeight =
+        double newMaxHeight =
                 FormatAndValueConverter.updateMaxAltitudeValue(currAltitude, maxHeight);
         String newMinStr =
                 FormatAndValueConverter.setMinMaxString(newMinHeight);
@@ -108,9 +109,9 @@ abstract class SessionUpdateModel {
         if (session.getLastLocation() != null) {
             Location lastLocation = session.getLastLocation();
             Location currentLocation = session.getCurrentLocation();
-            Double currentDistance = session.getDistance();
+            double currentDistance = session.getDistance();
 
-            Double distance = FormatAndValueConverter.updateDistanceValue(
+            double distance = FormatAndValueConverter.updateDistanceValue(
                     lastLocation, currentLocation, currentDistance);
             session.setDistance(distance);
 
@@ -132,5 +133,45 @@ abstract class SessionUpdateModel {
                 FormatAndValueConverter.setGeoCoordinateStr(location.getLongitude(), false);
         session.setLatitudeStr(latitudeStr);
         session.setLongitudeStr(longitudeStr);
+    }
+
+    /**
+     *
+     * @param session
+     */
+    static void setCurrentElevation(Session session) {
+        double elevation = CombinedLocationModel.getCombinedAltitude();
+        session.setCurrentElevation(elevation);
+        session.getCurrentLocation().setAltitude(elevation);
+    }
+
+
+    /**
+     *
+     * @param session
+     * @param location
+     */
+    static void saveSessionsLocation(Session session, Location location) {
+        if (session.getCurrentLocation() != null) {
+            session.setLastLocation(session.getCurrentLocation());
+        }
+        session.setCurrLocation(location);
+    }
+
+    /**
+     *
+     * @param session
+     */
+    static void appendLocationToList(Session session) {
+        session.appendLocationPoint(session.getCurrentLocation());
+    }
+
+    /**
+     *
+     * @param session
+     */
+    static void setElevationOnList(Session session) {
+        double elevation = FormatAndValueConverter.roundValue(CombinedLocationModel.getCombinedAltitude());
+        session.setElevationOnList(elevation);
     }
 }

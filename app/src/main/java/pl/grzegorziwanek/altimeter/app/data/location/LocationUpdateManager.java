@@ -53,7 +53,7 @@ public class LocationUpdateManager implements LocationResponse {
     private Runnable mBarometerRunnable;
     private Runnable mNetworkRunnable;
     private Runnable mDataCombinedRunnable;
-    private static Session mSession = null;
+    private Session mSession = null;
     private Subscription mBarometerSubscription = null;
 
     private LocationUpdateManager(@NonNull Context context) {
@@ -66,8 +66,6 @@ public class LocationUpdateManager implements LocationResponse {
 
     public static LocationUpdateManager getInstance(@NonNull Context context) {
         if (INSTANCE == null) {
-            INSTANCE = new LocationUpdateManager(context);
-        } else {
             INSTANCE = new LocationUpdateManager(context);
         }
         return INSTANCE;
@@ -87,26 +85,28 @@ public class LocationUpdateManager implements LocationResponse {
             }
         };
 
+        callbackGps = new GpsElevationCallback() {
+            @Override
+            public void onGpsLocationFound(Location location) {
+                GpsManager.setMeasureTime(System.currentTimeMillis());
+                SessionUpdateModel.saveSessionsLocation(mSession, location);
+                SessionUpdateModel.appendLocationToList(mSession);
+                fetchAddressService(location);
+
+                if (isAirportUpdateRequired(location.getTime())) {
+                    updateAirportInfo(location);
+                }
+                if (location.getAltitude() != 0) {
+                    saveNonZeroGpsAltitude(location);
+                }
+                mSession.appendGraphPoint(mSession.getCurrentLocation().getTime(), CombinedLocationModel.getCombinedAltitude());
+            }
+        };
+
         callbackAddress = new AddressFoundCallback() {
             @Override
             public void onAddressFound(String address) {
                 mSession.setAddress(address);
-            }
-        };
-
-        callbackGps = new GpsElevationCallback() {
-            @Override
-            public void onGpsLocationFound(Location location) {
-                if (GpsManager.isGpsEnabled()) {
-                    saveSessionsLocation(location);
-                    appendLocationToList();
-                    fetchAddressService(location);
-
-                    if (location.getAltitude() != 0) {
-                        saveNonZeroGpsAltitude(location);
-                    }
-                    mSession.appendGraphPoint(mSession.getCurrentLocation().getTime(), CombinedLocationModel.getCombinedAltitude());
-                }
             }
         };
     }
@@ -132,18 +132,14 @@ public class LocationUpdateManager implements LocationResponse {
         mBarometerRunnable = new Runnable() {
             @Override
             public void run() {
-                if (BarometerManager.isBarometerEnabled()) {
-                    mBarometerListener.registerListener();
-                }
+                mBarometerListener.registerListener();
             }
         };
 
         mNetworkRunnable = new Runnable() {
             @Override
             public void run() {
-                if (NetworkManager.isNetworkEnabled()) {
-                    fetchCurrentElevationRx(mSession.getCurrentLocation());
-                }
+                fetchCurrentElevationRx(mSession.getCurrentLocation());
             }
         };
 
@@ -151,12 +147,14 @@ public class LocationUpdateManager implements LocationResponse {
             @Override
             public void run() {
                 // TODO: 23.02.2017 set case when GPS is enabled, and other disabled (app crash)
-                // TODO: 23.02.2017 set case when GPS is disabled and network is enabled (call of "identify position" every 30sec)
                 // TODO: 23.02.2017 set case when only Barometer is enabled (only altitude will be shown)
+
+                // TODO: 01.03.2017 1-only barometer -> index out of bounds, refactor code to ignore lack of location
                 mSession.getLocationList().get(mSession.getLocationList().size()-1).setAltitude(CombinedLocationModel.getCombinedAltitude());
                 CombinedLocationModel.setUpdateTime(System.currentTimeMillis());
                 mSession.appendGraphPoint(CombinedLocationModel.getUpdateTime(), CombinedLocationModel.getCombinedAltitude());
-                mSession.setCurrentElevation(FormatAndValueConverter.roundValue(mSession.getCurrentElevation()));
+
+                SessionUpdateModel.setCurrentElevation(mSession);
                 callbackFullInfo.onFullInfoAcquired(mSession);
                 handler.postDelayed(mDataCombinedRunnable, 20000);
             }
@@ -185,8 +183,8 @@ public class LocationUpdateManager implements LocationResponse {
                             BarometerAltitudeModel.setAltitude(barAltitude);
                             barAltitude = FormatAndValueConverter.roundValue(barAltitude);
                             callbackFullInfo.onBarometerInfoAcquired(String.valueOf(barAltitude));
-                            CombinedLocationModel.updateCombinedAltitude();
                             handler.postDelayed(mBarometerRunnable, 20000);
+                            CombinedLocationModel.updateCombinedAltitude();
                         }
                     });
         }
@@ -211,34 +209,35 @@ public class LocationUpdateManager implements LocationResponse {
 
                     @Override
                     public void onNext(Double elevation) {
-                        //round elevation value (to set precision to meters)
                         elevation = (double) Math.round(elevation);
-                        appendLocationToList();
+                        elevation = FormatAndValueConverter.roundValue(elevation);
+
+                        SessionUpdateModel.appendLocationToList(mSession);
+
                         setTextViewStrings();
 
                         NetworkAltitudeModel.setAltitude(elevation);
                         NetworkAltitudeModel.setMeasureTime(System.currentTimeMillis());
 
-                        elevation = FormatAndValueConverter.roundValue(elevation);
+                        if (!GpsManager.isGpsEnabled() || isAddressUpdateRequired(System.currentTimeMillis())) {
+                            fetchAddressService(mSession.getCurrentLocation());
+                        }
+
                         String alt = String.valueOf(elevation);
                         callbackFullInfo.onNetworkInfoAcquired(alt);
 
                         CombinedLocationModel.updateCombinedAltitude();
-                        setCurrentElevation(CombinedLocationModel.getCombinedAltitude());
+                        SessionUpdateModel.setCurrentElevation(mSession);
                         handler.postDelayed(mNetworkRunnable, Constants.NETWORK_INTERVAL_VALUE);
 
-                        if (!GpsManager.isGpsEnabled()) {
+                        if (!GpsManager.isGpsEnabled() || isAddressUpdateRequired(System.currentTimeMillis())) {
                             identifyCurrentLocation();
+                        }
+                        if (isAirportUpdateRequired(mSession.getCurrentLocation().getTime())) {
+                            updateAirportInfo(mSession.getCurrentLocation());
                         }
                     }
                 });
-    }
-
-    private void fetchAddressService(Location location) {
-        Intent intent = new Intent(mContext, AddressService.class);
-        intent.putExtra(Constants.RECEIVER, mResultReceiver);
-        intent.putExtra(Constants.LOCATION_DATA, location);
-        mContext.startService(intent);
     }
 
     private void fetchNearestAirportsRx(Location location) {
@@ -264,9 +263,7 @@ public class LocationUpdateManager implements LocationResponse {
                     @Override
                     public void onNext(List<XmlAirportValues> values) {
                         BarometerManager.setAirportsList(values);
-                        if (!BarometerManager.isAirportsListEmpty()) {
-                            fetchAirportsPressureRx();
-                        }
+                        fetchAirportsPressureRx();
                     }
                 });
     }
@@ -300,32 +297,24 @@ public class LocationUpdateManager implements LocationResponse {
                 });
     }
 
-    private void saveSessionsLocation(Location location) {
-        if (mSession.getCurrentLocation() != null) {
-            mSession.setLastLocation(mSession.getCurrentLocation());
-        }
-        mSession.setCurrLocation(location);
+    private void fetchAddressService(Location location) {
+        Intent intent = new Intent(mContext, AddressService.class);
+        intent.putExtra(Constants.RECEIVER, mResultReceiver);
+        intent.putExtra(Constants.LOCATION_DATA, location);
+        mContext.startService(intent);
     }
 
     public void unsubscribeOnDestroy() {
-        mBarometerSubscription.unsubscribe();
-        mBarometerSubscription = null;
+        if (mBarometerSubscription != null) {
+            mBarometerSubscription.unsubscribe();
+            mBarometerSubscription = null;
+        }
         resetAllData();
     }
 
-    private void setCurrentElevation(Double elevation) {
-        mSession.setCurrentElevation(elevation);
-        mSession.getCurrentLocation().setAltitude(elevation);
-    }
-
-    private void appendLocationToList() {
-        mSession.appendLocationPoint(mSession.getCurrentLocation());
-    }
-
     private void setTextViewStrings() {
-        // TODO: 01.03.2017 kick that out to model
-        mSession.setCurrentElevation(FormatAndValueConverter.roundValue(CombinedLocationModel.getCombinedAltitude()));
-        mSession.setElevationOnList(FormatAndValueConverter.roundValue(CombinedLocationModel.getCombinedAltitude()));
+        SessionUpdateModel.setCurrentElevation(mSession);
+        SessionUpdateModel.setElevationOnList(mSession);
         SessionUpdateModel.setGeoCoordinateStr(mSession);
         SessionUpdateModel.setSessionsDistance(mSession);
         SessionUpdateModel.setSessionsHeight(mSession);
@@ -333,9 +322,9 @@ public class LocationUpdateManager implements LocationResponse {
 
     private void saveNonZeroGpsAltitude(Location location) {
         GpsAltitudeModel.setAltitude(location.getAltitude());
+        CombinedLocationModel.updateCombinedAltitude();
         Double gpsAlt = FormatAndValueConverter.roundValue(location.getAltitude());
         callbackFullInfo.onGpsInfoAcquired(String.valueOf(gpsAlt));
-        CombinedLocationModel.updateCombinedAltitude();
     }
 
     private void assignAirportPressure() {
@@ -384,6 +373,10 @@ public class LocationUpdateManager implements LocationResponse {
         }
     }
 
+    private void lockSession() {
+        mSession.setLocked(true);
+    }
+
     public void setManagerState(Class<?> manager, boolean isEnabled) {
         if (manager == GpsManager.class) {
             GpsManager.setGpsEnabled(isEnabled);
@@ -394,22 +387,26 @@ public class LocationUpdateManager implements LocationResponse {
         }
     }
 
-    private void lockSession() {
-        mSession.setLocked(true);
-    }
-
     @Override
     public void resetAllData() {
-        mSession.clearData();
-        callbackFullInfo.onFullInfoAcquired(mSession);
-        resetElevationSourceTextView();
+        resetTextViews();
         resetHandlers();
         resetListeners();
 
         identifyCurrentLocation();
     }
 
-    private void resetElevationSourceTextView() {
+    private void resetTextViews() {
+        resetSessionTextViews();
+        resetElevationSourceTextViews();
+    }
+
+    private void resetSessionTextViews() {
+        mSession.clearData();
+        callbackFullInfo.onFullInfoAcquired(mSession);
+    }
+
+    private void resetElevationSourceTextViews() {
         callbackFullInfo.onGpsInfoAcquired(Constants.DEFAULT_TEXT);
         callbackFullInfo.onNetworkInfoAcquired(Constants.DEFAULT_TEXT);
         callbackFullInfo.onBarometerInfoAcquired(Constants.DEFAULT_TEXT);
@@ -437,6 +434,10 @@ public class LocationUpdateManager implements LocationResponse {
         return (currentTime - BarometerManager.getAirportMeasureTime()) > Constants.HALF_HOUR;
     }
 
+    private boolean isAddressUpdateRequired(double currentTime) {
+        return (currentTime - GpsManager.getMeasureTime()) > Constants.TWENTY_SECONDS;
+    }
+
     public Session getSession() {
         return mSession;
     }
@@ -459,5 +460,3 @@ public class LocationUpdateManager implements LocationResponse {
         }
     }
 }
-
-

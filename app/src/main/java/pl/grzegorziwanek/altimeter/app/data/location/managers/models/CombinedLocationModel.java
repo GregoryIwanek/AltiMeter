@@ -3,6 +3,7 @@ package pl.grzegorziwanek.altimeter.app.data.location.managers.models;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.BarometerManager;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.GpsManager;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.NetworkManager;
+import pl.grzegorziwanek.altimeter.app.utils.FormatAndValueConverter;
 
 /**
  * Created by Grzegorz Iwanek on 22.02.2017.
@@ -49,7 +50,7 @@ public class CombinedLocationModel {
     }
 
     public static double getCombinedAltitude() {
-        return mCombinedAltitude;
+        return FormatAndValueConverter.roundValue(mCombinedAltitude);
     }
 
     public static void setUpdateTime(long updateTime) {
