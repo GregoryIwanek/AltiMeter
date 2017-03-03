@@ -65,9 +65,7 @@ public class LocationUpdateManager implements LocationResponse {
     }
 
     public static LocationUpdateManager getInstance(@NonNull Context context) {
-        if (INSTANCE == null) {
-            INSTANCE = new LocationUpdateManager(context);
-        }
+        INSTANCE = new LocationUpdateManager(context);
         return INSTANCE;
     }
 

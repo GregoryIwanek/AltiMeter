@@ -16,7 +16,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,6 +55,8 @@ public abstract class BasicActivity extends AppCompatActivity {
         setToolbar();
         setNavigationDrawer();
     }
+
+
 
     private void setToolbar() {
         setSupportActionBar(mToolbar);

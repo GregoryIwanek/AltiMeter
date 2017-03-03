@@ -1,35 +1,59 @@
 package pl.grzegorziwanek.altimeter.app.recordingsession;
 
+import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.Rect;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.jjoe64.graphview.GraphView;
+
+import java.io.File;
+import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import pl.grzegorziwanek.altimeter.app.map.MapActivity;
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.data.GraphPoint;
+import pl.grzegorziwanek.altimeter.app.map.MapActivity;
 
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static android.content.Context.WINDOW_SERVICE;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static pl.grzegorziwanek.altimeter.app.utils.NoticeDialogFragment.*;
+import static pl.grzegorziwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDialogFragmentV4;
 
 /**
  * Created by Grzegorz Iwanek on 31.01.2017. That's it.
@@ -75,12 +99,21 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new_graph, container, false);
-
         ButterKnife.bind(this, view);
         initiateButtonsTags();
-
         setHasOptionsMenu(true);
+
         return view;
+    }
+
+    protected void attachViewToWindowsManager(View v) {
+        WindowManager mWindowManager = (WindowManager) this.getActivity().getSystemService(WINDOW_SERVICE);
+
+        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+        mWindowManager.addView(v, params);
     }
 
     @Override
@@ -102,16 +135,147 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
-        show();
+        show(mShareActionProvider);
         return true;
     }
 
-    private void show() {
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
-        sendIntent.setType("text/plain");
-        startActivity(Intent.createChooser(sendIntent, "SHARE"));
+    private void show(ShareActionProvider s) {
+//        Intent sendIntent = new Intent();
+//        sendIntent.setAction(Intent.ACTION_SEND);
+//        sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+//        sendIntent.setType("text/plain");
+//        startActivity(Intent.createChooser(sendIntent, "SHARE"));
+        Uri uri = saveScreenShotDirectoryLocation();
+        screenShotHandler(uri);
+        onShareTargetSelected(s, getDefaultScreenshotShareIntent());
+    }
+
+    // TODO: 02.03.2017 sharing screenshot with facebook
+    // TODO: 02.03.2017 onCreateOptionsMenu ->  assign menu and ShareActionProvider
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        this.getActivity().getMenuInflater().inflate(R.menu.fragment_share_menu, menu);
+//
+//        // Find the MenuItem that we know has the ShareActionProvider
+//        MenuItem shareItem = menu.findItem(R.id.share_facebook);
+//
+//        // Get its ShareActionProvider
+//        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
+//
+//        Uri uri = saveScreenShotDirectoryLocation();
+//        screenShotHandler(uri);
+//
+//        //mShareActionProvider.setOnShareTargetSelectedListener(this);
+//
+//        // Return true so Android will know we want to display the menu
+//        return true;
+//    }
+
+    private Uri saveScreenShotDirectoryLocation() {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "Some Title");
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+        Uri uri = this.getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                values);
+
+        return uri;
+    }
+
+    public boolean onShareTargetSelected (ShareActionProvider source, Intent intent) {
+
+        Uri uri = saveScreenShotDirectoryLocation();
+        screenShotHandler(uri);
+        setShareIntent(getDefaultScreenshotShareIntent());
+
+        return false;
+    }
+
+    private void screenShotHandler(Uri uri) {
+
+        File path = Environment.getDataDirectory();
+        long usablePartitionSpace = path.getUsableSpace();
+
+        // if (usablePartitionSpace >= SCREENSHOT_FILE_SIZE_IN_BYTES ) {
+
+        Bitmap screenShot = takeScreenShot(this.getActivity());
+
+        OutputStream outstream;
+        try {
+            outstream = this.getActivity().getContentResolver().openOutputStream(uri);
+            screenShot.compress(Bitmap.CompressFormat.PNG, 100, outstream);
+            outstream.flush();
+            outstream.close();
+        } catch (Exception e) {
+            System.err.println(e.toString());
+        }
+        // } else {
+        //      Toast.makeText(this, "Not enough freespace for screenshot", Toast.LENGTH_SHORT).show();
+        //  }
+        setShareIntent(getDefaultScreenshotShareIntent());
+    }
+
+    // Call to update the share intent
+// Connect the dots: give the ShareActionProvider its Share Intent
+    private void setShareIntent(Intent shareIntent) {
+        if (mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(shareIntent);
+        }
+    }
+
+    private Bitmap takeScreenShot(Activity activity)
+    {
+        View view = getActivity().getWindow().getDecorView();
+        //view.buildDrawingCache();
+        Bitmap b1 = screenShot(view);
+        Rect frame = new Rect();
+        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+        int statusBarHeight = frame.top;
+        int width = activity.getWindowManager().getDefaultDisplay().getWidth();
+        int height = activity.getWindowManager().getDefaultDisplay().getHeight();
+
+        Bitmap b = Bitmap.createBitmap(b1, 0, 0, view.getWidth(), view.getHeight());
+        return b;
+    }
+
+    public Bitmap screenShot(View view) {
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),
+                view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap) {
+            @Override
+            public boolean isHardwareAccelerated() {
+                return true;
+            }
+        };
+
+        view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        view.draw(canvas);
+        return bitmap;
+    }
+
+    private Intent getDefaultScreenshotShareIntent() {
+
+        Uri uri = saveScreenShotDirectoryLocation();
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        intent.setType("image/png");
+
+        long currenttime = System.currentTimeMillis();
+
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Some Title" + currenttime);
+
+        File path = Environment.getDataDirectory();
+        long usablePartitionSpace = path.getUsableSpace();
+
+        // if (usablePartitionSpace >= SCREENSHOT_FILE_SIZE_IN_BYTES ) {
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        //}
+
+        intent.putExtra(Intent.EXTRA_TEXT, "Some Title");
+
+        return intent;
     }
 
     @OnClick(R.id.pause_button)
