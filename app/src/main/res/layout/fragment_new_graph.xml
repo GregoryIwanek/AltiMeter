@@ -178,6 +178,17 @@
             android:id="@+id/graph_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+
+        <!--<com.github.mikephil.charting.charts.LineChart-->
+            <!--android:id="@+id/graph_view_2"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent">-->
+        <!--</com.github.mikephil.charting.charts.LineChart>-->
+
+        <!--<pl.grzegorziwanek.altimeter.app.recordingsession.LineChartWidget-->
+            <!--android:id="@+id/graph_view"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"/>-->
     </FrameLayout>
 
     <!--layouts with max height, time, min height, longitude icon, latitude icon, small border line between,

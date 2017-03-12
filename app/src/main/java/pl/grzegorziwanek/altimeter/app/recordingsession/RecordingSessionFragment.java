@@ -2,45 +2,32 @@ package pl.grzegorziwanek.altimeter.app.recordingsession;
 
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.jjoe64.graphview.GraphView;
 
 import java.io.File;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -50,8 +37,6 @@ import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.data.GraphPoint;
 import pl.grzegorziwanek.altimeter.app.map.MapActivity;
 
-import static android.content.Context.LAYOUT_INFLATER_SERVICE;
-import static android.content.Context.WINDOW_SERVICE;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static pl.grzegorziwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDialogFragmentV4;
 
@@ -104,16 +89,6 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
         setHasOptionsMenu(true);
 
         return view;
-    }
-
-    protected void attachViewToWindowsManager(View v) {
-        WindowManager mWindowManager = (WindowManager) this.getActivity().getSystemService(WINDOW_SERVICE);
-
-        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-        mWindowManager.addView(v, params);
     }
 
     @Override
@@ -172,6 +147,16 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
 //        return true;
 //    }
 
+    @Override
+    public void drawGraph(ArrayList<GraphPoint> graphPoints) {
+        mGraphViewWidget.deliverGraph(graphPoints);
+    }
+
+    @Override
+    public void resetGraph() {
+        mGraphViewWidget.clearData();
+    }
+
     private Uri saveScreenShotDirectoryLocation() {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "Some Title");
@@ -203,7 +188,7 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
         OutputStream outstream;
         try {
             outstream = this.getActivity().getContentResolver().openOutputStream(uri);
-            screenShot.compress(Bitmap.CompressFormat.PNG, 100, outstream);
+            screenShot.compress(Bitmap.CompressFormat.JPEG, 100, outstream);
             outstream.flush();
             outstream.close();
         } catch (Exception e) {
@@ -226,7 +211,7 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
     private Bitmap takeScreenShot(Activity activity)
     {
         View view = getActivity().getWindow().getDecorView();
-        //view.buildDrawingCache();
+        view.buildDrawingCache();
         Bitmap b1 = screenShot(view);
         Rect frame = new Rect();
         activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
@@ -241,15 +226,15 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
     public Bitmap screenShot(View view) {
         Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),
                 view.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap) {
-            @Override
-            public boolean isHardwareAccelerated() {
-                return true;
-            }
-        };
+        Canvas canvas = new Canvas(bitmap);
 
-        view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        if (view.getBackground() != null) {
+            Drawable drawable = view.getBackground();
+            drawable.draw(canvas);
+        }
+
         view.draw(canvas);
+
         return bitmap;
     }
 
@@ -283,6 +268,8 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
         int tag = getButtonTagAsInt(mPlayPauseButton);
         switch (tag) {
             case R.drawable.ic_play_arrow_black_24dp:
+                // TODO: 05.03.2017 remove below
+                //setChart();
                 mPresenter.callStartLocationRecording();
                 break;
             case R.drawable.ic_pause_black_24dp:
@@ -529,16 +516,6 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
     @Override
     public void setBarometerTextView(String barometerAlt) {
         mBarometerValueTextView.setText(barometerAlt);
-    }
-
-    @Override
-    public void drawGraph(ArrayList<GraphPoint> graphPoints) {
-        mGraphViewWidget.deliverGraph(graphPoints);
-    }
-
-    @Override
-    public void resetGraph() {
-        mGraphViewWidget.clearData();
     }
 }
 

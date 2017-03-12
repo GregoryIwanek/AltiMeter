@@ -8,7 +8,7 @@ public class GraphPoint {
     private long xTime;
     private double yAltitude;
 
-    GraphPoint(long xValue, double yValue) {
+    public GraphPoint(long xValue, double yValue) {
         xTime = xValue;
         yAltitude = yValue;
     }

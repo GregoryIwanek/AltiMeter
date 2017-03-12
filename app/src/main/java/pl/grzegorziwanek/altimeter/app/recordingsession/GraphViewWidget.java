@@ -1,11 +1,8 @@
 package pl.grzegorziwanek.altimeter.app.recordingsession;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.view.View;
 
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
@@ -43,8 +40,6 @@ public class GraphViewWidget extends GraphView {
     }
 
     private void setGraphViewSettings() {
-        this.setLayerType(LAYER_TYPE_HARDWARE, null);
-        super.setLayerType(LAYER_TYPE_HARDWARE, null);
         setDiagramAppearance();
         setGridAppearance();
         setGraphBounds();
