@@ -1,6 +1,10 @@
 package pl.grzegorziwanek.altimeter.app.recordingsession;
 
+import android.content.ContentResolver;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.ShareActionProvider;
+import android.view.View;
+import android.view.Window;
 
 import java.util.ArrayList;
 
@@ -80,5 +84,7 @@ interface RecordingSessionContract {
         void lockSession();
 
         void activityDestroyedUnsubscribeRx();
+
+        void shareScreenShot(Window window, ShareActionProvider s, ContentResolver cr);
     }
 }

@@ -1,6 +1,9 @@
 package pl.grzegorziwanek.altimeter.app.recordingsession;
 
+import android.content.ContentResolver;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.ShareActionProvider;
+import android.view.Window;
 
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.data.Session;
@@ -13,22 +16,23 @@ import pl.grzegorziwanek.altimeter.app.data.location.managers.GpsManager;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.NetworkManager;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static pl.grzegorziwanek.altimeter.app.recordingsession.RecordingSessionContract.*;
 
 /**
  * Created by Grzegorz Iwanek on 31.01.2017.
  */
 
-public class RecordingSessionPresenter implements RecordingSessionContract.Presenter {
+public class RecordingSessionPresenter implements Presenter {
 
     private final SessionRepository mSessionRepository;
-    private final RecordingSessionContract.View mRecordingSessionView;
+    private final View mRecordingSessionView;
     private final LocationUpdateManager mLocationUpdateManager;
     private LocationResponse.FullInfoCallback callbackFullInfo;
     private static Session mSession;
 
     public RecordingSessionPresenter(@NonNull SessionRepository sessionSource,
                                      @NonNull LocationUpdateManager locationUpdateManager,
-                                     @NonNull RecordingSessionContract.View addNewGraphView) {
+                                     @NonNull View addNewGraphView) {
         mSessionRepository = checkNotNull(sessionSource);
         mLocationUpdateManager = checkNotNull(locationUpdateManager);
         mRecordingSessionView = checkNotNull(addNewGraphView);
@@ -195,6 +199,11 @@ public class RecordingSessionPresenter implements RecordingSessionContract.Prese
     @Override
     public void activityDestroyedUnsubscribeRx() {
         mLocationUpdateManager.unsubscribeOnDestroy();
+    }
+
+    @Override
+    public void shareScreenShot(Window window, ShareActionProvider s, ContentResolver cr) {
+        ScreenShotCatcher.captureAndShare(window, s, cr);
     }
 
     private void updateButton(int drawableId) {

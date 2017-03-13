@@ -31,5 +31,6 @@ dependencies {
     compile 'io.reactivex:rxjava:1.2.7'
     compile 'io.reactivex:rxandroid:1.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.1.0'
-    compile project(path: ':GraphViewGI')
+    compile project(':GraphViewIG')
+    compile project(path: ':GraphViewIG')
 }
