@@ -1,17 +1,8 @@
 package pl.grzegorziwanek.altimeter.app.recordingsession;
 
-import android.app.Activity;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
@@ -28,8 +19,6 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import java.io.File;
-import java.io.OutputStream;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -141,8 +130,6 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
         int tag = getButtonTagAsInt(mPlayPauseButton);
         switch (tag) {
             case R.drawable.ic_play_arrow_black_24dp:
-                // TODO: 05.03.2017 remove below
-                //setChart();
                 mPresenter.callStartLocationRecording();
                 break;
             case R.drawable.ic_pause_black_24dp:

@@ -17,14 +17,16 @@ import java.io.OutputStream;
 
 /**
  * Created by Grzegorz Iwanek on 12.03.2017.
+ * Consists class responsible for taking care of screenshot share action calculations and operations.
+ * Local range, is used only within {@link RecordingSessionFragment}
  */
 class ScreenShotCatcher {
 
     /**
-     *
-     * @param window
-     * @param provider
-     * @param resolver
+     * Captures current screen view as a screenshot.
+     * @param window window of the activity which view is about to capture;
+     * @param provider share action provider connected to menu item from a menu list (e.g. button "share");
+     * @param resolver activity's (which view is captured) content resolver;
      */
     static void captureAndShare(Window window, ShareActionProvider provider, ContentResolver resolver) {
         Uri uri = saveScreenShotDirectoryLocation(resolver);
@@ -33,22 +35,22 @@ class ScreenShotCatcher {
     }
 
     /**
-     *
-     * @param cr
-     * @return
+     * Generates uri with picture directory location.
+     * @param resolver activity's (which view is captured) content resolver;
+     * @return uri to device's storage with captured picture
      */
-    private static Uri saveScreenShotDirectoryLocation(ContentResolver cr) {
+    private static Uri saveScreenShotDirectoryLocation(ContentResolver resolver) {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "Session's picture");
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-        return cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        return resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
     }
 
     /**
-     *
-     * @param resolver
-     * @param uri
-     * @param window
+     * Capture screenshot and save it in external storage of the device.
+     * @param resolver activity's (which view is captured) content resolver;
+     * @param uri uri to device's storage with captured picture;
+     * @param window window of the activity which view is about to capture;
      */
     private static void screenShotHandler(ContentResolver resolver, Uri uri, Window window) {
         Bitmap captureView = takeScreenShot(window);
@@ -67,9 +69,9 @@ class ScreenShotCatcher {
     }
 
     /**
-     *
-     * @param window
-     * @return
+     * Takes screenshot of given window's view.
+     * @param window window of the activity which view is about to capture;
+     * @return bitmap of view adjusted to the size of the view;
      */
     private static Bitmap takeScreenShot(Window window) {
         View view = window.getDecorView();
@@ -79,9 +81,9 @@ class ScreenShotCatcher {
     }
 
     /**
-     *
-     * @param view
-     * @return
+     * Captures view of current window. Draws view's content on canvas and bitmap.
+     * @param view view of current activity's window;
+     * @return bitmap with given view's content;
      */
     private static Bitmap captureView(View view) {
         Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),
@@ -98,6 +100,11 @@ class ScreenShotCatcher {
         return bitmap;
     }
 
+    /**
+     * Generates screenshot picture ACTION_SEND intent.
+     * @param uri uri to device's storage with captured picture;
+     * @return ACTION_SEND intent with captured picture;
+     */
     private static Intent getDefaultScreenshotShareIntent(Uri uri) {
         long currTime = System.currentTimeMillis();
 
@@ -111,6 +118,11 @@ class ScreenShotCatcher {
         return intent;
     }
 
+    /**
+     * Executes screenshot share action.
+     * @param shareIntent ACTION_SEND screenshot share intent;
+     * @param provider share action provider connected to menu item from a menu list (e.g. button "share");
+     */
     private static void setShareIntent(Intent shareIntent, ShareActionProvider provider) {
         if (provider != null) {
             provider.setShareIntent(shareIntent);
