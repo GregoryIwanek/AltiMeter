@@ -1,5 +1,10 @@
 package pl.grzegorziwanek.altimeter.app.map;
 
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.support.v7.widget.ShareActionProvider;
+import android.view.Window;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -17,6 +22,8 @@ interface MapContract {
 
         void updateMap(List<LatLng> positions);
 
+        void showShareMenu(Intent intent);
+
         void showMapEmpty();
 
         void showMapLoaded();
@@ -25,5 +32,7 @@ interface MapContract {
     interface Presenter extends BasePresenter {
 
         void loadMapData();
+
+        void shareScreenShot(Window window, ContentResolver cr);
     }
 }

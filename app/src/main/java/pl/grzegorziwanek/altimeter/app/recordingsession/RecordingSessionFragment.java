@@ -108,11 +108,9 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
     }
 
     private void shareClicked(MenuItem item) {
-        ShareActionProvider mShareActionProvider =
-                (ShareActionProvider) MenuItemCompat.getActionProvider(item);
         ContentResolver cr = this.getActivity().getContentResolver();
         Window window = getActivity().getWindow();
-        mPresenter.shareScreenShot(window, mShareActionProvider, cr);
+        mPresenter.shareScreenShot(window, cr);
     }
 
     @Override
@@ -160,14 +158,14 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
         int tag = getButtonTagAsInt(mGpsButton);
         switch (tag) {
             case R.drawable.ic_gps_lock_24dp:
-                if (isRunning()) {
+                if (isRecordingRunning()) {
                     showStopSession();
                 } else {
                     mPresenter.enableGps();
                 }
                 break;
             case R.drawable.ic_gps_open_24dp:
-                if (isRunning()) {
+                if (isRecordingRunning()) {
                     showStopSession();
                 } else {
                     mPresenter.disableGps();
@@ -181,14 +179,14 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
         int tag = getButtonTagAsInt(mNetworkButton);
         switch (tag) {
             case R.drawable.ic_network_lock_24dp:
-                if (isRunning()) {
+                if (isRecordingRunning()) {
                     showStopSession();
                 } else {
                     mPresenter.enableNetwork();
                 }
                 break;
             case R.drawable.ic_network_open_24dp:
-                if (isRunning()) {
+                if (isRecordingRunning()) {
                     showStopSession();
                 } else {
                     mPresenter.disableNetwork();
@@ -202,14 +200,14 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
         int tag = getButtonTagAsInt(mBarometerButton);
         switch (tag) {
             case R.drawable.ic_barometer_lock_24dp:
-                if (isRunning()) {
+                if (isRecordingRunning()) {
                     showStopSession();
                 } else {
                     mPresenter.enableBarometer();
                 }
                 break;
             case R.drawable.ic_barometer_open_24dp:
-                if (isRunning()) {
+                if (isRecordingRunning()) {
                     showStopSession();
                 } else {
                     mPresenter.disableBarometer();
@@ -218,7 +216,7 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
         }
     }
 
-    private boolean isRunning() {
+    private boolean isRecordingRunning() {
         return getButtonTagAsInt(mPlayPauseButton)
                 == R.drawable.ic_pause_black_24dp;
     }
@@ -315,6 +313,11 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
     @Override
     public void showRecordingData() {
         showMessage("Recording data");
+    }
+
+    @Override
+    public void showShareMenu(Intent screenshotIntent) {
+        startActivity(screenshotIntent);
     }
 
     @Override

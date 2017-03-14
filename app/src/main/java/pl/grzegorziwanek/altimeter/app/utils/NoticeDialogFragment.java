@@ -16,7 +16,7 @@ import android.support.v7.app.AlertDialog;
 public class NoticeDialogFragment {
 
     /**
-     * Notice dialog to use with fragments "import android.support.v4.app.Fragment"
+     * Notice dialog to use with fragments "import android.support.v4.app.Fragment" (support.V4 !!!)
      */
     public static class NoticeDialogFragmentV4 extends DialogFragment {
 
@@ -74,7 +74,7 @@ public class NoticeDialogFragment {
     }
 
     /**
-     * Notice Dialog for use with fragments "import android.app.Fragment"
+     * Notice Dialog for use with fragments "import android.app.Fragment" (not support.V4, just Fragment)
      */
     public static class NoticeDialogFragmentApp extends android.app.DialogFragment {
 

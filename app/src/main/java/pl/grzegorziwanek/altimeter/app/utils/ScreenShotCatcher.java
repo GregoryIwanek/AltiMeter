@@ -1,4 +1,4 @@
-package pl.grzegorziwanek.altimeter.app.recordingsession;
+package pl.grzegorziwanek.altimeter.app.utils;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -8,30 +8,30 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v7.widget.ShareActionProvider;
 import android.view.View;
 import android.view.Window;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
+import pl.grzegorziwanek.altimeter.app.map.MapFragment;
+import pl.grzegorziwanek.altimeter.app.recordingsession.RecordingSessionFragment;
+
 /**
  * Created by Grzegorz Iwanek on 12.03.2017.
  * Consists class responsible for taking care of screenshot share action calculations and operations.
- * Local range, is used only within {@link RecordingSessionFragment}
+ * Used only within {@link RecordingSessionFragment} {@link MapFragment}
  */
-class ScreenShotCatcher {
-
+public class ScreenShotCatcher {
     /**
      * Captures current screen view as a screenshot.
      * @param window window of the activity which view is about to capture;
-     * @param provider share action provider connected to menu item from a menu list (e.g. button "share");
      * @param resolver activity's (which view is captured) content resolver;
      */
-    static void captureAndShare(Window window, ShareActionProvider provider, ContentResolver resolver) {
+    public static Intent captureAndShare(Window window, ContentResolver resolver) {
         Uri uri = saveScreenShotDirectoryLocation(resolver);
         screenShotHandler(resolver, uri, window);
-        setShareIntent(getDefaultScreenshotShareIntent(uri), provider);
+        return getDefaultScreenshotShareIntent(uri);
     }
 
     /**
@@ -116,16 +116,5 @@ class ScreenShotCatcher {
         intent.putExtra(Intent.EXTRA_TEXT, "Session's picture");
 
         return intent;
-    }
-
-    /**
-     * Executes screenshot share action.
-     * @param shareIntent ACTION_SEND screenshot share intent;
-     * @param provider share action provider connected to menu item from a menu list (e.g. button "share");
-     */
-    private static void setShareIntent(Intent shareIntent, ShareActionProvider provider) {
-        if (provider != null) {
-            provider.setShareIntent(shareIntent);
-        }
     }
 }

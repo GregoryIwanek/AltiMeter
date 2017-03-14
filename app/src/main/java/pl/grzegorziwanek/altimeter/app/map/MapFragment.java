@@ -1,6 +1,8 @@
 package pl.grzegorziwanek.altimeter.app.map;
 
 import android.Manifest;
+import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -9,11 +11,15 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -80,6 +86,22 @@ public class MapFragment extends Fragment implements MapContract.View {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.fragment_share_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.share_facebook:
+                shareClicked(item);
+                break;
+        }
+        return true;
+    }
+
+    private void shareClicked(MenuItem item) {
+        ContentResolver cr = this.getActivity().getContentResolver();
+        Window window = getActivity().getWindow();
+        mPresenter.shareScreenShot(window, cr);
     }
 
     @Override
@@ -160,6 +182,11 @@ public class MapFragment extends Fragment implements MapContract.View {
                 }
             }
         });
+    }
+
+    @Override
+    public void showShareMenu(Intent screenshotIntent) {
+        startActivity(screenshotIntent);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package pl.grzegorziwanek.altimeter.app.recordingsession;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.ShareActionProvider;
 import android.view.Window;
@@ -14,6 +15,7 @@ import pl.grzegorziwanek.altimeter.app.data.location.LocationUpdateManager;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.BarometerManager;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.GpsManager;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.NetworkManager;
+import pl.grzegorziwanek.altimeter.app.utils.ScreenShotCatcher;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static pl.grzegorziwanek.altimeter.app.recordingsession.RecordingSessionContract.*;
@@ -106,19 +108,13 @@ public class RecordingSessionPresenter implements Presenter {
 
     private void updateView(Session session) {
         mRecordingSessionView.setAddressTextView(session.getAddress());
-
         mRecordingSessionView.setElevationTextView(session.getCurrentElevation().toString());
-
         mRecordingSessionView.setDistanceTextView(session.getDistanceStr());
-
         mRecordingSessionView.setMinHeightTextView(session.getMinHeightStr());
         mRecordingSessionView.setMaxHeightTextView(session.getMaxHeightStr());
-
         mRecordingSessionView.setLatTextView(session.getLatitudeStr());
         mRecordingSessionView.setLongTextView(session.getLongitudeStr());
-
         mRecordingSessionView.drawGraph(session.getGraphList());
-
         mSessionRepository.updateSessionData(session);
     }
 
@@ -202,8 +198,9 @@ public class RecordingSessionPresenter implements Presenter {
     }
 
     @Override
-    public void shareScreenShot(Window window, ShareActionProvider s, ContentResolver cr) {
-        ScreenShotCatcher.captureAndShare(window, s, cr);
+    public void shareScreenShot(Window window, ContentResolver cr) {
+        Intent intent = ScreenShotCatcher.captureAndShare(window, cr);
+        mRecordingSessionView.showShareMenu(intent);
     }
 
     private void updateButton(int drawableId) {
