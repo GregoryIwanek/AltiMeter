@@ -7,8 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -101,16 +99,25 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.share_facebook:
-                shareClicked(item);
+                shareClicked();
                 break;
         }
         return true;
     }
 
-    private void shareClicked(MenuItem item) {
+    private void shareClicked() {
         ContentResolver cr = this.getActivity().getContentResolver();
         Window window = getActivity().getWindow();
-        mPresenter.shareScreenShot(window, cr);
+        String[] textViewContent = getTextViewContentToShare();
+        mPresenter.shareScreenShot(window, cr, textViewContent);
+    }
+
+    private String[] getTextViewContentToShare() {
+        return new String[]{
+                mCurrAddressTextView.getText().toString(),
+                mCurrElevationTextView.getText().toString(),
+                mDistanceTextView.getText().toString()
+        };
     }
 
     @Override
@@ -317,7 +324,7 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
 
     @Override
     public void showShareMenu(Intent screenshotIntent) {
-        startActivity(screenshotIntent);
+        startActivity(Intent.createChooser(screenshotIntent, "Send to"));
     }
 
     @Override

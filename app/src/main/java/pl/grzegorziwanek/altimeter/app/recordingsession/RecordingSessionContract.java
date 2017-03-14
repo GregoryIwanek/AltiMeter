@@ -88,6 +88,6 @@ interface RecordingSessionContract {
 
         void activityDestroyedUnsubscribeRx();
 
-        void shareScreenShot(Window window, ContentResolver cr);
+        void shareScreenShot(Window window, ContentResolver cr, String[] textViewContent);
     }
 }

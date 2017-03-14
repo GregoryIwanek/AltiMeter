@@ -198,8 +198,8 @@ public class RecordingSessionPresenter implements Presenter {
     }
 
     @Override
-    public void shareScreenShot(Window window, ContentResolver cr) {
-        Intent intent = ScreenShotCatcher.captureAndShare(window, cr);
+    public void shareScreenShot(Window window, ContentResolver cr, String[] textViewContent) {
+        Intent intent = ScreenShotCatcher.captureAndShare(window, cr, textViewContent);
         mRecordingSessionView.showShareMenu(intent);
     }
 

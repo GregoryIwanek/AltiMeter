@@ -389,5 +389,44 @@ public class FormatAndValueConverter {
     public static Double roundValue(Double value) {
         return (double) Math.round(value);
     }
+
+    /**
+     *
+     * @param messageContent
+     * @return
+     */
+    public static String buildMessage(String[] messageContent) {
+        String message = "";
+        // add address
+        if (isInitiated(messageContent[0])) {
+            message = "I'm in " + messageContent[0];
+        }
+        // add elevation level
+        if (isInitiated(messageContent[1])) {
+            if (isNotZero(messageContent[1])) {
+                message += "\n at " + messageContent[1] + " m.n.p.m.";
+            }
+        }
+        // add distance travelled
+        String distance = messageContent[2];
+        distance = distance.replaceAll("[^\\d.]", "");
+        if (isInitiated(messageContent[2])) {
+            if (isNotZero(distance)) {
+                message += " after travelling distance of " + messageContent[2] + ".";
+            }
+        }
+        // add app name
+        message  += "\nShared with AltiMeter app.";
+
+        return message;
+    }
+
+    private static boolean isInitiated(String str) {
+        return !str.equals("...");
+    }
+
+    private static boolean isNotZero(String str) {
+        return Float.valueOf(str) != 0;
+    }
 }
 

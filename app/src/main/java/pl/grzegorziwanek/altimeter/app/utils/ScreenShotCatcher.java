@@ -28,10 +28,11 @@ public class ScreenShotCatcher {
      * @param window window of the activity which view is about to capture;
      * @param resolver activity's (which view is captured) content resolver;
      */
-    public static Intent captureAndShare(Window window, ContentResolver resolver) {
+    public static Intent captureAndShare(Window window, ContentResolver resolver, String[] textViewContent) {
+        String message = FormatAndValueConverter.buildMessage(textViewContent);
         Uri uri = saveScreenShotDirectoryLocation(resolver);
         screenShotHandler(resolver, uri, window);
-        return getDefaultScreenshotShareIntent(uri);
+        return getDefaultScreenshotShareIntent(uri, message);
     }
 
     /**
@@ -105,15 +106,14 @@ public class ScreenShotCatcher {
      * @param uri uri to device's storage with captured picture;
      * @return ACTION_SEND intent with captured picture;
      */
-    private static Intent getDefaultScreenshotShareIntent(Uri uri) {
+    private static Intent getDefaultScreenshotShareIntent(Uri uri, String message) {
         long currTime = System.currentTimeMillis();
 
         Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         intent.setType("image/jpeg");
         intent.putExtra(Intent.EXTRA_SUBJECT, "Session's picture" + currTime);
         intent.putExtra(Intent.EXTRA_STREAM, uri);
-        intent.putExtra(Intent.EXTRA_TEXT, "Session's picture");
+        intent.putExtra(Intent.EXTRA_TEXT, message);
 
         return intent;
     }

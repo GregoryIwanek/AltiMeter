@@ -52,7 +52,7 @@ public class MapPresenter implements MapContract.Presenter {
 
     @Override
     public void shareScreenShot(Window window, ContentResolver cr) {
-        Intent screenshotIntent = ScreenShotCatcher.captureAndShare(window, cr);
+        Intent screenshotIntent = ScreenShotCatcher.captureAndShare(window, cr, null);
         mMapView.showShareMenu(screenshotIntent);
     }
 
