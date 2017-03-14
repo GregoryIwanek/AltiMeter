@@ -174,8 +174,8 @@ public class MapFragment extends Fragment implements MapContract.View {
                     polylineOptions.color(colorId);
 
                     mGoogleMap.addPolyline(polylineOptions);
-                    mGoogleMap.addMarker(new MarkerOptions().position(start).title("Start").snippet("Distance 0.0 km \nElevation 84.0 m"));
-                    mGoogleMap.addMarker(new MarkerOptions().position(end).title("End").snippet("Distance 4.53 km \nElevation 85.0 m"));
+                    mGoogleMap.addMarker(new MarkerOptions().position(start).title("Start"));
+                    mGoogleMap.addMarker(new MarkerOptions().position(end).title("End"));
                     //cameraPosition = new CameraPosition.Builder().target(position).zoom(8).build();
                     //CameraPosition cameraPosition = new CameraPosition.Builder().target(position).zoom(12).build();
                     //mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));

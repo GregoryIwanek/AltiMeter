@@ -9,13 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.utils.NoticeDialogFragment;
 
 /**
  * Created by Grzegorz Iwanek on 26.02.2017.
  */
-
 public class AboutFragmentMap extends Fragment {
 
     @Nullable
@@ -33,5 +33,25 @@ public class AboutFragmentMap extends Fragment {
         DialogFragment ndf = new NoticeDialogFragment.NoticeDialogFragmentApp();
         ndf.setArguments(args);
         ndf.show(getFragmentManager(), "NoticeDialogFragment");
+    }
+
+    @OnClick(R.id.about_menu_button_main)
+    public void onFieldMenuClick() {
+        showUpDialog(getString(R.string.about_menu_description));
+    }
+
+    @OnClick(R.id.about_title_label_main)
+    public void onFieldTitleClick() {
+        showUpDialog(getString(R.string.about_title));
+    }
+
+    @OnClick(R.id.about_actions_button_main)
+    public void onFieldActionsClick() {
+        showUpDialog(getString(R.string.about_actions_main));
+    }
+
+    @OnClick(R.id.about_map_content)
+    public void onFieldMapContent() {
+        showUpDialog(getString(R.string.about_map_content));
     }
 }

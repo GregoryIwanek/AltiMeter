@@ -16,10 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.WindowManager;
-import android.widget.LinearLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,9 +30,7 @@ import pl.grzegorziwanek.altimeter.app.statistics.StatisticsActivity;
 /**
  * Created by Grzegorz Iwanek on 21.01.2017.
  */
-
 public abstract class BasicActivity extends AppCompatActivity {
-
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view) NavigationView mNavigationView;
@@ -49,14 +44,14 @@ public abstract class BasicActivity extends AppCompatActivity {
         type = SessionActivity.class;
     }
 
-    //method called by child class to assign UI elements to layout
+    /**
+     * Called by child classes to assign UI elements to layout
+     */
     protected void initiateUI() {
         ButterKnife.bind(this);
         setToolbar();
         setNavigationDrawer();
     }
-
-
 
     private void setToolbar() {
         setSupportActionBar(mToolbar);
@@ -115,7 +110,6 @@ public abstract class BasicActivity extends AppCompatActivity {
                             default:
                                 break;
                         }
-                        //TODO-> find way to uncheck other clicked elements
                         menuItem.setChecked(true);
                         mDrawerLayout.closeDrawers();
                         return true;

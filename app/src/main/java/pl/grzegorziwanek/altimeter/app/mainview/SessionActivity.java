@@ -27,7 +27,6 @@ import pl.grzegorziwanek.altimeter.app.utils.FormatAndValueConverter;
  * Created by Grzegorz Iwanek on 18.01.2017.
  */
 public class SessionActivity extends BasicActivity {
-
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view) NavigationView mNavigationView;

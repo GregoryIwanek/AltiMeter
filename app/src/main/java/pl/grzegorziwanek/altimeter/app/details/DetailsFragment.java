@@ -23,7 +23,6 @@ import pl.grzegorziwanek.altimeter.app.R;
 /**
  * Created by Grzegorz Iwanek on 09.02.2017.
  */
-
 public class DetailsFragment extends Fragment implements DetailsContract.View {
     @BindView(R.id.title_value_label) EditText mTitleTV;
     @BindView(R.id.description_value_label) EditText mDescriptionTV;

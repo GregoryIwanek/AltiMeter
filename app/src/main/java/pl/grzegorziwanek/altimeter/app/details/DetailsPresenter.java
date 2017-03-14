@@ -13,9 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Created by Grzegorz Iwanek on 09.02.2017.
  */
-
 class DetailsPresenter implements DetailsContract.Presenter {
-
     private SessionDataSource.DetailsSessionCallback callbackDetails;
     private DetailsFragment mDetailsView;
     private final SessionRepository mSessionRepository;

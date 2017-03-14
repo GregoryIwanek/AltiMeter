@@ -92,6 +92,8 @@
         </LinearLayout>
 
         <FrameLayout
+            android:clickable="true"
+            android:id="@+id/about_map_content"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="395"

@@ -19,16 +19,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Created by Grzegorz Iwanek on 07.02.2017.
  */
-
-public class MapPresenter implements MapContract.Presenter {
+class MapPresenter implements MapContract.Presenter {
 
     private final SessionRepository mSessionRepository;
     private final MapContract.View mMapView;
     private final String mId;
 
-    public MapPresenter(@NonNull String id,
-                        @NonNull SessionRepository sessionSource,
-                        @NonNull MapContract.View mapView) {
+    MapPresenter(@NonNull String id,
+                 @NonNull SessionRepository sessionSource,
+                 @NonNull MapContract.View mapView) {
         mId = id;
         mSessionRepository = checkNotNull(sessionSource);
         mMapView = checkNotNull(mapView);

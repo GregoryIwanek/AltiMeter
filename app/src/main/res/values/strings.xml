@@ -60,6 +60,7 @@
     <string name="about_address_label">Address of the last checked location</string>
     <string name="about_checkbox_main">Checkboxes. Check to delete specific sessions.</string>
     <string name="about_labels_details">Details info</string>
+    <string name="about_map_content">Map with travelled path.</string>
     <string name="about_current_elevation">Elevation of the last checked location</string>
     <string name="about_rows_main">Session rows. Click to see details.</string>
     <string name="about_edit_details">Title and description edit box</string>

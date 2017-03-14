@@ -17,7 +17,6 @@ import pl.grzegorziwanek.altimeter.app.utils.ActivityUtils;
 /**
  * Created by Grzegorz Iwanek on 21.01.2017.
  */
-
 public class MapActivity extends BasicActivity {
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
