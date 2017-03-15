@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -30,6 +32,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,16 +96,16 @@ public class MapFragment extends Fragment implements MapContract.View {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.share_facebook:
-                shareClicked(item);
+                shareClicked();
                 break;
         }
         return true;
     }
 
-    private void shareClicked(MenuItem item) {
+    private void shareClicked() {
         ContentResolver cr = this.getActivity().getContentResolver();
         Window window = getActivity().getWindow();
-        mPresenter.shareScreenShot(window, cr);
+        mPresenter.shareScreenShot(window, cr, mGoogleMap);
     }
 
     @Override
@@ -186,7 +190,7 @@ public class MapFragment extends Fragment implements MapContract.View {
 
     @Override
     public void showShareMenu(Intent screenshotIntent) {
-        startActivity(screenshotIntent);
+        startActivity(Intent.createChooser(screenshotIntent, "Send to"));
     }
 
     @Override

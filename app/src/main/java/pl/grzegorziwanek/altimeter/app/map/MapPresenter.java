@@ -3,9 +3,9 @@ package pl.grzegorziwanek.altimeter.app.map;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.ShareActionProvider;
 import android.view.Window;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -50,8 +50,8 @@ class MapPresenter implements MapContract.Presenter {
     }
 
     @Override
-    public void shareScreenShot(Window window, ContentResolver cr) {
-        Intent screenshotIntent = ScreenShotCatcher.captureAndShare(window, cr, null);
+    public void shareScreenShot(Window window, ContentResolver cr, GoogleMap currentMap) {
+        Intent screenshotIntent = ScreenShotCatcher.captureAndShare(window, cr, null, currentMap);
         mMapView.showShareMenu(screenshotIntent);
     }
 

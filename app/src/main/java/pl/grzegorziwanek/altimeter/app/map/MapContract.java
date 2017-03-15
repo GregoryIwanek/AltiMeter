@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.widget.ShareActionProvider;
 import android.view.Window;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -33,6 +34,6 @@ interface MapContract {
 
         void loadMapData();
 
-        void shareScreenShot(Window window, ContentResolver cr);
+        void shareScreenShot(Window window, ContentResolver cr, GoogleMap currentMap);
     }
 }

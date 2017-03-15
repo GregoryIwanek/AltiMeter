@@ -32,7 +32,6 @@ import static pl.grzegorziwanek.altimeter.app.utils.NoticeDialogFragment.NoticeD
 /**
  * Created by Grzegorz Iwanek on 31.01.2017. That's it.
  */
-
 public class RecordingSessionFragment extends Fragment implements RecordingSessionContract.View,
         NoticeDialogFragmentV4.NoticeDialogListener {
 
