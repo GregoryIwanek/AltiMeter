@@ -229,5 +229,6 @@ public class SessionRepository implements SessionDataSource {
     }
 
     private void getSessionsFromRemoteDataSource(@NonNull final LoadSessionsCallback callback) {
+
     }
 }

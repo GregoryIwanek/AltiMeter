@@ -28,10 +28,9 @@ import rx.functions.Func0;
 /**
  * Created by Grzegorz Iwanek on 01.03.2017.
  */
-
 abstract class BasicAirportsTask {
 
-    private static String mXmlStr;
+    private static String sXmlStr;
 
     Observable<List<XmlAirportValues>> getNearestAirportsObservable(final Uri airportUri, final String parserMode) {
         return Observable.defer(new Func0<Observable<List<XmlAirportValues>>>() {
@@ -74,7 +73,7 @@ abstract class BasicAirportsTask {
             }
 
             // set xml string to parse
-            mXmlStr = stringBuilder.toString();
+            sXmlStr = stringBuilder.toString();
         } catch (IOException e) {
             Log.d(getClass().getSimpleName(), "ERROR IOS EXCEPTION");
             return null;
@@ -104,7 +103,7 @@ abstract class BasicAirportsTask {
 
     private List<XmlAirportValues> getAirportsFromXml(String parserMode) throws ParserConfigurationException, SAXException, IOException {
         // Read xml
-        BufferedReader bReader = new BufferedReader(new StringReader(mXmlStr));
+        BufferedReader bReader = new BufferedReader(new StringReader(sXmlStr));
         InputSource source = new InputSource(bReader);
 
         // Parse xml

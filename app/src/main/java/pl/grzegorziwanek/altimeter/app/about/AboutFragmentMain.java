@@ -19,7 +19,6 @@ import pl.grzegorziwanek.altimeter.app.utils.NoticeDialogFragment;
 /**
  * Created by Grzegorz Iwanek on 21.01.2017.
  */
-
 public final class AboutFragmentMain extends Fragment {
 
     @Nullable

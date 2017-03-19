@@ -146,7 +146,6 @@ public class LocationUpdateManager implements LocationResponse {
             public void run() {
                 // TODO: 23.02.2017 set case when GPS is enabled, and other disabled (app crash)
                 // TODO: 23.02.2017 set case when only Barometer is enabled (only altitude will be shown)
-
                 // TODO: 01.03.2017 1-only barometer -> index out of bounds, refactor code to ignore lack of location
                 mSession.getLocationList().get(mSession.getLocationList().size()-1).setAltitude(CombinedLocationModel.getCombinedAltitude());
                 CombinedLocationModel.setUpdateTime(System.currentTimeMillis());
@@ -400,8 +399,10 @@ public class LocationUpdateManager implements LocationResponse {
     }
 
     private void resetSessionTextViews() {
-        mSession.clearData();
-        callbackFullInfo.onFullInfoAcquired(mSession);
+        if (mSession != null) {
+            mSession.clearData();
+            callbackFullInfo.onFullInfoAcquired(mSession);
+        }
     }
 
     private void resetElevationSourceTextViews() {

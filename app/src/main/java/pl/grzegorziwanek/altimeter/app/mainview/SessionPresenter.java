@@ -67,24 +67,10 @@ class SessionPresenter implements SessionContract.Presenter {
             mSessionRepository.refreshSessions();
         }
 
-        //TODO-> setting espresso here -> to analyse
-        // The network request might be handled in a different thread so make sure Espresso knows
-        // that the app is busy until the response is handled.
-        //EspressoIdlingResource.increment(); // App is busy until further notice
-
         //getting sessions from database repository
         mSessionRepository.getSessions(new SessionDataSource.LoadSessionsCallback() {
             @Override
             public void onSessionLoaded(List<Session> sessions) {
-                // This callback may be called twice, once for the cache and once for loading
-                // the data from the server API, so we check before decrementing, otherwise
-                // it throws "Counter has been corrupted!" exception.
-                //TODO-> esspresso, add
-//               if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
-//                    EspressoIdlingResource.decrement(); // Set app as idle.
-//                }
-
-                // The view may not be able to handle UI updates anymore
                 if (!mSessionView.isActive()) {
                     return;
                 }
@@ -129,7 +115,6 @@ class SessionPresenter implements SessionContract.Presenter {
         mSessionView.showAddSessionUi();
     }
 
-    //TODO-> define session details module
     @Override
     public void openSessionDetails(String sessionId) {
         mSessionView.showSessionDetailsUi(sessionId);

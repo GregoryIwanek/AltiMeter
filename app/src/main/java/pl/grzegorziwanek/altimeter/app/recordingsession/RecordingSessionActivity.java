@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 
 import butterknife.BindView;
@@ -19,7 +18,6 @@ import pl.grzegorziwanek.altimeter.app.utils.ActivityUtils;
 /**
  * Created by Grzegorz Iwanek on 21.01.2017.
  */
-
 public class RecordingSessionActivity extends BasicActivity{
 
     @BindView(R.id.toolbar) Toolbar mToolbar;

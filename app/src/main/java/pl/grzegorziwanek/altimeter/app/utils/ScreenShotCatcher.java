@@ -1,9 +1,7 @@
 package pl.grzegorziwanek.altimeter.app.utils;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -16,11 +14,9 @@ import android.view.Window;
 
 import com.google.android.gms.maps.GoogleMap;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import pl.grzegorziwanek.altimeter.app.BasicActivity;
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.map.MapFragment;
 import pl.grzegorziwanek.altimeter.app.recordingsession.RecordingSessionFragment;
@@ -74,7 +70,7 @@ public class ScreenShotCatcher {
      * Capture screenshot and save it in external storage of the device.
      * @param resolver activity's (which view is captured) content resolver;
      * @param uri uri to device's storage with captured picture;
-     * @param window window of the activity which view is about to capture;
+     * @param window window of the activity which view is about to captured;
      */
     private static void screenShotHandler(ContentResolver resolver,
                                           Uri uri, Window window, @Nullable GoogleMap currentMap) {
@@ -85,12 +81,43 @@ public class ScreenShotCatcher {
         }
     }
 
+    /**
+     * Capture content of google maps and pass it further to be pasted into view.
+     * @param resolver activity's (which view is captured) content resolver;
+     * @param uri uri to device's storage with captured picture;
+     * @param window window of the activity which view is about to captured;
+     * @param currentMap google map object;
+     */
+    private static void captureGoogleMap(final ContentResolver resolver, final Uri uri, final Window window, GoogleMap currentMap) {
+        GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
+            @Override
+            public void onSnapshotReady(Bitmap snapshot) {
+                try {
+                    captureScreenshotOfView(resolver, uri, window, snapshot);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        currentMap.snapshot(callback);
+    }
+
+    /**
+     * Capture screenshot of the current window. Is able to capture regular window's view
+     * and optionally merge google maps content into a frame.
+     * @param resolver activity's (which view is captured) content resolver;
+     * @param uri uri to device's storage with captured picture;
+     * @param window window of the activity which view is about to captured;
+     * @param mapSnapshot snapshot of the google maps content;
+     */
     private static void captureScreenshotOfView(ContentResolver resolver,
                                                 Uri uri, Window window, @Nullable Bitmap mapSnapshot) {
         Bitmap captureView = takeScreenShot(window);
 
         if (mapSnapshot != null) {
-            captureView = mergeMapAndView(captureView, mapSnapshot, window);
+            float offsetY = window.findViewById(R.id.contentFrame).getY();
+            captureView = mergeMapAndView(captureView, mapSnapshot, offsetY);
         }
 
         try {
@@ -140,10 +167,17 @@ public class ScreenShotCatcher {
         return bitmap;
     }
 
-    private static Bitmap mergeMapAndView(Bitmap viewSnapshot, Bitmap mapSnapshot, Window window) {
+    /**
+     * Pastes google maps snapshot into empty frame of the device screen snapshot.
+     * Action Bar is kept unedited.
+     * @param viewSnapshot snapshot of the current device screen. Holds range of the ActionBar and empty frame for map content;
+     * @param mapSnapshot snapshot of the current google maps content;
+     * @param offsetY height of the ActionBar; starting Y position of the mapSnapshot is defined by this value;
+     * @return returns bitmap with google maps content pasted into a device screen frame;
+     */
+    private static Bitmap mergeMapAndView(Bitmap viewSnapshot, Bitmap mapSnapshot, float offsetY) {
         Bitmap result = Bitmap.createBitmap(viewSnapshot.getWidth(),
                 viewSnapshot.getHeight(), viewSnapshot.getConfig());
-        float offsetY = window.findViewById(R.id.contentFrame).getY();
         Canvas canvas = new Canvas(result);
         canvas.drawBitmap(viewSnapshot, 0, 0, null);
         canvas.drawBitmap(mapSnapshot, 0, offsetY, null);
@@ -165,20 +199,5 @@ public class ScreenShotCatcher {
         intent.putExtra(Intent.EXTRA_TEXT, message);
 
         return intent;
-    }
-
-    private static void captureGoogleMap(final ContentResolver resolver, final Uri uri, final Window window, GoogleMap currentMap) {
-            GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
-                @Override
-                public void onSnapshotReady(Bitmap snapshot) {
-                    try {
-                        captureScreenshotOfView(resolver, uri, window, snapshot);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-
-            currentMap.snapshot(callback);
     }
 }

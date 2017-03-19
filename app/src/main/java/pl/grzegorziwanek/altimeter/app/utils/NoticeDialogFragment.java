@@ -12,7 +12,6 @@ import android.support.v7.app.AlertDialog;
 /**
  * Created by Grzegorz Iwanek on 10.02.2017.
  */
-
 public class NoticeDialogFragment {
 
     /**

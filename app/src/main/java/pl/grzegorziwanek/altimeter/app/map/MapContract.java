@@ -16,7 +16,6 @@ import pl.grzegorziwanek.altimeter.app.BaseView;
 /**
  * Created by Grzegorz Iwanek on 07.02.2017.
  */
-
 interface MapContract {
 
     interface View extends BaseView<Presenter> {

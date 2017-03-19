@@ -45,7 +45,7 @@ public abstract class BasicActivity extends AppCompatActivity {
     }
 
     /**
-     * Called by child classes to assign UI elements to layout
+     * Called by children classes to bind UI elements with layout
      */
     protected void initiateUI() {
         ButterKnife.bind(this);

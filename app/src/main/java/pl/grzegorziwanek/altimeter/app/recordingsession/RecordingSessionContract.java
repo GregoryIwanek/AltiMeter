@@ -16,7 +16,6 @@ import pl.grzegorziwanek.altimeter.app.data.GraphPoint;
 /**
  * Created by Grzegorz Iwanek on 31.01.2017. That's it/
  */
-
 interface RecordingSessionContract {
 
     interface View extends BaseView<Presenter> {

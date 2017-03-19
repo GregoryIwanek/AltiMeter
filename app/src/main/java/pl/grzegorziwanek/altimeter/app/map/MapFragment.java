@@ -46,7 +46,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Created by Grzegorz Iwanek on 07.02.2017.
  */
-
 public class MapFragment extends Fragment implements MapContract.View {
 
     @BindView(R.id.map) MapView mMapView;

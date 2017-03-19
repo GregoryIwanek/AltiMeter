@@ -64,6 +64,12 @@ public class SessionActivity extends BasicActivity {
                 mSessionFragment);
     }
 
+    private void readPreferences() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String units = sharedPref.getString("pref_set_units", "KILOMETERS");
+        FormatAndValueConverter.setUnitsFormat(units);
+    }
+
     private void setGoogleApiClient() {
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
@@ -91,11 +97,5 @@ public class SessionActivity extends BasicActivity {
                 .setObject(object)
                 .setActionStatus(Action.STATUS_TYPE_COMPLETED)
                 .build();
-    }
-
-    private void readPreferences() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String units = sharedPref.getString("pref_set_units", "KILOMETERS");
-        FormatAndValueConverter.setUnitsFormat(units);
     }
 }

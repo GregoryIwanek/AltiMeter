@@ -13,7 +13,6 @@ import pl.grzegorziwanek.altimeter.app.R;
 /**
  * Created by Grzegorz Iwanek on 26.02.2017.
  */
-
 public class AboutFragmentAuthor extends Fragment {
 
     @Nullable

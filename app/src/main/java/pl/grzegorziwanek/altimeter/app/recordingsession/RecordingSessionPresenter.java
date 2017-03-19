@@ -23,8 +23,7 @@ import static pl.grzegorziwanek.altimeter.app.recordingsession.RecordingSessionC
 /**
  * Created by Grzegorz Iwanek on 31.01.2017.
  */
-
-public class RecordingSessionPresenter implements Presenter {
+class RecordingSessionPresenter implements Presenter {
 
     private final SessionRepository mSessionRepository;
     private final View mRecordingSessionView;

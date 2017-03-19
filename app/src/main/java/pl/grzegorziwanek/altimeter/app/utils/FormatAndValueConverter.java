@@ -11,8 +11,6 @@ import java.util.List;
 
 import pl.grzegorziwanek.altimeter.app.data.location.services.helpers.airporttask.xmlparser.XmlAirportValues;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * Created by Grzegorz Iwanek on 27.11.2016.
  * Consist upgraded ArrayAdapter<String> class; used to update all wanted text views in view at once (single ArrayAdapter by default upgrade one object);
@@ -58,9 +56,15 @@ public class FormatAndValueConverter {
     }
 
     private static String replaceSpecialSigns(String str) {
-        str = str.replaceFirst(":", "°");
-        str = str.replaceFirst(":", "'");
-        str = str.replaceFirst(",", "''");
+        if (str.contains(":")) {
+            str = str.replaceFirst(":", "°");
+        }
+        if (str.contains(":")) {
+            str = str.replaceFirst(":", "'");
+        }
+        if (str.contains(",")) {
+            str = str.replaceFirst(",", "''");
+        }
         return str;
     }
 
@@ -195,7 +199,7 @@ public class FormatAndValueConverter {
     /** Set min/max elevation string
      * @param altitude value to create string from
      * @return string
-     * example: 13.23 m n.p.m.
+     * example: altitude=13, return 13 m n.p.m.
      */
     public static String setMinMaxString(Double altitude) {
         String str = formatElevation(altitude);
@@ -388,6 +392,15 @@ public class FormatAndValueConverter {
      */
     public static Double roundValue(Double value) {
         return (double) Math.round(value);
+    }
+
+    /**
+     *
+     * @param value
+     * @return
+     */
+    public static Double roundValueToHalf(Double value) {
+        return (double) Math.round(value+0.5);
     }
 
     // TODO: 14.03.2017 adjust this method to Map screenshot
