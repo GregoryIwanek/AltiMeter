@@ -49,4 +49,13 @@
         <item name="Kilometers">KILOMETERS</item>
         <item name="Miles">MILES</item>
     </string-array>
+
+    <string-array name="statistics_names">
+        <item name="num_sessions">num_sessions</item>
+        <item name="num_points">num_points</item>
+        <item name="distance">distance</item>
+        <item name="max_altitude">max_altitude</item>
+        <item name="min_altitude">min_altitude</item>
+        <item name="long_session">long_session</item>
+    </string-array>
 </resources>
