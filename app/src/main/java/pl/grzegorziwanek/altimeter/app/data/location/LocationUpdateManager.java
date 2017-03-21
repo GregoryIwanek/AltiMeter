@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -301,12 +302,22 @@ public class LocationUpdateManager implements LocationResponse {
         mContext.startService(intent);
     }
 
-    public void unsubscribeOnDestroy() {
+    public void onActivityDestroyed() {
+        // TODO: 19.03.2017 here, on destroy, update the global statistics with new values of the current session
+        updateStatisticsOnDestroy();
+        unsubscribeOnDestroy();
+        resetAllData();
+    }
+
+    private void updateStatisticsOnDestroy() {
+        SessionUpdateModel.updateGlobalStatistics(mContext, mSession);
+    }
+
+    private void unsubscribeOnDestroy() {
         if (mBarometerSubscription != null) {
             mBarometerSubscription.unsubscribe();
             mBarometerSubscription = null;
         }
-        resetAllData();
     }
 
     private void setTextViewStrings() {
@@ -388,7 +399,7 @@ public class LocationUpdateManager implements LocationResponse {
     public void resetAllData() {
         resetTextViews();
         resetHandlers();
-        resetListeners();
+        resetManagers();
 
         identifyCurrentLocation();
     }
@@ -417,7 +428,7 @@ public class LocationUpdateManager implements LocationResponse {
         handler.removeCallbacks(mDataCombinedRunnable);
     }
 
-    private void resetListeners() {
+    private void resetManagers() {
         GpsManager.resetData();
         NetworkManager.resetData();
         BarometerManager.resetData();

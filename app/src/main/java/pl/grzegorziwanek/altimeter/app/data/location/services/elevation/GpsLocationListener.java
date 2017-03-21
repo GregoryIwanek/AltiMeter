@@ -21,8 +21,7 @@ import java.io.IOException;
 
 import pl.grzegorziwanek.altimeter.app.utils.Constants;
 import pl.grzegorziwanek.altimeter.app.data.location.LocationResponse;
-import pl.grzegorziwanek.altimeter.app.utils.EarthGravitationalModel;
-import rx.Observer;
+import pl.grzegorziwanek.altimeter.app.utils.gravitationalmodel.EarthGravitationalModel;
 
 /**
  * Created by on 02.02.2017.

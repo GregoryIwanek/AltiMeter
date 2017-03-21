@@ -35,6 +35,7 @@ class StatisticsPresenter implements Presenter {
             @Override
             public void onStatisticsReset(boolean isResetSuccess) {
                 if (isResetSuccess) {
+                    start();
                     mStatisticsView.showIsResetSuccess("Statistics reset successful.");
                 } else {
                     mStatisticsView.showIsResetSuccess("Statistics reset failed.");

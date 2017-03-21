@@ -30,6 +30,7 @@ class StatisticsTaskRx {
         return INSTANCE;
     }
 
+    // load global statistics, get observable Map with statistics
     Observable<Map<String,String>> getStatisticsObservable() {
         return Observable.defer(new Func0<Observable<Map<String, String>>>() {
             @Override
@@ -58,6 +59,7 @@ class StatisticsTaskRx {
         return map;
     }
 
+    // reset statistics, get boolean observable if succeed or not
     Observable<Boolean> getResetObservable() {
         return Observable.defer(new Func0<Observable<Boolean>>() {
             @Override

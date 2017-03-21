@@ -3,7 +3,6 @@ package pl.grzegorziwanek.altimeter.app.recordingsession;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.ShareActionProvider;
 import android.view.Window;
 
 import pl.grzegorziwanek.altimeter.app.R;
@@ -193,7 +192,7 @@ class RecordingSessionPresenter implements Presenter {
 
     @Override
     public void activityDestroyedUnsubscribeRx() {
-        mLocationUpdateManager.unsubscribeOnDestroy();
+        mLocationUpdateManager.onActivityDestroyed();
     }
 
     @Override

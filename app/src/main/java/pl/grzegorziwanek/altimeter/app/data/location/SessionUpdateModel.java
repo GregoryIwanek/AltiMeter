@@ -5,9 +5,13 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.preference.PreferenceManager;
 
+import java.util.ArrayList;
+
+import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.data.Session;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.BarometerManager;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.models.CombinedLocationModel;
+import pl.grzegorziwanek.altimeter.app.utils.Constants;
 import pl.grzegorziwanek.altimeter.app.utils.FormatAndValueConverter;
 
 /**
@@ -173,5 +177,92 @@ abstract class SessionUpdateModel {
     static void setElevationOnList(Session session) {
         double elevation = FormatAndValueConverter.roundValue(CombinedLocationModel.getCombinedAltitude());
         session.setElevationOnList(elevation);
+    }
+
+    static void updateGlobalStatistics(Context context, Session session) {
+        if (isSessionInitiated(session)) {
+            // statistics array inside values folder
+            // 0 - num_sessions; 1 - num_points; 2 - distance; 3 - max_altitude; 4 - min_altitude; 5 - long_session;
+            String[] statisticsNames = context.getResources().getStringArray(R.array.statistics_names);
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = preferences.edit();
+
+            String numSessionsStr = preferences.getString(statisticsNames[0], Constants.DEFAULT_TEXT);
+            numSessionsStr = incrementValue(numSessionsStr);
+            editor.putString(statisticsNames[0], numSessionsStr);
+
+            String numPointsStr = preferences.getString(statisticsNames[1], Constants.DEFAULT_TEXT);
+            double numPointsSession = session.getLocationList().size();
+            numPointsStr = sumCount(numPointsStr, numPointsSession);
+            editor.putString(statisticsNames[1], numPointsStr);
+
+            String distanceStr = preferences.getString(statisticsNames[2], Constants.DEFAULT_TEXT);
+            double distanceSession = session.getDistance();
+            distanceStr = sumCount(distanceStr, distanceSession);
+            editor.putString(statisticsNames[2], distanceStr);
+
+            String maxAltStr = preferences.getString(statisticsNames[3], Constants.DEFAULT_TEXT);
+            double maxAltSession = session.getMaxHeight();
+            int maxAltDefault = 10000;
+            if (isStatisticValueBigger(maxAltStr, maxAltSession) && maxAltSession != maxAltDefault) {
+                maxAltStr = String.valueOf(maxAltSession);
+            }
+            editor.putString(statisticsNames[3], maxAltStr);
+
+            String minAltStr = preferences.getString(statisticsNames[4], Constants.DEFAULT_TEXT);
+            double minAltSession = session.getMinHeight();
+            int minAltDefault = -10000;
+            if (!isStatisticValueBigger(minAltStr, minAltSession) && minAltSession != minAltDefault) {
+                minAltStr = String.valueOf(minAltSession);
+            }
+            editor.putString(statisticsNames[4], minAltStr);
+
+            String longestTimeStr = preferences.getString(statisticsNames[5], Constants.DEFAULT_TEXT);
+            long recordingLengthSession = getRecordingLength(session);
+            System.out.println("recording length session: " + recordingLengthSession);
+            String milliLongestTimeStr = FormatAndValueConverter.formatToZeroDateIfDefaultText(longestTimeStr);
+            milliLongestTimeStr = FormatAndValueConverter.getTimeMillisFromStr(milliLongestTimeStr);
+            if (!isStatisticValueBigger(milliLongestTimeStr, recordingLengthSession)) {
+                System.out.println("mili is: " + milliLongestTimeStr);
+                longestTimeStr = FormatAndValueConverter.setHoursDateString(recordingLengthSession);
+            }
+            editor.putString(statisticsNames[5], longestTimeStr);
+
+            editor.apply();
+        }
+    }
+
+    private static boolean isSessionInitiated(Session session) {
+        return session.getCurrentLocation() != null || session.getLocationList().size() != 0;
+    }
+
+    // TODO: 21.03.2017 change name for longest time
+    private static boolean isStatisticValueBigger(String statValueStr, double sessionValue) {
+        statValueStr = FormatAndValueConverter.formatToZeroIfDefaultText(statValueStr);
+        double statValue = Double.valueOf(statValueStr);
+        System.out.println("session value is: " + sessionValue);
+        System.out.println("stat value is: " + statValue);
+        return statValue > sessionValue;
+    }
+
+    private static String incrementValue(String oldValueStr) {
+        oldValueStr = FormatAndValueConverter.formatToZeroIfDefaultText(oldValueStr);
+        int oldValue = Integer.valueOf(oldValueStr);
+        return String.valueOf(oldValue + 1);
+    }
+
+    private static String sumCount(String oldValueStr, double sessionValue) {
+        oldValueStr = FormatAndValueConverter.formatToZeroIfDefaultText(oldValueStr);
+        int oldValue = Integer.valueOf(oldValueStr);
+        oldValue += sessionValue;
+        return String.valueOf(oldValue);
+    }
+
+    private static long getRecordingLength(Session session) {
+        if (session.getLocationList() != null) {
+            ArrayList<Location> locations = session.getLocationList();
+            return locations.get(locations.size()-1).getTime() - locations.get(0).getTime();
+        }
+        return 0;
     }
 }

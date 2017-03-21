@@ -3,18 +3,20 @@ package pl.grzegorziwanek.altimeter.app.utils;
 import android.location.Location;
 import android.text.TextUtils;
 
+import java.sql.Time;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import pl.grzegorziwanek.altimeter.app.data.location.services.helpers.airporttask.xmlparser.XmlAirportValues;
 
 /**
  * Created by Grzegorz Iwanek on 27.11.2016.
- * Consist upgraded ArrayAdapter<String> class; used to update all wanted text views in view at once (single ArrayAdapter by default upgrade one object);
- * Responsible for comparing value of current data and if corresponding TextViews need to be changed;
  */
 public class FormatAndValueConverter {
 
@@ -109,10 +111,13 @@ public class FormatAndValueConverter {
         }
     }
 
-    /** Set new value of the distance.
-     *  Gives up distance update if displacement is smaller than 5 meters.
+     /**
+      * Sets new value of the distance.
+     *  Drops distance update if displacement is smaller than 5 meters (value won't be updated);
      * @param lastLocation last known location
      * @param currLocation current location
+     * @param distance value of the current
+     * @return
      */
     public static double updateDistanceValue(Location lastLocation, Location currLocation, Double distance) {
         if (lastLocation != null && currLocation != null) {
@@ -194,6 +199,39 @@ public class FormatAndValueConverter {
      */
     public static String setDateString(long millis) {
         return new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss").format(millis);
+    }
+
+    /**
+     *
+     * @param millis
+     * @return
+     */
+    public static String setHoursDateString(long millis) {
+        System.out.println("millis is: " + millis);
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("result is: " + sdf.format(millis));
+        return sdf.format(millis);
+    }
+
+    /**
+     *
+     * @param time
+     * @return
+     */
+    public static String getTimeMillisFromStr(String time) {
+        System.out.println("time is: " + time);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String result = "0";
+        try {
+            Date date = sdf.parse("1970-01-01 " + time);
+            result = String.valueOf(date.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        System.out.println("result is: " + result);
+        return result;
     }
 
     /** Set min/max elevation string
@@ -456,6 +494,20 @@ public class FormatAndValueConverter {
 
     private static boolean isNotZero(String str) {
         return Float.valueOf(str) != 0;
+    }
+
+    public static String formatToZeroIfDefaultText(String str) {
+        if (str.equals("...")) {
+            str = "0";
+        }
+        return str;
+    }
+
+    public static String formatToZeroDateIfDefaultText(String str) {
+        if (str.equals("...")) {
+            str = "00:00:00.000";
+        }
+        return str;
     }
 }
 
