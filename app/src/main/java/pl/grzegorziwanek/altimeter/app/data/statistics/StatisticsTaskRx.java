@@ -16,18 +16,11 @@ import rx.functions.Func0;
  * Created by Grzegorz Iwanek on 19.03.2017.
  */
 class StatisticsTaskRx {
-    private static StatisticsTaskRx INSTANCE = null;
+
     private Context mContext;
 
-    private StatisticsTaskRx(Context context) {
+    StatisticsTaskRx(Context context) {
         mContext = context;
-    }
-
-    public static StatisticsTaskRx getInstance(Context context) {
-        if (INSTANCE == null) {
-            INSTANCE = new StatisticsTaskRx(context);
-        }
-        return INSTANCE;
     }
 
     // load global statistics, get observable Map with statistics

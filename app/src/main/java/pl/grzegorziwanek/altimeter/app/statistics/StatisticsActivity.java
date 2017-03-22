@@ -41,7 +41,7 @@ public class StatisticsActivity extends BasicActivity {
                 (StatisticsFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
 
         if (mStatisticsFragment == null) {
-            mStatisticsFragment = StatisticsFragment.newInstance();
+            mStatisticsFragment = new StatisticsFragment();
             ActivityUtils.addFragmentToActivity(
                     getSupportFragmentManager(), mStatisticsFragment, R.id.contentFrame);
         }
@@ -49,6 +49,6 @@ public class StatisticsActivity extends BasicActivity {
 
     private void setPresenter() {
         StatisticsPresenter mStatisticsPresenter = new StatisticsPresenter(mStatisticsFragment,
-                StatisticsManager.getInstance(this));
+                new StatisticsManager(this));
     }
 }

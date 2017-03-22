@@ -41,8 +41,7 @@ import rx.schedulers.Schedulers;
  */
 
 public class LocationUpdateManager implements LocationResponse {
-    private static LocationUpdateManager INSTANCE = null;
-    private static FullInfoCallback callbackFullInfo;
+    private FullInfoCallback callbackFullInfo;
     private LocationChangedCallback callbackInitiation;
     private AddressFoundCallback callbackAddress;
     private GpsElevationCallback callbackGps;
@@ -57,17 +56,12 @@ public class LocationUpdateManager implements LocationResponse {
     private Session mSession = null;
     private Subscription mBarometerSubscription = null;
 
-    private LocationUpdateManager(@NonNull Context context) {
+    public LocationUpdateManager(@NonNull Context context) {
         setCallbacks();
         setVariables(context);
         setManagers();
         setRunnable();
 
-    }
-
-    public static LocationUpdateManager getInstance(@NonNull Context context) {
-        INSTANCE = new LocationUpdateManager(context);
-        return INSTANCE;
     }
 
     private void setCallbacks() {

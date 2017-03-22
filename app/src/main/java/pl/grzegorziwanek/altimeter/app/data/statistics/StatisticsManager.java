@@ -13,24 +13,17 @@ import rx.schedulers.Schedulers;
  */
 
 public class StatisticsManager {
-    private static StatisticsResponse mCallback;
-    private static StatisticsManager INSTANCE = null;
+
+    private StatisticsResponse mCallback;
     private Context mContext;
 
-    private StatisticsManager(Context context) {
+    public StatisticsManager(Context context) {
         mContext = context;
-    }
-
-    public static StatisticsManager getInstance(Context context) {
-        if (INSTANCE == null) {
-            INSTANCE = new StatisticsManager(context);
-        }
-        return INSTANCE;
     }
 
     public void loadStoredStatisticsRx(StatisticsResponse callback) {
         mCallback = callback;
-        StatisticsTaskRx taskRx = StatisticsTaskRx.getInstance(mContext);
+        StatisticsTaskRx taskRx = new StatisticsTaskRx(mContext);
         taskRx.getStatisticsObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -54,7 +47,7 @@ public class StatisticsManager {
 
     public void resetStoredStatisticsRx(StatisticsResponse callback) {
         mCallback = callback;
-        StatisticsTaskRx taskRx = StatisticsTaskRx.getInstance(mContext);
+        StatisticsTaskRx taskRx = new StatisticsTaskRx(mContext);
         taskRx.getResetObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

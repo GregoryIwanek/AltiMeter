@@ -33,13 +33,9 @@ public class StatisticsFragment extends Fragment implements StatisticsContract.V
     @BindView(R.id.stats_min_alt_label_value) TextView mMinAltTV;
     @BindView(R.id.stats_longest_label_value) TextView mLongSessionTV;
 
-    private static StatisticsContract.Presenter mPresenter;
+    private StatisticsContract.Presenter mPresenter;
 
     public StatisticsFragment() {}
-
-    public static StatisticsFragment newInstance() {
-        return new StatisticsFragment();
-    }
 
     @Nullable
     @Override

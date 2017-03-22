@@ -219,11 +219,9 @@ abstract class SessionUpdateModel {
 
             String longestTimeStr = preferences.getString(statisticsNames[5], Constants.DEFAULT_TEXT);
             long recordingLengthSession = getRecordingLength(session);
-            System.out.println("recording length session: " + recordingLengthSession);
             String milliLongestTimeStr = FormatAndValueConverter.formatToZeroDateIfDefaultText(longestTimeStr);
             milliLongestTimeStr = FormatAndValueConverter.getTimeMillisFromStr(milliLongestTimeStr);
             if (!isStatisticValueBigger(milliLongestTimeStr, recordingLengthSession)) {
-                System.out.println("mili is: " + milliLongestTimeStr);
                 longestTimeStr = FormatAndValueConverter.setHoursDateString(recordingLengthSession);
             }
             editor.putString(statisticsNames[5], longestTimeStr);
@@ -236,12 +234,9 @@ abstract class SessionUpdateModel {
         return session.getCurrentLocation() != null || session.getLocationList().size() != 0;
     }
 
-    // TODO: 21.03.2017 change name for longest time
     private static boolean isStatisticValueBigger(String statValueStr, double sessionValue) {
         statValueStr = FormatAndValueConverter.formatToZeroIfDefaultText(statValueStr);
         double statValue = Double.valueOf(statValueStr);
-        System.out.println("session value is: " + sessionValue);
-        System.out.println("stat value is: " + statValue);
         return statValue > sessionValue;
     }
 

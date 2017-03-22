@@ -52,6 +52,6 @@ public class RecordingSessionActivity extends BasicActivity{
     private void setPresenter() {
         RecordingSessionPresenter mRecordingSessionPresenter = new RecordingSessionPresenter(
                 SessionRepository.getInstance(SessionLocalDataSource.getInstance(getApplicationContext())),
-                LocationUpdateManager.getInstance(getApplicationContext()), mRecordingSessionFragment);
+                new LocationUpdateManager(getApplicationContext()), mRecordingSessionFragment);
     }
 }

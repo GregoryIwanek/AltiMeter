@@ -3,7 +3,6 @@ package pl.grzegorziwanek.altimeter.app.utils;
 import android.location.Location;
 import android.text.TextUtils;
 
-import java.sql.Time;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -111,8 +110,8 @@ public class FormatAndValueConverter {
         }
     }
 
-     /**
-      * Sets new value of the distance.
+    /**
+     * Sets new value of the distance.
      *  Drops distance update if displacement is smaller than 5 meters (value won't be updated);
      * @param lastLocation last known location
      * @param currLocation current location
@@ -207,10 +206,8 @@ public class FormatAndValueConverter {
      * @return
      */
     public static String setHoursDateString(long millis) {
-        System.out.println("millis is: " + millis);
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("result is: " + sdf.format(millis));
         return sdf.format(millis);
     }
 
@@ -220,9 +217,9 @@ public class FormatAndValueConverter {
      * @return
      */
     public static String getTimeMillisFromStr(String time) {
-        System.out.println("time is: " + time);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        time = checkIfCorrectDateFormat(time);
         String result = "0";
         try {
             Date date = sdf.parse("1970-01-01 " + time);
@@ -230,8 +227,22 @@ public class FormatAndValueConverter {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        System.out.println("result is: " + result);
         return result;
+    }
+
+    private static String checkIfCorrectDateFormat(String timeStr) {
+        switch (timeStr) {
+            case "0":
+                timeStr = "00:00:00";
+                break;
+            case "00:00:00.000":
+                timeStr = "00:00:00";
+                break;
+            case "00:00:00.":
+                timeStr = "00:00:00";
+                break;
+        }
+        return timeStr;
     }
 
     /** Set min/max elevation string
@@ -505,7 +516,7 @@ public class FormatAndValueConverter {
 
     public static String formatToZeroDateIfDefaultText(String str) {
         if (str.equals("...")) {
-            str = "00:00:00.000";
+            str = "00:00:00";
         }
         return str;
     }

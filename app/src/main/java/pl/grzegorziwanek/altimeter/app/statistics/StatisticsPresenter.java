@@ -14,8 +14,8 @@ import pl.grzegorziwanek.altimeter.app.statistics.StatisticsContract.View;
  */
 
 class StatisticsPresenter implements Presenter {
-    private static StatisticsResponse mCallback;
     private final View mStatisticsView;
+    private StatisticsResponse mCallback;
     private StatisticsManager mManager;
 
     StatisticsPresenter(@NonNull View statisticsView, @NonNull StatisticsManager manager) {
