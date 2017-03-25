@@ -18,14 +18,14 @@ import pl.grzegorziwanek.altimeter.app.utils.FormatAndValueConverter;
  * Created by Grzegorz Iwanek on 01.03.2017.
  */
 
-abstract class SessionUpdateModel {
+class SessionUpdateModel {
 
     /**
      *
      * @param location
      * @param context
      */
-    static void saveAirportUpdateLocation(Location location, Context context) {
+    void saveAirportUpdateLocation(Location location, Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("measureTime", String.valueOf(location.getTime()));
@@ -38,25 +38,25 @@ abstract class SessionUpdateModel {
      *
      * @param context
      */
-    static void readAirportUpdateLocation(Context context) {
+    void readAirportUpdateLocation(Context context, BarometerManager barometerManager) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         String str = sharedPref.getString("measureTime", "0");
         long time = Long.valueOf(str);
         float lat = sharedPref.getFloat("updateLatitude", 0);
         float lon = sharedPref.getFloat("updateLongitude", 0);
-        BarometerManager.setAirportMeasureTime(time);
-        BarometerManager.setUpdateLatitude(lat);
-        BarometerManager.setUpdateLongitude(lon);
+        barometerManager.setAirportMeasureTime(time);
+        barometerManager.setUpdateLatitude(lat);
+        barometerManager.setUpdateLongitude(lon);
     }
 
     /**
      *
      * @param context
      */
-    static void saveAirportPressure(Context context) {
+    void saveAirportPressure(Context context, BarometerManager barometerManager) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("airportPressure", String.valueOf(BarometerManager.getClosestAirportPressure()));
+        editor.putString("airportPressure", String.valueOf(barometerManager.getClosestAirportPressure()));
         editor.apply();
     }
 
@@ -64,18 +64,18 @@ abstract class SessionUpdateModel {
      *
      * @param context
      */
-    static void readAirportPressure(Context context) {
+    void readAirportPressure(Context context, BarometerManager barometerManager) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         String pressureStr = sharedPref.getString("airportPressure", "0");
         double pressure = Double.valueOf(pressureStr);
-        BarometerManager.setClosestAirportPressure(pressure);
+        barometerManager.setClosestAirportPressure(pressure);
     }
 
     /**
      *
      * @param context
      */
-    static void updateDistanceUnits(Context context) {
+    void updateDistanceUnits(Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         String units = sharedPref.getString("pref_set_units", "KILOMETERS");
         FormatAndValueConverter.setUnitsFormat(units);
@@ -85,7 +85,7 @@ abstract class SessionUpdateModel {
      *
      * @param session
      */
-    static void setSessionsHeight(Session session) {
+    void setSessionsHeight(Session session) {
         double currAltitude = session.getCurrentElevation();
         double minHeight = session.getMinHeight();
         double maxHeight = session.getMaxHeight();
@@ -109,7 +109,7 @@ abstract class SessionUpdateModel {
      *
      * @param session
      */
-    static void setSessionsDistance(Session session) {
+    void setSessionsDistance(Session session) {
         if (session.getLastLocation() != null) {
             Location lastLocation = session.getLastLocation();
             Location currentLocation = session.getCurrentLocation();
@@ -129,7 +129,7 @@ abstract class SessionUpdateModel {
      *
      * @param session
      */
-    static void setGeoCoordinateStr(Session session) {
+    void setGeoCoordinateStr(Session session) {
         Location location = session.getCurrentLocation();
         String latitudeStr =
                 FormatAndValueConverter.setGeoCoordinateStr(location.getLatitude(), true);
@@ -143,19 +143,18 @@ abstract class SessionUpdateModel {
      *
      * @param session
      */
-    static void setCurrentElevation(Session session) {
-        double elevation = CombinedLocationModel.getCombinedAltitude();
+    void setCurrentElevation(Session session, CombinedLocationModel combinedLocationModel) {
+        double elevation = combinedLocationModel.getCombinedAltitude();
         session.setCurrentElevation(elevation);
         session.getCurrentLocation().setAltitude(elevation);
     }
-
 
     /**
      *
      * @param session
      * @param location
      */
-    static void saveSessionsLocation(Session session, Location location) {
+    void saveSessionsLocation(Session session, Location location) {
         if (session.getCurrentLocation() != null) {
             session.setLastLocation(session.getCurrentLocation());
         }
@@ -166,7 +165,7 @@ abstract class SessionUpdateModel {
      *
      * @param session
      */
-    static void appendLocationToList(Session session) {
+    void appendLocationToList(Session session) {
         session.appendLocationPoint(session.getCurrentLocation());
     }
 
@@ -174,12 +173,12 @@ abstract class SessionUpdateModel {
      *
      * @param session
      */
-    static void setElevationOnList(Session session) {
-        double elevation = FormatAndValueConverter.roundValue(CombinedLocationModel.getCombinedAltitude());
+    void setElevationOnList(Session session, CombinedLocationModel combinedLocationModel) {
+        double elevation = FormatAndValueConverter.roundValue(combinedLocationModel.getCombinedAltitude());
         session.setElevationOnList(elevation);
     }
 
-    static void updateGlobalStatistics(Context context, Session session) {
+    void updateGlobalStatistics(Context context, Session session) {
         if (isSessionInitiated(session)) {
             // statistics array inside values folder
             // 0 - num_sessions; 1 - num_points; 2 - distance; 3 - max_altitude; 4 - min_altitude; 5 - long_session;
@@ -230,30 +229,30 @@ abstract class SessionUpdateModel {
         }
     }
 
-    private static boolean isSessionInitiated(Session session) {
+    private boolean isSessionInitiated(Session session) {
         return session.getCurrentLocation() != null || session.getLocationList().size() != 0;
     }
 
-    private static boolean isStatisticValueBigger(String statValueStr, double sessionValue) {
+    private boolean isStatisticValueBigger(String statValueStr, double sessionValue) {
         statValueStr = FormatAndValueConverter.formatToZeroIfDefaultText(statValueStr);
         double statValue = Double.valueOf(statValueStr);
         return statValue > sessionValue;
     }
 
-    private static String incrementValue(String oldValueStr) {
+    private String incrementValue(String oldValueStr) {
         oldValueStr = FormatAndValueConverter.formatToZeroIfDefaultText(oldValueStr);
         int oldValue = Integer.valueOf(oldValueStr);
         return String.valueOf(oldValue + 1);
     }
 
-    private static String sumCount(String oldValueStr, double sessionValue) {
+    private String sumCount(String oldValueStr, double sessionValue) {
         oldValueStr = FormatAndValueConverter.formatToZeroIfDefaultText(oldValueStr);
         int oldValue = Integer.valueOf(oldValueStr);
         oldValue += sessionValue;
         return String.valueOf(oldValue);
     }
 
-    private static long getRecordingLength(Session session) {
+    private long getRecordingLength(Session session) {
         if (session.getLocationList() != null) {
             ArrayList<Location> locations = session.getLocationList();
             return locations.get(locations.size()-1).getTime() - locations.get(0).getTime();

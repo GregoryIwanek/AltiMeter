@@ -9,63 +9,56 @@ import pl.grzegorziwanek.altimeter.app.data.location.services.helpers.airporttas
  */
 
 public class BarometerManager {
-    private static BarometerManager mBarometerManager;
-    private static boolean mBarometerEnabled;
-    private static long mAirportMeasureTime = 0;
-    private static float mSeaLevelPressure = 0;
-    private static double mUpdateLatitude = 0;
-    private static double mUpdateLongitude = 0;
-    private static double mClosestAirportPressure = 0;
-    private static List<XmlAirportValues> mAirportsList = null;
 
-    public static BarometerManager getInstance() {
-        if (mBarometerManager == null) {
-            mBarometerManager = new BarometerManager();
-        }
-        return mBarometerManager;
-    }
+    private boolean mBarometerEnabled;
+    private long mAirportMeasureTime = 0;
+    private float mSeaLevelPressure = 0;
+    private double mUpdateLatitude = 0;
+    private double mUpdateLongitude = 0;
+    private double mClosestAirportPressure = 0;
+    private List<XmlAirportValues> mAirportsList = null;
 
-    public static boolean isBarometerEnabled() {
+    public boolean isBarometerEnabled() {
         return mBarometerEnabled;
     }
 
-    public static void setBarometerEnabled(boolean barometerEnabled) {
+    public void setBarometerEnabled(boolean barometerEnabled) {
         mBarometerEnabled = barometerEnabled;
     }
 
-    public static long getAirportMeasureTime() {
+    public long getAirportMeasureTime() {
         return mAirportMeasureTime;
     }
 
-    public static void setAirportMeasureTime(long airportMeasureTime) {
+    public void setAirportMeasureTime(long airportMeasureTime) {
         mAirportMeasureTime = airportMeasureTime;
     }
 
-    public static double getUpdateLatitude() {
+    public double getUpdateLatitude() {
         return mUpdateLatitude;
     }
 
-    public static void setUpdateLatitude(double updateLatitude) {
+    public void setUpdateLatitude(double updateLatitude) {
         mUpdateLatitude = updateLatitude;
     }
 
-    public static double getUpdateLongitude() {
+    public double getUpdateLongitude() {
         return mUpdateLongitude;
     }
 
-    public static void setUpdateLongitude(double updateLongitude) {
+    public void setUpdateLongitude(double updateLongitude) {
         mUpdateLongitude = updateLongitude;
     }
 
-    public static float getSeaLevelPressure() {
+    public float getSeaLevelPressure() {
         return mSeaLevelPressure;
     }
 
-    public static void setSeaLevelPressure(float seaLevelPressure) {
+    public void setSeaLevelPressure(float seaLevelPressure) {
         mSeaLevelPressure = seaLevelPressure;
     }
 
-    public static void resetData() {
+    public void resetData() {
         mBarometerEnabled = false;
         mAirportMeasureTime = 0;
         mSeaLevelPressure = 0;
@@ -74,11 +67,11 @@ public class BarometerManager {
         resetList();
     }
 
-    public static List<XmlAirportValues> getAirportsList() {
+    public List<XmlAirportValues> getAirportsList() {
         return mAirportsList;
     }
 
-    public static void setAirportsList(List<XmlAirportValues> airportsList) {
+    public void setAirportsList(List<XmlAirportValues> airportsList) {
         mAirportsList = airportsList;
     }
 
@@ -86,15 +79,15 @@ public class BarometerManager {
         //mAirportsList = null;
     }
 
-    public static double getClosestAirportPressure() {
+    public double getClosestAirportPressure() {
         return mClosestAirportPressure;
     }
 
-    public static void setClosestAirportPressure(double closestAirportPressure) {
+    public void setClosestAirportPressure(double closestAirportPressure) {
         mClosestAirportPressure = closestAirportPressure;
     }
 
-    public static boolean isAirportsListEmpty() {
+    public boolean isAirportsListEmpty() {
         return mAirportsList.isEmpty();
     }
 }

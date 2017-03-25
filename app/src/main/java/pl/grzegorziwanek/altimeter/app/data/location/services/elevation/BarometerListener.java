@@ -7,7 +7,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-import pl.grzegorziwanek.altimeter.app.data.location.LocationResponse;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.BarometerManager;
 import rx.subjects.PublishSubject;
 
@@ -17,29 +16,22 @@ import rx.subjects.PublishSubject;
 
 public class BarometerListener implements SensorEventListener {
 
-    private static BarometerListener barometerListener;
     private final PublishSubject<Double> mAltitudePublishSubject;
     private final Context mContext;
     private Sensor mSensor;
     private boolean isListenerRegistered = false;
-    private SensorManager sensorManager;
+    private SensorManager mSensorManager;
+    private double mClosestAirportPressure = 0;
 
-    private BarometerListener(Context context) {
+    public BarometerListener(Context context) {
         mContext = context;
         mAltitudePublishSubject = PublishSubject.create();
         setPressureSensor();
     }
 
-    public static BarometerListener getInstance(Context context) {
-        if (barometerListener == null) {
-            barometerListener = new BarometerListener(context);
-        }
-        return barometerListener;
-    }
-
     private void setPressureSensor() {
-        sensorManager = (SensorManager) mContext.getSystemService(Service.SENSOR_SERVICE);
-        mSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
+        mSensorManager = (SensorManager) mContext.getSystemService(Service.SENSOR_SERVICE);
+        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
     }
 
     public PublishSubject<Double> getPressureAltitudePublishSubject() {
@@ -54,12 +46,12 @@ public class BarometerListener implements SensorEventListener {
     }
 
     public void registerListener() {
-        sensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
         isListenerRegistered = true;
     }
 
     public void unregisterListener() {
-        sensorManager.unregisterListener(this);
+        mSensorManager.unregisterListener(this);
         isListenerRegistered = false;
     }
 
@@ -68,15 +60,18 @@ public class BarometerListener implements SensorEventListener {
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-    }
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
     private float getPressure() {
-        if (BarometerManager.getClosestAirportPressure() == 0) {
+        if (mClosestAirportPressure == 0) {
             return (float) 1013.5;
         } else {
-            return (float) BarometerManager.getClosestAirportPressure();
+            return (float) mClosestAirportPressure;
         }
+    }
+
+    public void setClosestAirportPressure(double airportPressure) {
+        mClosestAirportPressure = airportPressure;
     }
 }
 

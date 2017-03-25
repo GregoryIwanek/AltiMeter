@@ -5,34 +5,27 @@ package pl.grzegorziwanek.altimeter.app.data.location.managers;
  */
 
 public class GpsManager {
-    private static GpsManager gpsManager;
-    private static boolean mGpsEnabled;
-    private static long mMeasureTime = 0;
 
-    public static GpsManager getInstance() {
-        if (gpsManager == null) {
-            gpsManager = new GpsManager();
-        }
-        return gpsManager;
-    }
+    private boolean mGpsEnabled;
+    private long mMeasureTime = 0;
 
-    public static void setGpsEnabled(boolean gpsEnabled) {
+    public void setGpsEnabled(boolean gpsEnabled) {
         mGpsEnabled = gpsEnabled;
     }
 
-    public static boolean isGpsEnabled() {
+    public boolean isGpsEnabled() {
         return mGpsEnabled;
     }
 
-    public static long getMeasureTime() {
+    public long getMeasureTime() {
         return mMeasureTime;
     }
 
-    public static void setMeasureTime(long measureTime) {
+    public void setMeasureTime(long measureTime) {
         mMeasureTime = measureTime;
     }
 
-    public static void resetData() {
+    public void resetData() {
         mGpsEnabled = false;
         mMeasureTime = 0;
     }

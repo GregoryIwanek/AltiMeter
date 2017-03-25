@@ -11,6 +11,7 @@ import java.util.UUID;
  * Model class for Session; Stores location information about graph and session description;
  */
 public class Session {
+
     private boolean mCompleted = false;
     private boolean mLocked = false;
     private String mId;

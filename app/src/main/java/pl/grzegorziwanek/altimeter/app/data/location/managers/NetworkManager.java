@@ -5,34 +5,27 @@ package pl.grzegorziwanek.altimeter.app.data.location.managers;
  */
 
 public class NetworkManager {
-    private static NetworkManager mNetworkManager;
-    private static boolean mNetworkEnabled;
-    private static long mMeasureTime = 0;
 
-    public static NetworkManager getInstance() {
-        if (mNetworkManager == null) {
-            mNetworkManager = new NetworkManager();
-        }
-        return mNetworkManager;
-    }
+    private boolean mNetworkEnabled;
+    private long mMeasureTime = 0;
 
-    public static boolean isNetworkEnabled() {
+    public boolean isNetworkEnabled() {
         return mNetworkEnabled;
     }
 
-    public static void setNetworkEnabled(boolean networkEnabled) {
+    public void setNetworkEnabled(boolean networkEnabled) {
         mNetworkEnabled = networkEnabled;
     }
 
-    public static long getMeasureTime() {
+    public long getMeasureTime() {
         return mMeasureTime;
     }
 
-    public static void setMeasureTime(long measureTime) {
+    public void setMeasureTime(long measureTime) {
         mMeasureTime = measureTime;
     }
 
-    public static void resetData() {
+    public void resetData() {
         mNetworkEnabled = false;
         mMeasureTime = 0;
     }

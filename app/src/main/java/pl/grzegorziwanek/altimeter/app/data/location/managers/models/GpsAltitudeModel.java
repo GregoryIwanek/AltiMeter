@@ -5,30 +5,23 @@ package pl.grzegorziwanek.altimeter.app.data.location.managers.models;
  */
 
 public class GpsAltitudeModel {
-    private static GpsAltitudeModel gpsAltitudeModel;
-    private static double mAltitude = 0;
-    private static long mMeasureTime;
 
-    public static GpsAltitudeModel getInstance() {
-        if (gpsAltitudeModel == null) {
-            gpsAltitudeModel = new GpsAltitudeModel();
-        }
-        return gpsAltitudeModel;
-    }
+    private double mAltitude = 0;
+    private long mMeasureTime;
 
-    public static double getAltitude() {
+    public double getAltitude() {
         return mAltitude;
     }
 
-    public static void setAltitude(Double altitude) {
+    public void setAltitude(Double altitude) {
         mAltitude = altitude;
     }
 
-    public static long getMeasureTime() {
+    public long getMeasureTime() {
         return mMeasureTime;
     }
 
-    public static void setMeasureTime(long time) {
+    public void setMeasureTime(long time) {
         mMeasureTime = time;
     }
 }

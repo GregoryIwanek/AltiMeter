@@ -23,6 +23,7 @@ import rx.functions.Func0;
  */
 
 public class NetworkTaskRx {
+
     private String mLocationsStr;
 
     public void setLocationsStr(Location record) {

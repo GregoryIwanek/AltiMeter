@@ -10,35 +10,36 @@ import pl.grzegorziwanek.altimeter.app.utils.FormatAndValueConverter;
  */
 
 public class CombinedLocationModel {
-    private static CombinedLocationModel combinedLocationModel;
-    private static double mCombinedAltitude = 0;
-    private static long mUpdateTime = 0;
 
-    public static CombinedLocationModel getInstance() {
-        if (combinedLocationModel == null) {
-            combinedLocationModel = new CombinedLocationModel();
-        }
-        return combinedLocationModel;
-    }
+    private double mCombinedAltitude = 0;
+    private long mUpdateTime = 0;
 
-    public static void updateCombinedAltitude() {
+    /**
+     *
+     * @param stateOfProviders if provider is enabled; 0-gps, 1-network, 2-barometer
+     * @param modelsAltitude altitudes of providers; 0-gps, 1-network, 2-barometer
+     */
+    public void updateCombinedAltitude(boolean[] stateOfProviders, double[] modelsAltitude) {
         double altitude = 0;
         int count = 0;
-        if (GpsManager.isGpsEnabled()) {
-            if (GpsAltitudeModel.getAltitude() != 0) {
-                altitude += GpsAltitudeModel.getAltitude();
+        // gps
+        if (stateOfProviders[0]) {
+            if (modelsAltitude[0] != 0) {
+                altitude += modelsAltitude[0];
                 count++;
             }
         }
-        if (NetworkManager.isNetworkEnabled()) {
-            if (NetworkAltitudeModel.getAltitude() != 0) {
-                altitude += NetworkAltitudeModel.getAltitude();
+        // network
+        if (stateOfProviders[1]) {
+            if (modelsAltitude[1] != 0) {
+                altitude += modelsAltitude[1];
                 count++;
             }
         }
-        if (BarometerManager.isBarometerEnabled()) {
-            if (BarometerAltitudeModel.getAltitude() != 0) {
-                altitude += BarometerAltitudeModel.getAltitude();
+        // barometer
+        if (stateOfProviders[2]) {
+            if (modelsAltitude[2] != 0) {
+                altitude += modelsAltitude[2];
                 count++;
             }
         }
@@ -49,15 +50,15 @@ public class CombinedLocationModel {
         }
     }
 
-    public static double getCombinedAltitude() {
+    public double getCombinedAltitude() {
         return FormatAndValueConverter.roundValue(mCombinedAltitude);
     }
 
-    public static void setUpdateTime(long updateTime) {
+    public void setUpdateTime(long updateTime) {
         mUpdateTime = updateTime;
     }
     
-    public static long getUpdateTime() {
+    public long getUpdateTime() {
         return mUpdateTime;
     }
 }

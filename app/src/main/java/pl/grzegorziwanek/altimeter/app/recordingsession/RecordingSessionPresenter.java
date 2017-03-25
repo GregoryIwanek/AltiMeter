@@ -28,7 +28,7 @@ class RecordingSessionPresenter implements Presenter {
     private final View mRecordingSessionView;
     private final LocationUpdateManager mLocationUpdateManager;
     private LocationResponse.FullInfoCallback callbackFullInfo;
-    private static Session mSession;
+    private Session mSession;
 
     public RecordingSessionPresenter(@NonNull SessionRepository sessionSource,
                                      @NonNull LocationUpdateManager locationUpdateManager,
