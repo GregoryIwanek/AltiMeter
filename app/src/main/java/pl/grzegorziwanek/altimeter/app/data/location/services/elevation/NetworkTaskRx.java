@@ -19,15 +19,21 @@ import rx.Observable;
 import rx.functions.Func0;
 
 /**
- * Created by Grzegorz Iwanek on 27.02.2017.
+ * Consist JavaRx task. Retrieves elevation value of the given location.
+ * Requires location object as an input to work.
  */
-
 public class NetworkTaskRx {
 
     private String mLocationsStr;
 
-    public void setLocationsStr(Location record) {
-        mLocationsStr = null;
+    // private constructor to prevent instantiation without location object input
+    private NetworkTaskRx() {}
+
+    public NetworkTaskRx(Location location) {
+        setLocationsStr(location);
+    }
+
+    private void setLocationsStr(Location record) {
         mLocationsStr = Double.toString(record.getLatitude()) + "," + Double.toString(record.getLongitude());
     }
 
@@ -72,7 +78,7 @@ public class NetworkTaskRx {
             StringBuilder stringBuilder = new StringBuilder();
             while ((line = bufferedReader.readLine()) != null) {
                 // append new line to builder
-                stringBuilder.append(line + "\n");
+                stringBuilder.append(line).append("\n");
             }
 
             if (stringBuilder.length() == 0) {

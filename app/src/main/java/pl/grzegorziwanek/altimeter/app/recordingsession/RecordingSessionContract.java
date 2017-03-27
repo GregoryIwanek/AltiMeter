@@ -30,9 +30,13 @@ interface RecordingSessionContract {
 
         void showRecordingData();
 
+        void askGenerateMap();
+
         void showShareMenu(Intent screenshotIntent);
 
         void showSessionMap(@NonNull String sessionId);
+
+        void showMapEmpty();
 
         void setAddressTextView(String address);
 
@@ -88,5 +92,7 @@ interface RecordingSessionContract {
         void activityDestroyedUnsubscribeRx();
 
         void shareScreenShot(Window window, ContentResolver cr, String[] textViewContent);
+
+        void isSessionEmpty();
     }
 }

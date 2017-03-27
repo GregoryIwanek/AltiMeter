@@ -1,10 +1,10 @@
 package pl.grzegorziwanek.altimeter.app.data.location.services.helpers.airporttask.xmlparser;
 
 /**
- * Created by Grzegorz Iwanek on 24.02.2017.
+ * Consists class holding data about a single airport.
  */
-
 public class XmlAirportValues {
+
     private String id;
     private String country = "";
     private String site = "";

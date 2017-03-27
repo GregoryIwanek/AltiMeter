@@ -7,13 +7,12 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-import pl.grzegorziwanek.altimeter.app.data.location.managers.BarometerManager;
 import rx.subjects.PublishSubject;
 
 /**
- * Created by Grzegorz Iwanek on 18.02.2017.
+ * Consist Pressure Sensor listener. Returns updates of pressure sensor every interval set.
+ * Uses JavaRx to return updates of value.
  */
-
 public class BarometerListener implements SensorEventListener {
 
     private final PublishSubject<Double> mAltitudePublishSubject;

@@ -8,10 +8,10 @@ import pl.grzegorziwanek.altimeter.app.data.location.services.helpers.airporttas
 import pl.grzegorziwanek.altimeter.app.utils.Constants;
 import rx.Observable;
 
-/**
- * Created by Grzegorz Iwanek on 01.03.2017.
+/**Consists JavaRx airports task.
+ * Case of task when information about surrounding airports location, and their name codes are known.
+ * Used to download METARS weather data of given airports.
  */
-
 public class AirportsWithDataTaskRx extends BasicAirportsTask {
 
     private String mStationsStr;

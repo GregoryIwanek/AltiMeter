@@ -156,7 +156,7 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
 
     @OnClick(R.id.map_button)
     public void onMapButtonClick() {
-        showUpDialog("Generate map?");
+        mPresenter.isSessionEmpty();
     }
 
     @OnClick(R.id.gps_button)
@@ -322,6 +322,11 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
     }
 
     @Override
+    public void askGenerateMap() {
+        showUpDialog("Generate map?");
+    }
+
+    @Override
     public void showShareMenu(Intent screenshotIntent) {
         startActivity(Intent.createChooser(screenshotIntent, "Send to"));
     }
@@ -331,6 +336,11 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
         Intent intent = new Intent(getContext(), MapActivity.class);
         intent.putExtra("sessionId", sessionId);
         startActivity(intent);
+    }
+
+    @Override
+    public void showMapEmpty() {
+        showMessage("Session has no recorded points. Record points in order to generate map");
     }
 
     private void showMessage(String message) {

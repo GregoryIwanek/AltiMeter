@@ -9,13 +9,12 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by Grzegorz Iwanek on 19.03.2017.
+ * Consists manager class dealing with global statistics of the app.
  */
-
 public class StatisticsManager {
 
     private StatisticsResponse mCallback;
-    private Context mContext;
+    private final Context mContext;
 
     public StatisticsManager(Context context) {
         mContext = context;

@@ -15,6 +15,9 @@ import pl.grzegorziwanek.altimeter.app.data.location.managers.BarometerManager;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.GpsManager;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.NetworkManager;
 import pl.grzegorziwanek.altimeter.app.utils.ScreenShotCatcher;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static pl.grzegorziwanek.altimeter.app.recordingsession.RecordingSessionContract.*;
@@ -199,6 +202,31 @@ class RecordingSessionPresenter implements Presenter {
     public void shareScreenShot(Window window, ContentResolver cr, String[] textViewContent) {
         Intent intent = ScreenShotCatcher.captureAndShare(window, cr, textViewContent);
         mRecordingSessionView.showShareMenu(intent);
+    }
+
+    @Override
+    public void isSessionEmpty() {
+        mLocationUpdateManager.isSessionEmptyObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override
+                    public void onCompleted() {
+                        this.unsubscribe();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {}
+
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        if (aBoolean) {
+                            mRecordingSessionView.showMapEmpty();
+                        } else {
+                            mRecordingSessionView.askGenerateMap();
+                        }
+                    }
+                });
     }
 
     private void updateButton(int drawableId) {

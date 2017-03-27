@@ -3,10 +3,6 @@ package pl.grzegorziwanek.altimeter.app.statistics;
 import pl.grzegorziwanek.altimeter.app.BasePresenter;
 import pl.grzegorziwanek.altimeter.app.BaseView;
 
-/**
- * Created by Grzegorz Iwanek on 07.02.2017.
- */
-
 interface StatisticsContract {
 
     interface View extends BaseView<Presenter> {

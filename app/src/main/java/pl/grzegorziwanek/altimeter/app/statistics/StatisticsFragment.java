@@ -22,7 +22,7 @@ import static pl.grzegorziwanek.altimeter.app.utils.NoticeDialogFragment.NoticeD
 
 
 /**
- * Created by Grzegorz Iwanek on 07.02.2017.
+ * Consists view class of Statistics section.
  */
 public class StatisticsFragment extends Fragment implements StatisticsContract.View,
         NoticeDialogFragmentV4.NoticeDialogListener {

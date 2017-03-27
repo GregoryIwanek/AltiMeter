@@ -13,11 +13,11 @@ import rx.Observable;
 import rx.functions.Func0;
 
 /**
- * Created by Grzegorz Iwanek on 19.03.2017.
+ * Consists JavaRx task dealing with fetching global statistics of an app.
  */
 class StatisticsTaskRx {
 
-    private Context mContext;
+    private final Context mContext;
 
     StatisticsTaskRx(Context context) {
         mContext = context;

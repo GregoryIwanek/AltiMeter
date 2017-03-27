@@ -22,7 +22,6 @@ import pl.grzegorziwanek.altimeter.app.utils.Constants;
  * Implements IntentService; Has to be included in manifest file in corresponding activity section;
  * Returns address through use of geocoder class;
  */
-//TODO -> forge it into a AsyncTask
 public class AddressService extends IntentService {
 
     private ResultReceiver mResultReceiver;

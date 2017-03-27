@@ -7,30 +7,16 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.grzegorziwanek.altimeter.app.data.location.managers.BarometerManager;
-
 /**
- * Created by Grzegorz Iwanek on 24.02.2017.
+ * Consists class which parse xml airports data and splits them into separated objects.
  */
-
 public class XmlAirportParser extends DefaultHandler {
-    private static  XmlAirportParser parser;
-    private static List<XmlAirportValues> list = null;
+
+    private List<XmlAirportValues> list = null;
     private StringBuilder builder = null;
     private XmlAirportValues airportsValues = null;
     private String xmlMode;
     private int currentId;
-
-    private XmlAirportParser() {
-
-    }
-
-    public static XmlAirportParser getInstance() {
-        if (parser == null) {
-            parser = new XmlAirportParser();
-        }
-        return parser;
-    }
 
     @Override
     public void startDocument() throws SAXException {
@@ -132,9 +118,5 @@ public class XmlAirportParser extends DefaultHandler {
 
     public List<XmlAirportValues> getAirportsList() {
         return list;
-    }
-
-    public void clearList() {
-        list = null;
     }
 }

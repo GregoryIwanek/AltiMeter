@@ -253,7 +253,7 @@ class SessionUpdateModel {
     }
 
     private long getRecordingLength(Session session) {
-        if (session.getLocationList() != null) {
+        if (session.getLocationList() != null && session.getLocationList().size() > 0) {
             ArrayList<Location> locations = session.getLocationList();
             return locations.get(locations.size()-1).getTime() - locations.get(0).getTime();
         }

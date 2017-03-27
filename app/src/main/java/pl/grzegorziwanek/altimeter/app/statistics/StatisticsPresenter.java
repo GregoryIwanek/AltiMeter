@@ -10,9 +10,8 @@ import pl.grzegorziwanek.altimeter.app.statistics.StatisticsContract.Presenter;
 import pl.grzegorziwanek.altimeter.app.statistics.StatisticsContract.View;
 
 /**
- * Created by Grzegorz Iwanek on 07.02.2017.
+ * Consists presenter class of Statistics section.
  */
-
 class StatisticsPresenter implements Presenter {
     private final View mStatisticsView;
     private StatisticsResponse mCallback;

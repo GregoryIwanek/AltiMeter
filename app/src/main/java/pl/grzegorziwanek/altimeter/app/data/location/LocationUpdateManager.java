@@ -30,9 +30,11 @@ import pl.grzegorziwanek.altimeter.app.data.location.services.helpers.airporttas
 import pl.grzegorziwanek.altimeter.app.data.location.services.helpers.airporttask.xmlparser.XmlAirportValues;
 import pl.grzegorziwanek.altimeter.app.utils.Constants;
 import pl.grzegorziwanek.altimeter.app.utils.FormatAndValueConverter;
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func0;
 import rx.schedulers.Schedulers;
 
 /**
@@ -60,8 +62,8 @@ public class LocationUpdateManager implements LocationResponse {
     private Runnable mBarometerRunnable;
     private Runnable mNetworkRunnable;
     private Runnable mDataCombinedRunnable;
-    private Session mSession = null;
-    private Subscription mBarometerSubscription = null;
+    private Session mSession;
+    private Subscription mBarometerSubscription;
 
     public LocationUpdateManager(@NonNull Context context) {
         setVariables(context);
@@ -72,6 +74,13 @@ public class LocationUpdateManager implements LocationResponse {
         setListeners();
         setRunnable();
         setVariablesDependantOnOtherObject();
+    }
+
+    private void setVariables(Context context) {
+        mContext = context;
+        mCombinedLocationModel = new CombinedLocationModel();
+        mResultReceiver = new AddressResultReceiver(new Handler());
+        handler = new StaticHandler();
     }
 
     private void setCallbacks() {
@@ -114,24 +123,11 @@ public class LocationUpdateManager implements LocationResponse {
         };
     }
 
-    private void setVariables(Context context) {
-        mContext = context;
-        mCombinedLocationModel = new CombinedLocationModel();
-        mResultReceiver = new AddressResultReceiver(new Handler());
-        handler = new StaticHandler();
-    }
-
-    private void setSession() {
-        mSession = new Session("","");
-    }
-
-    private void setListeners() {
-        mGpsLocationListener = GpsLocationListener.getInstance(mContext, callbackInitiation, callbackGps);
-        mBarometerListener = new BarometerListener(mContext);
-    }
-
-    private void setVariablesDependantOnOtherObject() {
-        mBarometerListener.setClosestAirportPressure(mBarometerManager.getClosestAirportPressure());
+    private void setModels() {
+        mGpsAltitudeModel = new GpsAltitudeModel();
+        mNetworkAltitudeModel = new NetworkAltitudeModel();
+        mBarometerAltitudeModel = new BarometerAltitudeModel();
+        mSessionUpdateModel = new SessionUpdateModel();
     }
 
     private void setManagers() {
@@ -146,17 +142,23 @@ public class LocationUpdateManager implements LocationResponse {
         mSessionUpdateModel.readAirportPressure(mContext, mBarometerManager);
     }
 
+    private void setSession() {
+        mSession = new Session("","");
+    }
+
+    private void setListeners() {
+        mGpsLocationListener = new GpsLocationListener(mContext, callbackInitiation, callbackGps);
+        mBarometerListener = new BarometerListener(mContext);
+    }
+
+    private void setVariablesDependantOnOtherObject() {
+        mBarometerListener.setClosestAirportPressure(mBarometerManager.getClosestAirportPressure());
+    }
+
     private void setMangersDisabled() {
         mGpsManager.setGpsEnabled(false);
         mNetworkManager.setNetworkEnabled(false);
         mBarometerManager.setBarometerEnabled(false);
-    }
-
-    private void setModels() {
-        mGpsAltitudeModel = new GpsAltitudeModel();
-        mNetworkAltitudeModel = new NetworkAltitudeModel();
-        mBarometerAltitudeModel = new BarometerAltitudeModel();
-        mSessionUpdateModel = new SessionUpdateModel();
     }
 
     private void setRunnable() {
@@ -220,9 +222,21 @@ public class LocationUpdateManager implements LocationResponse {
         }
     }
 
+    public Observable<Boolean> isSessionEmptyObservable() {
+        return Observable.defer(new Func0<Observable<Boolean>>() {
+            @Override
+            public Observable<Boolean> call() {
+                return Observable.just(isSessionEmpty());
+            }
+        });
+    }
+
+    private boolean isSessionEmpty() {
+        return mSession.getLocationList() != null && mSession.getLocationList().size() < 1;
+    }
+
     private void fetchCurrentElevationRx(Location location) {
-        NetworkTaskRx taskRx = new NetworkTaskRx();
-        taskRx.setLocationsStr(location);
+        NetworkTaskRx taskRx = new NetworkTaskRx(location);
         taskRx.getElevationObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -342,7 +356,7 @@ public class LocationUpdateManager implements LocationResponse {
     }
 
     private void updateStatisticsOnDestroy() {
-        mSessionUpdateModel.updateGlobalStatistics(mContext, mSession);
+            mSessionUpdateModel.updateGlobalStatistics(mContext, mSession);
     }
 
     private void unsubscribeOnDestroy() {

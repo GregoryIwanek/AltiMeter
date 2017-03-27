@@ -29,12 +29,12 @@ dependencies {
     // local tests
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.7.17'
-    testCompile "org.robolectric:robolectric:3.3.1"
+    testCompile 'org.robolectric:robolectric:3.3.1'
 
     // android tests
     androidTestCompile 'junit:junit:4.12'
     androidTestCompile 'org.mockito:mockito-core:2.7.17'
-    androidTestCompile "org.robolectric:robolectric:3.3.1"
+    androidTestCompile 'org.robolectric:robolectric:3.3.1'
 
     // App's dependencies, libraries etc.
     compile 'com.android.support:appcompat-v7:25.2.0'
@@ -52,4 +52,5 @@ dependencies {
 
     // processor
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.1.0'
+
 }

@@ -42,7 +42,7 @@ public class MapActivity extends BasicActivity {
                 (MapFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
 
         if (mMapFragment == null) {
-            mMapFragment = MapFragment.newInstance();
+            mMapFragment = new MapFragment();
             ActivityUtils.addFragmentToActivity(
                     getSupportFragmentManager(), mMapFragment, R.id.contentFrame);
         }

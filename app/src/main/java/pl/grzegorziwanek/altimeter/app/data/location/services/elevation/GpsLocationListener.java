@@ -24,7 +24,8 @@ import pl.grzegorziwanek.altimeter.app.data.location.LocationResponse;
 import pl.grzegorziwanek.altimeter.app.utils.gravitationalmodel.EarthGravitationalModel;
 
 /**
- * Created by on 02.02.2017.
+ * Consist Gps listener (Google API Client). Returns updates of location every interval set.
+ * Requires device's Location Service turned on to work.
  */
 public class GpsLocationListener implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, LocationResponse {
@@ -34,20 +35,16 @@ public class GpsLocationListener implements GoogleApiClient.ConnectionCallbacks,
     private final String LOG_TAG = getClass().getSimpleName();
     private final Context mContext;
     private GoogleApiClient mGoogleApiClient;
-    private EarthGravitationalModel mGravitationModel;
+    private final EarthGravitationalModel mGravitationModel;
     private boolean isFastLocationRequest = false;
 
-    private GpsLocationListener(Context context, LocationChangedCallback callback, GpsElevationCallback gpsCallback) {
+    public GpsLocationListener(Context context, LocationChangedCallback callback, GpsElevationCallback gpsCallback) {
         mContext = context;
         mCallback = callback;
         mGpsCallback = gpsCallback;
         mGravitationModel = new EarthGravitationalModel();
         buildGooglePlayService();
         connectGoogleAPIClient();
-    }
-
-    public static GpsLocationListener getInstance(Context context, LocationChangedCallback callback, GpsElevationCallback gpsCallback) {
-        return new GpsLocationListener(context, callback, gpsCallback);
     }
 
     @Override
@@ -117,8 +114,7 @@ public class GpsLocationListener implements GoogleApiClient.ConnectionCallbacks,
         isFastLocationRequest = false;
         LocationRequest locationRequest = new LocationRequest();
         locationRequest = setStandardLocationRequest(locationRequest);
-        LocationSettingsRequest.Builder builder =
-                new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+        new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
         checkLocationPermissions(mContext, locationRequest);
     }
 
@@ -127,8 +123,7 @@ public class GpsLocationListener implements GoogleApiClient.ConnectionCallbacks,
         isFastLocationRequest = true;
         LocationRequest locationRequest = new LocationRequest();
         locationRequest = setFastLocationRequest(locationRequest);
-        LocationSettingsRequest.Builder builder =
-                new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+        new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
         checkLocationPermissions(mContext, locationRequest);
     }
 
@@ -163,6 +158,7 @@ public class GpsLocationListener implements GoogleApiClient.ConnectionCallbacks,
 
     private void checkLocationPermissions(@NonNull Context context, LocationRequest locationRequest) {
         // check for location permissions (required in android API 23 and above)
+        // TODO: 26.03.2017 add code responsible for calling for permissions if there are none
         if (ActivityCompat.checkSelfPermission(
                 context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(

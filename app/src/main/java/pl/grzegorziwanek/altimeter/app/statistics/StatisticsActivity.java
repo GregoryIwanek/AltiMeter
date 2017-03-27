@@ -14,9 +14,8 @@ import pl.grzegorziwanek.altimeter.app.data.statistics.StatisticsManager;
 import pl.grzegorziwanek.altimeter.app.utils.ActivityUtils;
 
 /**
- * Created by Grzegorz Iwanek on 21.01.2017.
+ * Statistics section main activity class.
  */
-
 public class StatisticsActivity extends BasicActivity {
 
     @BindView(R.id.toolbar) Toolbar mToolbar;

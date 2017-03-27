@@ -26,11 +26,13 @@ import rx.Observable;
 import rx.functions.Func0;
 
 /**
- * Created by Grzegorz Iwanek on 01.03.2017.
+ * Consists superclass of all airport data tasks.
+ * Used to fetch data of closest airports and download specific weather information (which work
+ * as a base for sensor calculations), required to calculate altitude of the device by using pressure sensor.
  */
 abstract class BasicAirportsTask {
 
-    private static String sXmlStr;
+    private String sXmlStr;
 
     Observable<List<XmlAirportValues>> getNearestAirportsObservable(final Uri airportUri, final String parserMode) {
         return Observable.defer(new Func0<Observable<List<XmlAirportValues>>>() {
@@ -107,7 +109,7 @@ abstract class BasicAirportsTask {
         InputSource source = new InputSource(bReader);
 
         // Parse xml
-        XmlAirportParser parser = XmlAirportParser.getInstance();
+        XmlAirportParser parser = new XmlAirportParser();
         parser.setMode(parserMode);
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser sp = factory.newSAXParser();
