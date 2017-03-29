@@ -162,6 +162,7 @@ public class GraphViewWidget extends GraphView {
     }
 
     public void deliverGraph(ArrayList<GraphPoint> graphPointList) {
+        long x = graphPointList.get(0).getXValue();
         checkIsSeriesNull();
         setRecordingStartTime(graphPointList.get(0).getXValue());
         drawGraph(graphPointList);

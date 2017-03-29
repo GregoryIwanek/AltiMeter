@@ -4,12 +4,15 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,15 +20,18 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.grzegorziwanek.altimeter.app.about.AboutFragmentMain;
+import pl.grzegorziwanek.altimeter.app.details.DetailsActivity;
 import pl.grzegorziwanek.altimeter.app.mainview.SessionActivity;
 import pl.grzegorziwanek.altimeter.app.map.MapActivity;
 import pl.grzegorziwanek.altimeter.app.recordingsession.RecordingSessionActivity;
 import pl.grzegorziwanek.altimeter.app.settings.SettingsFragment;
 import pl.grzegorziwanek.altimeter.app.statistics.StatisticsActivity;
+import pl.grzegorziwanek.altimeter.app.utils.Constants;
 
 /**
  * Created by Grzegorz Iwanek on 21.01.2017.
@@ -142,6 +148,7 @@ public abstract class BasicActivity extends AppCompatActivity {
 
     private void runActivity() {
         Intent intent = new Intent(BasicActivity.this, type);
+        putIntentExtra(intent);
         startActivity(intent);
     }
 
@@ -164,5 +171,23 @@ public abstract class BasicActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return fragment;
+    }
+
+    private void putIntentExtra(Intent intent) {
+        if (isMapCreationPossible()) {
+            intent.putExtra("sessionId", getSessionIdDrawerMapGeneration());
+        } else {
+            intent.putExtra("sessionId", Constants.DEFAULT_TEXT);
+        }
+    }
+
+    private boolean isMapCreationPossible() {
+        return getClassName().equals(RecordingSessionActivity.class.getSimpleName())
+                || getClassName().equals(DetailsActivity.class.getSimpleName());
+    }
+
+    private String getSessionIdDrawerMapGeneration() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        return preferences.getString("sessionId", Constants.DEFAULT_TEXT);
     }
 }

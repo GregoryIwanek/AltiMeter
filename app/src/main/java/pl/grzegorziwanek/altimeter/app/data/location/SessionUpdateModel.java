@@ -94,6 +94,8 @@ class SessionUpdateModel {
                 FormatAndValueConverter.updateMinAltitudeValue(currAltitude, minHeight);
         double newMaxHeight =
                 FormatAndValueConverter.updateMaxAltitudeValue(currAltitude, maxHeight);
+        System.out.println("new min height is: " + newMinHeight);
+        System.out.println("new max height is: " + newMaxHeight);
         String newMinStr =
                 FormatAndValueConverter.setMinMaxString(newMinHeight);
         String newMaxStr =
@@ -203,7 +205,7 @@ class SessionUpdateModel {
             String maxAltStr = preferences.getString(statisticsNames[3], Constants.DEFAULT_TEXT);
             double maxAltSession = session.getMaxHeight();
             int maxAltDefault = 10000;
-            if (isStatisticValueBigger(maxAltStr, maxAltSession) && maxAltSession != maxAltDefault) {
+            if (!isStatisticValueBigger(maxAltStr, maxAltSession) && maxAltSession != maxAltDefault) {
                 maxAltStr = String.valueOf(maxAltSession);
             }
             editor.putString(statisticsNames[3], maxAltStr);
@@ -211,7 +213,8 @@ class SessionUpdateModel {
             String minAltStr = preferences.getString(statisticsNames[4], Constants.DEFAULT_TEXT);
             double minAltSession = session.getMinHeight();
             int minAltDefault = -10000;
-            if (!isStatisticValueBigger(minAltStr, minAltSession) && minAltSession != minAltDefault) {
+            if ((isStatisticValueBigger(minAltStr, minAltSession) || minAltStr.equals(Constants.DEFAULT_TEXT))
+                    && minAltSession != minAltDefault) {
                 minAltStr = String.valueOf(minAltSession);
             }
             editor.putString(statisticsNames[4], minAltStr);

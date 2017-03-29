@@ -47,6 +47,7 @@ class StatisticsTaskRx {
         String[] statisticsNames = mContext.getResources().getStringArray(R.array.statistics_names);
         for (String name : statisticsNames) {
             String statistic = preferences.getString(name, Constants.DEFAULT_TEXT);
+            System.out.println("STATISTICS SAVED IS: " + name + " AND VALUE IS: " + statistic);
             map.put(name, statistic);
         }
         return map;

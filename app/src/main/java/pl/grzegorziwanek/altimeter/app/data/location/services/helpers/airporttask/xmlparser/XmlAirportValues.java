@@ -22,16 +22,8 @@ public class XmlAirportValues {
         this.id = id;
     }
 
-    public String getCountry() {
-        return country;
-    }
-
     public void setCountry(String country) {
         this.country = country;
-    }
-
-    public String getSite() {
-        return site;
     }
 
     public void setSite(String site) {
@@ -52,10 +44,6 @@ public class XmlAirportValues {
 
     public void setLongitude(float longitude) {
         this.longitude = longitude;
-    }
-
-    public float getElevation() {
-        return elevation;
     }
 
     public void setElevation(float elevation) {

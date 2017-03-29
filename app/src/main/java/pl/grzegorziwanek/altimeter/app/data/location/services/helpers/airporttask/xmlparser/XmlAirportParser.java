@@ -4,6 +4,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  */
 public class XmlAirportParser extends DefaultHandler {
 
-    private List<XmlAirportValues> list = null;
+    private static List<XmlAirportValues> list = null;
     private StringBuilder builder = null;
     private XmlAirportValues airportsValues = null;
     private String xmlMode;
@@ -30,24 +31,32 @@ public class XmlAirportParser extends DefaultHandler {
         // Create or reset StringBuilder object to store xml node value
         setBuilder();
 
+        System.out.println("PARSER, CALLING START ELEMENT");
         if(localName.equals("Station")){
+            System.out.println("PARSER, START ELEMENT, LOCAL NAME EQUALS STATIONS");
             airportsValues = new XmlAirportValues();
         }
     }
 
     private void setBuilder() {
+        System.out.println("CALLING SET BUILDER IN PARSER");
         if (builder == null) {
             builder = new StringBuilder();
+            System.out.println("CALLING SET BUILDER IN PARSER, NEW BUILDER");
         } else {
+            System.out.println("CALLING SET BUILDER IN PARSER, SET LENGTH 0");
             builder.setLength(0);
         }
     }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
+        System.out.println("END ELEMENT CALLED");
         if (isModeStations()) {
+            System.out.println("END ELEMENT, mode stations");
             appendInStationsMode(localName);
         } else if (isModeMetar()) {
+            System.out.println("END ELEMENT, mode METAR");
             appendInMetarMode(localName);
         }
     }
@@ -59,8 +68,10 @@ public class XmlAirportParser extends DefaultHandler {
     }
 
     private void appendInStationsMode(String localName) {
+        System.out.println("local name in station mode is: " + localName);
         switch (localName) {
             case "Station":
+                System.out.println("ADDing airportsValues to list");
                 list.add(airportsValues);
                 break;
             case "station_id":
@@ -85,12 +96,16 @@ public class XmlAirportParser extends DefaultHandler {
     }
 
     private void appendInMetarMode(String localName) {
+        System.out.println("local name in METAR mode is: " + localName);
+        System.out.println("list size in METAR mode is: " + list.size());
         switch (localName) {
             case "station_id":
                 findStationOnList(builder.toString());
                 break;
             case "altim_in_hg":
+                System.out.println("pressure in HG is:");
                 list.get(currentId).setPressureInHg(Double.parseDouble(builder.toString()));
+                System.out.println("pressure in HG is: " + list.get(currentId).getPressureInHg());
                 break;
         }
     }
@@ -118,5 +133,9 @@ public class XmlAirportParser extends DefaultHandler {
 
     public List<XmlAirportValues> getAirportsList() {
         return list;
+    }
+
+    public void clearList() {
+        list = null;
     }
 }

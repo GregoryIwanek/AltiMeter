@@ -33,9 +33,9 @@ class RecordingSessionPresenter implements Presenter {
     private LocationResponse.FullInfoCallback callbackFullInfo;
     private Session mSession;
 
-    public RecordingSessionPresenter(@NonNull SessionRepository sessionSource,
-                                     @NonNull LocationUpdateManager locationUpdateManager,
-                                     @NonNull View addNewGraphView) {
+    RecordingSessionPresenter(@NonNull SessionRepository sessionSource,
+                              @NonNull LocationUpdateManager locationUpdateManager,
+                              @NonNull View addNewGraphView) {
         mSessionRepository = checkNotNull(sessionSource);
         mLocationUpdateManager = checkNotNull(locationUpdateManager);
         mRecordingSessionView = checkNotNull(addNewGraphView);
@@ -46,6 +46,36 @@ class RecordingSessionPresenter implements Presenter {
     public void start() {
         setSession();
         initiateSession();
+        setCallbackFullInfo();
+    }
+
+    private void setCallbackFullInfo() {
+        callbackFullInfo = new LocationResponse.FullInfoCallback() {
+            @Override
+            public void onFullInfoAcquired(Session session) {
+                if (session.getCurrentLocation() != null) {
+                    updateView(session);
+                } else {
+                    updateAfterCleared();
+                }
+            }
+
+            //TODO-> merge this into one system of location management
+            @Override
+            public void onBarometerInfoAcquired(String barometerAlt) {
+                mRecordingSessionView.setBarometerTextView(barometerAlt);
+            }
+
+            @Override
+            public void onGpsInfoAcquired(String gpsAlt) {
+                mRecordingSessionView.setGpsTextView(gpsAlt);
+            }
+
+            @Override
+            public void onNetworkInfoAcquired(String networkAlt) {
+                mRecordingSessionView.setNetworkTextView(networkAlt);
+            }
+        };
     }
 
     private void setSession() {
@@ -75,34 +105,6 @@ class RecordingSessionPresenter implements Presenter {
     public void startLocationRecording() {
         int tag = R.drawable.ic_pause_black_24dp;
         updateButton(tag);
-
-        callbackFullInfo = new LocationResponse.FullInfoCallback() {
-            @Override
-            public void onFullInfoAcquired(Session session) {
-                if (session.getCurrentLocation() != null) {
-                    updateView(session);
-                } else {
-                    updateAfterCleared();
-                }
-            }
-
-            //TODO-> merge this into one system of location management
-            @Override
-            public void onBarometerInfoAcquired(String barometerAlt) {
-                mRecordingSessionView.setBarometerTextView(barometerAlt);
-            }
-
-            @Override
-            public void onGpsInfoAcquired(String gpsAlt) {
-                mRecordingSessionView.setGpsTextView(gpsAlt);
-            }
-
-            @Override
-            public void onNetworkInfoAcquired(String networkAlt) {
-                mRecordingSessionView.setNetworkTextView(networkAlt);
-            }
-        };
-
         mRecordingSessionView.showRecordingData();
         mLocationUpdateManager.startListenForLocations(callbackFullInfo);
     }
@@ -200,7 +202,8 @@ class RecordingSessionPresenter implements Presenter {
 
     @Override
     public void shareScreenShot(Window window, ContentResolver cr, String[] textViewContent) {
-        Intent intent = ScreenShotCatcher.captureAndShare(window, cr, textViewContent);
+        ScreenShotCatcher catcher = new ScreenShotCatcher();
+        Intent intent = catcher.captureAndShare(window, cr, textViewContent);
         mRecordingSessionView.showShareMenu(intent);
     }
 

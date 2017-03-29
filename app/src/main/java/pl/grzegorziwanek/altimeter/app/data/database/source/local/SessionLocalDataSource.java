@@ -2,9 +2,11 @@ package pl.grzegorziwanek.altimeter.app.data.database.source.local;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -18,6 +20,7 @@ import java.util.Random;
 import pl.grzegorziwanek.altimeter.app.data.Session;
 import pl.grzegorziwanek.altimeter.app.data.database.source.SessionDataSource;
 import pl.grzegorziwanek.altimeter.app.data.database.source.local.SessionDbContract.SessionEntry;
+import pl.grzegorziwanek.altimeter.app.utils.Constants;
 import pl.grzegorziwanek.altimeter.app.utils.FormatAndValueConverter;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -267,7 +270,10 @@ public class SessionLocalDataSource implements SessionDataSource {
 
     @Override
     public void getMapData(@NonNull String sessionId, @NonNull LoadMapDataCallback callback) {
-        List<LatLng> positions = populateMapData(sessionId);
+        List<LatLng> positions = new ArrayList<>();
+        if (!sessionId.equals(Constants.DEFAULT_TEXT)) {
+            positions = populateMapData(sessionId);
+        }
         callback.onMapDataLoaded(positions);
     }
 
@@ -301,8 +307,9 @@ public class SessionLocalDataSource implements SessionDataSource {
     }
 
     @Override
-    public void getDetails(@NonNull String sessionId, @NonNull DetailsSessionCallback callback) {
+    public void getDetails(@NonNull String sessionId, DetailsSessionCallback callback, Context context) {
         Bundle args = populateDetails(sessionId);
+        saveCurrentIdDrawerMapGeneration(args, context);
         callback.onDetailsLoaded(args);
     }
 
@@ -414,5 +421,20 @@ public class SessionLocalDataSource implements SessionDataSource {
         if (c != null) {
             c.close();
         }
+    }
+
+    private void saveCurrentIdDrawerMapGeneration(Bundle args, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        String id = args.getString("id");
+        editor.putString("sessionId", id);
+        editor.apply();
+    }
+
+    public void resetCurrentIdDrawerMapGeneration(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("sessionId", Constants.DEFAULT_TEXT);
+        editor.apply();
     }
 }

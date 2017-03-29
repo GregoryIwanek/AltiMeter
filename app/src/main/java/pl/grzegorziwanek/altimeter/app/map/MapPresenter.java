@@ -51,7 +51,8 @@ class MapPresenter implements MapContract.Presenter {
 
     @Override
     public void shareScreenShot(Window window, ContentResolver cr, GoogleMap currentMap) {
-        Intent screenshotIntent = ScreenShotCatcher.captureAndShare(window, cr, null, currentMap);
+        ScreenShotCatcher catcher = new ScreenShotCatcher();
+        Intent screenshotIntent = catcher.captureAndShare(window, cr, null, currentMap);
         mMapView.showShareMenu(screenshotIntent);
     }
 

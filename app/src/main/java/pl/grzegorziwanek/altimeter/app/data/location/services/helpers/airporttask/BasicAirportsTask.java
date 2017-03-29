@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.SQLOutput;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -38,6 +39,7 @@ abstract class BasicAirportsTask {
         return Observable.defer(new Func0<Observable<List<XmlAirportValues>>>() {
             @Override
             public Observable<List<XmlAirportValues>> call() {
+                System.out.println("CALLED GET NEAREST AIRPORTS OBSERVABLE with mode: " + parserMode);
                 return Observable.just(getNearestAirports(airportUri, parserMode));
             }
         });
@@ -76,6 +78,7 @@ abstract class BasicAirportsTask {
 
             // set xml string to parse
             sXmlStr = stringBuilder.toString();
+            System.out.println("got sXmlStr as: " + sXmlStr);
         } catch (IOException e) {
             Log.d(getClass().getSimpleName(), "ERROR IOS EXCEPTION");
             return null;
@@ -104,27 +107,43 @@ abstract class BasicAirportsTask {
     }
 
     private List<XmlAirportValues> getAirportsFromXml(String parserMode) throws ParserConfigurationException, SAXException, IOException {
+        System.out.println("CALLED GET AIRPORTS FROM XML");
         // Read xml
         BufferedReader bReader = new BufferedReader(new StringReader(sXmlStr));
         InputSource source = new InputSource(bReader);
 
+        System.out.println("PARSING XML");
         // Parse xml
         XmlAirportParser parser = new XmlAirportParser();
+        System.out.println("PARSER CREATED");
         parser.setMode(parserMode);
+        System.out.println("PARSER MODE SET");
         SAXParserFactory factory = SAXParserFactory.newInstance();
+        System.out.println("PARSER FACTORY CREATED");
         SAXParser sp = factory.newSAXParser();
+        System.out.println("SAX PARSER CREATED");
         XMLReader reader = sp.getXMLReader();
+        System.out.println("XML READER CREATED");
         reader.setContentHandler(parser);
+        System.out.println("READER SET CONTENT HANDLER");
         reader.parse(source);
+        System.out.println("READER PARSE SOURCE");
 
+        System.out.println("XML PARSED");
         //close reader
         try {
             bReader.close();
         } catch (IOException e)
         {
+            System.out.println("IN XML PARSER IO EXCEPTION OCCUR");
             e.printStackTrace();
         }
 
-        return parser.getAirportsList();
+        List<XmlAirportValues> airportValuesList = parser.getAirportsList();
+        if (parserMode.equals("GET_METAR")) {
+            parser.clearList();
+        }
+        System.out.println("GOT TO THE RETURN PARSED AIRPORT LIST");
+        return airportValuesList;
     }
 }

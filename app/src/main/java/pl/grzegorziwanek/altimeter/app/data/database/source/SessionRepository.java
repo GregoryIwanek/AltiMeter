@@ -1,5 +1,6 @@
 package pl.grzegorziwanek.altimeter.app.data.database.source;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -137,8 +138,8 @@ public class SessionRepository implements SessionDataSource {
     }
 
     @Override
-    public void getDetails(@NonNull String sessionId, @NonNull DetailsSessionCallback callback) {
-        mSessionLocalDataSource.getDetails(sessionId, callback);
+    public void getDetails(@NonNull String sessionId, DetailsSessionCallback callback, Context context) {
+        mSessionLocalDataSource.getDetails(sessionId, callback, context);
     }
 
     @Override

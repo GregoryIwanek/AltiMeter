@@ -3,13 +3,16 @@ package pl.grzegorziwanek.altimeter.app.data.location;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.sql.SQLOutput;
 import java.util.List;
 
 import pl.grzegorziwanek.altimeter.app.data.Session;
@@ -87,6 +90,7 @@ public class LocationUpdateManager implements LocationResponse {
         callbackInitiation = new LocationChangedCallback() {
             @Override
             public void onInitialLocationIdentified(Location location) {
+                System.out.println("ON INITIAL LOCATION IDENTIFIED");
                 if (isAirportUpdateRequired(location.getTime())) {
                     updateAirportInfo(location);
                 }
@@ -110,8 +114,8 @@ public class LocationUpdateManager implements LocationResponse {
                 }
                 if (location.getAltitude() != 0) {
                     saveNonZeroGpsAltitude(location);
+                    mSession.appendGraphPoint(mSession.getCurrentLocation().getTime(), mCombinedLocationModel.getCombinedAltitude());
                 }
-                mSession.appendGraphPoint(mSession.getCurrentLocation().getTime(), mCombinedLocationModel.getCombinedAltitude());
             }
         };
 
@@ -144,6 +148,7 @@ public class LocationUpdateManager implements LocationResponse {
 
     private void setSession() {
         mSession = new Session("","");
+        saveCurrentIdDrawerMapGeneration();
     }
 
     private void setListeners() {
@@ -184,9 +189,14 @@ public class LocationUpdateManager implements LocationResponse {
                 // TODO: 01.03.2017 1-only barometer -> index out of bounds, refactor code to ignore lack of location
                 mSession.getLocationList().get(mSession.getLocationList().size()-1).setAltitude(mCombinedLocationModel.getCombinedAltitude());
                 mCombinedLocationModel.setUpdateTime(System.currentTimeMillis());
+
+                // TODO: 27.03.2017 possible place which produces first Y as zero
+                System.out.println("IS IT?");
                 mSession.appendGraphPoint(mCombinedLocationModel.getUpdateTime(), mCombinedLocationModel.getCombinedAltitude());
+                System.out.println("YEA, IT IS");
 
                 mSessionUpdateModel.setCurrentElevation(mSession, mCombinedLocationModel);
+                setTextViewStrings();
                 callbackFullInfo.onFullInfoAcquired(mSession);
                 handler.postDelayed(mDataCombinedRunnable, 20000);
             }
@@ -201,13 +211,11 @@ public class LocationUpdateManager implements LocationResponse {
                     .subscribe(new Subscriber<Double>() {
                         @Override
                         public void onCompleted() {
-
+                            this.unsubscribe();
                         }
 
                         @Override
-                        public void onError(Throwable e) {
-
-                        }
+                        public void onError(Throwable e) {}
 
                         @Override
                         public void onNext(Double barAltitude) {
@@ -247,9 +255,7 @@ public class LocationUpdateManager implements LocationResponse {
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-
-                    }
+                    public void onError(Throwable e) {}
 
                     @Override
                     public void onNext(Double elevation) {
@@ -258,7 +264,7 @@ public class LocationUpdateManager implements LocationResponse {
 
                         mSessionUpdateModel.appendLocationToList(mSession);
 
-                        setTextViewStrings();
+                        //setTextViewStrings();
 
                         mNetworkAltitudeModel.setAltitude(elevation);
                         mNetworkAltitudeModel.setMeasureTime(System.currentTimeMillis());
@@ -275,6 +281,7 @@ public class LocationUpdateManager implements LocationResponse {
                         handler.postDelayed(mNetworkRunnable, Constants.NETWORK_INTERVAL_VALUE);
 
                         if (!mGpsManager.isGpsEnabled() || isAddressUpdateRequired(System.currentTimeMillis())) {
+                            System.out.println("CALLED FOR IDENTIFY FROM NETWORK RX");
                             identifyCurrentLocation();
                         }
                         if (isAirportUpdateRequired(mSession.getCurrentLocation().getTime())) {
@@ -285,6 +292,7 @@ public class LocationUpdateManager implements LocationResponse {
     }
 
     private void fetchNearestAirportsRx(Location location) {
+        System.out.println("FETCH NEAREST AIRPORTS RX");
         String airportRadialDistance = FormatAndValueConverter.setRadialDistanceString(
                 location.getLatitude(), location.getLongitude());
 
@@ -300,13 +308,12 @@ public class LocationUpdateManager implements LocationResponse {
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-
-                    }
+                    public void onError(Throwable e) {}
 
                     @Override
                     public void onNext(List<XmlAirportValues> values) {
                         mBarometerManager.setAirportsList(values);
+                        System.out.println("ON NEXT FETCH NEAREST AIRPORTS RX");
                         fetchAirportsPressureRx();
                     }
                 });
@@ -328,12 +335,11 @@ public class LocationUpdateManager implements LocationResponse {
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-
-                    }
+                    public void onError(Throwable e) {}
 
                     @Override
                     public void onNext(List<XmlAirportValues> xmlAirportValues) {
+                        System.out.println("ON NEXT FETCH AIRPORTS PRESSURE RX");
                         mBarometerManager.setAirportsList(xmlAirportValues);
                         assignAirportPressure();
                         BarometerManager.resetList();
@@ -349,14 +355,14 @@ public class LocationUpdateManager implements LocationResponse {
     }
 
     public void onActivityDestroyed() {
-        // TODO: 19.03.2017 here, on destroy, update the global statistics with new values of the current session
         updateStatisticsOnDestroy();
         unsubscribeOnDestroy();
+        resetCurrentIdDrawerMapGeneration();
         resetAllData();
     }
 
     private void updateStatisticsOnDestroy() {
-            mSessionUpdateModel.updateGlobalStatistics(mContext, mSession);
+        mSessionUpdateModel.updateGlobalStatistics(mContext, mSession);
     }
 
     private void unsubscribeOnDestroy() {
@@ -394,7 +400,7 @@ public class LocationUpdateManager implements LocationResponse {
 
     private double[] getProvidersAltitudes() {
         return new double[]{mGpsAltitudeModel.getAltitude(), mNetworkAltitudeModel.getAltitude(),
-        mBarometerAltitudeModel.getAltitude()};
+                mBarometerAltitudeModel.getAltitude()};
     }
 
     private void assignAirportPressure() {
@@ -461,11 +467,14 @@ public class LocationUpdateManager implements LocationResponse {
 
     @Override
     public void resetAllData() {
-        resetTextViews();
-        resetHandlers();
-        resetManagers();
+        if (mSession != null && callbackFullInfo != null) {
+            resetTextViews();
+            resetHandlers();
+            resetManagers();
 
-        identifyCurrentLocation();
+            System.out.println("CALLED FOR IDENTIFY FROM RESET ALL DATA");
+            identifyCurrentLocation();
+        }
     }
 
     private void resetTextViews() {
@@ -474,10 +483,8 @@ public class LocationUpdateManager implements LocationResponse {
     }
 
     private void resetSessionTextViews() {
-        if (mSession != null) {
-            mSession.clearData();
-            callbackFullInfo.onFullInfoAcquired(mSession);
-        }
+        mSession.clearData();
+        callbackFullInfo.onFullInfoAcquired(mSession);
     }
 
     private void resetElevationSourceTextViews() {
@@ -499,6 +506,7 @@ public class LocationUpdateManager implements LocationResponse {
     }
 
     private void updateAirportInfo(Location location) {
+        System.out.println("UPDATE AIRPORT INFO");
         mBarometerManager.setAirportMeasureTime(location.getTime());
         mSessionUpdateModel.saveAirportUpdateLocation(location, mContext);
         fetchNearestAirportsRx(location);
@@ -514,6 +522,20 @@ public class LocationUpdateManager implements LocationResponse {
 
     public Session getSession() {
         return mSession;
+    }
+
+    private void saveCurrentIdDrawerMapGeneration() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("sessionId", mSession.getId());
+        editor.apply();
+    }
+
+    private void resetCurrentIdDrawerMapGeneration() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("sessionId", Constants.DEFAULT_TEXT);
+        editor.apply();
     }
 
     @SuppressLint("ParcelCreator")

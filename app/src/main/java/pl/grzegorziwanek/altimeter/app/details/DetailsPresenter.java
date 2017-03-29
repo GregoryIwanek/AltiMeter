@@ -1,6 +1,9 @@
 package pl.grzegorziwanek.altimeter.app.details;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import java.util.Map;
@@ -51,7 +54,8 @@ class DetailsPresenter implements DetailsContract.Presenter {
 
     @Override
     public void start() {
-        mSessionRepository.getDetails(sessionId, callbackDetails);
+        Context context = mDetailsView.getContext();
+        mSessionRepository.getDetails(sessionId, callbackDetails, context);
     }
 
     @Override

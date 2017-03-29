@@ -369,7 +369,16 @@ public class FormatAndValueConverter {
     public static float fetchAirportPressure(List<XmlAirportValues> airportsList, double lat, double lon) {
         setAirportsDistance(airportsList, lat, lon);
         sortAirportsByDistance(airportsList);
+        System.out.println("FETCH AIRPORT PRESSURE START");
+        for (XmlAirportValues values : airportsList) {
+            System.out.println(values.getId());
+            System.out.println(values.getDistance());
+            System.out.println(values.getPressureInHg());
+            System.out.println(convertHgPressureToHPa((float) values.getPressureInHg()));
+        }
+        System.out.println("FETCH AIRPORT PRESSURE END");
         float pressure = getClosestAirportPressure(airportsList);
+        System.out.println("PRESSURE TAKEN IS: " + pressure);
         return convertHgPressureToHPa(pressure);
     }
 
@@ -430,6 +439,7 @@ public class FormatAndValueConverter {
      * @return pressure value converted to hectopascals
      */
     private static float convertHgPressureToHPa(float hgPressure) {
+        System.out.println("CONVERTING PRESSURE TO HPA: " + String.valueOf(hgPressure*Constants.MULTIPLIER_HPA));
         return (float) (hgPressure*Constants.MULTIPLIER_HPA);
     }
 

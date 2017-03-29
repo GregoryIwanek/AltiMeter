@@ -67,10 +67,15 @@ public class Session {
 
     public void appendGraphPoint(long xValue, double yValue) {
         GraphPoint point = new GraphPoint(xValue, yValue);
+        System.out.println("ADD GRAPH POINT TO LIST: " + point.getYValue());
         mGraphList.add(point);
     }
 
     public ArrayList<GraphPoint> getGraphList() {
+        System.out.println("CALLING RETURN GRAPH POINT LIST");
+        for (GraphPoint graphPoint : mGraphList) {
+            System.out.println("Graph point y is: " + graphPoint.getYValue() + " " + "Graph point x is: " + graphPoint.getXValue());
+        }
         return mGraphList;
     }
 

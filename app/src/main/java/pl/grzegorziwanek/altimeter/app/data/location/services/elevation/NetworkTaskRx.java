@@ -27,6 +27,7 @@ public class NetworkTaskRx {
     private String mLocationsStr;
 
     // private constructor to prevent instantiation without location object input
+    @SuppressWarnings("unused")
     private NetworkTaskRx() {}
 
     public NetworkTaskRx(Location location) {

@@ -41,6 +41,8 @@ public class BarometerListener implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         String altitude = String.valueOf(SensorManager.getAltitude(
                 getPressure(), event.values[0]));
+        System.out.println("closest airport pressure is: " + getPressure());
+        System.out.println("sensor pressure is: " + event.values[0]);
         mAltitudePublishSubject.onNext(Double.valueOf(altitude));
     }
 
@@ -70,6 +72,7 @@ public class BarometerListener implements SensorEventListener {
     }
 
     public void setClosestAirportPressure(double airportPressure) {
+        System.out.println("closest airport pressure set: " + airportPressure);
         mClosestAirportPressure = airportPressure;
     }
 }

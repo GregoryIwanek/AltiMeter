@@ -1,5 +1,6 @@
 package pl.grzegorziwanek.altimeter.app.data.database.source;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -60,7 +61,7 @@ public interface SessionDataSource {
 
     void getMapData(@NonNull String sessionId, @NonNull LoadMapDataCallback callback);
 
-    void getDetails(@NonNull String sessionId, @NonNull DetailsSessionCallback callback);
+    void getDetails(@NonNull String sessionId, DetailsSessionCallback callback, Context context);
 
     void deleteSessions(ArrayList<String> sessionsId, boolean isDeleteAll, @Nullable DeleteSessionCallback callback);
 

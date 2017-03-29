@@ -34,7 +34,7 @@ public class ScreenShotCatcher {
      * @param textViewContent text view's texts required to created message in share action;
      * @return returns share intent with screenshot, and message if text view's content has been provided;
      */
-    public static Intent captureAndShare(Window window, ContentResolver resolver, String[] textViewContent) {
+    public Intent captureAndShare(Window window, ContentResolver resolver, String[] textViewContent) {
         return captureAndShare(window, resolver, textViewContent, null);
     }
 
@@ -46,7 +46,7 @@ public class ScreenShotCatcher {
      * @param currentMap google map object which map screen is going to be captured;
      * @return returns share intent with screenshot, and message if text view's content has been provided;
      */
-    public static Intent captureAndShare(Window window, ContentResolver resolver,
+    public Intent captureAndShare(Window window, ContentResolver resolver,
                                          @Nullable String[] textViewContent, @Nullable GoogleMap currentMap) {
         String message = FormatAndValueConverter.buildMessage(textViewContent);
         Uri uri = saveScreenShotDirectoryLocation(resolver);
@@ -59,7 +59,7 @@ public class ScreenShotCatcher {
      * @param resolver activity's (which view is being captured) content resolver;
      * @return uri to device's storage with captured picture
      */
-    private static Uri saveScreenShotDirectoryLocation(ContentResolver resolver) {
+    private Uri saveScreenShotDirectoryLocation(ContentResolver resolver) {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "Session's picture");
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
@@ -72,7 +72,7 @@ public class ScreenShotCatcher {
      * @param uri uri to device's storage with captured picture;
      * @param window window of the activity which view is about to captured;
      */
-    private static void screenShotHandler(ContentResolver resolver,
+    private void screenShotHandler(ContentResolver resolver,
                                           Uri uri, Window window, @Nullable GoogleMap currentMap) {
         if (currentMap != null) {
             captureGoogleMap(resolver, uri, window, currentMap);
@@ -88,7 +88,7 @@ public class ScreenShotCatcher {
      * @param window window of the activity which view is about to captured;
      * @param currentMap google map object;
      */
-    private static void captureGoogleMap(final ContentResolver resolver, final Uri uri, final Window window, GoogleMap currentMap) {
+    private void captureGoogleMap(final ContentResolver resolver, final Uri uri, final Window window, GoogleMap currentMap) {
         GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
             @Override
             public void onSnapshotReady(Bitmap snapshot) {
@@ -111,7 +111,7 @@ public class ScreenShotCatcher {
      * @param window window of the activity which view is about to captured;
      * @param mapSnapshot snapshot of the google maps content;
      */
-    private static void captureScreenshotOfView(ContentResolver resolver,
+    private void captureScreenshotOfView(ContentResolver resolver,
                                                 Uri uri, Window window, @Nullable Bitmap mapSnapshot) {
         Bitmap captureView = takeScreenShot(window);
 
@@ -140,7 +140,7 @@ public class ScreenShotCatcher {
      * @param window window of the activity which view is about to capture;
      * @return bitmap of view adjusted to the size of the view;
      */
-    private static Bitmap takeScreenShot(Window window) {
+    private Bitmap takeScreenShot(Window window) {
         View view = window.findViewById(R.id.drawer_layout);
         view.buildDrawingCache();
         Bitmap bitmap = captureView(view);
@@ -152,7 +152,7 @@ public class ScreenShotCatcher {
      * @param view view of current activity's window;
      * @return bitmap with given view's content;
      */
-    private static Bitmap captureView(View view) {
+    private Bitmap captureView(View view) {
         Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),
                 view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
@@ -175,7 +175,7 @@ public class ScreenShotCatcher {
      * @param offsetY height of the ActionBar; starting Y position of the mapSnapshot is defined by this value;
      * @return returns bitmap with google maps content pasted into a device screen frame;
      */
-    private static Bitmap mergeMapAndView(Bitmap viewSnapshot, Bitmap mapSnapshot, float offsetY) {
+    private Bitmap mergeMapAndView(Bitmap viewSnapshot, Bitmap mapSnapshot, float offsetY) {
         Bitmap result = Bitmap.createBitmap(viewSnapshot.getWidth(),
                 viewSnapshot.getHeight(), viewSnapshot.getConfig());
         Canvas canvas = new Canvas(result);
@@ -189,7 +189,7 @@ public class ScreenShotCatcher {
      * @param uri uri to device's storage with captured picture;
      * @return ACTION_SEND intent with captured picture;
      */
-    private static Intent getDefaultScreenshotShareIntent(Uri uri, String message) {
+    private Intent getDefaultScreenshotShareIntent(Uri uri, String message) {
         long currTime = System.currentTimeMillis();
 
         Intent intent = new Intent(Intent.ACTION_SEND);

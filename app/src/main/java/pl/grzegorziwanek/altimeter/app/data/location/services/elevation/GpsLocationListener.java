@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -158,11 +159,11 @@ public class GpsLocationListener implements GoogleApiClient.ConnectionCallbacks,
 
     private void checkLocationPermissions(@NonNull Context context, LocationRequest locationRequest) {
         // check for location permissions (required in android API 23 and above)
-        // TODO: 26.03.2017 add code responsible for calling for permissions if there are none
         if (ActivityCompat.checkSelfPermission(
                 context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(
                 context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(context, "Turn on location service.", Toast.LENGTH_SHORT).show();
         } else {
             // remove old location request and add new one
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
