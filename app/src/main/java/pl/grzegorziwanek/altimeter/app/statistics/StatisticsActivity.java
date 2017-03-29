@@ -11,10 +11,11 @@ import butterknife.ButterKnife;
 import pl.grzegorziwanek.altimeter.app.BasicActivity;
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.data.statistics.StatisticsManager;
-import pl.grzegorziwanek.altimeter.app.utils.ActivityUtils;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Statistics section main activity class.
+ * Main activity class of Statistics section.
  */
 public class StatisticsActivity extends BasicActivity {
 
@@ -41,7 +42,7 @@ public class StatisticsActivity extends BasicActivity {
 
         if (mStatisticsFragment == null) {
             mStatisticsFragment = new StatisticsFragment();
-            ActivityUtils.addFragmentToActivity(
+            addFragmentToActivityOnStart(
                     getSupportFragmentManager(), mStatisticsFragment, R.id.contentFrame);
         }
     }

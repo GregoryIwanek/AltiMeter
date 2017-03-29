@@ -5,7 +5,7 @@ package pl.grzegorziwanek.altimeter.app.utils;
  * Consist constants keys and values used in services, managers and to calculations.
  */
 public final class Constants {
-    //service constants (used in fetch address service by current location)
+    // service constants (used in fetch address service by current location)
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;
     private static final String PACKAGE_NAME = "pl.grzegorziwanek.altimeter.app.model.location.LocationUpdateManager";
@@ -13,7 +13,7 @@ public final class Constants {
     public static final String RESULT_DATA_KEY = PACKAGE_NAME + ".RESULT_DATA_KEY";
     public static final String LOCATION_DATA = PACKAGE_NAME + ".LOCATION_DATA";
 
-    //JSON Google Map Elevation API service
+    // JSON Google Map Elevation API service
     public static final int NETWORK_INTERVAL_VALUE = 60000;
     public static final int NETWORK_FASTEST_INTERVAL_VALUE = 30000;
     public static final int URL_LENGTH_LIMIT = 8192;
@@ -48,7 +48,7 @@ public final class Constants {
 
     public static String sessionId = "";
 
-    //Notice Dialog choice parameters
+    // Notice Dialog choice parameters
     static final String POSITIVE = "OK";
     static final String CANCEL = "CANCEL";
 

@@ -20,7 +20,6 @@ import pl.grzegorziwanek.altimeter.app.BasicActivity;
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.data.database.source.SessionRepository;
 import pl.grzegorziwanek.altimeter.app.data.database.source.local.SessionLocalDataSource;
-import pl.grzegorziwanek.altimeter.app.utils.ActivityUtils;
 import pl.grzegorziwanek.altimeter.app.utils.FormatAndValueConverter;
 
 /**
@@ -53,7 +52,7 @@ public class SessionActivity extends BasicActivity {
 
         if (mSessionFragment == null) {
             mSessionFragment = SessionFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(
+            addFragmentToActivityOnStart(
                     getSupportFragmentManager(), mSessionFragment, R.id.contentFrame);
         }
     }

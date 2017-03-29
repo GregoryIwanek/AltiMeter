@@ -33,6 +33,8 @@ import pl.grzegorziwanek.altimeter.app.settings.SettingsFragment;
 import pl.grzegorziwanek.altimeter.app.statistics.StatisticsActivity;
 import pl.grzegorziwanek.altimeter.app.utils.Constants;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Created by Grzegorz Iwanek on 21.01.2017.
  */
@@ -189,5 +191,12 @@ public abstract class BasicActivity extends AppCompatActivity {
     private String getSessionIdDrawerMapGeneration() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         return preferences.getString("sessionId", Constants.DEFAULT_TEXT);
+    }
+
+    public static void addFragmentToActivityOnStart(@NonNull android.support.v4.app.FragmentManager fragmentManager,
+                                                    @NonNull android.support.v4.app.Fragment fragment, int frameId) {
+        android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.add(frameId, fragment);
+        transaction.commit();
     }
 }

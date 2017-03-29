@@ -11,11 +11,12 @@ import pl.grzegorziwanek.altimeter.app.statistics.StatisticsContract.View;
 
 /**
  * Consists presenter class of Statistics section.
+ * Bridge between {@link View} and {@link StatisticsManager};
  */
 class StatisticsPresenter implements Presenter {
     private final View mStatisticsView;
     private StatisticsResponse mCallback;
-    private StatisticsManager mManager;
+    private final StatisticsManager mManager;
 
     StatisticsPresenter(@NonNull View statisticsView, @NonNull StatisticsManager manager) {
         mManager = manager;

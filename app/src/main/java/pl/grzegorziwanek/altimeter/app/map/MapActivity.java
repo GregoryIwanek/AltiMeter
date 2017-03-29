@@ -12,7 +12,6 @@ import pl.grzegorziwanek.altimeter.app.BasicActivity;
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.data.database.source.SessionRepository;
 import pl.grzegorziwanek.altimeter.app.data.database.source.local.SessionLocalDataSource;
-import pl.grzegorziwanek.altimeter.app.utils.ActivityUtils;
 
 /**
  * Created by Grzegorz Iwanek on 21.01.2017.
@@ -43,7 +42,7 @@ public class MapActivity extends BasicActivity {
 
         if (mMapFragment == null) {
             mMapFragment = new MapFragment();
-            ActivityUtils.addFragmentToActivity(
+            addFragmentToActivityOnStart(
                     getSupportFragmentManager(), mMapFragment, R.id.contentFrame);
         }
     }
