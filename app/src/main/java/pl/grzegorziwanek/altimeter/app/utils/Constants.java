@@ -2,7 +2,7 @@ package pl.grzegorziwanek.altimeter.app.utils;
 
 /**
  * Created by Grzegorz Iwanek on 30.11.2016.
- * Consist constants keys used in called AddressIntentServicee and to retrieve result's back
+ * Consist constants keys and values used in services, managers and to calculations.
  */
 public final class Constants {
     //service constants (used in fetch address service by current location)
@@ -44,17 +44,13 @@ public final class Constants {
     public static final String AVIATION_STATION = "stationString";
     public static final String AVIATION_MOST_RECENT_FOR_EACH = "mostRecentForEachStation";
 
-    //Shared preferences default (TODO-> delete?)
-    public static final int ALTITUDE_MIN = 20000;
-    public static final int ALTITUDE_MAX = -20000;
-    public static final int DISTANCE_DEFAULT = 0;
     public static final String DEFAULT_TEXT = "...";
 
     public static String sessionId = "";
 
     //Notice Dialog choice parameters
-    public static final String POSITIVE = "OK";
-    public static final String CANCEL = "CANCEL";
+    static final String POSITIVE = "OK";
+    static final String CANCEL = "CANCEL";
 
     // Gps parameter
     public static final int GPS_INTERVAL_VALUE = 20000;
@@ -64,19 +60,5 @@ public final class Constants {
     public static final int TWENTY_SECONDS = 20000;
 
     // hectopascals <-> mercurial pressure multiplier
-    public static final double MULTIPLIER_HPA = 33.8638;
+    static final double MULTIPLIER_HPA = 33.8638;
 }
-
-//String APPID_KEY = "AIzaSyDz8OSO03MnSdoE-0FFN9sZaIyFRlpf79Y";
-//.appendQueryParameter(Constants.APPID_ELEVATION_PARAM, APPID_KEY)
-
-/**
- * US service (WORKS ONLY FOR US TERRITORY!!!) USGS GOV DATA
- * http://ned.usgs.gov/epqs/pqs.php?x=%2$f&y=%1$f&units=Meters&output=json
- * where x = longitude e.g -90.23, y = latitude e.g. 40.23332
- * units = Meters / Feet , output = json / xml
- * e.g. query:
- * USA, longitude -92.323, latitude 32.332
- * units Meters, output format json
- * http://ned.usgs.gov/epqs/pqs.php?x=-92.323&y=32.332&units=Meters&output=json
- */

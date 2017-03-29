@@ -10,7 +10,9 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 /**
- * Created by Grzegorz Iwanek on 10.02.2017.
+ * Consists class responsible for delivering popup notice message.
+ * Depending on used type of Fragment ({@link android.support.v4.app.Fragment}
+ * or {@link android.app.Fragment}), there is requirement of use different subclass of this class.
  */
 public class NoticeDialogFragment {
 
@@ -73,12 +75,13 @@ public class NoticeDialogFragment {
     }
 
     /**
-     * Notice Dialog for use with fragments "import android.app.Fragment" (not support.V4, just Fragment)
+     * Notice Dialog for use with fragments "import android.app.Fragment" (not support.V4, just Fragment!!!)
      */
     public static class NoticeDialogFragmentApp extends android.app.DialogFragment {
 
         private String mTitle;
 
+        @SuppressWarnings("deprecation")
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);

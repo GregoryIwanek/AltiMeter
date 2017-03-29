@@ -15,13 +15,16 @@ import java.util.TimeZone;
 import pl.grzegorziwanek.altimeter.app.data.location.services.helpers.airporttask.xmlparser.XmlAirportValues;
 
 /**
- * Created by Grzegorz Iwanek on 27.11.2016.
+ * Consists static methods used to format and convert input values to required shape.
+ * Class itself doesn't save or store any variables, except units format (which can be
+ * changed by user's preferences);
+ * Methods follow scheme:
+ * input values -> format/convert/recalculate input values -> return new correct value;
  */
 public class FormatAndValueConverter {
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
 
-    //TODO -> kick out mUnitsFormat and Symbol and move it to Presenter(?), LocationUpdateManager(?)
     private static String mUnitsFormat;
     private static String mUnitsSymbol;
 
@@ -112,11 +115,11 @@ public class FormatAndValueConverter {
 
     /**
      * Sets new value of the distance.
-     *  Drops distance update if displacement is smaller than 5 meters (value won't be updated);
-     * @param lastLocation last known location
-     * @param currLocation current location
-     * @param distance value of the current
-     * @return
+     * Drops distance update if displacement is smaller than 5 meters (value won't be updated);
+     * @param lastLocation last known location;
+     * @param currLocation current location;
+     * @param distance value of the current;
+     * @return returns updated, numeric distance value;
      */
     public static double updateDistanceValue(Location lastLocation, Location currLocation, Double distance) {
         if (lastLocation != null && currLocation != null) {
@@ -191,8 +194,8 @@ public class FormatAndValueConverter {
     }
 
     /**
-     * Set date string
-     * @param millis recorded time in milliseconds
+     * Set date string in "yyyy.MM.dd 'at' HH:mm:ss" format.
+     * @param millis recorded time in milliseconds;
      * @return formatted date string
      * example: 2017.02.14 at 21:48:23
      */
@@ -201,9 +204,9 @@ public class FormatAndValueConverter {
     }
 
     /**
-     *
-     * @param millis
-     * @return
+     * Converts input time in milliseconds into string in date "HH:mm:ss" format.
+     * @param millis time value in milliseconds to convert to date "HH:mm:ss" format;
+     * @return returns string in "HH:mm:ss" format;
      */
     public static String setHoursDateString(long millis) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -212,9 +215,10 @@ public class FormatAndValueConverter {
     }
 
     /**
-     *
-     * @param time
-     * @return
+     * Converts string in date format (yyyy-MM-dd HH:mm:ss or HH:mm:ss) into milliseconds format.
+     * Input string has to be in correct "yyyy-MM-dd HH:mm:ss or HH:mm:ss" format to work;
+     * @param time input time string in "yyyy-MM-dd HH:mm:ss or HH:mm:ss" format;
+     * @return returns string with time in milliseconds
      */
     public static String getTimeMillisFromStr(String time) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -357,28 +361,18 @@ public class FormatAndValueConverter {
         return symbolStr;
     }
 
-
-    // TODO: 14.03.2017 complete below description
     /**
-     *
-     * @param airportsList
-     * @param lat
-     * @param lon
-     * @return
+     * Fetches pressure value of the closest airport station to the user.
+     * @param airportsList list of {@link XmlAirportValues} objects
+     * @param lat current latitude value of device's location
+     * @param lon current longitude value of device's location
+     * @return returns numeric pressure value of the closest {@link XmlAirportValues} object to the
+     * device's location;
      */
     public static float fetchAirportPressure(List<XmlAirportValues> airportsList, double lat, double lon) {
         setAirportsDistance(airportsList, lat, lon);
         sortAirportsByDistance(airportsList);
-        System.out.println("FETCH AIRPORT PRESSURE START");
-        for (XmlAirportValues values : airportsList) {
-            System.out.println(values.getId());
-            System.out.println(values.getDistance());
-            System.out.println(values.getPressureInHg());
-            System.out.println(convertHgPressureToHPa((float) values.getPressureInHg()));
-        }
-        System.out.println("FETCH AIRPORT PRESSURE END");
         float pressure = getClosestAirportPressure(airportsList);
-        System.out.println("PRESSURE TAKEN IS: " + pressure);
         return convertHgPressureToHPa(pressure);
     }
 
@@ -389,7 +383,7 @@ public class FormatAndValueConverter {
      * @param lat latitude of user's position
      * @param lon longitude of user's position
      */
-    public static void setAirportsDistance(List<XmlAirportValues> airportsList, double lat, double lon) {
+    private static void setAirportsDistance(List<XmlAirportValues> airportsList, double lat, double lon) {
         for (XmlAirportValues values : airportsList) {
             float [] results = new float[1];
             Location.distanceBetween(values.getLatitude(), values.getLongitude(),
@@ -439,7 +433,6 @@ public class FormatAndValueConverter {
      * @return pressure value converted to hectopascals
      */
     private static float convertHgPressureToHPa(float hgPressure) {
-        System.out.println("CONVERTING PRESSURE TO HPA: " + String.valueOf(hgPressure*Constants.MULTIPLIER_HPA));
         return (float) (hgPressure*Constants.MULTIPLIER_HPA);
     }
 
@@ -454,21 +447,22 @@ public class FormatAndValueConverter {
     }
 
     /**
-     *
-     * @param value
-     * @return
+     * Rounds input numeric value to half.
+     * @param value numeric value to round to half
+     * @return rounded to half numeric value e.g. 10.5, 11.0, 0.5;
      */
     public static Double roundValueToHalf(Double value) {
-        return (double) Math.round(value+0.5);
+        return (double) Math.round(value*2)/2;
     }
 
-    // TODO: 14.03.2017 adjust this method to Map screenshot
     /**
-     *
-     * @param messageContent
-     * @return
+     * Builds share message. Depending on input content (full or partial), it will be returned
+     * full share message, partial share message or basic default message.
+     * @param messageContent array of string values with message content [0-address, 1-elevation level,
+     *                       2-distance travelled];
+     * @return returns full or partial string message;
      */
-    public static String buildMessage(String[] messageContent) {
+    static String buildMessage(String[] messageContent) {
         if (messageContent != null) {
             return buildFullMessage(messageContent);
         } else {
@@ -517,6 +511,12 @@ public class FormatAndValueConverter {
         return Float.valueOf(str) != 0;
     }
 
+    /**
+     * Formats given string, if required, to char value zero.
+     * Input string can be in any format, and method looks if it equals default text value "...";
+     * @param str string to check if is equal to default text ("...");
+     * @return string in a date format "00:00:00"
+     */
     public static String formatToZeroIfDefaultText(String str) {
         if (str.equals("...")) {
             str = "0";
@@ -524,6 +524,12 @@ public class FormatAndValueConverter {
         return str;
     }
 
+    /**
+     * Formats given string, if required, to correct date format HH:mm:SS;
+     * Input string is expected to be in format HH:mm:SS or equal to default text value "...";
+     * @param str string to check if is equal to default text ("...")
+     * @return string in a date format "00:00:00"
+     */
     public static String formatToZeroDateIfDefaultText(String str) {
         if (str.equals("...")) {
             str = "00:00:00";
