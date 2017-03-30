@@ -12,8 +12,6 @@ import pl.grzegorziwanek.altimeter.app.BasicActivity;
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.data.statistics.StatisticsManager;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * Main activity class of Statistics section.
  */
@@ -47,6 +45,7 @@ public class StatisticsActivity extends BasicActivity {
         }
     }
 
+    @SuppressWarnings("UnusedAssignment")
     private void setPresenter() {
         StatisticsPresenter mStatisticsPresenter = new StatisticsPresenter(mStatisticsFragment,
                 new StatisticsManager(this));

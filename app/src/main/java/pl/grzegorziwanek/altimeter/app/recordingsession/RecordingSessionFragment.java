@@ -30,7 +30,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static pl.grzegorziwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDialogFragmentV4;
 
 /**
- * Created by Grzegorz Iwanek on 31.01.2017. That's it.
+ * View of the RecordingSession fragment.
+ * Consists number of views and inner layouts. Presents altitude graph with recorded values.
  */
 public class RecordingSessionFragment extends Fragment implements RecordingSessionContract.View,
         NoticeDialogFragmentV4.NoticeDialogListener {
@@ -81,7 +82,7 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPresenter.activityDestroyedUnsubscribeRx();
+        mPresenter.onActivityDestroyedUnsubscribeRx();
     }
 
     @Override
@@ -156,7 +157,7 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
 
     @OnClick(R.id.map_button)
     public void onMapButtonClick() {
-        mPresenter.isSessionEmpty();
+        mPresenter.checkIsSessionEmpty();
     }
 
     @OnClick(R.id.gps_button)
@@ -249,7 +250,7 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
                 mPresenter.lockSession();
                 break;
             case "Generate map?":
-                mPresenter.openSessionMap();
+                mPresenter.openMapOfSession();
                 break;
         }
     }
@@ -343,6 +344,7 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
         showMessage("Session has no recorded points. Record points in order to generate map");
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void showMessage(String message) {
         Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
     }

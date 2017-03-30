@@ -3,8 +3,6 @@ package pl.grzegorziwanek.altimeter.app.recordingsession;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.ShareActionProvider;
-import android.view.View;
 import android.view.Window;
 
 import java.util.ArrayList;
@@ -16,6 +14,7 @@ import pl.grzegorziwanek.altimeter.app.data.GraphPoint;
 /**
  * Created by Grzegorz Iwanek on 31.01.2017. That's it/
  */
+@SuppressWarnings("unused")
 interface RecordingSessionContract {
 
     interface View extends BaseView<Presenter> {
@@ -65,7 +64,7 @@ interface RecordingSessionContract {
 
     interface Presenter extends BasePresenter {
 
-        void openSessionMap();
+        void openMapOfSession();
 
         void callStartLocationRecording();
 
@@ -89,10 +88,10 @@ interface RecordingSessionContract {
 
         void lockSession();
 
-        void activityDestroyedUnsubscribeRx();
+        void onActivityDestroyedUnsubscribeRx();
 
         void shareScreenShot(Window window, ContentResolver cr, String[] textViewContent);
 
-        void isSessionEmpty();
+        void checkIsSessionEmpty();
     }
 }

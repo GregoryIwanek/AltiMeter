@@ -14,7 +14,7 @@ import pl.grzegorziwanek.altimeter.app.data.database.source.SessionRepository;
 import pl.grzegorziwanek.altimeter.app.data.database.source.local.SessionLocalDataSource;
 
 /**
- * Created by Grzegorz Iwanek on 21.01.2017.
+ * Consists main activity of the Map section.
  */
 public class MapActivity extends BasicActivity {
 

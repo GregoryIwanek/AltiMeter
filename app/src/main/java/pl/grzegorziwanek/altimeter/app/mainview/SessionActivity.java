@@ -23,7 +23,7 @@ import pl.grzegorziwanek.altimeter.app.data.database.source.local.SessionLocalDa
 import pl.grzegorziwanek.altimeter.app.utils.FormatAndValueConverter;
 
 /**
- * Created by Grzegorz Iwanek on 18.01.2017.
+ * Launcher activity of the application.
  */
 public class SessionActivity extends BasicActivity {
     @BindView(R.id.toolbar) Toolbar mToolbar;

@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static pl.grzegorziwanek.altimeter.app.recordingsession.RecordingSessionContract.*;
 
 /**
- * Created by Grzegorz Iwanek on 31.01.2017.
+ * Presenter class of RecordingSession section.
  */
 class RecordingSessionPresenter implements Presenter {
 
@@ -44,8 +44,8 @@ class RecordingSessionPresenter implements Presenter {
 
     @Override
     public void start() {
-        setSession();
-        initiateSession();
+        setSessionObject();
+        initiateSessionObject();
         setCallbackFullInfo();
     }
 
@@ -56,7 +56,7 @@ class RecordingSessionPresenter implements Presenter {
                 if (session.getCurrentLocation() != null) {
                     updateView(session);
                 } else {
-                    updateAfterCleared();
+                    updateViewAfterClearedSession();
                 }
             }
 
@@ -78,11 +78,11 @@ class RecordingSessionPresenter implements Presenter {
         };
     }
 
-    private void setSession() {
+    private void setSessionObject() {
         mSession = mLocationUpdateManager.getSession();
     }
 
-    private void initiateSession() {
+    private void initiateSessionObject() {
         mSessionRepository.createNewSession(mSession, new SessionDataSource.SaveSessionCallback() {
             @Override
             public void onNewSessionSaved(String id) {
@@ -91,7 +91,7 @@ class RecordingSessionPresenter implements Presenter {
     }
 
     @Override
-    public void openSessionMap() {
+    public void openMapOfSession() {
         String id = mSession.getId();
         mRecordingSessionView.showSessionMap(id);
     }
@@ -104,7 +104,7 @@ class RecordingSessionPresenter implements Presenter {
     @Override
     public void startLocationRecording() {
         int tag = R.drawable.ic_pause_black_24dp;
-        updateButton(tag);
+        updateButtonState(tag);
         mRecordingSessionView.showRecordingData();
         mLocationUpdateManager.startListenForLocations(callbackFullInfo);
     }
@@ -121,7 +121,7 @@ class RecordingSessionPresenter implements Presenter {
         mSessionRepository.updateSessionData(session);
     }
 
-    private void updateAfterCleared() {
+    private void updateViewAfterClearedSession() {
         mRecordingSessionView.setAddressTextView("...");
         mRecordingSessionView.setElevationTextView("...");
         mRecordingSessionView.setDistanceTextView("...");
@@ -134,69 +134,69 @@ class RecordingSessionPresenter implements Presenter {
     @Override
     public void pauseLocationRecording() {
         int tag = R.drawable.ic_play_arrow_black_24dp;
-        updateButton(tag);
+        updateButtonState(tag);
         mRecordingSessionView.showRecordingPaused();
         mLocationUpdateManager.stopListenForLocations(false);
     }
 
     @Override
     public void enableGps() {
-        updateManager(GpsManager.class, true);
+        updateManagerState(GpsManager.class, true);
         int tag = R.drawable.ic_gps_open_24dp;
-        updateButton(tag);
+        updateButtonState(tag);
     }
 
     @Override
     public void disableGps() {
-        updateManager(GpsManager.class, false);
+        updateManagerState(GpsManager.class, false);
         int tag = R.drawable.ic_gps_lock_24dp;
-        updateButton(tag);
+        updateButtonState(tag);
 
     }
 
     @Override
     public void enableNetwork() {
-        updateManager(NetworkManager.class, true);
+        updateManagerState(NetworkManager.class, true);
         int tag = R.drawable.ic_network_open_24dp;
-        updateButton(tag);
+        updateButtonState(tag);
     }
 
     @Override
     public void disableNetwork() {
-        updateManager(NetworkManager.class, false);
+        updateManagerState(NetworkManager.class, false);
         int tag = R.drawable.ic_network_lock_24dp;
-        updateButton(tag);
+        updateButtonState(tag);
     }
 
     @Override
     public void enableBarometer() {
-        updateManager(BarometerManager.class, true);
+        updateManagerState(BarometerManager.class, true);
         int tag = R.drawable.ic_barometer_open_24dp;
-        updateButton(tag);
+        updateButtonState(tag);
     }
 
     @Override
     public void disableBarometer() {
-        updateManager(BarometerManager.class, false);
+        updateManagerState(BarometerManager.class, false);
         int tag = R.drawable.ic_barometer_lock_24dp;
-        updateButton(tag);
+        updateButtonState(tag);
     }
 
-    private void updateManager(Class<?> manager, boolean isEnabled) {
+    private void updateManagerState(Class<?> manager, boolean isEnabled) {
         mLocationUpdateManager.setManagerState(manager, isEnabled);
     }
 
     @Override
     public void lockSession() {
         int tag = R.drawable.ic_play_arrow_black_24dp;
-        updateButton(tag);
+        updateButtonState(tag);
 
         mRecordingSessionView.showSessionLocked();
         mLocationUpdateManager.stopListenForLocations(true);
     }
 
     @Override
-    public void activityDestroyedUnsubscribeRx() {
+    public void onActivityDestroyedUnsubscribeRx() {
         mLocationUpdateManager.onActivityDestroyed();
     }
 
@@ -208,7 +208,7 @@ class RecordingSessionPresenter implements Presenter {
     }
 
     @Override
-    public void isSessionEmpty() {
+    public void checkIsSessionEmpty() {
         mLocationUpdateManager.isSessionEmptyObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -232,7 +232,7 @@ class RecordingSessionPresenter implements Presenter {
                 });
     }
 
-    private void updateButton(int drawableId) {
+    private void updateButtonState(int drawableId) {
         mRecordingSessionView.setButtonTagAndPicture(drawableId);
     }
 

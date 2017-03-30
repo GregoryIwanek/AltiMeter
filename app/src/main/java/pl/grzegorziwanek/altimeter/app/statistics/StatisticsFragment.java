@@ -60,13 +60,13 @@ public class StatisticsFragment extends Fragment implements StatisticsContract.V
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        showUpDialog("Reset statistics?");
+        showUpDialog();
         return true;
     }
 
-    private void showUpDialog(String title) {
+    private void showUpDialog() {
         Bundle args = new Bundle();
-        args.putString("title", title);
+        args.putString("title", "Reset statistics?");
         DialogFragment ndf = new NoticeDialogFragmentV4();
         ndf.setArguments(args);
         ndf.show(getChildFragmentManager(), "NoticeDialogFragment");
@@ -112,6 +112,7 @@ public class StatisticsFragment extends Fragment implements StatisticsContract.V
         mLongSessionTV.setText(str);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void showIsResetSuccess(String message) {
         Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();

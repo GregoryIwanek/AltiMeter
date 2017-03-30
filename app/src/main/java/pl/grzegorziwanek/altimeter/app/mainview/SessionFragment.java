@@ -37,7 +37,8 @@ import pl.grzegorziwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDialogFr
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Created by Grzegorz Iwanek on 18.01.2017.
+ * View of this section.
+ * Consists number of inner views (textViews etc.) and layouts, also customized inner Adapter class.
  */
 public class SessionFragment extends Fragment implements SessionContract.View,
         NoticeDialogFragmentV4.NoticeDialogListener {
@@ -256,6 +257,10 @@ public class SessionFragment extends Fragment implements SessionContract.View,
         mListAdapter.clearInfoChecked();
     }
 
+    /**
+     * Private, inner adapter class. Used to populate and perform
+     * operations on a List with {@link Session} objects.
+     */
     private static class SessionAdapter extends BaseAdapter {
 
         private List<Session> mSessions;
@@ -362,7 +367,9 @@ public class SessionFragment extends Fragment implements SessionContract.View,
         }
     }
 
-    //TODO-> refactor this code
+    /**
+     * Interface defining events on the list rows.
+     */
     interface SessionItemListener {
 
         void onSessionClick(Session clickedSession);
@@ -370,29 +377,3 @@ public class SessionFragment extends Fragment implements SessionContract.View,
         void onCheckBoxClick(String sessionId, boolean isCompleted);
     }
 }
-
-//    /**TODO-> remove that in final version, or move to neutral place
-//     * Database inspection.
-//     * Step 1, this code: copy existing app's database on Android device to accessible location inside of the device (Downloads).
-//     * Step 2, user: copy it through android's app Total Commander to visible folder.
-//     * Step 3, user: check with SQLite Browser.
-//     * @throws IOException
-//     */
-//    private void copyAppDbToDownloadFolder() throws IOException {
-//        File backupDB = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "My_data.db");
-//        File currentDB = getContext().getApplicationContext().getDatabasePath("Graphs.db");
-//        if (currentDB.exists()) {
-//            FileChannel src = new FileInputStream(currentDB).getChannel();
-//            FileChannel dst = new FileOutputStream(backupDB).getChannel();
-//            dst.transferFrom(src, 0, src.size());
-//            src.close();
-//            dst.close();
-//        }
-//
-////          assign this to call above (for example to a "refresh" click in menu)
-////        try {
-////            copyAppDbToDownloadFolder();
-////        } catch (IOException e) {
-////            e.printStackTrace();
-////        }
-//    }

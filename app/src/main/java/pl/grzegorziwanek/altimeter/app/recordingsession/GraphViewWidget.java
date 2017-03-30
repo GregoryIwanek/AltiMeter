@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import pl.grzegorziwanek.altimeter.app.data.GraphPoint;
 
 /**
- *  Created by Grzegorz Iwanek on 01.12.2016.
  *  Consist extension of external library class GraphView (http://www.android-graphview.org/) and required customized methods;
  *  Takes list with locations as a parameter to draw or update altitude graph inside a widget.
  */
@@ -162,7 +161,6 @@ public class GraphViewWidget extends GraphView {
     }
 
     public void deliverGraph(ArrayList<GraphPoint> graphPointList) {
-        long x = graphPointList.get(0).getXValue();
         checkIsSeriesNull();
         setRecordingStartTime(graphPointList.get(0).getXValue());
         drawGraph(graphPointList);

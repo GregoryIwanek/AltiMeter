@@ -17,7 +17,8 @@ import pl.grzegorziwanek.altimeter.app.utils.ScreenShotCatcher;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Created by Grzegorz Iwanek on 07.02.2017.
+ * Presenter of Map section.
+ * Works as a bridge between {@link SessionRepository} and {@link MapContract.View}.
  */
 class MapPresenter implements MapContract.Presenter {
 

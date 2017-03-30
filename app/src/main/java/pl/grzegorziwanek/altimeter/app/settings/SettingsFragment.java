@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import pl.grzegorziwanek.altimeter.app.R;
 
 /**
- * Created by Grzegorz Iwanek on 10.12.2016.
+ * Class consists preference settings fragment and preference view.
  */
 public final class SettingsFragment extends PreferenceFragment {
 

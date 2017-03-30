@@ -15,7 +15,7 @@ import pl.grzegorziwanek.altimeter.app.data.database.source.local.SessionLocalDa
 import pl.grzegorziwanek.altimeter.app.data.location.LocationUpdateManager;
 
 /**
- * Created by Grzegorz Iwanek on 21.01.2017.
+ * Main activity of RecordingSession section.
  */
 public class RecordingSessionActivity extends BasicActivity{
 
@@ -48,6 +48,7 @@ public class RecordingSessionActivity extends BasicActivity{
         }
     }
 
+    @SuppressWarnings("UnusedAssignment")
     private void setPresenter() {
         RecordingSessionPresenter mRecordingSessionPresenter = new RecordingSessionPresenter(
                 SessionRepository.getInstance(SessionLocalDataSource.getInstance(getApplicationContext())),
