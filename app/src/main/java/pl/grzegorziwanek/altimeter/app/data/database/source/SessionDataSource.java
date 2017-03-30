@@ -19,7 +19,6 @@ import pl.grzegorziwanek.altimeter.app.data.Session;
 public interface SessionDataSource {
 
     interface LoadSessionsCallback {
-        //TODO-> change graph view to correct type of data
         void onSessionLoaded(List<Session> sessions);
 
         void onDataNotAvailable();

@@ -5,8 +5,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.ArrayMap;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -21,7 +19,7 @@ import butterknife.OnClick;
 import pl.grzegorziwanek.altimeter.app.R;
 
 /**
- * Created by Grzegorz Iwanek on 09.02.2017.
+ * View class of Details section.
  */
 public class DetailsFragment extends Fragment implements DetailsContract.View {
     @BindView(R.id.title_value_label) EditText mTitleTV;
@@ -51,11 +49,6 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_share_menu, menu);
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         mPresenter.start();
@@ -72,16 +65,6 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
         mPresenter = presenter;
     }
 
-    @OnClick(R.id.title_value_label)
-    public void onTitleClick() {
-
-    }
-
-    @OnClick(R.id.description_value_label)
-    public void onDescriptionClick() {
-
-    }
-
     @OnClick(R.id.save_button)
     public void onSaveButtonClick() {
         mPresenter.saveTextChanges();
@@ -93,7 +76,7 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
         changesMap.put("id", mIdTV.getText().toString());
         changesMap.put("title", mTitleTV.getText().toString());
         changesMap.put("description", mDescriptionTV.getText().toString());
-        mPresenter.saveChanges(changesMap);
+        mPresenter.saveChangesInRepository(changesMap);
     }
 
     @Override
@@ -101,6 +84,7 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
         showMessage("Changes saved");
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void showMessage(String message) {
         Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
     }

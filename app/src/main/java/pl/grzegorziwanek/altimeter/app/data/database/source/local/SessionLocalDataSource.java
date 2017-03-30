@@ -27,9 +27,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static pl.grzegorziwanek.altimeter.app.data.database.source.local.SessionDbContract.*;
 
 /**
- * Created by Grzegorz Iwanek on 27.01.2017.
+ * Consists
  */
-
 public class SessionLocalDataSource implements SessionDataSource {
 
     private static SessionLocalDataSource INSTANCE = null;
@@ -37,7 +36,6 @@ public class SessionLocalDataSource implements SessionDataSource {
 
     //Private to prevent direct instantiation.
     private SessionLocalDataSource(@NonNull Context context) {
-        checkNotNull(context);
         mSessionDbHelper = new SessionDbHelper(context);
     }
 
@@ -50,7 +48,6 @@ public class SessionLocalDataSource implements SessionDataSource {
 
     @Override
     public void createNewSession(@NonNull Session session, @NonNull SaveSessionCallback callback) {
-        checkNotNull(session);
         SQLiteDatabase db = mSessionDbHelper.getWritableDatabase();
 
         session.setTitle(adjustStrIfEmpty(session.getTitle()));
@@ -68,7 +65,6 @@ public class SessionLocalDataSource implements SessionDataSource {
 
     @Override
     public void createRecordsTable(@NonNull Session session) {
-        checkNotNull(session);
         SQLiteDatabase db = mSessionDbHelper.getWritableDatabase();
         int oldVersion = db.getVersion();
         int newVersion = oldVersion + 1;
@@ -79,7 +75,6 @@ public class SessionLocalDataSource implements SessionDataSource {
 
     @Override
     public void updateSessionData(@NonNull Session session) {
-        checkNotNull(session);
         SQLiteDatabase db = mSessionDbHelper.getWritableDatabase();
 
         updateSessionRow(db, session);
@@ -101,7 +96,6 @@ public class SessionLocalDataSource implements SessionDataSource {
     }
 
     private ContentValues getRecordValues(Session session) {
-        //TODO -> add new two columns to keep formatted longitude and latitude?
         ContentValues vRecord = new ContentValues();
         vRecord.put(RecordsEntry.COLUMN_NAME_LATITUDE, session.getLatNumericStr());
         vRecord.put(RecordsEntry.COLUMN_NAME_LONGITUDE, session.getLongNumericStr());
@@ -172,7 +166,7 @@ public class SessionLocalDataSource implements SessionDataSource {
 
     private String adjustStrIfEmpty(String str) {
         if (isStringEmpty(str)) {
-            return rollNewStr();
+            return "Have to be set...";
         } else {
             return str;
         }
@@ -180,32 +174,6 @@ public class SessionLocalDataSource implements SessionDataSource {
 
     private boolean isStringEmpty(String str) {
         return str == null || str.equals("");
-    }
-
-    private String rollNewStr() {
-        int roll = new Random().nextInt(8);
-        String str;
-        switch (roll) {
-            case 0: str = "Unknown and waiting";
-                break;
-            case 1: str = "Click me to set";
-                break;
-            case 2: str = "Waiting to be set";
-                break;
-            case 3: str = "Undefined, set me";
-                break;
-            case 4: str = "Waiting for click";
-                break;
-            case 5: str = "Click to crash app";
-                break;
-            case 6: str = "Call 911";
-                break;
-            case 7: str = "Don't click it";
-                break;
-            default: str = "Error 404";
-        }
-
-        return str;
     }
 
     @Override
@@ -240,7 +208,6 @@ public class SessionLocalDataSource implements SessionDataSource {
     }
 
     private void updateDetails(Map<String, String> changes) {
-        checkNotNull(changes);
         SQLiteDatabase db = mSessionDbHelper.getWritableDatabase();
 
         updateChangedDetails(db, changes);
@@ -428,13 +395,6 @@ public class SessionLocalDataSource implements SessionDataSource {
         SharedPreferences.Editor editor = preferences.edit();
         String id = args.getString("id");
         editor.putString("sessionId", id);
-        editor.apply();
-    }
-
-    public void resetCurrentIdDrawerMapGeneration(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("sessionId", Constants.DEFAULT_TEXT);
         editor.apply();
     }
 }

@@ -8,10 +8,10 @@ import android.util.Log;
 import static pl.grzegorziwanek.altimeter.app.data.database.source.local.SessionDbContract.*;
 
 /**
- * Created by Grzegorz Iwanek on 26.01.2017.
+ * Consists helper class SQLite helper. Works as helper class to perform direct operations
+ * on the database values.
  */
-
-public class SessionDbHelper extends SQLiteOpenHelper {
+class SessionDbHelper extends SQLiteOpenHelper {
 
     private static int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "Graphs.db";
@@ -93,11 +93,11 @@ public class SessionDbHelper extends SQLiteOpenHelper {
                 + " VALUES (" + setProperName(rowValue) +")";
     }
 
-    public String setProperName(String name) {
+    String setProperName(String name) {
         return "\"" + name + "\"";
     }
 
-    public String[] getProjectionsSessions() {
+    String[] getProjectionsSessions() {
         return new String[] {
                 SessionEntry.COLUMN_NAME_ENTRY_ID,
                 SessionEntry.COLUMN_NAME_TITLE,
@@ -110,15 +110,13 @@ public class SessionDbHelper extends SQLiteOpenHelper {
         };
     }
 
-
-    //TODO-> refactor this part, somehow merge below methods
-    public String[] getProjectionsRecordsDate() {
+    String[] getProjectionsRecordsDate() {
         return new String[] {
                 RecordsEntry.COLUMN_NAME_DATE
         };
     }
 
-    public String[] getProjectionRecordsLatLng() {
+    String[] getProjectionRecordsLatLng() {
         return new String[] {
                 RecordsEntry.COLUMN_NAME_LATITUDE,
                 RecordsEntry.COLUMN_NAME_LONGITUDE

@@ -5,9 +5,6 @@ import java.util.Map;
 import pl.grzegorziwanek.altimeter.app.BasePresenter;
 import pl.grzegorziwanek.altimeter.app.BaseView;
 
-/**
- * Created by Grzegorz Iwanek on 09.02.2017.
- */
 interface DetailsContract {
 
     interface View extends BaseView<Presenter> {
@@ -35,6 +32,6 @@ interface DetailsContract {
 
         void saveTextChanges();
 
-        void saveChanges(Map<String, String> changes);
+        void saveChangesInRepository(Map<String, String> changes);
     }
 }

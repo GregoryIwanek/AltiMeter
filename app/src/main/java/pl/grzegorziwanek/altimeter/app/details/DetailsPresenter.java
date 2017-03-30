@@ -1,9 +1,7 @@
 package pl.grzegorziwanek.altimeter.app.details;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import java.util.Map;
@@ -14,7 +12,7 @@ import pl.grzegorziwanek.altimeter.app.data.database.source.SessionRepository;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Created by Grzegorz Iwanek on 09.02.2017.
+ * Presenter class of Details section.
  */
 class DetailsPresenter implements DetailsContract.Presenter {
     private SessionDataSource.DetailsSessionCallback callbackDetails;
@@ -64,7 +62,7 @@ class DetailsPresenter implements DetailsContract.Presenter {
     }
 
     @Override
-    public void saveChanges(Map<String, String> changes) {
+    public void saveChangesInRepository(Map<String, String> changes) {
         mSessionRepository.updateDetailsChanges(callbackDetails, changes);
     }
 }

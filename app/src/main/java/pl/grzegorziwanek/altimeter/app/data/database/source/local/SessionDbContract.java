@@ -3,11 +3,11 @@ package pl.grzegorziwanek.altimeter.app.data.database.source.local;
 import android.provider.BaseColumns;
 
 /**
- * Created by Grzegorz Iwanek on 27.01.2017.
+ * Contract consists constant database values and names of columns and rows.
  */
-
 final class SessionDbContract {
 
+    // private constructor to prevent instantiation
     private SessionDbContract() {}
 
     /**

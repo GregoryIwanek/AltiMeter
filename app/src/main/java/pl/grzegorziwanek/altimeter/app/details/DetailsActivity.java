@@ -17,7 +17,7 @@ import pl.grzegorziwanek.altimeter.app.data.database.source.local.SessionLocalDa
 import pl.grzegorziwanek.altimeter.app.utils.FormatAndValueConverter;
 
 /**
- * Created by Grzegorz Iwanek on 09.02.2017.
+ * Main activity of Details section.
  */
 public class DetailsActivity extends BasicActivity {
 
@@ -50,6 +50,7 @@ public class DetailsActivity extends BasicActivity {
         }
     }
 
+    @SuppressWarnings("UnusedAssignment")
     private void setPresenter() {
         String id = getIntent().getStringExtra("sessionId");
         DetailsPresenter detailsPresenter = new DetailsPresenter(id,
