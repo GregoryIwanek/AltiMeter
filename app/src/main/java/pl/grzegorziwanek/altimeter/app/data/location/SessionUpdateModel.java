@@ -11,19 +11,19 @@ import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.data.Session;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.BarometerManager;
 import pl.grzegorziwanek.altimeter.app.data.location.managers.models.CombinedLocationModel;
+import pl.grzegorziwanek.altimeter.app.recordingsession.RecordingSessionFragment;
 import pl.grzegorziwanek.altimeter.app.utils.Constants;
 import pl.grzegorziwanek.altimeter.app.utils.FormatAndValueConverter;
 
 /**
- * Created by Grzegorz Iwanek on 01.03.2017.
+ * Consists Session's value and state update model.
  */
-
 class SessionUpdateModel {
-
     /**
-     *
-     * @param location
-     * @param context
+     * Saves location and measure time of device's location when called for update of
+     * closest airports in proximity.
+     * @param location current location of the device;
+     * @param context context, required to use SharedPreferences;
      */
     void saveAirportUpdateLocation(Location location, Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
@@ -35,8 +35,8 @@ class SessionUpdateModel {
     }
 
     /**
-     *
-     * @param context
+     * Reads saved device's location at the moment of call for airports in proximity update.
+     * @param context context required to read SharedPreferences;
      */
     void readAirportUpdateLocation(Context context, BarometerManager barometerManager) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
@@ -50,8 +50,8 @@ class SessionUpdateModel {
     }
 
     /**
-     *
-     * @param context
+     * Saves closest station's value of the pressure on the local sea level.
+     * @param context context required to use SharedPreferences;
      */
     void saveAirportPressure(Context context, BarometerManager barometerManager) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
@@ -61,8 +61,8 @@ class SessionUpdateModel {
     }
 
     /**
-     *
-     * @param context
+     * Reads stored pressure at the local sea level of the closest airport station.
+     * @param context context required to use SharedPreferences;
      */
     void readAirportPressure(Context context, BarometerManager barometerManager) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
@@ -72,8 +72,8 @@ class SessionUpdateModel {
     }
 
     /**
-     *
-     * @param context
+     * Updates units symbol chosen by user in settings.
+     * @param context context required to use SharedPreferences;
      */
     void updateDistanceUnits(Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
@@ -82,8 +82,8 @@ class SessionUpdateModel {
     }
 
     /**
-     *
-     * @param session
+     * Updates minimum and maximum height (recorded altitude) of the current session.
+     * @param session current Session object to update;
      */
     void setSessionsHeight(Session session) {
         double currAltitude = session.getCurrentElevation();
@@ -94,8 +94,6 @@ class SessionUpdateModel {
                 FormatAndValueConverter.updateMinAltitudeValue(currAltitude, minHeight);
         double newMaxHeight =
                 FormatAndValueConverter.updateMaxAltitudeValue(currAltitude, maxHeight);
-        System.out.println("new min height is: " + newMinHeight);
-        System.out.println("new max height is: " + newMaxHeight);
         String newMinStr =
                 FormatAndValueConverter.setMinMaxString(newMinHeight);
         String newMaxStr =
@@ -108,8 +106,8 @@ class SessionUpdateModel {
     }
 
     /**
-     *
-     * @param session
+     * Updates value of the distance travelled between last and current location;
+     * @param session current Session object to update;
      */
     void setSessionsDistance(Session session) {
         if (session.getLastLocation() != null) {
@@ -128,8 +126,9 @@ class SessionUpdateModel {
     }
 
     /**
-     *
-     * @param session
+     * Defines coordinate strings (latitude and longitude) for the current location.
+     * Format of the coordinates defined inside {@link FormatAndValueConverter};
+     * @param session current Session object to update;
      */
     void setGeoCoordinateStr(Session session) {
         Location location = session.getCurrentLocation();
@@ -142,8 +141,9 @@ class SessionUpdateModel {
     }
 
     /**
-     *
-     * @param session
+     * Assigns current elevation value from all chosen sources (GPS, Network, Barometer) {@link CombinedLocationModel}
+     * for the current Session;
+     * @param session current Session object to update;
      */
     void setCurrentElevation(Session session, CombinedLocationModel combinedLocationModel) {
         double elevation = combinedLocationModel.getCombinedAltitude();
@@ -152,9 +152,10 @@ class SessionUpdateModel {
     }
 
     /**
-     *
-     * @param session
-     * @param location
+     * Sets new current location value for the current Session.
+     * Called whenever new correct location object is provided via GPS LocationListener.
+     * @param session current Session object to update;
+     * @param location location to set as new one;
      */
     void saveSessionsLocation(Session session, Location location) {
         if (session.getCurrentLocation() != null) {
@@ -164,22 +165,31 @@ class SessionUpdateModel {
     }
 
     /**
-     *
-     * @param session
+     * Adds current location object to list of the all location objects recorded during session.
+     * @param session current Session object to update;
      */
     void appendLocationToList(Session session) {
         session.appendLocationPoint(session.getCurrentLocation());
     }
 
     /**
-     *
-     * @param session
+     * Define elevation of the newest location (current) on the list of location, as the average
+     * elevation of all combined sources (GPS, Network, Barometer) via {@link CombinedLocationModel}.
+     * @param session current Session object to update;
      */
     void setElevationOnList(Session session, CombinedLocationModel combinedLocationModel) {
         double elevation = FormatAndValueConverter.roundValue(combinedLocationModel.getCombinedAltitude());
         session.setElevationOnList(elevation);
     }
 
+    /**
+     * Updates values of global, combined statistics of all sessions of the user.
+     * Compares values by key stored in String[] array.xml.
+     * Called when activity hosting {@link RecordingSessionFragment} is destroyed (onDestroy)
+     * and only if recording session is initiated (has saved points).
+     * @param context context required to use SharedPreferences (global statistics stored inside SP);
+     * @param session current Session object holding data to fetch from;
+     */
     void updateGlobalStatistics(Context context, Session session) {
         if (isSessionInitiated(session)) {
             // statistics array inside values folder

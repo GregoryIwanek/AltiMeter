@@ -38,16 +38,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--<ListPreference-->
-            <!--android:defaultValue="5"-->
-            <!--android:key="pref_sync_frequency_key"-->
-            <!--android:entries="@array/syncLocationUpdateFrequency"-->
-            <!--android:summary="@string/pref_sync_frequency_summary"-->
-            <!--android:entryValues="@array/syncLocationUpdateFrequencyValues"-->
-            <!--android:title="@string/pref_sync_frequency"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"/>-->
-
         <ListPreference
             android:defaultValue="KILOMETERS"
             android:entries="@array/unitsArray"

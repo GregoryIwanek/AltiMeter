@@ -1,6 +1,5 @@
 package pl.grzegorziwanek.altimeter.app.about;
 
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -9,16 +8,11 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.grzegorziwanek.altimeter.app.R;
-import pl.grzegorziwanek.altimeter.app.utils.NoticeDialogFragment;
 
-/**
- * Created by Grzegorz Iwanek on 21.01.2017.
- */
 public final class AboutFragmentMain extends Fragment {
 
     @Nullable
@@ -27,9 +21,7 @@ public final class AboutFragmentMain extends Fragment {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
         ButterKnife.bind(this, view);
 
-        if (view != null) {
-            view.setBackgroundColor(ContextCompat.getColor(this.getActivity(), R.color.colorBlack));
-        }
+        view.setBackgroundColor(ContextCompat.getColor(this.getActivity(), R.color.colorBlack));
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.contentFrameAbout, new AboutFragmentGraphs());

@@ -12,7 +12,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.sql.SQLOutput;
 import java.util.List;
 
 import pl.grzegorziwanek.altimeter.app.data.Session;
@@ -40,9 +39,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func0;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by ... on 01.02.2017.
- */
 public class LocationUpdateManager implements LocationResponse {
 
     private GpsManager mGpsManager;
@@ -90,7 +86,6 @@ public class LocationUpdateManager implements LocationResponse {
         callbackInitiation = new LocationChangedCallback() {
             @Override
             public void onInitialLocationIdentified(Location location) {
-                System.out.println("ON INITIAL LOCATION IDENTIFIED");
                 if (isAirportUpdateRequired(location.getTime())) {
                     updateAirportInfo(location);
                 }
@@ -191,9 +186,7 @@ public class LocationUpdateManager implements LocationResponse {
                 mCombinedLocationModel.setUpdateTime(System.currentTimeMillis());
 
                 // TODO: 27.03.2017 possible place which produces first Y as zero
-                System.out.println("IS IT?");
                 mSession.appendGraphPoint(mCombinedLocationModel.getUpdateTime(), mCombinedLocationModel.getCombinedAltitude());
-                System.out.println("YEA, IT IS");
 
                 mSessionUpdateModel.setCurrentElevation(mSession, mCombinedLocationModel);
                 setTextViewStrings();
@@ -281,7 +274,6 @@ public class LocationUpdateManager implements LocationResponse {
                         handler.postDelayed(mNetworkRunnable, Constants.NETWORK_INTERVAL_VALUE);
 
                         if (!mGpsManager.isGpsEnabled() || isAddressUpdateRequired(System.currentTimeMillis())) {
-                            System.out.println("CALLED FOR IDENTIFY FROM NETWORK RX");
                             identifyCurrentLocation();
                         }
                         if (isAirportUpdateRequired(mSession.getCurrentLocation().getTime())) {
@@ -292,7 +284,6 @@ public class LocationUpdateManager implements LocationResponse {
     }
 
     private void fetchNearestAirportsRx(Location location) {
-        System.out.println("FETCH NEAREST AIRPORTS RX");
         String airportRadialDistance = FormatAndValueConverter.setRadialDistanceString(
                 location.getLatitude(), location.getLongitude());
 
@@ -313,7 +304,6 @@ public class LocationUpdateManager implements LocationResponse {
                     @Override
                     public void onNext(List<XmlAirportValues> values) {
                         mBarometerManager.setAirportsList(values);
-                        System.out.println("ON NEXT FETCH NEAREST AIRPORTS RX");
                         fetchAirportsPressureRx();
                     }
                 });
@@ -339,7 +329,6 @@ public class LocationUpdateManager implements LocationResponse {
 
                     @Override
                     public void onNext(List<XmlAirportValues> xmlAirportValues) {
-                        System.out.println("ON NEXT FETCH AIRPORTS PRESSURE RX");
                         mBarometerManager.setAirportsList(xmlAirportValues);
                         assignAirportPressure();
                         BarometerManager.resetList();
@@ -404,7 +393,6 @@ public class LocationUpdateManager implements LocationResponse {
     }
 
     private void assignAirportPressure() {
-        System.out.println("assign Airport Pressure, size of list: " + mBarometerManager.getAirportsList().size());
         float pressure = FormatAndValueConverter.fetchAirportPressure(mBarometerManager.getAirportsList(),
                 mBarometerManager.getUpdateLatitude(), mBarometerManager.getUpdateLongitude());
         mBarometerManager.setClosestAirportPressure(pressure);
@@ -472,7 +460,6 @@ public class LocationUpdateManager implements LocationResponse {
             resetHandlers();
             resetManagers();
 
-            System.out.println("CALLED FOR IDENTIFY FROM RESET ALL DATA");
             identifyCurrentLocation();
         }
     }
@@ -506,7 +493,6 @@ public class LocationUpdateManager implements LocationResponse {
     }
 
     private void updateAirportInfo(Location location) {
-        System.out.println("UPDATE AIRPORT INFO");
         mBarometerManager.setAirportMeasureTime(location.getTime());
         mSessionUpdateModel.saveAirportUpdateLocation(location, mContext);
         fetchNearestAirportsRx(location);

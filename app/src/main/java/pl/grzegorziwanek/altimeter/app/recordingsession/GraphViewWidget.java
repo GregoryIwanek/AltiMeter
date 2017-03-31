@@ -224,6 +224,7 @@ public class GraphViewWidget extends GraphView {
         getGridLabelRenderer().setTextSize(20);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void setLabelsFormatSymbols(String yFormat, String xFormat){
         final String axisYFormat = yFormat;
         final String axisXFormat = xFormat;

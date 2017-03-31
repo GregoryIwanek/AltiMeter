@@ -47,6 +47,7 @@ public class MapActivity extends BasicActivity {
         }
     }
 
+    @SuppressWarnings("UnusedAssignment")
     private void setPresenter() {
         String id = getIntent().getStringExtra("sessionId");
         MapPresenter mMapPresenter = new MapPresenter(id,

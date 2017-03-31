@@ -112,6 +112,7 @@ public class MapFragment extends Fragment implements MapContract.View {
 
     private void generateAMap(final List<LatLng> positions) {
         mMapView.getMapAsync(new OnMapReadyCallback() {
+            @SuppressWarnings("StatementWithEmptyBody")
             @Override
             public void onMapReady(GoogleMap mMap) {
                 mGoogleMap = mMap;
@@ -164,6 +165,7 @@ public class MapFragment extends Fragment implements MapContract.View {
         showMessage("Map loaded successfully");
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void showMessage(String message) {
         Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
     }

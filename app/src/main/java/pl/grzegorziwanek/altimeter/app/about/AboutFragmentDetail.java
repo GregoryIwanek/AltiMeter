@@ -13,9 +13,6 @@ import butterknife.OnClick;
 import pl.grzegorziwanek.altimeter.app.R;
 import pl.grzegorziwanek.altimeter.app.utils.NoticeDialogFragment;
 
-/**
- * Created by Grzegorz Iwanek on 26.02.2017.
- */
 public class AboutFragmentDetail extends Fragment{
 
     @Nullable

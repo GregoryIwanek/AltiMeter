@@ -81,12 +81,12 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
 
     @Override
     public void showChangesSaved() {
-        showMessage("Changes saved");
+        showMessage();
     }
 
     @SuppressWarnings("ConstantConditions")
-    private void showMessage(String message) {
-        Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
+    private void showMessage() {
+        Snackbar.make(getView(), "Changes saved", Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

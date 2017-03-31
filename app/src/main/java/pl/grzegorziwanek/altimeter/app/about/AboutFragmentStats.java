@@ -2,8 +2,6 @@ package pl.grzegorziwanek.altimeter.app.about;
 
 import android.app.Fragment;
 
-/**
- * Created by Grzegorz Iwanek on 26.02.2017.
- */
+// TODO: 30.03.2017 finish this fragment about
 public class AboutFragmentStats extends Fragment {
 }
