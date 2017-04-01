@@ -8,7 +8,7 @@
     <android.support.v4.widget.DrawerLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="pl.grzegorziwanek.altimeter.app.WelcomeScreen"
+        tools:context="pl.gregoryiwanek.altimeter.app.WelcomeScreen"
         android:id="@+id/screen_welcome_activity">
 
         <FrameLayout

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="pl.grzegorziwanek.altimeter.app">
+    package="pl.gregoryiwanek.altimeter.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -17,23 +17,23 @@
         android:theme="@style/AppTheme"
         android:hardwareAccelerated="true">
         <activity
-            android:name=".mainview.SessionActivity">
+            android:name="pl.gregoryiwanek.altimeter.app.mainview.SessionActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".recordingsession.RecordingSessionActivity"/>
-        <activity android:name=".map.MapActivity"/>
-        <activity android:name=".statistics.StatisticsActivity"/>
-        <activity android:name=".details.DetailsActivity"
+        <activity android:name="pl.gregoryiwanek.altimeter.app.recordingsession.RecordingSessionActivity"/>
+        <activity android:name="pl.gregoryiwanek.altimeter.app.map.MapActivity"/>
+        <activity android:name="pl.gregoryiwanek.altimeter.app.statistics.StatisticsActivity"/>
+        <activity android:name="pl.gregoryiwanek.altimeter.app.details.DetailsActivity"
             android:windowSoftInputMode="adjustNothing"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDz8OSO03MnSdoE-0FFN9sZaIyFRlpf79Y" />
         <service
-            android:name=".data.location.services.helpers.AddressService"
+            android:name="pl.gregoryiwanek.altimeter.app.data.location.services.helpers.AddressService"
             android:exported="false"
             android:enabled="true"/>
         <meta-data

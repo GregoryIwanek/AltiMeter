@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pl.grzegorziwanek.altimeter.app.mainview.SwipeRefreshLayoutChild
+<pl.gregoryiwanek.altimeter.app.mainview.SwipeRefreshLayoutChild
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
@@ -57,4 +57,4 @@
                 android:text="DODAJ GRAF"/>
         </LinearLayout>
     </RelativeLayout>
-</pl.grzegorziwanek.altimeter.app.mainview.SwipeRefreshLayoutChild>
+</pl.gregoryiwanek.altimeter.app.mainview.SwipeRefreshLayoutChild>

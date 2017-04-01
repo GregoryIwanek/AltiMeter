@@ -128,7 +128,7 @@
             android:layout_weight="11">
 
             <!--ELEMENT FROM EXTERNAL LIBRARY TO CREATE GRAPHS IN REAL TIME-->
-            <pl.grzegorziwanek.altimeter.app.recordingsession.GraphViewWidget
+            <pl.gregoryiwanek.altimeter.app.recordingsession.GraphViewWidget
                 android:id="@+id/graph_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
