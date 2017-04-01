@@ -67,7 +67,6 @@ public class Session {
 
     public void appendGraphPoint(long xValue, double yValue) {
         GraphPoint point = new GraphPoint(xValue, yValue);
-        System.out.println("ADD GRAPH POINT TO LIST: " + point.getYValue());
         mGraphList.add(point);
     }
 

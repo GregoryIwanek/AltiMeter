@@ -123,12 +123,8 @@ public class LocationUpdateManager implements LocationResponse {
         mGpsManager = new GpsManager();
         mNetworkManager = new NetworkManager();
         mBarometerManager = new BarometerManager();
-        setMangersDisabled();
-
-        // TODO: 22.03.2017 refactor that static
-        // TODO: 22.03.2017 create method to assign airport pressure saved in preferences, AFTER initiation of mBarometerListener
-        mSessionUpdateModel.readAirportUpdateLocation(mContext, mBarometerManager);
-        mSessionUpdateModel.readAirportPressure(mContext, mBarometerManager);
+        setMangersStateDisabled();
+        readStoredPressure();
     }
 
     private void setSession() {
@@ -137,7 +133,8 @@ public class LocationUpdateManager implements LocationResponse {
     }
 
     private void setListeners() {
-        mGpsLocationListener = new GpsLocationListener(mContext, callbackInitiation, callbackFoundGpsLocation);
+        mGpsLocationListener = new GpsLocationListener(mContext, callbackInitiation,
+                callbackFoundGpsLocation);
         mBarometerListener = new BarometerListener(mContext);
     }
 
@@ -145,17 +142,12 @@ public class LocationUpdateManager implements LocationResponse {
         mBarometerListener.setClosestAirportPressure(mBarometerManager.getClosestAirportPressure());
     }
 
-    private void setMangersDisabled() {
+    private void setMangersStateDisabled() {
         mGpsManager.setGpsEnabled(false);
         mNetworkManager.setNetworkEnabled(false);
         mBarometerManager.setBarometerEnabled(false);
     }
 
-    // TODO: 01.04.2017 set runnable to work with single source enabled:
-    // TODO: 01.04.2017 GPS -> 0 altitude; solution -> wait for returned value, has to be different than 0
-    // TODO: 01.04.2017 Network -> no location, app crash; solution -> call for new location with GPS till new location is found
-    // TODO: 01.04.2017 and add conditions inside mDataCombinedRunnable to prevent outOfBounds exception
-    // TODO: 01.04.2017 Barometer -> prevent crash of an app caused by lack of location ( print only graph, without saving locations)
     private void setRunnable() {
         mBarometerRunnable = () -> mBarometerListener.registerListener();
 
@@ -209,19 +201,21 @@ public class LocationUpdateManager implements LocationResponse {
         if (mGpsAltitudeModel.isInitiated()) {
             mSession.getLocationList().get(mSession.getLocationList().size()-1).setAltitude(mCombinedLocationModel.getCombinedAltitude());
             mCombinedLocationModel.setUpdateTime(System.currentTimeMillis());
-            mSession.appendGraphPoint(mCombinedLocationModel.getUpdateTime(), mCombinedLocationModel.getCombinedAltitude());
+            appendGraphPointFromCombinedAltModel();
             mSessionUpdateModel.setCurrentElevation(mSession, mCombinedLocationModel);
             setTextViewStrings();
             callbackFullInfo.onFullInfoAcquired(mSession);
         }
+
         handler.postDelayed(mDataCombinedRunnable, 20000);
     }
 
     private void callbackFullInfoOnlyBarometer() {
         mCombinedLocationModel.setUpdateTime(System.currentTimeMillis());
-        mSession.appendGraphPoint(mCombinedLocationModel.getUpdateTime(), mCombinedLocationModel.getCombinedAltitude());
+        appendGraphPointFromCombinedAltModel();
         mSessionUpdateModel.setCurrentElevation(mSession, mCombinedLocationModel);
         mSessionUpdateModel.setSessionsHeight(mSession);
+
         callbackFullInfo.onFullInfoAcquired(mSession);
         handler.postDelayed(mDataCombinedRunnable, 20000);
     }
@@ -229,11 +223,18 @@ public class LocationUpdateManager implements LocationResponse {
     private void callbackFullInfoDefault() {
         mSession.getLocationList().get(mSession.getLocationList().size()-1).setAltitude(mCombinedLocationModel.getCombinedAltitude());
         mCombinedLocationModel.setUpdateTime(System.currentTimeMillis());
-        mSession.appendGraphPoint(mCombinedLocationModel.getUpdateTime(), mCombinedLocationModel.getCombinedAltitude());
+        appendGraphPointFromCombinedAltModel();
         mSessionUpdateModel.setCurrentElevation(mSession, mCombinedLocationModel);
         setTextViewStrings();
+
         callbackFullInfo.onFullInfoAcquired(mSession);
         handler.postDelayed(mDataCombinedRunnable, 20000);
+    }
+
+    private void appendGraphPointFromCombinedAltModel() {
+        long valueX = mCombinedLocationModel.getUpdateTime();
+        double valueY = mCombinedLocationModel.getCombinedAltitude();
+        mSession.appendGraphPoint(valueX, valueY);
     }
 
     private void fetchBarometerAltitudeRx() {
@@ -563,6 +564,11 @@ public class LocationUpdateManager implements LocationResponse {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("sessionId", Constants.DEFAULT_TEXT);
         editor.apply();
+    }
+
+    private void readStoredPressure() {
+        mSessionUpdateModel.readAirportUpdateLocation(mContext, mBarometerManager);
+        mSessionUpdateModel.readAirportPressure(mContext, mBarometerManager);
     }
 
     @SuppressLint("ParcelCreator")
