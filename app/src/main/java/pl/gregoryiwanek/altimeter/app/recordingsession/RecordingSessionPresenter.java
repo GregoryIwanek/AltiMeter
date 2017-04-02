@@ -25,6 +25,7 @@ import static pl.gregoryiwanek.altimeter.app.recordingsession.RecordingSessionCo
 /**
  * Presenter class of RecordingSession section.
  */
+// TODO: 02.04.2017 kick out mSession object -> wrong layer of responsibility
 class RecordingSessionPresenter implements Presenter {
 
     private final SessionRepository mSessionRepository;
@@ -55,12 +56,13 @@ class RecordingSessionPresenter implements Presenter {
             public void onFullInfoAcquired(Session session) {
                 if (session.getCurrentLocation() != null) {
                     updateView(session);
+                    updateSessionObject(session);
                 } else {
                     updateViewAfterClearedSession();
+                    mSession.clearData();
                 }
             }
 
-            //TODO-> merge this into one system of location management
             @Override
             public void onBarometerInfoAcquired(String barometerAlt) {
                 mRecordingSessionView.setBarometerTextView(barometerAlt);
@@ -82,12 +84,12 @@ class RecordingSessionPresenter implements Presenter {
         mSession = mLocationUpdateManager.getSession();
     }
 
+    private void updateSessionObject(Session session) {
+        mSession = session;
+    }
+
     private void initiateSessionObject() {
-        mSessionRepository.createNewSession(mSession, new SessionDataSource.SaveSessionCallback() {
-            @Override
-            public void onNewSessionSaved(String id) {
-            }
-        });
+        mSessionRepository.createNewSession(mSession, sessionId -> {});
     }
 
     @Override
@@ -118,7 +120,6 @@ class RecordingSessionPresenter implements Presenter {
         mRecordingSessionView.setLatTextView(session.getLatitudeStr());
         mRecordingSessionView.setLongTextView(session.getLongitudeStr());
         mRecordingSessionView.drawGraph(session.getGraphList());
-        mSessionRepository.updateSessionData(session);
     }
 
     private void updateViewAfterClearedSession() {
@@ -197,7 +198,12 @@ class RecordingSessionPresenter implements Presenter {
 
     @Override
     public void onActivityDestroyedUnsubscribeRx() {
+        saveSessionToDatabase();
         mLocationUpdateManager.onActivityDestroyed();
+    }
+
+    private void saveSessionToDatabase() {
+        mSessionRepository.updateSessionData(mSession);
     }
 
     @Override

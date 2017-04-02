@@ -7,12 +7,9 @@ import pl.gregoryiwanek.altimeter.app.data.location.services.helpers.airporttask
 /**
  * Created by Grzegorz Iwanek on 21.02.2017.
  */
-
 public class BarometerManager {
-
     private boolean mBarometerEnabled;
     private long mAirportMeasureTime = 0;
-    private float mSeaLevelPressure = 0;
     private double mUpdateLatitude = 0;
     private double mUpdateLongitude = 0;
     private double mClosestAirportPressure = 0;
@@ -50,18 +47,9 @@ public class BarometerManager {
         mUpdateLongitude = updateLongitude;
     }
 
-    public float getSeaLevelPressure() {
-        return mSeaLevelPressure;
-    }
-
-    public void setSeaLevelPressure(float seaLevelPressure) {
-        mSeaLevelPressure = seaLevelPressure;
-    }
-
     public void resetData() {
         mBarometerEnabled = false;
         mAirportMeasureTime = 0;
-        mSeaLevelPressure = 0;
         mUpdateLatitude = 0;
         mUpdateLongitude = 0;
         resetList();
@@ -75,8 +63,8 @@ public class BarometerManager {
         mAirportsList = airportsList;
     }
 
-    public static void resetList(){
-        //mAirportsList = null;
+    public void resetList(){
+        mAirportsList = null;
     }
 
     public double getClosestAirportPressure() {
@@ -87,7 +75,4 @@ public class BarometerManager {
         mClosestAirportPressure = closestAirportPressure;
     }
 
-    public boolean isAirportsListEmpty() {
-        return mAirportsList.isEmpty();
-    }
 }

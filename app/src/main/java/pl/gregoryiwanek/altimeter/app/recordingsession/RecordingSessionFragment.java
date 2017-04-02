@@ -99,20 +99,20 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.share_facebook:
-                shareClicked();
+                shareButtonClicked();
                 break;
         }
         return true;
     }
 
-    private void shareClicked() {
+    private void shareButtonClicked() {
         ContentResolver cr = this.getActivity().getContentResolver();
         Window window = getActivity().getWindow();
-        String[] textViewContent = getTextViewContentToShare();
+        String[] textViewContent = getTextContentToShareMessage();
         mPresenter.shareScreenShot(window, cr, textViewContent);
     }
 
-    private String[] getTextViewContentToShare() {
+    private String[] getTextContentToShareMessage() {
         return new String[]{
                 mCurrAddressTextView.getText().toString(),
                 mCurrElevationTextView.getText().toString(),

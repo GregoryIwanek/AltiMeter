@@ -371,9 +371,10 @@ public class LocationUpdateManager implements LocationResponse {
 
                     @Override
                     public void onNext(List<XmlAirportValues> xmlAirportValues) {
+                        // TODO: 02.04.2017 polish that
                         mBarometerManager.setAirportsList(xmlAirportValues);
                         assignAirportPressure();
-                        BarometerManager.resetList();
+                        mBarometerManager.resetList();
                     }
                 });
     }
@@ -453,7 +454,6 @@ public class LocationUpdateManager implements LocationResponse {
 
         if (mNetworkManager.isNetworkEnabled()) {
             fetchCurrentElevationRx(mSession.getCurrentLocation());
-            mNetworkManager.setMeasureTime(mSession.getCurrentLocation().getTime());
         }
 
         if (mBarometerManager.isBarometerEnabled()) {
