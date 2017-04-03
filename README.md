@@ -56,4 +56,6 @@ About section, consists series of fragments with descriptions of other sections 
 :-------------------------:|:-------------------------:
 <img src="https://rawgit.com/GregoryIwanek/AltiMeter/master/screenshot/about.png" title="about section" height="250" />  |  <img src="https://rawgit.com/GregoryIwanek/AltiMeter/master/screenshot/settings.png" title="settings section" height="250" />
 
-
+##To do##
+* add settings switch theme ( dark/light)
+* fix color of secondary text in settings popup windows
