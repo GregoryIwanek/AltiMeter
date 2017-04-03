@@ -35,8 +35,17 @@ To code and build this app was used:
 
 ## How does it look like
 App is splitted into several different sections.
-* main view section, consists lists of saved recording sessions
-<img src="https://rawgit.com/GregoryIwanek/AltiMeter/master/screenshot/main_view.png" title="main view" height="300" />
 
+Navigation between activities and fragments is done through Navigarion Drawer | Main view section, consists lists of saved recording sessions
+:-------------------------:|:-------------------------:
+<img src="https://rawgit.com/GregoryIwanek/AltiMeter/GregoryIwanek-readme/screenshot/nav_drawer.png" title="nav drawer" height="250" />  |  <img src="https://rawgit.com/GregoryIwanek/AltiMeter/master/screenshot/main_view.png" title="main view" height="250" />
+
+Recording session section, works as operation center for recording altitude and locations | Details section, shows basic information and statistics of choosen session
+:-------------------------:|:-------------------------:
+<img src="https://rawgit.com/GregoryIwanek/AltiMeter/GregoryIwanek-readme/screenshot/recording_session.png" title="recording session" height="250" />  |  <img src="https://rawgit.com/GregoryIwanek/AltiMeter/GregoryIwanek-readme/screenshot/details.png" title="recording session" height="250" />
+
+Statistics section, shows global statistics of the all recording sessions | Map section, shows recorded locations as a path on a google map
+:-------------------------:|:-------------------------:
+<img src="https://rawgit.com/GregoryIwanek/AltiMeter/GregoryIwanek-readme/screenshot/statistics.png" title="recording session" height="250" />  |  <img src="https://rawgit.com/GregoryIwanek/AltiMeter/GregoryIwanek-readme/screenshot/map.png" title="recording session" height="250" />
 
 
