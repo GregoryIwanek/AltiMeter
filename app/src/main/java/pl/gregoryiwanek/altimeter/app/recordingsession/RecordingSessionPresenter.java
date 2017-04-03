@@ -97,6 +97,7 @@ class RecordingSessionPresenter implements Presenter {
 
     @Override
     public void openMapOfSession() {
+        saveSessionToDatabase();
         String id = mSession.getId();
         mRecordingSessionView.showSessionMap(id);
     }

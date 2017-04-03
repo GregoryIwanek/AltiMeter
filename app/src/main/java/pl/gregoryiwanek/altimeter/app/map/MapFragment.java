@@ -146,7 +146,7 @@ public class MapFragment extends Fragment implements MapContract.View {
     }
 
     private void setCameraPosition(LatLng focusPoint) {
-        CameraPosition position = new CameraPosition.Builder().target(focusPoint).zoom(10).build();
+        CameraPosition position = new CameraPosition.Builder().target(focusPoint).zoom(13).build();
         mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
     }
 
