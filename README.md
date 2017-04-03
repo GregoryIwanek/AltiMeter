@@ -59,3 +59,4 @@ About section, consists series of fragments with descriptions of other sections 
 ## To do
 * add settings switch theme ( dark/light)
 * fix color of secondary text in settings popup windows
+* add export of all session's data as text file ( .txt, xml, excel etc.)
