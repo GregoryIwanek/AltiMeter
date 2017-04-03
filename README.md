@@ -3,7 +3,7 @@
 *Android app for recording device's elevation and location*
 
 ## What is AltiMeter
-AltiMeter is an android app capable of:
+AltiMeter is an android app with core features:
 * recording user's location
 * recording user's altitude
 * using three different data sources ( GPS, network, pressure sensor) and combining them
@@ -32,5 +32,11 @@ To code and build this app was used:
 **Play services**
 * location
 * map
+
+## How does it look like
+App is splitted into several different sections.
+* main view section, consists lists of saved recording sessions
+<img src="https://rawgit.com/GregoryIwanek/AltiMeter/master/screenshot/main_view.png" title="main view" height="300" />
+
 
 
