@@ -1,2 +1,2 @@
-# AltiMeter *Iw*
-AndroidStudio app for measuring height above ground.
+# AltiMeter 
+*Android app for recording device's elevation and location*
