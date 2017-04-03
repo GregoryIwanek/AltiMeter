@@ -5,70 +5,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <!--<LinearLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:orientation="vertical"-->
-    <!--android:layout_marginLeft="@dimen/activity_padding_bottom_12dp"-->
-    <!--android:layout_marginRight="@dimen/activity_padding_bottom_12dp"-->
-    <!--android:background="@color/colorTransparent">-->
-
-    <!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="@string/new_graph_screen"-->
-    <!--android:paddingBottom="@dimen/margin_8dp"-->
-    <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"/>-->
-
-    <!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"-->
-    <!--android:paddingBottom="@dimen/activity_padding_bottom_12dp"-->
-    <!--android:text="New graph screen is a section responsible for holding new session's operations."/>-->
-
-    <!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"-->
-    <!--android:paddingBottom="@dimen/margin_8dp"-->
-    <!--android:text="Features:"/>-->
-
-    <!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"-->
-    <!--android:text="- recording altitude by GPS, internet and barometer"/>-->
-    <!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"-->
-    <!--android:text="- limiting number of sources to take data from"/>-->
-    <!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"-->
-    <!--android:text="- drawing altitude in time graph"/>-->
-    <!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"-->
-    <!--android:text="- printing information about location"/>-->
-    <!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:paddingBottom="@dimen/activity_padding_bottom_12dp"-->
-    <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"-->
-    <!--android:text="- generating map with recorded locations"/>-->
-
-    <!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"-->
-    <!--android:paddingBottom="@dimen/margin_8dp"-->
-    <!--android:text="Click on UI element to get specific information"/>-->
-    <!--</LinearLayout>-->
-
     <FrameLayout
         android:layout_gravity="center"
         android:layout_width="300dp"
@@ -120,12 +56,11 @@
                     android:background="@color/colorTransparent"/>
 
                 <RelativeLayout
-                    android:clickable="true"
+                    android:clickable="false"
                     android:id="@+id/about_actions_button"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="50"
-                    android:background="@drawable/customborder"/>
+                    android:layout_weight="50"/>
             </LinearLayout>
 
             <LinearLayout

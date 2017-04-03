@@ -20,6 +20,7 @@ import pl.gregoryiwanek.altimeter.app.utils.FormatAndValueConverter;
  * Launcher activity of the application.
  */
 public class SessionActivity extends BasicActivity {
+
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view) NavigationView mNavigationView;

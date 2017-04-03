@@ -22,6 +22,7 @@ import pl.gregoryiwanek.altimeter.app.R;
  * View class of Details section.
  */
 public class DetailsFragment extends Fragment implements DetailsContract.View {
+
     @BindView(R.id.title_value_label) EditText mTitleTV;
     @BindView(R.id.description_value_label) EditText mDescriptionTV;
     @BindView(R.id.id_value_label) TextView mIdTV;

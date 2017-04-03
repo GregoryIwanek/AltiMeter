@@ -56,6 +56,7 @@
     <string name="about_menu_description">Navigation menu button</string>
     <string name="about_title">Title</string>
     <string name="about_actions_main">Actions button. \nDelete all \nDelete checked</string>
+    <string name="about_actions_stats">Actions button. \nReset statistics</string>
     <string name="about_share_button">Share menu button.</string>
     <string name="about_address_label">Address of the last checked location</string>
     <string name="about_checkbox_main">Checkboxes. Check to delete specific sessions.</string>
@@ -84,4 +85,7 @@
     <string name="stats">S\nT\nA\nT\nS</string>
     <string name="map_button">M\nA\nP</string>
     <string name="author">A\nU\nT\nH\nO\nR</string>
+    <string name="labels_stats">Global statistics</string>
+    <string name="label_stats_values">Global statistics values</string>
+    <string name="about_actions_share">Action share.</string>
 </resources>

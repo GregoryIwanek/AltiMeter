@@ -26,6 +26,7 @@ import static pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDi
  */
 public class StatisticsFragment extends Fragment implements StatisticsContract.View,
         NoticeDialogFragmentV4.NoticeDialogListener {
+
     @BindView(R.id.stats_sessions_numb_label_value) TextView mNumSessionTV;
     @BindView(R.id.stats_points_numb_label_value) TextView mNumPointsTV;
     @BindView(R.id.stats_distance_label_value) TextView mDistanceTV;

@@ -15,7 +15,6 @@ import android.support.annotation.Nullable;
 import java.util.List;
 
 import pl.gregoryiwanek.altimeter.app.data.Session;
-import pl.gregoryiwanek.altimeter.app.data.StaticHandler;
 import pl.gregoryiwanek.altimeter.app.data.location.managers.BarometerManager;
 import pl.gregoryiwanek.altimeter.app.data.location.managers.GpsManager;
 import pl.gregoryiwanek.altimeter.app.data.location.managers.NetworkManager;
@@ -57,7 +56,7 @@ public class LocationUpdateManager implements LocationResponse {
     private LocationResponse mGpsLocationListener;
     private BarometerListener mBarometerListener;
     private Context mContext;
-    private StaticHandler handler;
+    private Handler mHandler;
     private Runnable mBarometerRunnable;
     private Runnable mNetworkRunnable;
     private Runnable mDataCombinedRunnable;
@@ -79,7 +78,7 @@ public class LocationUpdateManager implements LocationResponse {
         mContext = context;
         mCombinedLocationModel = new CombinedLocationModel();
         mResultReceiver = new AddressResultReceiver(new Handler());
-        handler = new StaticHandler();
+        mHandler = new Handler();
     }
 
     // callbacks defined with lambdas
@@ -207,7 +206,7 @@ public class LocationUpdateManager implements LocationResponse {
             callbackFullInfo.onFullInfoAcquired(mSession);
         }
 
-        handler.postDelayed(mDataCombinedRunnable, 20000);
+        mHandler.postDelayed(mDataCombinedRunnable, 20000);
     }
 
     private void callbackFullInfoOnlyBarometer() {
@@ -217,7 +216,7 @@ public class LocationUpdateManager implements LocationResponse {
         mSessionUpdateModel.setSessionsHeight(mSession);
 
         callbackFullInfo.onFullInfoAcquired(mSession);
-        handler.postDelayed(mDataCombinedRunnable, 20000);
+        mHandler.postDelayed(mDataCombinedRunnable, 20000);
     }
 
     private void callbackFullInfoDefault() {
@@ -228,7 +227,7 @@ public class LocationUpdateManager implements LocationResponse {
         setTextViewStrings();
 
         callbackFullInfo.onFullInfoAcquired(mSession);
-        handler.postDelayed(mDataCombinedRunnable, 20000);
+        mHandler.postDelayed(mDataCombinedRunnable, 20000);
     }
 
     private void appendGraphPointFromCombinedAltModel() {
@@ -257,7 +256,7 @@ public class LocationUpdateManager implements LocationResponse {
                             mBarometerAltitudeModel.setAltitude(barAltitude);
                             barAltitude = FormatAndValueConverter.roundValue(barAltitude);
                             callbackFullInfo.onBarometerInfoAcquired(String.valueOf(barAltitude));
-                            handler.postDelayed(mBarometerRunnable, 20000);
+                            mHandler.postDelayed(mBarometerRunnable, 20000);
                             updateCombinedLocationAltitude();
                         }
                     });
@@ -299,10 +298,7 @@ public class LocationUpdateManager implements LocationResponse {
 
                         mSessionUpdateModel.appendLocationToList(mSession);
 
-                        //setTextViewStrings();
-
                         mNetworkAltitudeModel.setAltitude(elevation);
-                        mNetworkAltitudeModel.setMeasureTime(System.currentTimeMillis());
 
                         if (!mGpsManager.isGpsEnabled() || isAddressUpdateRequired(System.currentTimeMillis())) {
                             fetchAddressService(mSession.getCurrentLocation());
@@ -313,7 +309,7 @@ public class LocationUpdateManager implements LocationResponse {
 
                         updateCombinedLocationAltitude();
                         mSessionUpdateModel.setCurrentElevation(mSession, mCombinedLocationModel);
-                        handler.postDelayed(mNetworkRunnable, Constants.NETWORK_INTERVAL_VALUE);
+                        mHandler.postDelayed(mNetworkRunnable, Constants.NETWORK_INTERVAL_VALUE);
 
                         if (!mGpsManager.isGpsEnabled() || isAddressUpdateRequired(System.currentTimeMillis())) {
                             identifyCurrentLocation();
@@ -463,7 +459,7 @@ public class LocationUpdateManager implements LocationResponse {
             }
         }
 
-        handler.postDelayed(mDataCombinedRunnable, 10000);
+        mHandler.postDelayed(mDataCombinedRunnable, 10000);
     }
 
     @Override
@@ -523,9 +519,9 @@ public class LocationUpdateManager implements LocationResponse {
     }
 
     private void resetHandlers() {
-        handler.removeCallbacks(mBarometerRunnable);
-        handler.removeCallbacks(mNetworkRunnable);
-        handler.removeCallbacks(mDataCombinedRunnable);
+        mHandler.removeCallbacks(mBarometerRunnable);
+        mHandler.removeCallbacks(mNetworkRunnable);
+        mHandler.removeCallbacks(mDataCombinedRunnable);
     }
 
     private void resetManagers() {

@@ -22,7 +22,7 @@ import android.view.MenuItem;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pl.gregoryiwanek.altimeter.app.about.AboutFragmentMain;
+import pl.gregoryiwanek.altimeter.app.about.AboutFragmentMainWindow;
 import pl.gregoryiwanek.altimeter.app.details.DetailsActivity;
 import pl.gregoryiwanek.altimeter.app.mainview.SessionActivity;
 import pl.gregoryiwanek.altimeter.app.map.MapActivity;
@@ -116,7 +116,7 @@ public abstract class BasicActivity extends AppCompatActivity {
                             navigateToFragment(SettingsFragment.class);
                             break;
                         case R.id.about_navigation_menu_item:
-                            navigateToFragment(AboutFragmentMain.class);
+                            navigateToFragment(AboutFragmentMainWindow.class);
                             break;
                         default:
                             break;

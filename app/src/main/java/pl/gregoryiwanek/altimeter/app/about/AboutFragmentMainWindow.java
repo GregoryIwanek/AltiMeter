@@ -13,7 +13,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.gregoryiwanek.altimeter.app.R;
 
-public final class AboutFragmentMain extends Fragment {
+public final class AboutFragmentMainWindow extends Fragment {
 
     @Nullable
     @Override
@@ -24,7 +24,7 @@ public final class AboutFragmentMain extends Fragment {
         view.setBackgroundColor(ContextCompat.getColor(this.getActivity(), R.color.colorBlack));
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.contentFrameAbout, new AboutFragmentGraphs());
+        ft.replace(R.id.contentFrameAbout, new InnerFragmentGraphs());
         ft.commit();
 
         return view;
@@ -63,22 +63,22 @@ public final class AboutFragmentMain extends Fragment {
     private void setFragmentToReplace(int id) {
         switch (id) {
             case R.id.about_button_graphs:
-                replaceFragment(new AboutFragmentGraphs());
+                replaceFragment(new InnerFragmentGraphs());
                 break;
             case R.id.about_button_new_graph:
-                replaceFragment(new AboutFragmentNew());
+                replaceFragment(new InnerFragmentNew());
                 break;
             case R.id.about_button_details:
-                replaceFragment(new AboutFragmentDetail());
+                replaceFragment(new InnerFragmentDetail());
                 break;
             case R.id.about_button_stats:
-                replaceFragment(new AboutFragmentStats());
+                replaceFragment(new InnerFragmentStats());
                 break;
             case R.id.about_button_map:
-                replaceFragment(new AboutFragmentMap());
+                replaceFragment(new InnerFragmentMap());
                 break;
             case R.id.about_button_author:
-                replaceFragment(new AboutFragmentAuthor());
+                replaceFragment(new InnerFragmentAuthor());
                 break;
         }
     }

@@ -34,7 +34,7 @@ public class SessionLocalDataSource implements SessionDataSource {
     private SessionDbHelper mSessionDbHelper;
 
     //Private to prevent direct instantiation.
-    private SessionLocalDataSource(@NonNull Context context) {
+    public SessionLocalDataSource(@NonNull Context context) {
         mSessionDbHelper = new SessionDbHelper(context);
     }
 

@@ -14,6 +14,7 @@ import pl.gregoryiwanek.altimeter.app.statistics.StatisticsContract.View;
  * Bridge between {@link View} and {@link StatisticsManager};
  */
 class StatisticsPresenter implements Presenter {
+
     private final View mStatisticsView;
     private StatisticsResponse mCallback;
     private final StatisticsManager mManager;

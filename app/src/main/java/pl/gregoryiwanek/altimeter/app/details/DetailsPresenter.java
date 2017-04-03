@@ -15,6 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Presenter class of Details section.
  */
 class DetailsPresenter implements DetailsContract.Presenter {
+
     private SessionDataSource.DetailsSessionCallback callbackDetails;
     private final DetailsFragment mDetailsView;
     private final SessionRepository mSessionRepository;

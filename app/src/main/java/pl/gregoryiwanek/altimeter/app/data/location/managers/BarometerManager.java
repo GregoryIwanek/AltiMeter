@@ -4,10 +4,8 @@ import java.util.List;
 
 import pl.gregoryiwanek.altimeter.app.data.location.services.helpers.airporttask.xmlparser.XmlAirportValues;
 
-/**
- * Created by Grzegorz Iwanek on 21.02.2017.
- */
 public class BarometerManager {
+
     private boolean mBarometerEnabled;
     private long mAirportMeasureTime = 0;
     private double mUpdateLatitude = 0;

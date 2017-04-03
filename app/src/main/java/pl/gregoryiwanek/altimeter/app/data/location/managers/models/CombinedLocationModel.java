@@ -2,10 +2,6 @@ package pl.gregoryiwanek.altimeter.app.data.location.managers.models;
 
 import pl.gregoryiwanek.altimeter.app.utils.FormatAndValueConverter;
 
-/**
- * Created by Grzegorz Iwanek on 22.02.2017.
- */
-
 public class CombinedLocationModel {
 
     private double mCombinedAltitude = 0;

@@ -1,7 +1,5 @@
 package pl.gregoryiwanek.altimeter.app.about;
 
-import android.app.DialogFragment;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,9 +9,8 @@ import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment;
 
-public class AboutFragmentDetail extends Fragment{
+public class InnerFragmentDetail extends BasicInnerFragment{
 
     @Nullable
     @Override
@@ -24,28 +21,8 @@ public class AboutFragmentDetail extends Fragment{
         return view;
     }
 
-    private void showUpDialog(String title) {
-        Bundle args = new Bundle();
-        args.putString("title", title);
-        DialogFragment ndf = new NoticeDialogFragment.NoticeDialogFragmentApp();
-        ndf.setArguments(args);
-        ndf.show(getFragmentManager(), "NoticeDialogFragment");
-    }
-
-    @OnClick(R.id.about_menu_button)
-    public void onFieldMenuClick() {
-        showUpDialog(getString(R.string.about_menu_description));
-    }
-
-    @OnClick(R.id.about_title_label)
-    public void onFieldTitleClick() {
-        showUpDialog(getString(R.string.about_title));
-    }
-
-    @OnClick(R.id.about_actions_button)
-    public void onFieldActionsClick() {
-        showUpDialog(getString(R.string.about_actions_main));
-    }
+    @Override
+    protected void onFieldActionsClick() {}
 
     @OnClick(R.id.about_labels_details)
     public void onFieldLabelsClick() {

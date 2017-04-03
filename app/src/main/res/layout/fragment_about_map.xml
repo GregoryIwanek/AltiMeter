@@ -62,7 +62,7 @@
 
             <RelativeLayout
                 android:clickable="true"
-                android:id="@+id/about_menu_button_main"
+                android:id="@+id/about_menu_button"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="45"
@@ -70,7 +70,7 @@
 
             <RelativeLayout
                 android:clickable="true"
-                android:id="@+id/about_title_label_main"
+                android:id="@+id/about_title_label"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="125"
@@ -84,7 +84,7 @@
 
             <RelativeLayout
                 android:clickable="true"
-                android:id="@+id/about_actions_button_main"
+                android:id="@+id/about_actions_button"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="50"
