@@ -76,6 +76,7 @@ abstract class BasicAirportsTask {
 
             // set xml string to parse
             sXmlStr = stringBuilder.toString();
+            System.out.println(sXmlStr);
         } catch (IOException e) {
             Log.d(getClass().getSimpleName(), "ERROR IOS EXCEPTION");
             return null;
