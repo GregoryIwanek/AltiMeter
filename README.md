@@ -33,6 +33,10 @@ To code and build this app was used:
 * location
 * map
 
+**Tested on**
+* Nexus 4
+* API version 22
+
 ## How does it look like
 App is splitted into several different sections.
 
