@@ -20,6 +20,7 @@ To code and build this app was used:
 * Java 7/8
 * Android Studio 2.3
 * SQLite
+* REST
 
 **Pattern**
 * MVP
