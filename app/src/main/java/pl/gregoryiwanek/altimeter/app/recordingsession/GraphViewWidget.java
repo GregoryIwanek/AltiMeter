@@ -91,14 +91,16 @@ public class GraphViewWidget extends GraphView {
     }
 
     private void setXBounds() {
-        if (mDiagramSeries.getHighestValueX() > this.getViewport().getMaxX(false) * 0.8) {
+        double sizeMultiplier = 0.8;
+        if (mDiagramSeries.getHighestValueX() > this.getViewport().getMaxX(false) * sizeMultiplier) {
             int xRange = getNewXBoundsRange();
             this.getViewport().setMaxX(xRange);
         }
     }
 
     private int getNewXBoundsRange() {
-        return (int) (mDiagramSeries.getHighestValueX() * 2);
+        int sizeMultiplier = 2;
+        return (int) (mDiagramSeries.getHighestValueX() * sizeMultiplier);
     }
 
     private void setYBounds() {
@@ -108,37 +110,43 @@ public class GraphViewWidget extends GraphView {
     }
 
     private void setYMaxBounds(int heightMiddle) {
-        if ((mDiagramSeries.getHighestValueY() - heightMiddle) > 40) {
+        int borderCheck = 40;
+        if ((mDiagramSeries.getHighestValueY() - heightMiddle) > borderCheck) {
             int yMaxRange = getNewYMaxBoundsRange(heightMiddle);
             this.getViewport().setMaxY(yMaxRange);
         }else {
-            int yMaxRange = heightMiddle + 50;
+            int borderDistance = 50;
+            int yMaxRange = heightMiddle + borderDistance;
             this.getViewport().setMaxY(yMaxRange);
         }
     }
 
     private int getNewYMaxBoundsRange(int heightMiddle) {
         int heightDiff = getHeightDifference();
-        return (int) (heightMiddle + (heightDiff/2)*1.25);
+        double sizeMultiplier = 1.25;
+        return (int) (heightMiddle + (heightDiff/2)*sizeMultiplier);
     }
 
     private void setYMinBounds(int heightMiddle) {
-        if ((heightMiddle - mDiagramSeries.getLowestValueY()) > 40) {
+        int borderCheck = 40;
+        if ((heightMiddle - mDiagramSeries.getLowestValueY()) > borderCheck) {
             int yMinRange = getNewYMinBoundsRange(heightMiddle);
             this.getViewport().setMinY(yMinRange);
         }else {
-            int yMinRange = heightMiddle - 50;
+            int borderDistance = 50;
+            int yMinRange = heightMiddle - borderDistance;
             this.getViewport().setMinY(yMinRange);
         }
     }
 
     private int getNewYMinBoundsRange(int heightMiddle) {
         int heightDiff = getHeightDifference();
+        double sizeMultiplier = 1.25;
         int newYMinRange;
         if (mDiagramSeries.getLowestValueY() < 0) {
-            newYMinRange = (int) (heightMiddle - (heightDiff/2)*1.25);
+            newYMinRange = (int) (heightMiddle - (heightDiff/2)*sizeMultiplier);
         }else {
-            newYMinRange = (int) (heightMiddle - (heightDiff/2)*1.25);
+            newYMinRange = (int) (heightMiddle - (heightDiff/2)*sizeMultiplier);
             if (newYMinRange < 0) {
                 newYMinRange = 0;
             }

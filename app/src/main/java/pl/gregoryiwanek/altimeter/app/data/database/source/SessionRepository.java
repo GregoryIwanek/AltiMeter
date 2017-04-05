@@ -16,7 +16,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Created by Grzegorz Iwanek on 27.01.2017.
  */
-
 public class SessionRepository implements SessionDataSource {
 
     private static SessionRepository INSTANCE = null;
