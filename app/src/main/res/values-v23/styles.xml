@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:colorPrimary">@color/colorJewel</item>
-    </style>
-
     <style name="Theme_Preference_Screen" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="colorPrimary">@color/colorJewel</item>
-        <!--<item name="colorPrimaryDark">@color/colorVoid</item>-->
+        <item name="colorPrimaryDark">@color/colorVoid</item>
         <item name="colorAccent">@color/colorFuschia</item>
-        <!--<item name="android:background">@color/colorVoid</item>-->
+        <item name="android:background">@color/colorVoid</item>
         <item name="android:textColor">@color/colorStark</item>
         <item name="android:listDivider">@color/colorStark</item>
         <item name="android:editTextColor">@color/colorStark</item>
@@ -19,9 +15,6 @@
         <item name="android:textColorHighlight">@color/colorStark</item>
         <item name="android:textColorHint">@color/colorStark</item>
         <item name="android:keyTextColor">@color/colorStark</item>
-        <item name="android:textAppearanceLargePopupMenu">@color/colorStark</item>
-        <item name="android:textAppearanceSmallPopupMenu">@color/colorStark</item>
-        <item name="android:textColorLink">@color/colorStark</item>
-        <item name="android:calendarTextColor">@color/colorStark</item>
+        <item name="android:titleTextColor">@color/colorStark</item>
     </style>
 </resources>

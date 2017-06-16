@@ -427,6 +427,7 @@ public class FormatAndValueConverter {
         }
         return (float) pressure;
     }
+
     /**
      * Converts inch of mercury [inHg] pressure to hectopascal [hPa] value (used in Android)
      * @param hgPressure at the station data is coming from;

@@ -45,6 +45,7 @@ public final class Constants {
     public static final String AVIATION_MOST_RECENT_FOR_EACH = "mostRecentForEachStation";
 
     public static final String DEFAULT_TEXT = "...";
+    public static final int MAX_NUMBER_SESSIONS = 4;
 
     public static String sessionId = "";
 

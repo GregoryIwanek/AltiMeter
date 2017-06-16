@@ -19,6 +19,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -153,7 +154,7 @@ public abstract class BasicActivity extends AppCompatActivity {
     private void runActivity() {
         Intent intent = new Intent(BasicActivity.this, type);
         putIntentExtra(intent);
-        startActivity(intent);
+        tryStartActivity(intent);
     }
 
     private void runFragment() {
@@ -193,6 +194,23 @@ public abstract class BasicActivity extends AppCompatActivity {
     private String getSessionIdDrawerMapGeneration() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         return preferences.getString("sessionId", Constants.DEFAULT_TEXT);
+    }
+
+    private void tryStartActivity(Intent intent) {
+        if (type == RecordingSessionActivity.class) {
+            if (isBelowMaxSavedSessions()) {
+                startActivity(intent);
+            } else {
+                Toast.makeText(getApplicationContext(), "Maximum number of saved sessions in free version. You need to delete some...", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            startActivity(intent);
+        }
+    }
+
+    private boolean isBelowMaxSavedSessions() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        return Constants.MAX_NUMBER_SESSIONS >= (preferences.getInt("numSavedSessions", Constants.MAX_NUMBER_SESSIONS));
     }
 
     public static void addFragmentToActivityOnStart(@NonNull android.support.v4.app.FragmentManager fragmentManager,

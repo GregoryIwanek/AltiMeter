@@ -19,6 +19,26 @@
         <item name="colorButtonNormal">@color/colorJewel</item>
     </style>
 
+    <style name="Theme_Preference_Screen" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorJewel</item>
+        <item name="colorPrimaryDark">@color/colorVoid</item>
+        <item name="colorAccent">@color/colorFuschia</item>
+        <item name="android:background">@color/colorVoid</item>
+        <item name="android:textColor">@color/colorStark</item>
+        <item name="android:listDivider">@color/colorStark</item>
+        <item name="android:editTextColor">@color/colorStark</item>
+        <item name="colorButtonNormal">@color/colorJewel</item>
+        <item name="android:textColorSecondary">@color/colorStark</item>
+        <item name="android:actionMenuTextColor">@color/colorStark</item>
+        <item name="android:textColorAlertDialogListItem">@color/colorStark</item>
+        <item name="android:textColorHighlight">@color/colorStark</item>
+        <item name="android:textColorHint">@color/colorStark</item>
+        <item name="android:keyTextColor">@color/colorStark</item>
+        <item name="android:textAppearanceLargePopupMenu">@color/colorStark</item>
+        <item name="android:textAppearanceSmallPopupMenu">@color/colorStark</item>
+        <item name="android:textColorLink">@color/colorStark</item>
+    </style>
+
     <style name="Theme_Navigation_List" parent="ThemeOverlay.AppCompat.Dark">
         <item name="colorPrimary">@color/colorJewel</item>
         <item name="colorPrimaryDark">@color/colorVoid</item>
@@ -27,6 +47,4 @@
         <item name="android:textColor">@color/colorStark</item>
         <item name="android:listDivider">@color/colorStark</item>
     </style>
-
-    <style name="Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 </resources>

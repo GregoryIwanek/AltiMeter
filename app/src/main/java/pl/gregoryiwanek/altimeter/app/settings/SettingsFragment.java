@@ -18,6 +18,7 @@ public final class SettingsFragment extends PreferenceFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        this.getActivity().setTheme(R.style.Theme_Preference_Screen);
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
     }
@@ -31,3 +32,4 @@ public final class SettingsFragment extends PreferenceFragment {
         return view;
     }
 }
+

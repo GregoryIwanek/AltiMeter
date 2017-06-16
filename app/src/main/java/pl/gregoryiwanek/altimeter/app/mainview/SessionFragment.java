@@ -1,7 +1,9 @@
 package pl.gregoryiwanek.altimeter.app.mainview;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +23,9 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.common.base.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +36,7 @@ import pl.gregoryiwanek.altimeter.app.R;
 import pl.gregoryiwanek.altimeter.app.details.DetailsActivity;
 import pl.gregoryiwanek.altimeter.app.data.Session;
 import pl.gregoryiwanek.altimeter.app.recordingsession.RecordingSessionActivity;
+import pl.gregoryiwanek.altimeter.app.utils.Constants;
 import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDialogFragmentV4;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -203,21 +209,35 @@ public class SessionFragment extends Fragment implements SessionContract.View,
     @Override
     public void showSessions(List<Session> sessions) {
         mListAdapter.replaceData(sessions);
+        updateNumSavedSessions(sessions.size());
         mSessionView.setVisibility(View.VISIBLE);
         mNoSessionsView.setVisibility(View.GONE);
+    }
+
+    private void updateNumSavedSessions(int number) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("numSavedSessions", number);
+        editor.apply();
     }
 
     @Override
     public void showEmptySessions(List<Session> sessions) {
         mListAdapter.replaceData(sessions);
+        updateNumSavedSessions(0);
         mSessionView.setVisibility(View.GONE);
         mNoSessionsView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showAddSessionUi() {
-        Intent intent = new Intent(getContext(), RecordingSessionActivity.class);
-        startActivity(intent);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        if (Constants.MAX_NUMBER_SESSIONS >= preferences.getInt("numSavedSessions", Constants.MAX_NUMBER_SESSIONS)) {
+            Intent intent = new Intent(getContext(), RecordingSessionActivity.class);
+            startActivity(intent);
+        } else {
+            Toast.makeText(getActivity(), "Maximum number of saved sessions in free version. You need to delete some...", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
