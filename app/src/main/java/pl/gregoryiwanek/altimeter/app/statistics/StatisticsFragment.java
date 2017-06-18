@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pl.gregoryiwanek.altimeter.app.BasicFragment;
 import pl.gregoryiwanek.altimeter.app.R;
 
 import static pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDialogFragmentV4;
@@ -24,8 +25,7 @@ import static pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDi
 /**
  * Consists view class of Statistics section.
  */
-public class StatisticsFragment extends Fragment implements StatisticsContract.View,
-        NoticeDialogFragmentV4.NoticeDialogListener {
+public class StatisticsFragment extends BasicFragment implements StatisticsContract.View {
 
     @BindView(R.id.stats_sessions_numb_label_value) TextView mNumSessionTV;
     @BindView(R.id.stats_points_numb_label_value) TextView mNumPointsTV;
@@ -50,7 +50,7 @@ public class StatisticsFragment extends Fragment implements StatisticsContract.V
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_reset_menu, menu);
+        inflater.inflate(R.menu.fragment_menu_statistics, menu);
     }
 
     @Override
@@ -61,16 +61,9 @@ public class StatisticsFragment extends Fragment implements StatisticsContract.V
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        showUpDialog();
+        String title = "Reset statistics?";
+        popUpNoticeDialog(title);
         return true;
-    }
-
-    private void showUpDialog() {
-        Bundle args = new Bundle();
-        args.putString("title", "Reset statistics?");
-        DialogFragment ndf = new NoticeDialogFragmentV4();
-        ndf.setArguments(args);
-        ndf.show(getChildFragmentManager(), "NoticeDialogFragment");
     }
 
     @Override

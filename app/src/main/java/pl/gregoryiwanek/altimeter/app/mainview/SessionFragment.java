@@ -8,10 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,21 +20,18 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.common.base.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pl.gregoryiwanek.altimeter.app.BasicFragment;
 import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.details.DetailsActivity;
 import pl.gregoryiwanek.altimeter.app.data.Session;
+import pl.gregoryiwanek.altimeter.app.details.DetailsActivity;
 import pl.gregoryiwanek.altimeter.app.recordingsession.RecordingSessionActivity;
 import pl.gregoryiwanek.altimeter.app.utils.Constants;
-import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDialogFragmentV4;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -45,8 +39,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * View of this section.
  * Consists number of inner views (textViews etc.) and layouts, also customized inner Adapter class.
  */
-public class SessionFragment extends Fragment implements SessionContract.View,
-        NoticeDialogFragmentV4.NoticeDialogListener {
+public class SessionFragment extends BasicFragment implements SessionContract.View{
 
     @BindView(R.id.graphs_list) ListView mListView;
     @BindView(R.id.graphsLL) LinearLayout mSessionView;
@@ -106,12 +99,7 @@ public class SessionFragment extends Fragment implements SessionContract.View,
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.fab_add_session);
         fab.setImageResource(R.drawable.ic_vector_add);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mPresenter.addNewSession();
-            }
-        });
+        fab.setOnClickListener(view -> mPresenter.addNewSession());
     }
 
     private void setProgressIndicator(View view) {
@@ -123,22 +111,17 @@ public class SessionFragment extends Fragment implements SessionContract.View,
                 ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark)
         );
         swipeRefreshLayoutChild.setScrollUpChild(mListView);
-        swipeRefreshLayoutChild.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mPresenter.loadSessions(false);
-            }
-        });
+        swipeRefreshLayoutChild.setOnRefreshListener(() -> mPresenter.loadSessions(false));
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_delete:
-                showUpDialog("Delete checked?");
+                popUpNoticeDialog("Delete checked?");
                 break;
             case R.id.menu_delete_all:
-                showUpDialog("Delete all?");
+                popUpNoticeDialog("Delete all?");
                 break;
         }
         return true;
@@ -153,15 +136,15 @@ public class SessionFragment extends Fragment implements SessionContract.View,
             case "Delete all?":
                 mPresenter.deleteAllSessions(getAdapterAllId());
                 break;
+            // TODO: 16.06.2017 refactor this part
+            case "Upgrade to AltiMeterPro to save unlimited number of sessions.\nDo you want to upgrade?":
+                break;
         }
     }
 
-    private void showUpDialog(String title) {
-        Bundle args = new Bundle();
-        args.putString("title", title);
-        DialogFragment ndf = new NoticeDialogFragmentV4();
-        ndf.setArguments(args);
-        ndf.show(getChildFragmentManager(), "NoticeDialogFragment");
+    @Override
+    protected void popUpNoticeDialog(String title) {
+        super.popUpNoticeDialog(title);
     }
 
     private ArrayList<String> getAdapterCheckedId() {
@@ -174,7 +157,7 @@ public class SessionFragment extends Fragment implements SessionContract.View,
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_menu, menu);
+        inflater.inflate(R.menu.fragment_menu_main, menu);
     }
 
     SessionItemListener mSessionItemListener = new SessionItemListener() {
@@ -236,7 +219,7 @@ public class SessionFragment extends Fragment implements SessionContract.View,
             Intent intent = new Intent(getContext(), RecordingSessionActivity.class);
             startActivity(intent);
         } else {
-            Toast.makeText(getActivity(), "Maximum number of saved sessions in free version. You need to delete some...", Toast.LENGTH_LONG).show();
+            popUpNoticeDialog(Constants.MESSAGE_UPGRADE_TO_PRO);
         }
     }
 

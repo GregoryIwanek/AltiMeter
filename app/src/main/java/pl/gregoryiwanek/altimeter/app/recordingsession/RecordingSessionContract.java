@@ -90,6 +90,8 @@ interface RecordingSessionContract {
 
         void onActivityDestroyedUnsubscribeRx();
 
+        void onActivityPaused();
+
         void shareScreenShot(Window window, ContentResolver cr, String[] textViewContent);
 
         void checkIsSessionEmpty();

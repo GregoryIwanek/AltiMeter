@@ -78,7 +78,7 @@ public class MapFragment extends Fragment implements MapContract.View {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_share_menu, menu);
+        inflater.inflate(R.menu.fragment_menu_share, menu);
     }
 
     @Override

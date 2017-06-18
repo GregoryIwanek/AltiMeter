@@ -2,9 +2,11 @@ package pl.gregoryiwanek.altimeter.app.details;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.util.ArrayMap;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -16,12 +18,15 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pl.gregoryiwanek.altimeter.app.BasicFragment;
 import pl.gregoryiwanek.altimeter.app.R;
+import pl.gregoryiwanek.altimeter.app.utils.Constants;
+import pl.gregoryiwanek.altimeter.app.utils.VersionController;
 
 /**
  * View class of Details section.
  */
-public class DetailsFragment extends Fragment implements DetailsContract.View {
+public class DetailsFragment extends BasicFragment implements DetailsContract.View {
 
     @BindView(R.id.title_value_label) EditText mTitleTV;
     @BindView(R.id.description_value_label) EditText mDescriptionTV;
@@ -47,6 +52,27 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
 
         setHasOptionsMenu(true);
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_menu_details, menu);
+    }
+
+    // todo programme behaviour of the menu "export" button
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_export_session_data:
+                String packageName = this.getClass().getPackage().toString();
+                if (!VersionController.isFreeVersion(packageName)) {
+                    popUpNoticeDialog(Constants.MESSAGE_UPGRADE_TO_PRO);
+                } else {
+                    // todo code responsible for exporting data from database to file
+                }
+                break;
+        }
+        return true;
     }
 
     @Override
@@ -82,12 +108,11 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
 
     @Override
     public void showChangesSaved() {
-        showMessage();
+        showMessage("Changes saved");
     }
 
-    @SuppressWarnings("ConstantConditions")
-    private void showMessage() {
-        Snackbar.make(getView(), "Changes saved", Snackbar.LENGTH_SHORT).show();
+    private void showMessage(String message) {
+        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
@@ -123,5 +148,11 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
     @Override
     public void setDistanceTextView(String distance) {
         mDistanceTV.setText(distance);
+    }
+
+    // // TODO: 17.06.2017
+    @Override
+    public void onDialogPositiveClick(String callbackCode) {
+
     }
 }
