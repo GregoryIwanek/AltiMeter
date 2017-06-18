@@ -62,4 +62,23 @@ public final class Constants {
 
     // hectopascals <-> mercurial pressure multiplier
     static final double MULTIPLIER_HPA = 33.8638;
+
+    // version
+    static final String FREE_VERSION = "free";
+    static final String PRO_VERSION = "pro";
+    public static final String MESSAGE_UPGRADE_TO_PRO = "Upgrade to AltiMeterPRO to export sessions data.\nDo you want to upgrade?";
+
+    // popup messages
+    public static final String MESSAGE_GENERATE_MAP = "Generate map?";
+    public static final String MESSAGE_SEND_TO = "Send to";
+    public static final String MESSAGE_LOCK_SESSION = "Lock session. Recording will be terminated. Are you sure?";
+    public static final String MESSAGE_RESET_SESSION = "Reset session. Are you sure?";
+
+    // toast messages
+    public static final String TOAST_EMPTY_MAP = "Session has no recorded points. Record points in order to generate map";
+    public static final String TOAST_SESSION_LOCKED = "Session locked";
+    public static final String TOAST_SESSION_PAUSED = "Paused";
+    public static final String TOAST_SESSION_RECORDING = "Recording data";
+    public static final String TOAST_TURN_ON_SOURCE = "Turn on at least one data source";
+    public static final String TOAST_MUST_STOP_SESSION = "You must stop session first.";
 }

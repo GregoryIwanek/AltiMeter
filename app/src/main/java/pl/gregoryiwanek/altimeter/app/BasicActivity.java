@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,7 +20,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,8 +31,7 @@ import pl.gregoryiwanek.altimeter.app.recordingsession.RecordingSessionActivity;
 import pl.gregoryiwanek.altimeter.app.settings.SettingsFragment;
 import pl.gregoryiwanek.altimeter.app.statistics.StatisticsActivity;
 import pl.gregoryiwanek.altimeter.app.utils.Constants;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment;
 
 /**
  * Superclass for all activities used in a project.
@@ -180,6 +179,8 @@ public abstract class BasicActivity extends AppCompatActivity {
 
     private void putIntentExtra(Intent intent) {
         if (isMapCreationPossible()) {
+            System.out.println("creation of map possible");
+            System.out.println("id is: " + getSessionIdDrawerMapGeneration());
             intent.putExtra("sessionId", getSessionIdDrawerMapGeneration());
         } else {
             intent.putExtra("sessionId", Constants.DEFAULT_TEXT);
@@ -187,6 +188,7 @@ public abstract class BasicActivity extends AppCompatActivity {
     }
 
     private boolean isMapCreationPossible() {
+        System.out.println("class name is: " + getClassName() + " and recording session is: " + RecordingSessionActivity.class.getSimpleName());
         return getClassName().equals(RecordingSessionActivity.class.getSimpleName())
                 || getClassName().equals(DetailsActivity.class.getSimpleName());
     }
@@ -201,11 +203,19 @@ public abstract class BasicActivity extends AppCompatActivity {
             if (isBelowMaxSavedSessions()) {
                 startActivity(intent);
             } else {
-                Toast.makeText(getApplicationContext(), "Maximum number of saved sessions in free version. You need to delete some...", Toast.LENGTH_LONG).show();
+                popUpNoticeDialog(Constants.MESSAGE_UPGRADE_TO_PRO);
             }
         } else {
             startActivity(intent);
         }
+    }
+
+    public void popUpNoticeDialog(String title) {
+        Bundle args = new Bundle();
+        args.putString("title", title);
+        DialogFragment ndf = new NoticeDialogFragment.NoticeDialogFragmentV4();
+        ndf.setArguments(args);
+        ndf.show(getSupportFragmentManager(), "NoticeDialogFragment");
     }
 
     private boolean isBelowMaxSavedSessions() {

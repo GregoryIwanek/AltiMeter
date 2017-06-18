@@ -549,6 +549,7 @@ public class LocationUpdateManager implements LocationResponse {
     }
 
     private void saveCurrentIdDrawerMapGeneration() {
+        System.out.println("it's happening!!!");
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("sessionId", mSession.getId());

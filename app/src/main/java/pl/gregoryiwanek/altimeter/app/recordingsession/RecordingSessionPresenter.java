@@ -202,8 +202,12 @@ class RecordingSessionPresenter implements Presenter {
 
     @Override
     public void onActivityDestroyedUnsubscribeRx() {
-        saveSessionToDatabase();
         mLocationUpdateManager.onActivityDestroyed();
+    }
+
+    @Override
+    public void onActivityPaused() {
+        saveSessionToDatabase();
     }
 
     private void saveSessionToDatabase() {

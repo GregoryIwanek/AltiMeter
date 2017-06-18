@@ -22,9 +22,11 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pl.gregoryiwanek.altimeter.app.BasicFragment;
 import pl.gregoryiwanek.altimeter.app.R;
 import pl.gregoryiwanek.altimeter.app.data.GraphPoint;
 import pl.gregoryiwanek.altimeter.app.map.MapActivity;
+import pl.gregoryiwanek.altimeter.app.utils.Constants;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDialogFragmentV4;
@@ -33,8 +35,7 @@ import static pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDi
  * View of the RecordingSession fragment.
  * Consists number of views and inner layouts. Presents altitude graph with recorded values.
  */
-public class RecordingSessionFragment extends Fragment implements RecordingSessionContract.View,
-        NoticeDialogFragmentV4.NoticeDialogListener {
+public class RecordingSessionFragment extends BasicFragment implements RecordingSessionContract.View {
 
     @BindView(R.id.current_elevation_label) TextView mCurrElevationTextView;
     @BindView(R.id.current_latitude_value) TextView mCurrLatitudeTextView;
@@ -80,6 +81,12 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        mPresenter.onActivityPaused();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         mPresenter.onActivityDestroyedUnsubscribeRx();
@@ -92,7 +99,7 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_share_menu, menu);
+        inflater.inflate(R.menu.fragment_menu_share, menu);
     }
 
     @Override
@@ -147,12 +154,12 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
 
     @OnClick(R.id.reset_button)
     public void onResetButtonClick() {
-        showUpDialog("Reset session. Are you sure?");
+        popUpNoticeDialog(Constants.MESSAGE_RESET_SESSION);
     }
 
     @OnClick(R.id.lock_button)
     public void onLockButtonCLick() {
-        showUpDialog("Lock session. Recording will be terminated. Are you sure?");
+        popUpNoticeDialog(Constants.MESSAGE_LOCK_SESSION);
     }
 
     @OnClick(R.id.map_button)
@@ -229,27 +236,24 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
     }
 
     private void showStopSession() {
-        showMessage("You must stop session first.");
+        showMessage(Constants.TOAST_MUST_STOP_SESSION);
     }
 
-    private void showUpDialog(String title) {
-        Bundle args = new Bundle();
-        args.putString("title", title);
-        DialogFragment ndf = new NoticeDialogFragmentV4();
-        ndf.setArguments(args);
-        ndf.show(getChildFragmentManager(), "NoticeDialogFragment");
+    @Override
+    protected void popUpNoticeDialog(String title) {
+        super.popUpNoticeDialog(title);
     }
 
     @Override
     public void onDialogPositiveClick(String callbackCode) {
         switch (callbackCode) {
-            case "Reset session. Are you sure?":
+            case Constants.MESSAGE_RESET_SESSION:
                 mPresenter.resetSessionData();
                 break;
-            case "Lock session. Recording will be terminated. Are you sure?":
+            case Constants.MESSAGE_LOCK_SESSION:
                 mPresenter.lockSession();
                 break;
-            case "Generate map?":
+            case Constants.MESSAGE_GENERATE_MAP:
                 mPresenter.openMapOfSession();
                 break;
         }
@@ -297,7 +301,7 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
         if (isAnyDataSourceOpen()) {
             mPresenter.startLocationRecording();
         } else {
-            showMessage("Turn on at least one data source");
+            showMessage(Constants.TOAST_TURN_ON_SOURCE);
         }
     }
 
@@ -309,27 +313,27 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
 
     @Override
     public void showSessionLocked() {
-        showMessage("Session locked");
+        showMessage(Constants.TOAST_SESSION_LOCKED);
     }
 
     @Override
     public void showRecordingPaused() {
-        showMessage("Paused");
+        showMessage(Constants.TOAST_SESSION_PAUSED);
     }
 
     @Override
     public void showRecordingData() {
-        showMessage("Recording data");
+        showMessage(Constants.TOAST_SESSION_RECORDING);
     }
 
     @Override
     public void askGenerateMap() {
-        showUpDialog("Generate map?");
+        popUpNoticeDialog(Constants.MESSAGE_GENERATE_MAP);
     }
 
     @Override
     public void showShareMenu(Intent screenshotIntent) {
-        startActivity(Intent.createChooser(screenshotIntent, "Send to"));
+        startActivity(Intent.createChooser(screenshotIntent, Constants.MESSAGE_SEND_TO));
     }
 
     @Override
@@ -341,7 +345,7 @@ public class RecordingSessionFragment extends Fragment implements RecordingSessi
 
     @Override
     public void showMapEmpty() {
-        showMessage("Session has no recorded points. Record points in order to generate map");
+        showMessage(Constants.TOAST_EMPTY_MAP);
     }
 
     @SuppressWarnings("ConstantConditions")
