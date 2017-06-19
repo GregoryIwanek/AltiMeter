@@ -73,6 +73,8 @@ public final class Constants {
     public static final String MESSAGE_SEND_TO = "Send to";
     public static final String MESSAGE_LOCK_SESSION = "Lock session. Recording will be terminated. Are you sure?";
     public static final String MESSAGE_RESET_SESSION = "Reset session. Are you sure?";
+    public static final String MESSAGE_DELETE_ALL = "Delete all?";
+    public static final String MESSAGE_DELETE_CHECKED = "Delete checked?";
 
     // toast messages
     public static final String TOAST_EMPTY_MAP = "Session has no recorded points. Record points in order to generate map";

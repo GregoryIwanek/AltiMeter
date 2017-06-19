@@ -153,6 +153,10 @@ public class DetailsFragment extends BasicFragment implements DetailsContract.Vi
     // // TODO: 17.06.2017
     @Override
     public void onDialogPositiveClick(String callbackCode) {
-
+        switch (callbackCode) {
+            case Constants.MESSAGE_UPGRADE_TO_PRO:
+                super.openUpgradePro();
+                break;
+        }
     }
 }

@@ -21,10 +21,6 @@ import pl.gregoryiwanek.altimeter.app.utils.FormatAndValueConverter;
  */
 public class SessionActivity extends BasicActivity {
 
-    @BindView(R.id.toolbar) Toolbar mToolbar;
-    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    @BindView(R.id.nav_view) NavigationView mNavigationView;
-
     private SessionFragment mSessionFragment;
 
     @Override
@@ -33,7 +29,6 @@ public class SessionActivity extends BasicActivity {
         setContentView(R.layout.activity_graph_altitude);
 
         super.initiateUI();
-        ButterKnife.bind(this);
         setSessionFragment();
         setPresenter();
         readPreferences();

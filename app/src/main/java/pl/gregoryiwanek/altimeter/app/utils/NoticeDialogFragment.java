@@ -30,10 +30,22 @@ public class NoticeDialogFragment {
         public void onAttach(Context context) {
             super.onAttach(context);
 
+            // try attach listener to a parent Fragment, if this object is attached directly
+            // to a parent activity it will return null
             try {
                 mListener = (NoticeDialogListener) getParentFragment();
             } catch (ClassCastException e) {
                 e.printStackTrace();
+            }
+
+            // try attach listener to parent Activity, only if this object ( window) is attached
+            // directly to the parent activity, not a Fragment
+            if (mListener == null) {
+                try {
+                    mListener = (NoticeDialogListener) getActivity();
+                } catch (ClassCastException e) {
+                    e.printStackTrace();
+                }
             }
 
             getBundleArguments();

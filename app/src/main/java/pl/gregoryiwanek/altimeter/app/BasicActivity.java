@@ -30,8 +30,10 @@ import pl.gregoryiwanek.altimeter.app.map.MapActivity;
 import pl.gregoryiwanek.altimeter.app.recordingsession.RecordingSessionActivity;
 import pl.gregoryiwanek.altimeter.app.settings.SettingsFragment;
 import pl.gregoryiwanek.altimeter.app.statistics.StatisticsActivity;
+import pl.gregoryiwanek.altimeter.app.upgradepro.UpgradeProActivity;
 import pl.gregoryiwanek.altimeter.app.utils.Constants;
 import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment;
+import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDialogFragmentV4.NoticeDialogListener;
 
 /**
  * Superclass for all activities used in a project.
@@ -43,10 +45,11 @@ import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment;
  * - drawerLayout with id drawer_layout
  * - navigationView with id nav_view
  */
-public abstract class BasicActivity extends AppCompatActivity {
-    @BindView(R.id.toolbar) Toolbar mToolbar;
-    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    @BindView(R.id.nav_view) NavigationView mNavigationView;
+public abstract class BasicActivity extends AppCompatActivity implements NoticeDialogListener {
+    // TODO: 19.06.2017 change access operator to protected and remove thsese from children activities??
+    @BindView(R.id.toolbar) protected Toolbar mToolbar;
+    @BindView(R.id.drawer_layout) protected DrawerLayout mDrawerLayout;
+    @BindView(R.id.nav_view) protected NavigationView mNavigationView;
 
     private Class<?> type;
 
@@ -58,7 +61,7 @@ public abstract class BasicActivity extends AppCompatActivity {
     }
 
     /**
-     * Called by children class to bind UI elements with layout
+     * Called by children class to bind UI elements with child's layout
      */
     protected void initiateUI() {
         ButterKnife.bind(this);
@@ -114,6 +117,9 @@ public abstract class BasicActivity extends AppCompatActivity {
                             break;
                         case R.id.settings_navigation_menu_item:
                             navigateToFragment(SettingsFragment.class);
+                            break;
+                        case R.id.upgrade_pro_menu_item:
+                            navigateToActivity(UpgradeProActivity.class);
                             break;
                         case R.id.about_navigation_menu_item:
                             navigateToFragment(AboutFragmentMainWindow.class);
@@ -179,8 +185,6 @@ public abstract class BasicActivity extends AppCompatActivity {
 
     private void putIntentExtra(Intent intent) {
         if (isMapCreationPossible()) {
-            System.out.println("creation of map possible");
-            System.out.println("id is: " + getSessionIdDrawerMapGeneration());
             intent.putExtra("sessionId", getSessionIdDrawerMapGeneration());
         } else {
             intent.putExtra("sessionId", Constants.DEFAULT_TEXT);
@@ -217,6 +221,12 @@ public abstract class BasicActivity extends AppCompatActivity {
         ndf.setArguments(args);
         ndf.show(getSupportFragmentManager(), "NoticeDialogFragment");
     }
+
+    @Override
+    public void onDialogPositiveClick(String callbackCode) {
+        Intent intent = new Intent(this, UpgradeProActivity.class);
+        startActivity(intent);
+    };
 
     private boolean isBelowMaxSavedSessions() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());

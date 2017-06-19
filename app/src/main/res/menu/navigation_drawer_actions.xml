@@ -33,6 +33,11 @@
             android:title="@string/settings"/>
 
         <item
+            android:id="@+id/upgrade_pro_menu_item"
+            android:icon="@drawable/ic_upgrade_pro_black_24dp"
+            android:title="Upgrade to AltiMeterPro"/>
+
+        <item
             android:id="@+id/about_navigation_menu_item"
             android:icon="@drawable/ic_about_black_24dp"
             android:title="@string/about"/>

@@ -21,10 +21,6 @@ import pl.gregoryiwanek.altimeter.app.utils.FormatAndValueConverter;
  */
 public class DetailsActivity extends BasicActivity {
 
-    @BindView(R.id.toolbar) Toolbar mToolbar;
-    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    @BindView(R.id.nav_view) NavigationView mNavigationView;
-
     private DetailsFragment mDetailsFragment;
 
     @Override
@@ -33,7 +29,6 @@ public class DetailsActivity extends BasicActivity {
         setContentView(R.layout.activity_details);
 
         super.initiateUI();
-        ButterKnife.bind(this);
         readPreferences();
         setDetailsFragment();
         setPresenter();

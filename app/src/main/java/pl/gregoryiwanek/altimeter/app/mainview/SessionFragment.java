@@ -118,10 +118,10 @@ public class SessionFragment extends BasicFragment implements SessionContract.Vi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_delete:
-                popUpNoticeDialog("Delete checked?");
+                popUpNoticeDialog(Constants.MESSAGE_DELETE_CHECKED);
                 break;
             case R.id.menu_delete_all:
-                popUpNoticeDialog("Delete all?");
+                popUpNoticeDialog(Constants.MESSAGE_DELETE_ALL);
                 break;
         }
         return true;
@@ -130,14 +130,14 @@ public class SessionFragment extends BasicFragment implements SessionContract.Vi
     @Override
     public void onDialogPositiveClick(String callbackCode) {
         switch (callbackCode) {
-            case "Delete checked?":
+            case Constants.MESSAGE_DELETE_CHECKED:
                 mPresenter.deleteCheckedSessions(getAdapterCheckedId());
                 break;
-            case "Delete all?":
+            case Constants.MESSAGE_DELETE_ALL:
                 mPresenter.deleteAllSessions(getAdapterAllId());
                 break;
-            // TODO: 16.06.2017 refactor this part
-            case "Upgrade to AltiMeterPro to save unlimited number of sessions.\nDo you want to upgrade?":
+            case Constants.MESSAGE_UPGRADE_TO_PRO:
+                super.openUpgradePro();
                 break;
         }
     }

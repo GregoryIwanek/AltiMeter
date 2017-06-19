@@ -26,6 +26,7 @@
         <activity android:name="pl.gregoryiwanek.altimeter.app.recordingsession.RecordingSessionActivity"/>
         <activity android:name="pl.gregoryiwanek.altimeter.app.map.MapActivity"/>
         <activity android:name="pl.gregoryiwanek.altimeter.app.statistics.StatisticsActivity"/>
+        <activity android:name="pl.gregoryiwanek.altimeter.app.upgradepro.UpgradeProActivity"/>
         <activity android:name="pl.gregoryiwanek.altimeter.app.details.DetailsActivity"
             android:windowSoftInputMode="adjustNothing"/>
 

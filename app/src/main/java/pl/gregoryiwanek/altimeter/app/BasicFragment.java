@@ -1,9 +1,11 @@
 package pl.gregoryiwanek.altimeter.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 
+import pl.gregoryiwanek.altimeter.app.upgradepro.UpgradeProActivity;
 import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment;
 import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDialogFragmentV4.NoticeDialogListener;
 
@@ -26,5 +28,10 @@ public class BasicFragment extends Fragment implements NoticeDialogListener{
         DialogFragment ndf = new NoticeDialogFragment.NoticeDialogFragmentV4();
         ndf.setArguments(args);
         ndf.show(getChildFragmentManager(), "NoticeDialogFragment");
+    }
+
+    protected void openUpgradePro() {
+        Intent intent = new Intent(getActivity(), UpgradeProActivity.class);
+        startActivity(intent);
     }
 }
