@@ -66,7 +66,7 @@ public class DetailsFragment extends BasicFragment implements DetailsContract.Vi
             case R.id.menu_export_session_data:
                 String packageName = this.getClass().getPackage().toString();
                 if (!VersionController.isFreeVersion(packageName)) {
-                    popUpNoticeDialog(Constants.MESSAGE_UPGRADE_TO_PRO);
+                    popUpNoticeDialog(Constants.MESSAGE_UPGRADE_TO_PRO_EXPORT);
                 } else {
                     // todo code responsible for exporting data from database to file
                 }
@@ -154,7 +154,7 @@ public class DetailsFragment extends BasicFragment implements DetailsContract.Vi
     @Override
     public void onDialogPositiveClick(String callbackCode) {
         switch (callbackCode) {
-            case Constants.MESSAGE_UPGRADE_TO_PRO:
+            case Constants.MESSAGE_UPGRADE_TO_PRO_EXPORT:
                 super.openUpgradePro();
                 break;
         }

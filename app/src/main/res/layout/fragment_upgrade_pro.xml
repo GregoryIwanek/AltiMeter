@@ -1,15 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:theme="@style/Theme_Altitude_Graphs"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
+        android:id="@+id/upgrade_pro_background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/upgrade_pro"
         android:scaleType="centerCrop"/>
+
+    <TextView
+        android:layout_marginTop="@dimen/activity_padding_bottom_16dp"
+        android:layout_marginBottom="@dimen/activity_padding_bottom_16dp"
+        android:textColor="@color/colorBlack"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:id="@+id/upgrade_pro_first_paragraph"
+        android:background="@color/colorTransparent"
+        android:text="With AltiMeterPro you can:"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ListView
+        android:layout_marginLeft="@dimen/activity_padding_bottom_16dp"
+        android:layout_below="@id/upgrade_pro_first_paragraph"
+        android:background="@color/colorTransparent"
+        android:cacheColorHint="@color/colorTransparent"
+        android:id="@+id/upgrade_pro_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </ListView>
 
     <Button
         android:layout_width="wrap_content"

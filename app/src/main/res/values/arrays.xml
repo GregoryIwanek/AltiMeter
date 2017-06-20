@@ -58,4 +58,20 @@
         <item name="min_altitude">min_altitude</item>
         <item name="long_session">long_session</item>
     </string-array>
+
+    <string-array name="upgrade_pro_list_values">
+        <item name="str_export">Export saved session\'s data</item>
+        <item name="str_save">Save unlimited number of sessions</item>
+        <item name="str_details">Upgrade session\'s details window</item>
+        <item name="str_icon">Keep dynamic icon with altitude on your screen</item>
+        <item name="str_style">Switch between unique app styles</item>
+    </string-array>
+
+    <array name="upgrade_pro_list_images">
+        <item>@drawable/ic_import_export_black_24dp</item>
+        <item>@drawable/ic_save_black_24dp</item>
+        <item>@drawable/ic_fiber_new_black_24dp</item>
+        <item>@drawable/ic_event_note_black_24dp</item>
+        <item>@drawable/ic_style_black_24dp</item>
+    </array>
 </resources>

@@ -66,7 +66,8 @@ public final class Constants {
     // version
     static final String FREE_VERSION = "free";
     static final String PRO_VERSION = "pro";
-    public static final String MESSAGE_UPGRADE_TO_PRO = "Upgrade to AltiMeterPRO to export sessions data.\nDo you want to upgrade?";
+    public static final String MESSAGE_UPGRADE_TO_PRO_EXPORT = "Upgrade to AltiMeterPRO to export sessions data.\nDo you want to upgrade?";
+    public static final String MESSAGE_UPGRADE_TO_PRO_MAX_SAVED = "Upgrade to AltiMeterPro to save more than 5 sessions.\nDo you want to upgrade?";
 
     // popup messages
     public static final String MESSAGE_GENERATE_MAP = "Generate map?";

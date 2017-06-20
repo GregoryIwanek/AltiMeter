@@ -207,7 +207,7 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
             if (isBelowMaxSavedSessions()) {
                 startActivity(intent);
             } else {
-                popUpNoticeDialog(Constants.MESSAGE_UPGRADE_TO_PRO);
+                popUpNoticeDialog(Constants.MESSAGE_UPGRADE_TO_PRO_MAX_SAVED);
             }
         } else {
             startActivity(intent);

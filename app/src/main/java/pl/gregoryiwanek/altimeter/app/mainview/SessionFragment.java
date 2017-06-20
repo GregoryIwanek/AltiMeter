@@ -136,7 +136,7 @@ public class SessionFragment extends BasicFragment implements SessionContract.Vi
             case Constants.MESSAGE_DELETE_ALL:
                 mPresenter.deleteAllSessions(getAdapterAllId());
                 break;
-            case Constants.MESSAGE_UPGRADE_TO_PRO:
+            case Constants.MESSAGE_UPGRADE_TO_PRO_MAX_SAVED:
                 super.openUpgradePro();
                 break;
         }
@@ -219,7 +219,7 @@ public class SessionFragment extends BasicFragment implements SessionContract.Vi
             Intent intent = new Intent(getContext(), RecordingSessionActivity.class);
             startActivity(intent);
         } else {
-            popUpNoticeDialog(Constants.MESSAGE_UPGRADE_TO_PRO);
+            popUpNoticeDialog(Constants.MESSAGE_UPGRADE_TO_PRO_MAX_SAVED);
         }
     }
 
