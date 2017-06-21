@@ -7,5 +7,5 @@
         android:id="@+id/share_facebook"
         android:title="Share"
         shareit:actionProviderClass="android.support.v7.widget.ShareActionProvider"
-        app:showAsAction="always"/>
+        app:showAsAction="never"/>
 </menu>

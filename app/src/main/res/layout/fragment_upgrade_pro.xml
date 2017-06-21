@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:text="Upgrade to AltiMeterPro"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        android:text="Upgrade for 2.99zł"
         android:layout_marginBottom="@dimen/activity_padding_bottom_16dp"/>
 </RelativeLayout>

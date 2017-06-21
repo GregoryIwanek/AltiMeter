@@ -16,7 +16,7 @@
         <item name="android:textColor">@color/colorStark</item>
         <item name="android:listDivider">@color/colorStark</item>
         <item name="android:editTextColor">@color/colorStark</item>
-        <item name="colorButtonNormal">@color/colorJewel</item>
+        <item name="colorButtonNormal">@color/colorFuschia</item>
     </style>
 
     <style name="Theme_Preference_Screen" parent="Theme.AppCompat.DayNight.NoActionBar">

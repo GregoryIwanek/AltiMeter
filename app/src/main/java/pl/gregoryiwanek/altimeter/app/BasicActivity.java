@@ -21,6 +21,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.gregoryiwanek.altimeter.app.about.AboutFragmentMainWindow;
@@ -34,6 +37,7 @@ import pl.gregoryiwanek.altimeter.app.upgradepro.UpgradeProActivity;
 import pl.gregoryiwanek.altimeter.app.utils.Constants;
 import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment;
 import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDialogFragmentV4.NoticeDialogListener;
+import pl.gregoryiwanek.altimeter.app.utils.VersionController;
 
 /**
  * Superclass for all activities used in a project.
@@ -50,6 +54,7 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
     @BindView(R.id.toolbar) protected Toolbar mToolbar;
     @BindView(R.id.drawer_layout) protected DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view) protected NavigationView mNavigationView;
+    @BindView(R.id.adView) protected AdView mAdView;
 
     private Class<?> type;
 
@@ -67,6 +72,7 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
         ButterKnife.bind(this);
         setToolbar();
         setNavigationDrawer();
+        initMobileAds();
     }
 
     private void setToolbar() {
@@ -80,6 +86,15 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
         mDrawerLayout.setStatusBarBackground(R.color.colorBlack);
         if (mNavigationView != null) {
             setupDrawerContent(mNavigationView);
+        }
+    }
+
+    private void initMobileAds() {
+        if (VersionController.isFreeVersion(this.getPackageName())) {
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+            mAdView.setScaleX(0.9f);
+            mAdView.setScaleY(1.2f);
         }
     }
 

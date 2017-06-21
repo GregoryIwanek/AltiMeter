@@ -65,6 +65,7 @@
         <item name="str_details">Upgrade session\'s details window</item>
         <item name="str_icon">Keep dynamic icon with altitude on your screen</item>
         <item name="str_style">Switch between unique app styles</item>
+        <item name="str_commercials">Remove commercials</item>
     </string-array>
 
     <array name="upgrade_pro_list_images">
@@ -73,5 +74,6 @@
         <item>@drawable/ic_fiber_new_black_24dp</item>
         <item>@drawable/ic_event_note_black_24dp</item>
         <item>@drawable/ic_style_black_24dp</item>
+        <item>@drawable/ic_mood_black_24dp</item>
     </array>
 </resources>

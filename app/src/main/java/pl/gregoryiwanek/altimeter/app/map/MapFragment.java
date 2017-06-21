@@ -61,14 +61,16 @@ public class MapFragment extends Fragment implements MapContract.View {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-
         ButterKnife.bind(this, view);
-
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
-
         setHasOptionsMenu(true);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+
     }
 
     @Override
