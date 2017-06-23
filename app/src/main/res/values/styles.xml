@@ -47,4 +47,15 @@
         <item name="android:textColor">@color/colorStark</item>
         <item name="android:listDivider">@color/colorStark</item>
     </style>
+
+    <style name="Testtt" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorJewel</item>
+        <item name="colorPrimaryDark">@color/colorVoid</item>
+        <item name="colorAccent">@color/colorFuschia</item>
+        <item name="android:background">@color/colorVoid</item>
+        <item name="android:textColor">@color/colorStark</item>
+        <item name="android:listDivider">@color/colorStark</item>
+        <item name="android:editTextColor">@color/colorStark</item>
+        <item name="colorButtonNormal">@color/colorFuschia</item>
+    </style>
 </resources>
