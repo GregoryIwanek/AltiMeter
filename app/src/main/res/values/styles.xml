@@ -1,14 +1,20 @@
 <resources>
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/colorJewel</item>
-        <item name="colorPrimaryDark">@color/colorVoid</item>
-        <item name="colorAccent">@color/colorFuschia</item>
-        <item name="android:textColor">@color/colorStark</item>
-        <item name="android:textColorSecondary">@color/colorStark</item>
-        <item name="android:itemBackground">@color/colorInk</item>
+    <style name="ApplicationTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPurple900</item>
+        <item name="colorPrimaryDark">@color/colorPurpleDark900</item>
+        <item name="colorAccent">@color/colorPurpleLight900</item>
+        <item name="android:textColorPrimary">@color/colorStark</item>
+        <item name="android:textColorSecondary">@color/colorVoid</item>
+        <item name="android:itemBackground">@color/colorStark</item>
+        <item name="colorButtonPrimary">@color/colorVoid</item>
+        <item name="colorButtonSecondary">@color/colorElectricLime</item>
+        <item name="colorGraphGrid">@color/colorVoid</item>
+        <item name="colorGraphText">@color/colorVoid</item>
+        <item name="colorGraphLine">@color/colorElectricLime</item>
+        <item name="colorGraphBackground">@color/colorCyanLight400</item>
     </style>
 
-    <style name="Theme_Altitude_Graphs" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="Theme_Altitude_Graphs" parent="ApplicationTheme">
         <item name="colorPrimary">@color/colorJewel</item>
         <item name="colorPrimaryDark">@color/colorVoid</item>
         <item name="colorAccent">@color/colorFuschia</item>
@@ -17,6 +23,8 @@
         <item name="android:listDivider">@color/colorStark</item>
         <item name="android:editTextColor">@color/colorStark</item>
         <item name="colorButtonNormal">@color/colorFuschia</item>
+        <item name="colorButtonPrimary">@color/colorElectricLime</item>
+        <item name="colorButtonSecondary">@color/colorPalm</item>
     </style>
 
     <style name="Theme_Preference_Screen" parent="Theme.AppCompat.DayNight.NoActionBar">
@@ -48,14 +56,18 @@
         <item name="android:listDivider">@color/colorStark</item>
     </style>
 
-    <style name="Testtt" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/colorJewel</item>
-        <item name="colorPrimaryDark">@color/colorVoid</item>
-        <item name="colorAccent">@color/colorFuschia</item>
-        <item name="android:background">@color/colorVoid</item>
-        <item name="android:textColor">@color/colorStark</item>
-        <item name="android:listDivider">@color/colorStark</item>
-        <item name="android:editTextColor">@color/colorStark</item>
-        <item name="colorButtonNormal">@color/colorFuschia</item>
+    <style name="Style_Material_Purple_Cyan" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">#4a148c</item>
+        <item name="colorPrimaryDark">#12005e</item>
+        <item name="colorAccent">#7c43bd</item>
+        <!--<item name="colorSecondary">#26c6da</item>-->
+        <!--<item name="colorSecondaryDark">#0095a8</item>-->
+        <!--<item name="colorSecondaryLight">#6ff9ff</item>-->
+        <item name="android:textColorPrimary">#ffffff</item>
+        <item name="android:textColorSecondary">#000000</item>
+        <!--<item name="colorAccent">@color/colorFuschia</item>-->
+        <!--<item name="android:background">@color/colorInk</item>-->
+        <!--<item name="android:textColor">@color/colorStark</item>-->
+        <!--<item name="android:listDivider">@color/colorStark</item>-->
     </style>
 </resources>

@@ -23,11 +23,25 @@
     <color name="colorGunmetal">#233237</color>
     <color name="colorRustyRed">#984B43</color>
     <color name="colorWarmYellow">#EAC67A</color>
-    
+
+    <!--color palette Green Lime Palm-->
     <color name="colorElectricLime">#88D317</color>
     <color name="colorPalm">#1B7B34</color>
     <color name="colorSilk">#DCD0C0</color>
     <color name="colorCharcoal">#373737</color>
 
+    <!--color palette purple & cyan - use white/stark as primary text color and black/void as secondary text color-->
+    <color name="colorPurple900">#4a148c</color>
+    <color name="colorPurpleLight900">#7c43bd</color>
+    <color name="colorPurpleDark900">#12005e</color>
+    <color name="colorCyan400">#26c6da</color>
+    <color name="colorCyanLight400">#6ff9ff</color>
+    <color name="colorCyanDark400">#0095a8</color>
+
     <color name="colorTransparent">#00000000</color>
+    <color name="colorPseudoTransparent">#10000000</color>
+
+    <!-- colors used in shadow generation pre API 21-->
+    <color name="colorShadowStart">#002e3436</color>
+    <color name="colorShadowEnd">#992e3436</color>
 </resources>

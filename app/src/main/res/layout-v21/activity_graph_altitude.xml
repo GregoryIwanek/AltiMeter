@@ -42,15 +42,15 @@
                     <FrameLayout
                         android:id="@+id/contentFrame"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent" />
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fab_add_session"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:elevation="10dp"
                         android:layout_margin="@dimen/activity_padding_bottom_16dp"
                         android:src="@drawable/ic_vector_add"
+                        app:elevation="8dp"
                         app:fabSize="normal"
                         app:layout_anchor="@id/contentFrame"
                         app:layout_anchorGravity="bottom|right|end" />

@@ -212,10 +212,11 @@ public class SessionFragment extends BasicFragment implements SessionContract.Vi
         mNoSessionsView.setVisibility(View.VISIBLE);
     }
 
+    // TODO: 24.06.2017 remove +10 from the condition, just for now
     @Override
     public void showAddSessionUi() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        if (Constants.MAX_NUMBER_SESSIONS >= preferences.getInt("numSavedSessions", Constants.MAX_NUMBER_SESSIONS)) {
+        if (Constants.MAX_NUMBER_SESSIONS + 10 >= preferences.getInt("numSavedSessions", Constants.MAX_NUMBER_SESSIONS)) {
             Intent intent = new Intent(getContext(), RecordingSessionActivity.class);
             startActivity(intent);
         } else {

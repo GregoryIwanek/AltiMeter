@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="colorButtonPrimary" format="reference|color"/>
+    <attr name="colorButtonSecondary" format="reference|color"/>
+    <attr name="colorGraphGrid" format="reference|color"/>
+    <attr name="colorGraphText" format="reference|color"/>
+    <attr name="colorGraphLine" format="reference|color"/>
+    <attr name="colorGraphBackground" format="reference|color"/>
+</resources>

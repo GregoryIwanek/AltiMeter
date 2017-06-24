@@ -11,6 +11,6 @@ public abstract class VersionController {
      */
     // TODO: 21.06.2017 remove "!" from return statement ( just for sake of working this at this stage of an app
     public static boolean isFreeVersion(String packageName) {
-        return !packageName.contains(Constants.FREE_VERSION);
+        return packageName.contains(Constants.FREE_VERSION);
     }
 }

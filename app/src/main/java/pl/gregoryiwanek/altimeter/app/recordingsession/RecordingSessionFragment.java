@@ -4,9 +4,8 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,7 +29,6 @@ import pl.gregoryiwanek.altimeter.app.map.MapActivity;
 import pl.gregoryiwanek.altimeter.app.utils.Constants;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDialogFragmentV4;
 
 /**
  * View of the RecordingSession fragment.
@@ -58,7 +57,8 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
 
     private RecordingSessionContract.Presenter mPresenter;
 
-    public RecordingSessionFragment() {}
+    public RecordingSessionFragment() {
+    }
 
     public static RecordingSessionFragment newInstance() {
         return new RecordingSessionFragment();
@@ -74,10 +74,16 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new_graph, container, false);
         ButterKnife.bind(this, view);
-        initiateButtonsTags();
+        initiateButtons();
         setHasOptionsMenu(true);
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setButtonsByTheme();
     }
 
     @Override
@@ -143,9 +149,11 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
         switch (tag) {
             case R.drawable.ic_play_arrow_black_24dp:
                 mPresenter.callStartLocationRecording();
+                applyThemeColorToSingle(mPlayPauseButton, R.attr.colorButtonSecondary);
                 break;
             case R.drawable.ic_pause_black_24dp:
                 mPresenter.pauseLocationRecording();
+                applyThemeColorToSingle(mPlayPauseButton, R.attr.colorButtonPrimary);
                 break;
             default:
                 break;
@@ -176,6 +184,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
                     showStopSession();
                 } else {
                     mPresenter.enableGps();
+                    applyThemeColorToSingle(mGpsButton, R.attr.colorButtonSecondary);
                 }
                 break;
             case R.drawable.ic_gps_open_24dp:
@@ -183,6 +192,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
                     showStopSession();
                 } else {
                     mPresenter.disableGps();
+                    applyThemeColorToSingle(mGpsButton, R.attr.colorButtonPrimary);
                 }
                 break;
         }
@@ -197,6 +207,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
                     showStopSession();
                 } else {
                     mPresenter.enableNetwork();
+                    applyThemeColorToSingle(mNetworkButton, R.attr.colorButtonSecondary);
                 }
                 break;
             case R.drawable.ic_network_open_24dp:
@@ -204,6 +215,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
                     showStopSession();
                 } else {
                     mPresenter.disableNetwork();
+                    applyThemeColorToSingle(mNetworkButton, R.attr.colorButtonPrimary);
                 }
                 break;
         }
@@ -218,6 +230,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
                     showStopSession();
                 } else {
                     mPresenter.enableBarometer();
+                    applyThemeColorToSingle(mBarometerButton, R.attr.colorButtonSecondary);
                 }
                 break;
             case R.drawable.ic_barometer_open_24dp:
@@ -225,6 +238,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
                     showStopSession();
                 } else {
                     mPresenter.disableBarometer();
+                    applyThemeColorToSingle(mBarometerButton, R.attr.colorButtonPrimary);
                 }
                 break;
         }
@@ -259,11 +273,44 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
         }
     }
 
+    private void setButtonsByTheme() {
+        ViewGroup viewGroupContainer =  (ViewGroup) getView();
+        List<View> buttonList = new ArrayList<>();
+        populateButtonList(viewGroupContainer, buttonList);
+        applyThemeColorsToMultiple(buttonList, R.attr.colorButtonPrimary);
+    }
+
+    private void populateButtonList(ViewGroup viewGroup, List<View> buttonList) {
+        for (int i=0; i< viewGroup.getChildCount(); i++) {
+            if (viewGroup.getChildAt(i) instanceof ViewGroup) {
+                populateButtonList((ViewGroup) viewGroup.getChildAt(i), buttonList);
+            } else if (viewGroup.getChildAt(i) instanceof ImageButton){
+                buttonList.add(viewGroup.getChildAt(i));
+            }
+        }
+    }
+
+    private void initiateButtons() {
+        initiateButtonsTags();
+    }
+
     private void initiateButtonsTags() {
         mPlayPauseButton.setTag(R.drawable.ic_play_arrow_black_24dp);
         mGpsButton.setTag(R.drawable.ic_gps_lock_24dp);
         mNetworkButton.setTag(R.drawable.ic_network_lock_24dp);
         mBarometerButton.setTag(R.drawable.ic_barometer_lock_24dp);
+    }
+
+    private void applyThemeColorsToMultiple(List<View> viewList, int attrId) {
+        int colorId = super.getThemeAttrColor(attrId);
+        for (View view : viewList) {
+            super.setViewColorFilter(view, colorId);
+        }
+    }
+
+    private void applyThemeColorToSingle(View view, int attrId) {
+        int colorId = super.getThemeAttrColor(attrId);
+        super.setViewColorFilter(view, colorId);
     }
 
     private int getButtonTagAsInt(ImageButton imageButton) {

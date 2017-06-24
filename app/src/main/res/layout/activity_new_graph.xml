@@ -35,7 +35,8 @@
                 android:layout_below="@id/toolbar_container"
                 android:id="@+id/contentFrame"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/colorWhite">
             </FrameLayout>
         </LinearLayout>
 

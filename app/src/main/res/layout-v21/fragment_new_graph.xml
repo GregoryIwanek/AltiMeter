@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme_Altitude_Graphs"
     android:orientation="vertical">
 
     <!--location label, current height label, geographic direction label-->
@@ -20,7 +19,7 @@
             android:layout_weight="1"
 
             android:text="@string/current_no_value"
-            android:textAppearance="?android:textAppearanceLarge"
+            android:textAppearance="?android:textAppearanceMedium"
             android:textSize="@dimen/text_size_16sp"
             android:gravity="center"
             android:textAlignment="center" />
@@ -39,7 +38,7 @@
                 android:layout_weight="1"
 
                 android:text="@string/current_no_value"
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_large_30sp"
                 android:textAlignment="center"
                 android:gravity="center"/>
@@ -102,7 +101,7 @@
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:layout_gravity="center"
-                        android:background="@drawable/ic_play_arrow_black_24dp" />
+                        android:background="@drawable/ic_play_arrow_black_24dp"/>
                 </FrameLayout>
 
                 <FrameLayout
@@ -161,7 +160,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.5"/>
+                    android:layout_weight="1.5" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -176,18 +175,7 @@
         <pl.gregoryiwanek.altimeter.app.recordingsession.GraphViewWidget
             android:id="@+id/graph_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <!--<com.github.mikephil.charting.charts.LineChart-->
-            <!--android:id="@+id/graph_view_2"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent">-->
-        <!--</com.github.mikephil.charting.charts.LineChart>-->
-
-        <!--<pl.grzegorziwanek.altimeter.app.recordingsession.LineChartWidget-->
-            <!--android:id="@+id/graph_view"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"/>-->
+            android:layout_height="match_parent" />
     </FrameLayout>
 
     <!--layouts with max height, time, min height, longitude icon, latitude icon, small border line between,
@@ -242,6 +230,7 @@
                         android:id="@+id/gps_button"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
+                        android:elevation="8dp"
 
                         android:text="@string/current_latitude_label"
                         android:textAppearance="?android:textAppearanceLarge"
@@ -339,7 +328,6 @@
                         android:id="@+id/barometer_button"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
-                        android:elevation="5dp"
 
                         android:text="@string/current_longitude_label"
                         android:textAppearance="?android:textAppearanceLarge"
@@ -481,7 +469,7 @@
                         android:layout_weight="1"
 
                         android:text="@string/current_latitude_label"
-                        android:textAppearance="?android:textAppearanceLarge"
+                        android:textAppearance="?android:textAppearanceMedium"
                         android:gravity="center"
                         android:textAlignment="center"/>
 
@@ -492,7 +480,7 @@
                         android:layout_weight="1"
 
                         android:text="@string/current_longitude_label"
-                        android:textAppearance="?android:textAppearanceLarge"
+                        android:textAppearance="?android:textAppearanceMedium"
                         android:gravity="center"
                         android:textAlignment="center"/>
                 </LinearLayout>
@@ -516,7 +504,7 @@
                         android:layout_weight="1"
 
                         android:text="@string/current_no_value"
-                        android:textAppearance="?android:textAppearanceMedium"
+                        android:textAppearance="?android:textAppearanceSmall"
                         android:gravity="center"
                         android:textAlignment="center"/>
 
@@ -527,7 +515,7 @@
                         android:layout_weight="1"
 
                         android:text="@string/current_no_value"
-                        android:textAppearance="?android:textAppearanceMedium"
+                        android:textAppearance="?android:textAppearanceSmall"
                         android:gravity="center"
                         android:textAlignment="center"/>
                 </LinearLayout>

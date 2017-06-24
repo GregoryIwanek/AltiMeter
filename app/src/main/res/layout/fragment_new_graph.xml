@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme_Altitude_Graphs"
     android:orientation="vertical">
 
     <!--location label, current height label, geographic direction label-->
@@ -177,17 +176,6 @@
             android:id="@+id/graph_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-
-        <!--<com.github.mikephil.charting.charts.LineChart-->
-            <!--android:id="@+id/graph_view_2"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent">-->
-        <!--</com.github.mikephil.charting.charts.LineChart>-->
-
-        <!--<pl.grzegorziwanek.altimeter.app.recordingsession.LineChartWidget-->
-            <!--android:id="@+id/graph_view"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"/>-->
     </FrameLayout>
 
     <!--layouts with max height, time, min height, longitude icon, latitude icon, small border line between,
