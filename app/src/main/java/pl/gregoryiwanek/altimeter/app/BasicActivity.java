@@ -37,6 +37,7 @@ import pl.gregoryiwanek.altimeter.app.upgradepro.UpgradeProActivity;
 import pl.gregoryiwanek.altimeter.app.utils.Constants;
 import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment;
 import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDialogFragmentV4.NoticeDialogListener;
+import pl.gregoryiwanek.altimeter.app.utils.ThemeManager;
 import pl.gregoryiwanek.altimeter.app.utils.VersionController;
 
 /**
@@ -57,9 +58,11 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
     @BindView(R.id.adView) protected AdView mAdView;
 
     private Class<?> type;
+    private ThemeManager themeManager = new ThemeManager();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setPreferredTheme();
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         type = SessionActivity.class;
@@ -101,6 +104,17 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
     protected void setShareIcon() {
         Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_share_24dp);
         mToolbar.setOverflowIcon(drawable);
+    }
+
+    public void setPreferredTheme() {
+        String preferredThemeName = getPreferredTheme();
+        int currThemeId = themeManager.getThemeAsInteger(preferredThemeName);
+        this.setTheme(currThemeId);
+    }
+
+    private String getPreferredTheme() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return preferences.getString("pref_theme_key", "Light");
     }
 
     @Override

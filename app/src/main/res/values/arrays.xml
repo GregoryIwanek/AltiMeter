@@ -12,12 +12,20 @@
 
     <!--Style-->
     <string-array name="styleArray">
-        <item name="Dark">Dark</item>
         <item name="Light">Light</item>
+        <item name="Dark">Dark</item>
+        <item name="Candy">Candy</item>
+        <item name="Dracula">Dracula</item>
+        <item name="Ocean">Ocean</item>
+        <item name="Forest">Forest</item>
     </string-array>
     <string-array name="styleValues">
-        <item name="Dark">DARK</item>
-        <item name="Light">LIGHT</item>
+        <item name="Light">Light</item>
+        <item name="Dark">Dark</item>
+        <item name="Candy">Candy</item>
+        <item name="Dracula">Dracula</item>
+        <item name="Ocean">Ocean</item>
+        <item name="Forest">Forest</item>
     </string-array>
 
     <!--Location update frequency settings-->

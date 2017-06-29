@@ -11,9 +11,6 @@ import pl.gregoryiwanek.altimeter.app.BasePresenter;
 import pl.gregoryiwanek.altimeter.app.BaseView;
 import pl.gregoryiwanek.altimeter.app.data.GraphPoint;
 
-/**
- * Created by Grzegorz Iwanek on 31.01.2017. That's it/
- */
 @SuppressWarnings("unused")
 interface RecordingSessionContract {
 

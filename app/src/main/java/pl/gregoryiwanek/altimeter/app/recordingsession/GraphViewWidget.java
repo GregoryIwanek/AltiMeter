@@ -13,35 +13,31 @@ import java.util.ArrayList;
 
 import pl.gregoryiwanek.altimeter.app.R;
 import pl.gregoryiwanek.altimeter.app.data.GraphPoint;
-import pl.gregoryiwanek.altimeter.app.utils.ThemeAttributesPicker;
+import pl.gregoryiwanek.altimeter.app.utils.ThemeManager;
 
 /**
  *  Consist extension of external library class GraphView (http://www.android-graphview.org/) and required customized methods;
  *  Takes list with locations as a parameter to draw or update altitude graph inside a widget.
  */
 public class GraphViewWidget extends GraphView {
-
     private LineGraphSeries<DataPoint> mDiagramSeries = new LineGraphSeries<>();
     private int mCurSeriesCount = 0;
-    private Long mRecordingStartTime = null;
-    private ThemeAttributesPicker themePicker = new ThemeAttributesPicker();
+    private Long mRecordingStartTime;
+    private ThemeManager themePicker = new ThemeManager();
 
     public GraphViewWidget(Context context) {
         super(context);
-        setGraphViewSettings();
     }
 
     public GraphViewWidget(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setGraphViewSettings();
     }
 
     public GraphViewWidget(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        setGraphViewSettings();
     }
 
-    private void setGraphViewSettings() {
+    public void initGraphViewDefault() {
         setDiagramAppearance();
         setGridAppearance();
         setGraphBounds();
@@ -49,7 +45,6 @@ public class GraphViewWidget extends GraphView {
     }
 
     private void setDiagramAppearance() {
-        getContext().setTheme(R.style.ApplicationTheme);
         setDiagramLine();
         setDiagramBackground();
     }
@@ -183,7 +178,7 @@ public class GraphViewWidget extends GraphView {
     private void checkIsSeriesNull() {
         if (mDiagramSeries == null) {
             mDiagramSeries = new LineGraphSeries<>();
-            setGraphViewSettings();
+            initGraphViewDefault();
         }
     }
 
@@ -254,8 +249,6 @@ public class GraphViewWidget extends GraphView {
         });
     }
 
-    // TODO: 24.06.2017 remove comment
-//    Color.rgb(255, 255, 255);
     private void setTextColor() {
         int colorId = themePicker.getColor(getContext(), R.attr.colorGraphGrid);
         getGridLabelRenderer().setHorizontalLabelsColor(colorId);

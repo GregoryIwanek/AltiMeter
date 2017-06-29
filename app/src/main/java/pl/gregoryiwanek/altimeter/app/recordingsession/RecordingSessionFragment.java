@@ -57,9 +57,6 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
 
     private RecordingSessionContract.Presenter mPresenter;
 
-    public RecordingSessionFragment() {
-    }
-
     public static RecordingSessionFragment newInstance() {
         return new RecordingSessionFragment();
     }
@@ -74,7 +71,8 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new_graph, container, false);
         ButterKnife.bind(this, view);
-        initiateButtons();
+        initGraphViewDefault();
+        initButtonsDefault();
         setHasOptionsMenu(true);
 
         return view;
@@ -83,7 +81,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setButtonsByTheme();
+        setButtonColorsByTheme();
     }
 
     @Override
@@ -143,36 +141,36 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
         mGraphViewWidget.clearData();
     }
 
+    @OnClick(R.id.reset_button)
+    public void onResetButtonClick() {
+        super.popUpNoticeDialog(Constants.MESSAGE_RESET_SESSION);
+    }
+
+    @OnClick(R.id.lock_button)
+    public void onLockButtonCLick() {
+        super.popUpNoticeDialog(Constants.MESSAGE_LOCK_SESSION);
+    }
+
+    @OnClick(R.id.map_button)
+    public void onMapButtonClick() {
+        mPresenter.checkIsSessionEmpty();
+    }
+
     @OnClick(R.id.pause_button)
     public void onPlayPauseButtonClick() {
         int tag = getButtonTagAsInt(mPlayPauseButton);
         switch (tag) {
             case R.drawable.ic_play_arrow_black_24dp:
                 mPresenter.callStartLocationRecording();
-                applyThemeColorToSingle(mPlayPauseButton, R.attr.colorButtonSecondary);
+                super.applyThemeColorToSingleView(mPlayPauseButton, R.attr.colorButtonSecondary);
                 break;
             case R.drawable.ic_pause_black_24dp:
                 mPresenter.pauseLocationRecording();
-                applyThemeColorToSingle(mPlayPauseButton, R.attr.colorButtonPrimary);
+                super.applyThemeColorToSingleView(mPlayPauseButton, R.attr.colorButtonPrimary);
                 break;
             default:
                 break;
         }
-    }
-
-    @OnClick(R.id.reset_button)
-    public void onResetButtonClick() {
-        popUpNoticeDialog(Constants.MESSAGE_RESET_SESSION);
-    }
-
-    @OnClick(R.id.lock_button)
-    public void onLockButtonCLick() {
-        popUpNoticeDialog(Constants.MESSAGE_LOCK_SESSION);
-    }
-
-    @OnClick(R.id.map_button)
-    public void onMapButtonClick() {
-        mPresenter.checkIsSessionEmpty();
     }
 
     @OnClick(R.id.gps_button)
@@ -184,7 +182,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
                     showStopSession();
                 } else {
                     mPresenter.enableGps();
-                    applyThemeColorToSingle(mGpsButton, R.attr.colorButtonSecondary);
+                    super.applyThemeColorToSingleView(mGpsButton, R.attr.colorButtonSecondary);
                 }
                 break;
             case R.drawable.ic_gps_open_24dp:
@@ -192,7 +190,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
                     showStopSession();
                 } else {
                     mPresenter.disableGps();
-                    applyThemeColorToSingle(mGpsButton, R.attr.colorButtonPrimary);
+                    super.applyThemeColorToSingleView(mGpsButton, R.attr.colorButtonPrimary);
                 }
                 break;
         }
@@ -207,7 +205,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
                     showStopSession();
                 } else {
                     mPresenter.enableNetwork();
-                    applyThemeColorToSingle(mNetworkButton, R.attr.colorButtonSecondary);
+                    super.applyThemeColorToSingleView(mNetworkButton, R.attr.colorButtonSecondary);
                 }
                 break;
             case R.drawable.ic_network_open_24dp:
@@ -215,7 +213,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
                     showStopSession();
                 } else {
                     mPresenter.disableNetwork();
-                    applyThemeColorToSingle(mNetworkButton, R.attr.colorButtonPrimary);
+                    super.applyThemeColorToSingleView(mNetworkButton, R.attr.colorButtonPrimary);
                 }
                 break;
         }
@@ -230,7 +228,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
                     showStopSession();
                 } else {
                     mPresenter.enableBarometer();
-                    applyThemeColorToSingle(mBarometerButton, R.attr.colorButtonSecondary);
+                    applyThemeColorToSingleView(mBarometerButton, R.attr.colorButtonSecondary);
                 }
                 break;
             case R.drawable.ic_barometer_open_24dp:
@@ -238,7 +236,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
                     showStopSession();
                 } else {
                     mPresenter.disableBarometer();
-                    applyThemeColorToSingle(mBarometerButton, R.attr.colorButtonPrimary);
+                    applyThemeColorToSingleView(mBarometerButton, R.attr.colorButtonPrimary);
                 }
                 break;
         }
@@ -251,11 +249,6 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
 
     private void showStopSession() {
         showMessage(Constants.TOAST_MUST_STOP_SESSION);
-    }
-
-    @Override
-    protected void popUpNoticeDialog(String title) {
-        super.popUpNoticeDialog(title);
     }
 
     @Override
@@ -273,11 +266,11 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
         }
     }
 
-    private void setButtonsByTheme() {
+    private void setButtonColorsByTheme() {
         ViewGroup viewGroupContainer =  (ViewGroup) getView();
         List<View> buttonList = new ArrayList<>();
         populateButtonList(viewGroupContainer, buttonList);
-        applyThemeColorsToMultiple(buttonList, R.attr.colorButtonPrimary);
+        super.applyThemeColorsToMultipleViews(buttonList, R.attr.colorButtonPrimary);
     }
 
     private void populateButtonList(ViewGroup viewGroup, List<View> buttonList) {
@@ -290,7 +283,11 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
         }
     }
 
-    private void initiateButtons() {
+    private void initGraphViewDefault() {
+        mGraphViewWidget.initGraphViewDefault();
+    }
+
+    private void initButtonsDefault() {
         initiateButtonsTags();
     }
 
@@ -299,18 +296,6 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
         mGpsButton.setTag(R.drawable.ic_gps_lock_24dp);
         mNetworkButton.setTag(R.drawable.ic_network_lock_24dp);
         mBarometerButton.setTag(R.drawable.ic_barometer_lock_24dp);
-    }
-
-    private void applyThemeColorsToMultiple(List<View> viewList, int attrId) {
-        int colorId = super.getThemeAttrColor(attrId);
-        for (View view : viewList) {
-            super.setViewColorFilter(view, colorId);
-        }
-    }
-
-    private void applyThemeColorToSingle(View view, int attrId) {
-        int colorId = super.getThemeAttrColor(attrId);
-        super.setViewColorFilter(view, colorId);
     }
 
     private int getButtonTagAsInt(ImageButton imageButton) {
@@ -375,7 +360,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
 
     @Override
     public void askGenerateMap() {
-        popUpNoticeDialog(Constants.MESSAGE_GENERATE_MAP);
+        super.popUpNoticeDialog(Constants.MESSAGE_GENERATE_MAP);
     }
 
     @Override

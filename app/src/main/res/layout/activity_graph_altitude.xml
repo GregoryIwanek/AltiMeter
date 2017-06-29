@@ -39,10 +39,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <FrameLayout
+                    <pl.gregoryiwanek.altimeter.app.utils.widgetextensions.FragmentContainer
                         android:id="@+id/contentFrame"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent" />
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fab_add_session"
@@ -71,7 +71,6 @@
 
     <!-- Navigation Drawer -->
     <android.support.design.widget.NavigationView
-        android:theme="@style/Theme_Navigation_List"
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

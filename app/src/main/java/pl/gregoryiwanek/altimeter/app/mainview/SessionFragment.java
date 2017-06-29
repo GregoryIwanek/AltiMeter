@@ -48,8 +48,6 @@ public class SessionFragment extends BasicFragment implements SessionContract.Vi
     private SessionAdapter mListAdapter;
     private SessionContract.Presenter mPresenter;
 
-    public SessionFragment() {}
-
     public static SessionFragment newInstance() {
         return new SessionFragment();
     }

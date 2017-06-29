@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme_Altitude_Graphs"
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
@@ -26,7 +25,7 @@
                 android:layout_weight="1"
 
                 android:text="TITLE"
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -40,7 +39,7 @@
 
                 android:text="..."
                 android:inputType="textCapWords|textMultiLine"
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="right|center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -61,7 +60,7 @@
                 android:layout_weight="1"
 
                 android:text="DESCRIPTION"
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -75,7 +74,7 @@
 
                 android:text="..."
                 android:inputType="textCapWords|textMultiLine"
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="right|center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -94,7 +93,7 @@
                 android:layout_weight="1"
 
                 android:text="SAVE CHANGES"
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -106,7 +105,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_margin="8dp"
-
                 android:text="OK"/>
         </LinearLayout>
 
@@ -123,7 +121,7 @@
                 android:layout_weight="1"
 
                 android:text="UNIQUE ID"
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -136,7 +134,7 @@
                 android:layout_weight="1"
 
                 android:text="..."
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="right|center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -156,7 +154,7 @@
                 android:layout_weight="1"
 
                 android:text="NUMBER OF POINTS"
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -169,7 +167,7 @@
                 android:layout_weight="1"
 
                 android:text="..."
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="right|center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -190,7 +188,7 @@
                 android:layout_weight="1"
 
                 android:text="TIME START"
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -203,7 +201,7 @@
                 android:layout_weight="1"
 
                 android:text="..."
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="right|center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -223,7 +221,7 @@
                 android:layout_weight="1"
 
                 android:text="TIME END"
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -236,7 +234,7 @@
                 android:layout_weight="1"
 
                 android:text="..."
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="right|center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -256,7 +254,7 @@
                 android:layout_weight="1"
 
                 android:text="DISTANCE"
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -269,7 +267,7 @@
                 android:layout_weight="1"
 
                 android:text="..."
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="right|center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"

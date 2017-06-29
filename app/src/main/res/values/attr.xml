@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="colorRootBackground" format="reference|color"/>
     <attr name="colorButtonPrimary" format="reference|color"/>
     <attr name="colorButtonSecondary" format="reference|color"/>
     <attr name="colorGraphGrid" format="reference|color"/>

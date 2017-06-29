@@ -28,7 +28,7 @@
         <ListPreference
             android:title="@string/pref_style_name"
             android:summary="@string/pref_style_summary"
-            android:key="pref_style_key"
+            android:key="pref_theme_key"
             android:entries="@array/styleArray"
             android:entryValues="@array/styleValues"
             android:layout_width="match_parent"

@@ -39,7 +39,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <FrameLayout
+                    <pl.gregoryiwanek.altimeter.app.utils.widgetextensions.FragmentContainer
                         android:id="@+id/contentFrame"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
@@ -72,12 +72,11 @@
 
     <!-- Navigation Drawer -->
     <android.support.design.widget.NavigationView
-        android:theme="@style/Theme_Navigation_List"
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/navigation_drawer_actions"/>
+        app:menu="@menu/navigation_drawer_actions" />
 </android.support.v4.widget.DrawerLayout>

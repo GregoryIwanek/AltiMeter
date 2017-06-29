@@ -2,18 +2,32 @@ package pl.gregoryiwanek.altimeter.app.about;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.gregoryiwanek.altimeter.app.R;
+import pl.gregoryiwanek.altimeter.app.utils.ThemeManager;
 
 public final class AboutFragmentMainWindow extends Fragment {
+
+    private ThemeManager themePicker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        themePicker = new ThemeManager();
+    }
 
     @Nullable
     @Override
@@ -28,6 +42,29 @@ public final class AboutFragmentMainWindow extends Fragment {
         ft.commit();
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setButtonColorsByTheme();
+    }
+
+    private void setButtonColorsByTheme() {
+        ViewGroup viewGroupContainer =  (ViewGroup) getView();
+        List<View> buttonList = new ArrayList<>();
+        populateButtonList(viewGroupContainer, buttonList);
+        applyThemeColorsToMultipleViews(buttonList, R.attr.colorPrimary);
+    }
+
+    private void populateButtonList(ViewGroup viewGroup, List<View> buttonList) {
+        for (int i=0; i< viewGroup.getChildCount(); i++) {
+            if (viewGroup.getChildAt(i) instanceof ViewGroup) {
+                populateButtonList((ViewGroup) viewGroup.getChildAt(i), buttonList);
+            } else if (viewGroup.getChildAt(i) instanceof Button){
+                buttonList.add(viewGroup.getChildAt(i));
+            }
+        }
     }
 
     @OnClick(R.id.about_button_graphs)
@@ -87,5 +124,41 @@ public final class AboutFragmentMainWindow extends Fragment {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.contentFrameAbout, fragment);
         ft.commit();
+    }
+
+    // TODO: 29.06.2017 refactor this code and merge one with BasicFragment (app)
+    private void applyThemeColorsToMultipleViews(List<View> viewList, int attrId) {
+        int colorId = getThemeAttrColor(attrId);
+        for (View view : viewList) {
+            setViewColor(view, colorId);
+        }
+    }
+
+    private int getThemeAttrColor(int attrId) {
+        return themePicker.getColor(getActivity(), attrId);
+    }
+
+    private void setViewColor(View view, int colorId) {
+        setViewColor(view, colorId, PorterDuff.Mode.MULTIPLY);
+    }
+
+    private void setViewColor(View view, int colorId, PorterDuff.Mode mode) {
+        if (isBackgroundInvisible(view)) {
+            setViewBackgroundColor(view, colorId);
+        } else {
+            setViewColorFilter(view, colorId, mode);
+        }
+    }
+
+    private void setViewBackgroundColor(View view, int colorId) {
+        view.setBackgroundColor(colorId);
+    }
+
+    private void setViewColorFilter(View view, int colorId, PorterDuff.Mode mode) {
+        view.getBackground().setColorFilter(colorId, mode);
+    }
+
+    private boolean isBackgroundInvisible(View view) {
+        return view.getBackground() == null || !view.getBackground().isVisible();
     }
 }

@@ -165,7 +165,7 @@ public class SessionLocalDataSource implements SessionDataSource {
 
     private String adjustStrIfEmpty(String str) {
         if (isStringEmpty(str)) {
-            return "Have to be set...";
+            return "Click to set...";
         } else {
             return str;
         }

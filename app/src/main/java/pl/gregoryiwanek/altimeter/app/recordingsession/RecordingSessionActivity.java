@@ -23,11 +23,11 @@ public class RecordingSessionActivity extends BasicActivity{
 
         super.initiateUI();
         super.setShareIcon();
-        setAddNewGraphFragment();
+        setRecordingSessionFragment();
         setPresenter();
     }
 
-    private void setAddNewGraphFragment() {
+    private void setRecordingSessionFragment() {
         mRecordingSessionFragment =
                 (RecordingSessionFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
 

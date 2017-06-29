@@ -38,6 +38,42 @@
     <color name="colorCyanLight400">#6ff9ff</color>
     <color name="colorCyanDark400">#0095a8</color>
 
+    <!--color palette dracula-->
+    <color name="colorGrey900">#212121</color>
+    <color name="colorGreyLight">#484848</color>
+    <color name="colorGreyDark">#000000</color>
+    <color name="colorRedA700">#d50000</color>
+    <color name="colorRedA700Light">#ff5131</color>
+    <color name="colorRedA700Dark">#9b0000</color>
+
+    <!--color palette ocean-->
+    <color name="colorCyan900">#006064</color>
+    <color name="colorCyanLight">#428e92</color>
+    <color name="colorCyanDark">#00363a</color>
+    <color name="colorCyanA200">#18ffff</color>
+    <color name="colorCyanA200Light">#76ffff</color>
+    <color name="colorCyanA200Dark">#00cbcc</color>
+
+
+    <!--color palette candy-->
+    <color name="colorPink500">#e91e63</color>
+    <color name="colorPink500Light">#ff6090</color>
+    <color name="colorPink500Dark">#b0003a</color>
+    <color name="colorYellowA400">#ffea00</color>
+    <color name="colorYellowA400Light">#ffff56</color>
+    <color name="colorYellowA400Dark">#c7b800</color>
+
+    <!--color palette forest-->
+    <color name="colorGreen900">#1b5e20</color>
+    <color name="colorGreen900Light">#4c8c4a</color>
+    <color name="colorGreen900Dark">#003300</color>
+    <color name="colorGreenA400">#76ff03</color>
+    <color name="colorGreenA400Light">#b0ff57</color>
+    <color name="colorGreenA400Dark">#32cb00</color>
+    <color name="colorGreenA200Light">#e7ff8c</color>
+    <color name="colorBrown200">#bcaaa4</color>
+
+
     <color name="colorTransparent">#00000000</color>
     <color name="colorPseudoTransparent">#10000000</color>
 

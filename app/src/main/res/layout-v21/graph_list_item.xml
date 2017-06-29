@@ -10,7 +10,6 @@
     android:background="@color/colorWhite"
     android:elevation="8dp">
 
-    <!--android:buttonTint="@color/colorWhite"-->
     <CheckBox
         android:id="@+id/removeItem"
         android:layout_width="wrap_content"
@@ -22,6 +21,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="@dimen/margin_16dp" />
-    <!--android:textAppearance="@style/TextAppearance.AppCompat.Title"-->
+        android:layout_marginLeft="@dimen/margin_16dp"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
 </LinearLayout>

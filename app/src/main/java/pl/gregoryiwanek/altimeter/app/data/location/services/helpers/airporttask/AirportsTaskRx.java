@@ -19,6 +19,7 @@ public class AirportsTaskRx extends BasicAirportsTask {
     public Observable<List<XmlAirportValues>> getNearestAirportsObservable() {
         return super.getNearestAirportsObservable(parseNearestAirportUri(), "GET_STATIONS");
     }
+
     private Uri parseNearestAirportUri() {
         return Uri.parse(Constants.AVIATION_BASE_URL).buildUpon()
                 .appendQueryParameter(Constants.AVIATION_DATA_SOURCE, "stations")

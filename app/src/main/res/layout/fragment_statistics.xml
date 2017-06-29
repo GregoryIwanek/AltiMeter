@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme_Altitude_Graphs"
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
@@ -21,7 +20,7 @@
                 android:layout_height="match_parent"
 
                 android:text="GLOBAL STATISTICS"
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -39,12 +38,12 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
 
-                android:text="NUMBER OF SESSIONS"
-                android:textAppearance="?android:textAppearanceLarge"
-                android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
-                android:paddingRight="@dimen/margin_16dp"/>
+                android:paddingRight="@dimen/margin_16dp"
+                android:text="NUMBER OF SESSIONS"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textSize="@dimen/text_size_16sp" />
 
             <TextView
                 android:id="@+id/stats_sessions_numb_label_value"
@@ -53,7 +52,7 @@
                 android:layout_weight="1"
 
                 android:text="..."
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="right|center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -72,7 +71,7 @@
                 android:layout_weight="1"
 
                 android:text="CAPTURED POINTS"
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -85,7 +84,7 @@
                 android:layout_weight="1"
 
                 android:text="..."
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="right|center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -104,7 +103,7 @@
                 android:layout_weight="1"
 
                 android:text="COMBINED DISTANCE"
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -117,7 +116,7 @@
                 android:layout_weight="1"
 
                 android:text="..."
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="right|center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -136,7 +135,7 @@
                 android:layout_weight="1"
 
                 android:text="MAX ALTITUDE"
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -149,7 +148,7 @@
                 android:layout_weight="1"
 
                 android:text="..."
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="right|center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -168,7 +167,7 @@
                 android:layout_weight="1"
 
                 android:text="MIN ALTITUDE"
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -181,7 +180,7 @@
                 android:layout_weight="1"
 
                 android:text="..."
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="right|center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -200,7 +199,7 @@
                 android:layout_weight="1"
 
                 android:text="LONGEST SESSION"
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
@@ -213,7 +212,7 @@
                 android:layout_weight="1"
 
                 android:text="..."
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textSize="@dimen/text_size_16sp"
                 android:gravity="right|center_vertical"
                 android:paddingLeft="@dimen/margin_16dp"
