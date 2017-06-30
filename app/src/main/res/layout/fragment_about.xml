@@ -4,8 +4,7 @@
     android:id="@+id/coordinatorContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:theme="@style/Theme_Altitude_Graphs">
+    android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="45dp"

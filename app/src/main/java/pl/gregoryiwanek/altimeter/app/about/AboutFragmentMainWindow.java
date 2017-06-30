@@ -5,7 +5,6 @@ import android.app.FragmentTransaction;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +34,7 @@ public final class AboutFragmentMainWindow extends Fragment {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
         ButterKnife.bind(this, view);
 
-        view.setBackgroundColor(ContextCompat.getColor(this.getActivity(), R.color.colorBlack));
+        themePicker.applyColorToSingleView(view, R.attr.colorRootBackground, this.getActivity());
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.contentFrameAbout, new InnerFragmentGraphs());
@@ -135,7 +134,7 @@ public final class AboutFragmentMainWindow extends Fragment {
     }
 
     private int getThemeAttrColor(int attrId) {
-        return themePicker.getColor(getActivity(), attrId);
+        return themePicker.getAttrColor(getActivity(), attrId);
     }
 
     private void setViewColor(View view, int colorId) {

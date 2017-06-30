@@ -53,7 +53,7 @@
     <color name="colorCyanA200">#18ffff</color>
     <color name="colorCyanA200Light">#76ffff</color>
     <color name="colorCyanA200Dark">#00cbcc</color>
-
+    <color name="colorCyan100">#b2ebf2</color>
 
     <!--color palette candy-->
     <color name="colorPink500">#e91e63</color>
@@ -62,6 +62,9 @@
     <color name="colorYellowA400">#ffea00</color>
     <color name="colorYellowA400Light">#ffff56</color>
     <color name="colorYellowA400Dark">#c7b800</color>
+    <color name="colorYellow300">#fff176</color>
+    <color name="colorYellow100">#fff9c4</color>
+    <color name="colorPink300">#f06292</color>
 
     <!--color palette forest-->
     <color name="colorGreen900">#1b5e20</color>
@@ -72,7 +75,12 @@
     <color name="colorGreenA400Dark">#32cb00</color>
     <color name="colorGreenA200Light">#e7ff8c</color>
     <color name="colorBrown200">#bcaaa4</color>
+    <color name="colorGreen200">#a5d6a7</color>
 
+    <!--color palette dark-->
+    <!--<color name="colorGrey900">#212121</color>-->
+    <color name="colorGrey900Light">#484848</color>
+    <color name="colorGrey800Light">#6d6d6d</color>
 
     <color name="colorTransparent">#00000000</color>
     <color name="colorPseudoTransparent">#10000000</color>

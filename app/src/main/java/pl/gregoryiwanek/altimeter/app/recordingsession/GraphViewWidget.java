@@ -20,6 +20,7 @@ import pl.gregoryiwanek.altimeter.app.utils.ThemeManager;
  *  Takes list with locations as a parameter to draw or update altitude graph inside a widget.
  */
 public class GraphViewWidget extends GraphView {
+
     private LineGraphSeries<DataPoint> mDiagramSeries = new LineGraphSeries<>();
     private int mCurSeriesCount = 0;
     private Long mRecordingStartTime;
@@ -50,20 +51,20 @@ public class GraphViewWidget extends GraphView {
     }
 
     private void setDiagramLine() {
-        int colorId = themePicker.getColor(getContext(), R.attr.colorGraphLine);
+        int colorId = themePicker.getAttrColor(getContext(), R.attr.colorGraphLine);
         mDiagramSeries.setColor(colorId);
         mDiagramSeries.setThickness(2);
     }
 
     private void setDiagramBackground() {
-        int colorId = themePicker.getColor(getContext(), R.attr.colorGraphBackground);
+        int colorId = themePicker.getAttrColor(getContext(), R.attr.colorGraphBackground);
         int colorAlpha = Color.argb(180, Color.red(colorId), Color.green(colorId), Color.blue(colorId));
         mDiagramSeries.setDrawBackground(true);
         mDiagramSeries.setBackgroundColor(colorAlpha);
     }
 
     private void setGridAppearance() {
-        int colorId = themePicker.getColor(getContext(), R.attr.colorGraphGrid);
+        int colorId = themePicker.getAttrColor(getContext(), R.attr.colorGraphGrid);
         getGridLabelRenderer().setGridColor(colorId);
     }
 
@@ -250,7 +251,7 @@ public class GraphViewWidget extends GraphView {
     }
 
     private void setTextColor() {
-        int colorId = themePicker.getColor(getContext(), R.attr.colorGraphGrid);
+        int colorId = themePicker.getAttrColor(getContext(), R.attr.colorGraphGrid);
         getGridLabelRenderer().setHorizontalLabelsColor(colorId);
         getGridLabelRenderer().setVerticalLabelsColor(colorId);
         getGridLabelRenderer().setHorizontalAxisTitleColor(colorId);

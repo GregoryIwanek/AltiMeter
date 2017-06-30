@@ -20,6 +20,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -86,10 +89,23 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
     }
 
     private void setNavigationDrawer() {
+        setNavigationDrawerState();
+        setNavigationDrawerColors();
+    }
+
+    private void setNavigationDrawerState() {
         mDrawerLayout.setStatusBarBackground(R.color.colorBlack);
         if (mNavigationView != null) {
             setupDrawerContent(mNavigationView);
         }
+    }
+
+    private void setNavigationDrawerColors() {
+        ViewGroup navHeader = (ViewGroup) mNavigationView.getHeaderView(0);
+        themeManager.applyColorToSingleNestedChildView(navHeader,
+                R.attr.colorButtonPrimary, ImageView.class, this);
+        themeManager.applyColorToNonTransparentBackground(
+                mNavigationView, R.attr.colorRootNavigation, this);
     }
 
     private void initMobileAds() {

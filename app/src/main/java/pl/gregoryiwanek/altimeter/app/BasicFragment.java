@@ -1,14 +1,13 @@
 package pl.gregoryiwanek.altimeter.app;
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.View;
-
-import java.util.List;
+import android.view.ViewGroup;
 
 import pl.gregoryiwanek.altimeter.app.upgradepro.UpgradeProActivity;
 import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment;
@@ -17,12 +16,12 @@ import pl.gregoryiwanek.altimeter.app.utils.ThemeManager;
 
 public abstract class BasicFragment extends Fragment implements NoticeDialogListener {
 
-    private ThemeManager themePicker;
+    private ThemeManager themeManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        themePicker = new ThemeManager();
+        themeManager = new ThemeManager();
     }
 
     @Override
@@ -32,58 +31,18 @@ public abstract class BasicFragment extends Fragment implements NoticeDialogList
     }
 
     private void setRootViewBackgroundColor(View rootView) {
-        applyThemeColorToSingleView(rootView, R.attr.colorRootBackground);
+        Context context = getActivity();
+        themeManager.applyColorToSingleView(rootView, R.attr.colorRootBackground, context);
     }
 
-    protected int getThemeAttrColor(int attrId) {
-        return themePicker.getColor(getActivity(), attrId);
+    protected void applyColorToMultipleViews(ViewGroup viewGroup, int attrId, Class<?> lookedType) {
+        Context context = getActivity();
+        themeManager.applyColorToMultipleViews(viewGroup, attrId, lookedType, context);
     }
 
-    /**
-     * Apply color filter to a multiple views.
-     * @param viewList list of views to set color filter on;
-     * @param attrId color attribute id; R.attr.name;
-     */
-    protected void applyThemeColorsToMultipleViews(List<View> viewList, int attrId) {
-        int colorId = getThemeAttrColor(attrId);
-        for (View view : viewList) {
-            setViewColor(view, colorId);
-        }
-    }
-
-    /**
-     * Apply color filter to a single view.
-     * @param view view to set color filter on;
-     * @param attrId color attribute id; format R.attr.name;
-     */
-    protected void applyThemeColorToSingleView(View view, int attrId) {
-        int colorId = getThemeAttrColor(attrId);
-        setViewColor(view, colorId);
-    }
-
-
-    private void setViewColor(View view, int colorId) {
-        setViewColor(view, colorId, PorterDuff.Mode.MULTIPLY);
-    }
-
-    private void setViewColor(View view, int colorId, PorterDuff.Mode mode) {
-        if (isBackgroundInvisible(view)) {
-            setViewBackgroundColor(view, colorId);
-        } else {
-            setViewColorFilter(view, colorId, mode);
-        }
-    }
-
-    private void setViewBackgroundColor(View view, int colorId) {
-        view.setBackgroundColor(colorId);
-    }
-
-    private void setViewColorFilter(View view, int colorId, PorterDuff.Mode mode) {
-        view.getBackground().setColorFilter(colorId, mode);
-    }
-
-    private boolean isBackgroundInvisible(View view) {
-        return view.getBackground() == null || !view.getBackground().isVisible();
+    protected void applyColorToSingleView(View view, int attrId) {
+        Context context = getActivity();
+        themeManager.applyColorToSingleView(view, attrId, context);
     }
 
     /**

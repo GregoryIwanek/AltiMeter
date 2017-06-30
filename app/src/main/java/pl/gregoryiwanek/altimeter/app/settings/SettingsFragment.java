@@ -8,13 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import pl.gregoryiwanek.altimeter.app.R;
+import pl.gregoryiwanek.altimeter.app.utils.ThemeManager;
 
 /**
  * Class consists preference settings fragment and preference view.
  */
 public final class SettingsFragment extends PreferenceFragment {
 
-    public SettingsFragment(){}
+    ThemeManager themeManager = new ThemeManager();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,10 +26,12 @@ public final class SettingsFragment extends PreferenceFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        if (view != null) {
-            view.setBackgroundColor(ContextCompat.getColor(this.getActivity(), R.color.colorNavyBlue));
-        }
+        setSettingsBackground(view);
         return view;
+    }
+
+    private void setSettingsBackground(View view) {
+        themeManager.applyColorToNonTransparentBackground(view, R.attr.colorRootBackground, getActivity());
     }
 }
 

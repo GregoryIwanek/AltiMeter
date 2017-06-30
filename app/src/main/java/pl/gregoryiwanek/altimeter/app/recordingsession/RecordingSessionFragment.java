@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.AppCompatImageButton;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +28,7 @@ import pl.gregoryiwanek.altimeter.app.R;
 import pl.gregoryiwanek.altimeter.app.data.GraphPoint;
 import pl.gregoryiwanek.altimeter.app.map.MapActivity;
 import pl.gregoryiwanek.altimeter.app.utils.Constants;
+import pl.gregoryiwanek.altimeter.app.utils.ThemeManager;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -55,16 +57,11 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
     @BindView(R.id.network_value_label) TextView mNetworkValueTextView;
     @BindView(R.id.barometer_value_label) TextView mBarometerValueTextView;
 
+    private ThemeManager themeManager;
     private RecordingSessionContract.Presenter mPresenter;
 
     public static RecordingSessionFragment newInstance() {
         return new RecordingSessionFragment();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mPresenter.start();
     }
 
     @Override
@@ -82,6 +79,12 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setButtonColorsByTheme();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.start();
     }
 
     @Override
@@ -162,11 +165,11 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
         switch (tag) {
             case R.drawable.ic_play_arrow_black_24dp:
                 mPresenter.callStartLocationRecording();
-                super.applyThemeColorToSingleView(mPlayPauseButton, R.attr.colorButtonSecondary);
+                super.applyColorToSingleView(mPlayPauseButton, R.attr.colorButtonSecondary);
                 break;
             case R.drawable.ic_pause_black_24dp:
                 mPresenter.pauseLocationRecording();
-                super.applyThemeColorToSingleView(mPlayPauseButton, R.attr.colorButtonPrimary);
+                super.applyColorToSingleView(mPlayPauseButton, R.attr.colorButtonPrimary);
                 break;
             default:
                 break;
@@ -182,7 +185,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
                     showStopSession();
                 } else {
                     mPresenter.enableGps();
-                    super.applyThemeColorToSingleView(mGpsButton, R.attr.colorButtonSecondary);
+                    super.applyColorToSingleView(mGpsButton, R.attr.colorButtonSecondary);
                 }
                 break;
             case R.drawable.ic_gps_open_24dp:
@@ -190,7 +193,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
                     showStopSession();
                 } else {
                     mPresenter.disableGps();
-                    super.applyThemeColorToSingleView(mGpsButton, R.attr.colorButtonPrimary);
+                    super.applyColorToSingleView(mGpsButton, R.attr.colorButtonPrimary);
                 }
                 break;
         }
@@ -205,7 +208,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
                     showStopSession();
                 } else {
                     mPresenter.enableNetwork();
-                    super.applyThemeColorToSingleView(mNetworkButton, R.attr.colorButtonSecondary);
+                    super.applyColorToSingleView(mNetworkButton, R.attr.colorButtonSecondary);
                 }
                 break;
             case R.drawable.ic_network_open_24dp:
@@ -213,7 +216,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
                     showStopSession();
                 } else {
                     mPresenter.disableNetwork();
-                    super.applyThemeColorToSingleView(mNetworkButton, R.attr.colorButtonPrimary);
+                    super.applyColorToSingleView(mNetworkButton, R.attr.colorButtonPrimary);
                 }
                 break;
         }
@@ -228,7 +231,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
                     showStopSession();
                 } else {
                     mPresenter.enableBarometer();
-                    applyThemeColorToSingleView(mBarometerButton, R.attr.colorButtonSecondary);
+                    super.applyColorToSingleView(mBarometerButton, R.attr.colorButtonSecondary);
                 }
                 break;
             case R.drawable.ic_barometer_open_24dp:
@@ -236,7 +239,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
                     showStopSession();
                 } else {
                     mPresenter.disableBarometer();
-                    applyThemeColorToSingleView(mBarometerButton, R.attr.colorButtonPrimary);
+                    super.applyColorToSingleView(mBarometerButton, R.attr.colorButtonPrimary);
                 }
                 break;
         }
@@ -267,20 +270,9 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
     }
 
     private void setButtonColorsByTheme() {
-        ViewGroup viewGroupContainer =  (ViewGroup) getView();
-        List<View> buttonList = new ArrayList<>();
-        populateButtonList(viewGroupContainer, buttonList);
-        super.applyThemeColorsToMultipleViews(buttonList, R.attr.colorButtonPrimary);
-    }
-
-    private void populateButtonList(ViewGroup viewGroup, List<View> buttonList) {
-        for (int i=0; i< viewGroup.getChildCount(); i++) {
-            if (viewGroup.getChildAt(i) instanceof ViewGroup) {
-                populateButtonList((ViewGroup) viewGroup.getChildAt(i), buttonList);
-            } else if (viewGroup.getChildAt(i) instanceof ImageButton){
-                buttonList.add(viewGroup.getChildAt(i));
-            }
-        }
+        ViewGroup viewContainer =  (ViewGroup) getView();
+        Class<?> lookedType = mGpsButton.getClass();
+        super.applyColorToMultipleViews(viewContainer, R.attr.colorButtonPrimary, lookedType);
     }
 
     private void initGraphViewDefault() {
