@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'IT'
+            keyPassword 'cpbfuy'
+            storeFile file('N:/AndroidProjects/AltiMeter/AltiMeterInstall.jks')
+            storePassword 'cpbfuy'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion '25.0.2'
-
     defaultConfig {
         applicationId "pl.grzegorziwanek.altimeter.app"
         testApplicationId "pl.grzegorziwanek.altimeter.app.test"
@@ -14,11 +21,13 @@ android {
         jackOptions {
             enabled true
         }
+        signingConfig signingConfigs.config
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
     testOptions {
@@ -27,6 +36,8 @@ android {
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
+    }
+    productFlavors {
     }
 }
 

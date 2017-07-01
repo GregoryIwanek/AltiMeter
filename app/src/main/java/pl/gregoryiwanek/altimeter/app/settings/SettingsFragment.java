@@ -14,12 +14,13 @@ import pl.gregoryiwanek.altimeter.app.utils.stylecontroller.StyleController;
  */
 public final class SettingsFragment extends PreferenceFragment {
 
-    StyleController styleController = new StyleController(mContext);
+    StyleController styleController;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
+        styleController = new StyleController(getActivity());
     }
 
     @Override
@@ -30,7 +31,7 @@ public final class SettingsFragment extends PreferenceFragment {
     }
 
     private void setSettingsBackground(View view) {
-        styleController.applyColorAsBackground(view, R.attr.colorRootBackground, getActivity());
+        styleController.applyColorAsBackground(view, R.attr.colorRootBackground);
     }
 }
 

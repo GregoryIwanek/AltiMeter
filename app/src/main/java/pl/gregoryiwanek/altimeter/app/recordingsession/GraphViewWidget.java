@@ -26,6 +26,8 @@ public class GraphViewWidget extends GraphView {
     private Long mRecordingStartTime;
     private StyleController themePicker;
 
+    // TODO: 01.07.2017 remove 3x initiation of themePicker ( just for generating apk file,
+    // TODO I don't remember which constructor is used).
     public GraphViewWidget(Context context) {
         super(context);
         themePicker = new StyleController(context);
@@ -33,10 +35,12 @@ public class GraphViewWidget extends GraphView {
 
     public GraphViewWidget(Context context, AttributeSet attrs) {
         super(context, attrs);
+        themePicker = new StyleController(context);
     }
 
     public GraphViewWidget(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        themePicker = new StyleController(context);
     }
 
     public void initGraphViewDefault() {
