@@ -25,12 +25,7 @@ class StatisticsTaskRx {
 
     // load global statistics, get observable Map with statistics
     Observable<Map<String,String>> getStatisticsObservable() {
-        return Observable.defer(new Func0<Observable<Map<String, String>>>() {
-            @Override
-            public Observable<Map<String, String>> call() {
-                return Observable.just(getStatistics());
-            }
-        });
+        return Observable.defer(() -> Observable.just(getStatistics()));
     }
 
     private Map<String,String> getStatistics() {

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 import pl.gregoryiwanek.altimeter.app.R;
 import pl.gregoryiwanek.altimeter.app.data.GraphPoint;
-import pl.gregoryiwanek.altimeter.app.utils.ThemeManager;
+import pl.gregoryiwanek.altimeter.app.utils.stylecontroller.StyleController;
 
 /**
  *  Consist extension of external library class GraphView (http://www.android-graphview.org/) and required customized methods;
@@ -24,10 +24,11 @@ public class GraphViewWidget extends GraphView {
     private LineGraphSeries<DataPoint> mDiagramSeries = new LineGraphSeries<>();
     private int mCurSeriesCount = 0;
     private Long mRecordingStartTime;
-    private ThemeManager themePicker = new ThemeManager();
+    private StyleController themePicker;
 
     public GraphViewWidget(Context context) {
         super(context);
+        themePicker = new StyleController(context);
     }
 
     public GraphViewWidget(Context context, AttributeSet attrs) {
@@ -51,20 +52,20 @@ public class GraphViewWidget extends GraphView {
     }
 
     private void setDiagramLine() {
-        int colorId = themePicker.getAttrColor(getContext(), R.attr.colorGraphLine);
+        int colorId = themePicker.getAttrColor(R.attr.colorGraphLine);
         mDiagramSeries.setColor(colorId);
         mDiagramSeries.setThickness(2);
     }
 
     private void setDiagramBackground() {
-        int colorId = themePicker.getAttrColor(getContext(), R.attr.colorGraphBackground);
+        int colorId = themePicker.getAttrColor(R.attr.colorGraphBackground);
         int colorAlpha = Color.argb(180, Color.red(colorId), Color.green(colorId), Color.blue(colorId));
         mDiagramSeries.setDrawBackground(true);
         mDiagramSeries.setBackgroundColor(colorAlpha);
     }
 
     private void setGridAppearance() {
-        int colorId = themePicker.getAttrColor(getContext(), R.attr.colorGraphGrid);
+        int colorId = themePicker.getAttrColor(R.attr.colorGraphGrid);
         getGridLabelRenderer().setGridColor(colorId);
     }
 
@@ -251,7 +252,7 @@ public class GraphViewWidget extends GraphView {
     }
 
     private void setTextColor() {
-        int colorId = themePicker.getAttrColor(getContext(), R.attr.colorGraphGrid);
+        int colorId = themePicker.getAttrColor(R.attr.colorGraphGrid);
         getGridLabelRenderer().setHorizontalLabelsColor(colorId);
         getGridLabelRenderer().setVerticalLabelsColor(colorId);
         getGridLabelRenderer().setHorizontalAxisTitleColor(colorId);

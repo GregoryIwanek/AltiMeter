@@ -20,7 +20,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -40,7 +39,7 @@ import pl.gregoryiwanek.altimeter.app.upgradepro.UpgradeProActivity;
 import pl.gregoryiwanek.altimeter.app.utils.Constants;
 import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment;
 import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDialogFragmentV4.NoticeDialogListener;
-import pl.gregoryiwanek.altimeter.app.utils.ThemeManager;
+import pl.gregoryiwanek.altimeter.app.utils.stylecontroller.StyleController;
 import pl.gregoryiwanek.altimeter.app.utils.VersionController;
 
 /**
@@ -54,14 +53,13 @@ import pl.gregoryiwanek.altimeter.app.utils.VersionController;
  * - navigationView with id nav_view
  */
 public abstract class BasicActivity extends AppCompatActivity implements NoticeDialogListener {
-    // TODO: 19.06.2017 change access operator to protected and remove thsese from children activities??
+
     @BindView(R.id.toolbar) protected Toolbar mToolbar;
     @BindView(R.id.drawer_layout) protected DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view) protected NavigationView mNavigationView;
     @BindView(R.id.adView) protected AdView mAdView;
-
     private Class<?> type;
-    private ThemeManager themeManager = new ThemeManager();
+    private StyleController styleController = new StyleController(this);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,10 +100,10 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
 
     private void setNavigationDrawerColors() {
         ViewGroup navHeader = (ViewGroup) mNavigationView.getHeaderView(0);
-        themeManager.applyColorToSingleNestedChildView(navHeader,
-                R.attr.colorButtonPrimary, ImageView.class, this);
-        themeManager.applyColorToNonTransparentBackground(
-                mNavigationView, R.attr.colorRootNavigation, this);
+        styleController.applyColorToSingleUnknownNestedView(navHeader,
+                R.attr.colorButtonPrimary, ImageView.class);
+        styleController.applyColorAsBackground(
+                mNavigationView, R.attr.colorRootNavigation);
     }
 
     private void initMobileAds() {
@@ -124,7 +122,7 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
 
     public void setPreferredTheme() {
         String preferredThemeName = getPreferredTheme();
-        int currThemeId = themeManager.getThemeAsInteger(preferredThemeName);
+        int currThemeId = styleController.getStyleAsInteger(preferredThemeName);
         this.setTheme(currThemeId);
     }
 

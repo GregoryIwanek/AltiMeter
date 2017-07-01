@@ -16,16 +16,16 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.utils.ThemeManager;
+import pl.gregoryiwanek.altimeter.app.utils.stylecontroller.StyleController;
 
 public final class AboutFragmentMainWindow extends Fragment {
 
-    private ThemeManager themePicker;
+    private StyleController themePicker;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        themePicker = new ThemeManager();
+        themePicker = new StyleController(getActivity());
     }
 
     @Nullable
@@ -34,7 +34,7 @@ public final class AboutFragmentMainWindow extends Fragment {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
         ButterKnife.bind(this, view);
 
-        themePicker.applyColorToSingleView(view, R.attr.colorRootBackground, this.getActivity());
+        themePicker.applyColorToSingleKnownView(view, R.attr.colorRootBackground);
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.contentFrameAbout, new InnerFragmentGraphs());
@@ -134,7 +134,7 @@ public final class AboutFragmentMainWindow extends Fragment {
     }
 
     private int getThemeAttrColor(int attrId) {
-        return themePicker.getAttrColor(getActivity(), attrId);
+        return themePicker.getAttrColor(attrId);
     }
 
     private void setViewColor(View view, int colorId) {

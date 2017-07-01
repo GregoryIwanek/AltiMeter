@@ -2,20 +2,19 @@ package pl.gregoryiwanek.altimeter.app.settings;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.utils.ThemeManager;
+import pl.gregoryiwanek.altimeter.app.utils.stylecontroller.StyleController;
 
 /**
  * Class consists preference settings fragment and preference view.
  */
 public final class SettingsFragment extends PreferenceFragment {
 
-    ThemeManager themeManager = new ThemeManager();
+    StyleController styleController = new StyleController(mContext);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,7 +30,7 @@ public final class SettingsFragment extends PreferenceFragment {
     }
 
     private void setSettingsBackground(View view) {
-        themeManager.applyColorToNonTransparentBackground(view, R.attr.colorRootBackground, getActivity());
+        styleController.applyColorAsBackground(view, R.attr.colorRootBackground, getActivity());
     }
 }
 

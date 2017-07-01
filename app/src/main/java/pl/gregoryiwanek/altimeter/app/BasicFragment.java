@@ -1,6 +1,5 @@
 package pl.gregoryiwanek.altimeter.app;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,16 +11,16 @@ import android.view.ViewGroup;
 import pl.gregoryiwanek.altimeter.app.upgradepro.UpgradeProActivity;
 import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment;
 import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDialogFragmentV4.NoticeDialogListener;
-import pl.gregoryiwanek.altimeter.app.utils.ThemeManager;
+import pl.gregoryiwanek.altimeter.app.utils.stylecontroller.StyleController;
 
 public abstract class BasicFragment extends Fragment implements NoticeDialogListener {
 
-    private ThemeManager themeManager;
+    private StyleController styleController;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        themeManager = new ThemeManager();
+        styleController = new StyleController(getActivity());
     }
 
     @Override
@@ -31,18 +30,15 @@ public abstract class BasicFragment extends Fragment implements NoticeDialogList
     }
 
     private void setRootViewBackgroundColor(View rootView) {
-        Context context = getActivity();
-        themeManager.applyColorToSingleView(rootView, R.attr.colorRootBackground, context);
+        styleController.applyColorToSingleKnownView(rootView, R.attr.colorRootBackground);
     }
 
     protected void applyColorToMultipleViews(ViewGroup viewGroup, int attrId, Class<?> lookedType) {
-        Context context = getActivity();
-        themeManager.applyColorToMultipleViews(viewGroup, attrId, lookedType, context);
+        styleController.applyColorToMultipleViews(viewGroup, attrId, lookedType);
     }
 
     protected void applyColorToSingleView(View view, int attrId) {
-        Context context = getActivity();
-        themeManager.applyColorToSingleView(view, attrId, context);
+        styleController.applyColorToSingleKnownView(view, attrId);
     }
 
     /**
@@ -53,10 +49,6 @@ public abstract class BasicFragment extends Fragment implements NoticeDialogList
     @Override
     public void onDialogPositiveClick(String callbackCode) {}
 
-    /**
-     * Initiation of NoticeDialog with positive/cancel options ( pop up window with a message).
-     * @param title title shown in the pop up window
-     */
     protected void popUpNoticeDialog(String title) {
         Bundle args = new Bundle();
         args.putString("title", title);

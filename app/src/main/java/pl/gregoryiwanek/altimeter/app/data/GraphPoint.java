@@ -7,8 +7,8 @@ package pl.gregoryiwanek.altimeter.app.data;
  */
 public class GraphPoint {
 
-    private long xTime;
-    private double yAltitude;
+    private final long xTime;
+    private final double yAltitude;
 
     GraphPoint(long xValue, double yValue) {
         xTime = xValue;

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.AppCompatImageButton;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,7 +17,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,7 +26,7 @@ import pl.gregoryiwanek.altimeter.app.R;
 import pl.gregoryiwanek.altimeter.app.data.GraphPoint;
 import pl.gregoryiwanek.altimeter.app.map.MapActivity;
 import pl.gregoryiwanek.altimeter.app.utils.Constants;
-import pl.gregoryiwanek.altimeter.app.utils.ThemeManager;
+import pl.gregoryiwanek.altimeter.app.utils.stylecontroller.StyleController;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -57,7 +55,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
     @BindView(R.id.network_value_label) TextView mNetworkValueTextView;
     @BindView(R.id.barometer_value_label) TextView mBarometerValueTextView;
 
-    private ThemeManager themeManager;
+    private StyleController styleController;
     private RecordingSessionContract.Presenter mPresenter;
 
     public static RecordingSessionFragment newInstance() {
