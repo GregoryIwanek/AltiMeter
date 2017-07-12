@@ -9,9 +9,9 @@ import com.google.android.gms.ads.MobileAds;
 
 import pl.gregoryiwanek.altimeter.app.BasicActivity;
 import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.data.database.source.SessionRepository;
-import pl.gregoryiwanek.altimeter.app.data.database.source.local.SessionLocalDataSource;
-import pl.gregoryiwanek.altimeter.app.utils.FormatAndValueConverter;
+import pl.gregoryiwanek.altimeter.app.data.database.SessionRepository;
+import pl.gregoryiwanek.altimeter.app.data.database.local.LocalDataSource;
+import pl.gregoryiwanek.altimeter.app.utils.formatconventer.FormatAndValueConverter;
 import pl.gregoryiwanek.altimeter.app.utils.VersionController;
 
 /**
@@ -46,7 +46,7 @@ public class SessionActivity extends BasicActivity {
 
     private void setPresenter() {
         SessionPresenter mSessionPresenter = new SessionPresenter(
-                SessionRepository.getInstance(SessionLocalDataSource.getInstance(this)),
+                SessionRepository.getInstance(LocalDataSource.newInstance(this)),
                 mSessionFragment);
     }
 

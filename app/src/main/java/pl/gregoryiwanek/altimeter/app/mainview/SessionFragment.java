@@ -28,7 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.gregoryiwanek.altimeter.app.BasicFragment;
 import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.data.Session;
+import pl.gregoryiwanek.altimeter.app.data.sessions.Session;
 import pl.gregoryiwanek.altimeter.app.details.DetailsActivity;
 import pl.gregoryiwanek.altimeter.app.recordingsession.RecordingSessionActivity;
 import pl.gregoryiwanek.altimeter.app.utils.Constants;
@@ -116,25 +116,27 @@ public class SessionFragment extends BasicFragment implements SessionContract.Vi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_delete:
-                popUpNoticeDialog(Constants.MESSAGE_DELETE_CHECKED);
+                popUpNoticeDialog(Constants.TEXT.MESSAGE_DELETE_CHECKED.getValue(getContext()),
+                        Constants.CODE_DELETE_CHECKED);
                 break;
             case R.id.menu_delete_all:
-                popUpNoticeDialog(Constants.MESSAGE_DELETE_ALL);
+                popUpNoticeDialog(Constants.TEXT.MESSAGE_DELETE_ALL.getValue(getContext()),
+                        Constants.CODE_DELETE_ALL);
                 break;
         }
         return true;
     }
 
     @Override
-    public void onDialogPositiveClick(String callbackCode) {
+    public void onDialogPositiveClick(int callbackCode) {
         switch (callbackCode) {
-            case Constants.MESSAGE_DELETE_CHECKED:
+            case Constants.CODE_DELETE_CHECKED:
                 mPresenter.deleteCheckedSessions(getAdapterCheckedId());
                 break;
-            case Constants.MESSAGE_DELETE_ALL:
+            case Constants.CODE_DELETE_ALL:
                 mPresenter.deleteAllSessions(getAdapterAllId());
                 break;
-            case Constants.MESSAGE_UPGRADE_TO_PRO_MAX_SAVED:
+            case Constants.CODE_UPGRADE_MAX_SAVED:
                 super.openUpgradePro();
                 break;
         }
@@ -210,7 +212,7 @@ public class SessionFragment extends BasicFragment implements SessionContract.Vi
         mNoSessionsView.setVisibility(View.VISIBLE);
     }
 
-    // TODO: 24.06.2017 remove +10 from the condition, just for now
+    // TODO: 24.06.2017 remove +10 from the condition, just for now and name it for God sake
     @Override
     public void showAddSessionUi() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -218,7 +220,8 @@ public class SessionFragment extends BasicFragment implements SessionContract.Vi
             Intent intent = new Intent(getContext(), RecordingSessionActivity.class);
             startActivity(intent);
         } else {
-            popUpNoticeDialog(Constants.MESSAGE_UPGRADE_TO_PRO_MAX_SAVED);
+            popUpNoticeDialog(Constants.TEXT.MESSAGE_UPGRADE_TO_PRO_MAX_SAVED.getValue(getContext()),
+                    Constants.CODE_UPGRADE_MAX_SAVED);
         }
     }
 
@@ -235,7 +238,7 @@ public class SessionFragment extends BasicFragment implements SessionContract.Vi
     }
 
     private void showMessage(String message) {
-        Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
@@ -245,12 +248,12 @@ public class SessionFragment extends BasicFragment implements SessionContract.Vi
 
     @Override
     public void showCheckedSessionsDeleted() {
-        showMessage("Checked sessions deleted");
+        showMessage(Constants.TEXT.TOAST_CHECKED_DELETED.getValue(getContext()));
     }
 
     @Override
     public void showAllSessionsDeleted() {
-        showMessage("All sessions deleted");
+        showMessage(Constants.TEXT.TOAST_ALL_DELETED.getValue(getContext()));
     }
 
     @Override

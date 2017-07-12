@@ -88,4 +88,35 @@
     <string name="labels_stats">Global statistics</string>
     <string name="label_stats_values">Global statistics values</string>
     <string name="about_actions_share">Action share.</string>
+
+
+    <!--SESSION CONSTANT STRINGS-->
+    <string name="positive">OK</string>
+    <string name="negative">CANCEL</string>
+    <string name="upgrade_to_pro_export">Upgrade to AltiMeterPRO to export sessions data.\nDo you want to upgrade?</string>
+    <string name="upgrade_to_pro_max_saved">Upgrade to AltiMeterPro to save more than 5 sessions.\nDo you want to upgrade?</string>
+    <string name="message_generate_map">Generate a map?</string>
+    <string name="message_send_to">Send to?</string>
+    <string name="message_save_session">Save session to database?</string>
+    <string name="message_reset_session">Reset session. Are you sure?</string>
+    <string name="message_delete_all">Delete all?</string>
+    <string name="message_delete_checked">Delete checked?</string>
+    <string name="message_reset_statistics">Reset statistics?</string>
+    <string name="message_saving_please_wait">Saving session data, please wait...</string>
+    <string name="toast_empty_map">Session has no recorded points. Record points in order to generate a map...</string>
+    <string name="toast_session_saved">Session data saved</string>
+    <string name="toast_session_paused">Paused</string>
+    <string name="toast_session_recording">Recording data</string>
+    <string name="toast_turn_on_source">Turn on at least one data source</string>
+    <string name="toast_must_stop_session">You must stop session first</string>
+    <string name="toast_checked_deleted">Checked sessions deleted</string>
+    <string name="toast_all_deleted">All sessions deleted</string>
+    <string name="toast_changes_saved">Changes saved</string>
+
+    <!--menu strings-->
+    <string name="menu_delete_all">Delete all</string>
+    <string name="menu_delete_checked">Delete checked</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_export_data">Export session data</string>
+    <string name="menu_reset_statistics">Reset statistics</string>
 </resources>

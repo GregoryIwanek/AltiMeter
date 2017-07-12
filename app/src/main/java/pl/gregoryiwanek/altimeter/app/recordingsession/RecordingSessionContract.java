@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import pl.gregoryiwanek.altimeter.app.BasePresenter;
 import pl.gregoryiwanek.altimeter.app.BaseView;
-import pl.gregoryiwanek.altimeter.app.data.GraphPoint;
+import pl.gregoryiwanek.altimeter.app.data.sessions.GraphPoint;
 
 @SuppressWarnings("unused")
 interface RecordingSessionContract {
@@ -20,7 +20,7 @@ interface RecordingSessionContract {
 
         void checkDataSourceOpen();
 
-        void showSessionLocked();
+        void showSessionSaved();
 
         void showRecordingPaused();
 
@@ -57,13 +57,19 @@ interface RecordingSessionContract {
         void drawGraph(ArrayList<GraphPoint> graphPoints);
 
         void resetGraph();
+
+        void showProgressDialog();
+
+        void hideProgressDialog();
+
+        void dismissProgressDialog();
+
+        void onSaveCompletedFromButtonBack();
     }
 
     interface Presenter extends BasePresenter {
 
         void openMapOfSession();
-
-        void callStartLocationRecording();
 
         void startLocationRecording();
 
@@ -83,14 +89,18 @@ interface RecordingSessionContract {
 
         void resetSessionData();
 
-        void lockSession();
+        void saveSession(boolean isCalledByButtonBack);
 
         void onActivityDestroyedUnsubscribeRx();
-
-        void onActivityPaused();
 
         void shareScreenShot(Window window, ContentResolver cr, String[] textViewContent);
 
         void checkIsSessionEmpty();
+
+    }
+
+    interface ParentActivityCallback {
+
+        void onSessionSaved();
     }
 }

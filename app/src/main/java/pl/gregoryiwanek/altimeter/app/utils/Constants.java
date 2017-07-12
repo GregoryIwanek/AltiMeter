@@ -1,10 +1,15 @@
 package pl.gregoryiwanek.altimeter.app.utils;
 
+import android.content.Context;
+
+import pl.gregoryiwanek.altimeter.app.R;
+
 /**
  * Created by Grzegorz Iwanek on 30.11.2016.
  * Consist constants keys and values used in services, managers and to calculations.
  */
 public final class Constants {
+
     // service constants (used in fetch address service by current location)
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;
@@ -47,11 +52,19 @@ public final class Constants {
     public static final String DEFAULT_TEXT = "...";
     public static final int MAX_NUMBER_SESSIONS = 4;
 
+    // Database expressions
+    public static final String DATABASE_NAME = "Graphs.db";
+    public static final String TEXT_TYPE = " TEXT";
+    public static final String REAL_TYPE = " REAL";
+    public static final String BOOLEAN_TYPE = " INTEGER";
+    public static final String UNIQUE = " UNIQUE";
+    public static final String COMMA_SEP = ",";
+
     public static String sessionId = "";
 
     // Notice Dialog choice parameters
-    static final String POSITIVE = "OK";
-    static final String CANCEL = "CANCEL";
+    public static final String POSITIVE = "OK";
+    public static final String CANCEL = "CANCEL";
 
     // Gps parameter
     public static final int GPS_INTERVAL_VALUE = 20000;
@@ -61,7 +74,7 @@ public final class Constants {
     public static final int TWENTY_SECONDS = 20000;
 
     // hectopascals <-> mercurial pressure multiplier
-    static final double MULTIPLIER_HPA = 33.8638;
+    public static final double MULTIPLIER_HPA = 33.8638;
 
     // version
     static final String FREE_VERSION = "free";
@@ -70,18 +83,149 @@ public final class Constants {
     public static final String MESSAGE_UPGRADE_TO_PRO_MAX_SAVED = "Upgrade to AltiMeterPro to save more than 5 sessions.\nDo you want to upgrade?";
 
     // popup messages
-    public static final String MESSAGE_GENERATE_MAP = "Generate map?";
+    public static final String MESSAGE_GENERATE_MAP = "Generate a map?";
     public static final String MESSAGE_SEND_TO = "Send to";
-    public static final String MESSAGE_LOCK_SESSION = "Lock session. Recording will be terminated. Are you sure?";
+    public static final String MESSAGE_SAVE_SESSION = "Save session to database?";
     public static final String MESSAGE_RESET_SESSION = "Reset session. Are you sure?";
     public static final String MESSAGE_DELETE_ALL = "Delete all?";
     public static final String MESSAGE_DELETE_CHECKED = "Delete checked?";
 
+    // popup message codes
+    public static final int CODE_GENERATE_MAP = 0;
+    public static final int CODE_SEND_TO = 1;
+    public static final int CODE_SAVE_SESSION = 2;
+    public static final int CODE_RESET_SESSION = 3;
+    public static final int CODE_DELETE_ALL = 4;
+    public static final int CODE_DELETE_CHECKED = 5;
+    public static final int CODE_UPGRADE_EXPORT = 6;
+    public static final int CODE_UPGRADE_MAX_SAVED = 6;
+
     // toast messages
     public static final String TOAST_EMPTY_MAP = "Session has no recorded points. Record points in order to generate map";
-    public static final String TOAST_SESSION_LOCKED = "Session locked";
+    public static final String TOAST_SESSION_SAVED = "Session data saved";
     public static final String TOAST_SESSION_PAUSED = "Paused";
     public static final String TOAST_SESSION_RECORDING = "Recording data";
     public static final String TOAST_TURN_ON_SOURCE = "Turn on at least one data source";
     public static final String TOAST_MUST_STOP_SESSION = "You must stop session first.";
+    public static String CREATE_TABLE = "CREATE TABLE ";
+    public static String ON_UPGRADE = "";
+
+    public enum TEXT {
+        MESSAGE_GENERATE_MAP {
+            @Override
+            public String getValue(Context context) {
+                return context.getResources().getString(R.string.message_generate_map);
+            }
+        },
+        MESSAGE_SEND_TO {
+            @Override
+            public String getValue(Context context) {
+                return context.getResources().getString(R.string.message_send_to);
+            }
+        },
+        MESSAGE_SAVE_SESSION {
+            @Override
+            public String getValue(Context context) {
+                return context.getResources().getString(R.string.message_save_session);
+            }
+        },
+        MESSAGE_RESET_SESSION {
+            @Override
+            public String getValue(Context context) {
+                return context.getResources().getString(R.string.message_reset_session);
+            }
+        },
+        MESSAGE_DELETE_ALL {
+            @Override
+            public String getValue(Context context) {
+                return context.getResources().getString(R.string.message_delete_all);
+            }
+        },
+        MESSAGE_DELETE_CHECKED {
+            @Override
+            public String getValue(Context context) {
+                return context.getResources().getString(R.string.message_delete_checked);
+            }
+        },
+        MESSAGE_SAVING_PLEASE_WAIT {
+            @Override
+            public String getValue(Context context) {
+                return context.getResources().getString(R.string.message_saving_please_wait);
+            }
+        },
+        TOAST_EMPTY_MAP {
+            @Override
+            public String getValue(Context context) {
+                return context.getResources().getString(R.string.toast_empty_map);
+            }
+        },
+        TOAST_SESSION_SAVED {
+            @Override
+            public String getValue(Context context) {
+                return context.getResources().getString(R.string.toast_session_saved);
+            }
+        },
+        TOAST_SESSION_PAUSED {
+            @Override
+            public String getValue(Context context) {
+                return context.getResources().getString(R.string.toast_session_paused);
+            }
+        },
+        TOAST_SESSION_RECORDING {
+            @Override
+            public String getValue(Context context) {
+                return context.getResources().getString(R.string.toast_session_recording);
+            }
+        },
+        TOAST_TURN_ON_SOURCE {
+            @Override
+            public String getValue(Context context) {
+                return context.getResources().getString(R.string.toast_turn_on_source);
+            }
+        },
+        TOAST_MUST_STOP_SESSION {
+            @Override
+            public String getValue(Context context) {
+                return context.getResources().getString(R.string.toast_must_stop_session);
+            }
+        },
+        TOAST_CHECKED_DELETED {
+            @Override
+            public String getValue(Context context) {
+                return context.getResources().getString(R.string.toast_checked_deleted);
+            }
+        },
+        TOAST_ALL_DELETED {
+            @Override
+            public String getValue(Context context) {
+                return context.getResources().getString(R.string.toast_all_deleted);
+            }
+        },
+        TOAST_CHANGES_SAVED {
+            @Override
+            public String getValue(Context context) {
+                return context.getResources().getString(R.string.toast_changes_saved);
+            }
+        },
+        MESSAGE_UPGRADE_TO_PRO_EXPORT {
+            @Override
+            public String getValue(Context context) {
+                return context.getResources().getString(R.string.upgrade_to_pro_export);
+            }
+        },
+        MESSAGE_UPGRADE_TO_PRO_MAX_SAVED {
+            @Override
+            public String getValue(Context context) {
+                return context.getResources().getString(R.string.upgrade_to_pro_max_saved);
+            }
+        },
+        MESSAGE_RESET_STATISTICS {
+            @Override
+            public String getValue(Context context) {
+                return context.getResources().getString(R.string.message_reset_statistics);
+            }
+        };
+
+        public abstract String getValue(Context context);
+    }
 }

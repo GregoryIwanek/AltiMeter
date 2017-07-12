@@ -1,6 +1,6 @@
 package pl.gregoryiwanek.altimeter.app.data.location.managers.models;
 
-import pl.gregoryiwanek.altimeter.app.utils.FormatAndValueConverter;
+import pl.gregoryiwanek.altimeter.app.utils.formatconventer.FormatAndValueConverter;
 
 public class CombinedLocationModel {
 

@@ -1,10 +1,11 @@
-package pl.gregoryiwanek.altimeter.app.data;
+package pl.gregoryiwanek.altimeter.app.data.sessions;
 
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -12,9 +13,9 @@ import java.util.UUID;
  */
 public class Session {
 
+    private final String mId;
     private boolean mCompleted = false;
     private boolean mLocked = false;
-    private String mId;
     private String mTitle = "TITLE";
     private String mDescription = "DESCRIPTION";
 
@@ -33,6 +34,13 @@ public class Session {
     private Location mCurrLocation = null;
     private ArrayList<Location> mLocationList = null;
     private ArrayList<GraphPoint> mGraphList = null;
+    private ArrayList<RecordPoint> mRecordPointList = null;
+
+    // temporary variables
+    // TODO: 05.07.2017 variables to remove
+    private String mDistanceStringTemporary = "0";
+    private String mDateTemporary = "";
+    private String mCurrElevationTemporary = "";
 
     /**
      * Use this constructor to create new recording session. Unique ID generated automatically.
@@ -55,10 +63,13 @@ public class Session {
         mId = id;
         mLocationList = new ArrayList<>();
         mGraphList = new ArrayList<>();
+        mRecordPointList = new ArrayList<>();
     }
 
     public void appendLocationPoint(Location location) {
         mLocationList.add(location);
+        // TODO: 05.07.2017 remove append record point
+        appendRecordPoint(location);
     }
 
     public ArrayList<Location> getLocationList() {
@@ -68,6 +79,23 @@ public class Session {
     public void appendGraphPoint(long xValue, double yValue) {
         GraphPoint point = new GraphPoint(xValue, yValue);
         mGraphList.add(point);
+    }
+
+    // TODO: 07.07.2017 remove for loop; added just to increase number of points
+    public void appendRecordPoint(Location location) {
+        // TODO: 11.07.2017 to remove if else, merge that
+        mRecordPointList.add(
+                new RecordPoint.Builder(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()))
+                        .setAltitude(mCurrElevationTemporary)
+                        .setDate(mDateTemporary)
+                        .setAddress(mAddress)
+                        .setDistance(mDistanceStringTemporary)
+                        .build()
+        );
+    }
+
+    public ArrayList<RecordPoint> getRecordList() {
+        return mRecordPointList;
     }
 
     public ArrayList<GraphPoint> getGraphList() {
@@ -132,6 +160,8 @@ public class Session {
 
     public void setCurrentElevation(Double elevation) {
         mCurrElevation = elevation;
+        // TODO: 05.07.2017 to remove temporary variable
+        mCurrElevationTemporary = String.valueOf(elevation);
     }
 
     public void setElevationOnList(Double elevation) {
@@ -176,6 +206,8 @@ public class Session {
 
     public void setDistance(Double distance) {
         mDistance = distance;
+        // TODO: 05.07.2017 remove this distance temporary
+        mDistanceStringTemporary = String.valueOf(distance);
     }
 
     public Double getMinHeight() {
@@ -200,6 +232,8 @@ public class Session {
 
     public void setCurrLocation(Location currLocation) {
         mCurrLocation = currLocation;
+        // TODO: 05.07.2017 remove date temporary
+        mDateTemporary = String.valueOf(mCurrLocation.getTime());
     }
 
     public boolean isCompleted() {

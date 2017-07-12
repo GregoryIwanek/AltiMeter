@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import butterknife.OnClick;
 import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment;
+import pl.gregoryiwanek.altimeter.app.utils.widgetextensions.NoticeDialogFragment;
 
 public abstract class BasicInnerFragment extends Fragment {
 

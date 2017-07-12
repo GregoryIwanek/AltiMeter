@@ -4,6 +4,6 @@
 
     <item
         android:id="@+id/menu_reset"
-        android:title="Reset statistics"
+        android:title="@string/menu_reset_statistics"
         app:showAsAction="never"/>
 </menu>

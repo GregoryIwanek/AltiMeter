@@ -5,9 +5,9 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.gregoryiwanek.altimeter.app.data.Session;
-import pl.gregoryiwanek.altimeter.app.data.database.source.SessionDataSource;
-import pl.gregoryiwanek.altimeter.app.data.database.source.SessionRepository;
+import pl.gregoryiwanek.altimeter.app.data.sessions.Session;
+import pl.gregoryiwanek.altimeter.app.data.database.SessionDataSource;
+import pl.gregoryiwanek.altimeter.app.data.database.SessionRepository;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

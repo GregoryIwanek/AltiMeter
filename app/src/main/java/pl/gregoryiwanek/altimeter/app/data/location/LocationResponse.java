@@ -2,7 +2,7 @@ package pl.gregoryiwanek.altimeter.app.data.location;
 
 import android.location.Location;
 
-import pl.gregoryiwanek.altimeter.app.data.Session;
+import pl.gregoryiwanek.altimeter.app.data.sessions.Session;
 
 /**
  * Created by Grzegorz Iwanek on 20.12.2016.

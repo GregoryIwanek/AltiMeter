@@ -8,12 +8,12 @@ import android.preference.PreferenceManager;
 import java.util.ArrayList;
 
 import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.data.Session;
+import pl.gregoryiwanek.altimeter.app.data.sessions.Session;
 import pl.gregoryiwanek.altimeter.app.data.location.managers.BarometerManager;
 import pl.gregoryiwanek.altimeter.app.data.location.managers.models.CombinedLocationModel;
 import pl.gregoryiwanek.altimeter.app.recordingsession.RecordingSessionFragment;
 import pl.gregoryiwanek.altimeter.app.utils.Constants;
-import pl.gregoryiwanek.altimeter.app.utils.FormatAndValueConverter;
+import pl.gregoryiwanek.altimeter.app.utils.formatconventer.FormatAndValueConverter;
 
 /**
  * Consists Session's value and state update model.

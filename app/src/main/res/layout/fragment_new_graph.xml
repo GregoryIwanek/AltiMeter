@@ -130,7 +130,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1">
                     <ImageButton
-                        android:id="@+id/lock_button"
+                        android:id="@+id/save_session_button"
                         android:clickable="true"
                         android:layout_width="36dp"
                         android:layout_height="36dp"

@@ -5,11 +5,15 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
+import java.util.List;
+
 import pl.gregoryiwanek.altimeter.app.BasicActivity;
 import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.data.database.source.SessionRepository;
-import pl.gregoryiwanek.altimeter.app.data.database.source.local.SessionLocalDataSource;
-import pl.gregoryiwanek.altimeter.app.utils.FormatAndValueConverter;
+import pl.gregoryiwanek.altimeter.app.data.database.SessionDataSource;
+import pl.gregoryiwanek.altimeter.app.data.database.SessionRepository;
+import pl.gregoryiwanek.altimeter.app.data.database.local.LocalDataSource;
+import pl.gregoryiwanek.altimeter.app.utils.databaseexporter.DatabaseExporter;
+import pl.gregoryiwanek.altimeter.app.utils.formatconventer.FormatAndValueConverter;
 
 /**
  * Main activity of Details section.
@@ -44,7 +48,7 @@ public class DetailsActivity extends BasicActivity {
     private void setPresenter() {
         String id = getIntent().getStringExtra("sessionId");
         DetailsPresenter detailsPresenter = new DetailsPresenter(id,
-                SessionRepository.getInstance(SessionLocalDataSource.getInstance(this)),
+                SessionRepository.getInstance(LocalDataSource.newInstance(this)),
                 mDetailsFragment);
     }
 

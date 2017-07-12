@@ -4,8 +4,6 @@ package pl.gregoryiwanek.altimeter.app.statistics;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,8 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.gregoryiwanek.altimeter.app.BasicFragment;
 import pl.gregoryiwanek.altimeter.app.R;
-
-import static pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDialogFragmentV4;
+import pl.gregoryiwanek.altimeter.app.utils.Constants;
 
 
 /**
@@ -61,13 +58,13 @@ public class StatisticsFragment extends BasicFragment implements StatisticsContr
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        String title = "Reset statistics?";
+        String title = Constants.TEXT.MESSAGE_RESET_STATISTICS.getValue(getContext());
         popUpNoticeDialog(title);
         return true;
     }
 
     @Override
-    public void onDialogPositiveClick(String callbackCode) {
+    public void onDialogPositiveClick(int callbackCode) {
         mPresenter.resetStatistics();
     }
 

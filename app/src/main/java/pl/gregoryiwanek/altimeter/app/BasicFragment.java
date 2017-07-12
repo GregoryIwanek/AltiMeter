@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import pl.gregoryiwanek.altimeter.app.upgradepro.UpgradeProActivity;
-import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment;
-import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDialogFragmentV4.NoticeDialogListener;
+import pl.gregoryiwanek.altimeter.app.utils.widgetextensions.NoticeDialogFragment;
+import pl.gregoryiwanek.altimeter.app.utils.widgetextensions.NoticeDialogFragment.NoticeDialogFragmentV4.NoticeDialogListener;
 import pl.gregoryiwanek.altimeter.app.utils.stylecontroller.StyleController;
 
 public abstract class BasicFragment extends Fragment implements NoticeDialogListener {
@@ -47,11 +47,16 @@ public abstract class BasicFragment extends Fragment implements NoticeDialogList
      * @param callbackCode callback code used to define specific action on positive click
      */
     @Override
-    public void onDialogPositiveClick(String callbackCode) {}
+    public void onDialogPositiveClick(int callbackCode) {}
 
     protected void popUpNoticeDialog(String title) {
+        popUpNoticeDialog(title, -1);
+    }
+
+    protected void popUpNoticeDialog(String title, int messageCode) {
         Bundle args = new Bundle();
         args.putString("title", title);
+        args.putInt("code", messageCode);
         DialogFragment ndf = new NoticeDialogFragment.NoticeDialogFragmentV4();
         ndf.setArguments(args);
         ndf.show(getChildFragmentManager(), "NoticeDialogFragment");

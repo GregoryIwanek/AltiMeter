@@ -1,4 +1,4 @@
-package pl.gregoryiwanek.altimeter.app.utils;
+package pl.gregoryiwanek.altimeter.app.utils.formatconventer;
 
 import android.location.Location;
 import android.text.TextUtils;
@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import pl.gregoryiwanek.altimeter.app.data.location.services.helpers.airporttask.xmlparser.XmlAirportValues;
+import pl.gregoryiwanek.altimeter.app.utils.Constants;
 
 /**
  * Consists static methods used to format and convert input values to required shape.
@@ -434,7 +435,7 @@ public class FormatAndValueConverter {
      * @return pressure value converted to hectopascals
      */
     private static float convertHgPressureToHPa(float hgPressure) {
-        return (float) (hgPressure*Constants.MULTIPLIER_HPA);
+        return (float) (hgPressure* Constants.MULTIPLIER_HPA);
     }
 
     /**
@@ -463,7 +464,7 @@ public class FormatAndValueConverter {
      *                       2-distance travelled];
      * @return returns full or partial string message;
      */
-    static String buildMessage(String[] messageContent) {
+    public static String buildMessage(String[] messageContent) {
         if (messageContent != null) {
             return buildFullMessage(messageContent);
         } else {

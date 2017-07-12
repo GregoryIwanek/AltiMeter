@@ -1,4 +1,4 @@
-package pl.gregoryiwanek.altimeter.app.data;
+package pl.gregoryiwanek.altimeter.app.data.sessions;
 
 /**
  * Consists container class for Graph View data.

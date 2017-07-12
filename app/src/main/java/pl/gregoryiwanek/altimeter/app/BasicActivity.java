@@ -37,8 +37,8 @@ import pl.gregoryiwanek.altimeter.app.settings.SettingsFragment;
 import pl.gregoryiwanek.altimeter.app.statistics.StatisticsActivity;
 import pl.gregoryiwanek.altimeter.app.upgradepro.UpgradeProActivity;
 import pl.gregoryiwanek.altimeter.app.utils.Constants;
-import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment;
-import pl.gregoryiwanek.altimeter.app.utils.NoticeDialogFragment.NoticeDialogFragmentV4.NoticeDialogListener;
+import pl.gregoryiwanek.altimeter.app.utils.widgetextensions.NoticeDialogFragment;
+import pl.gregoryiwanek.altimeter.app.utils.widgetextensions.NoticeDialogFragment.NoticeDialogFragmentV4.NoticeDialogListener;
 import pl.gregoryiwanek.altimeter.app.utils.stylecontroller.StyleController;
 import pl.gregoryiwanek.altimeter.app.utils.VersionController;
 
@@ -58,6 +58,7 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
     @BindView(R.id.drawer_layout) protected DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view) protected NavigationView mNavigationView;
     @BindView(R.id.adView) protected AdView mAdView;
+
     private Class<?> type;
     private StyleController styleController = new StyleController(this);
 
@@ -76,7 +77,7 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
         ButterKnife.bind(this);
         setToolbar();
         setNavigationDrawer();
-        initMobileAds();
+        setMobileAds();
     }
 
     private void setToolbar() {
@@ -106,7 +107,7 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
                 mNavigationView, R.attr.colorRootNavigation);
     }
 
-    private void initMobileAds() {
+    private void setMobileAds() {
         if (VersionController.isFreeVersion(this.getPackageName())) {
             AdRequest adRequest = new AdRequest.Builder().build();
             mAdView.loadAd(adRequest);
@@ -177,7 +178,7 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
         );
     }
 
-    protected void navigateToActivity(Class<?> type) {
+    private void navigateToActivity(Class<?> type) {
         if (!getClassName().equals(type.getSimpleName())) {
             setType(type);
             runActivity();
@@ -209,7 +210,7 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
         Fragment fragment = getFragmentToShow();
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.contentFrame, fragment);
+        fragmentTransaction.replace(R.id.contentFrame, fragment, "settings");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
@@ -235,7 +236,6 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
     }
 
     private boolean isMapCreationPossible() {
-        System.out.println("class name is: " + getClassName() + " and recording session is: " + RecordingSessionActivity.class.getSimpleName());
         return getClassName().equals(RecordingSessionActivity.class.getSimpleName())
                 || getClassName().equals(DetailsActivity.class.getSimpleName());
     }
@@ -247,7 +247,7 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
 
     private void tryStartActivity(Intent intent) {
         if (type == RecordingSessionActivity.class) {
-            if (isBelowMaxSavedSessions()) {
+            if (isLessThanMaxSavedSessions()) {
                 startActivity(intent);
             } else {
                 popUpNoticeDialog(Constants.MESSAGE_UPGRADE_TO_PRO_MAX_SAVED);
@@ -266,12 +266,12 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
     }
 
     @Override
-    public void onDialogPositiveClick(String callbackCode) {
+    public void onDialogPositiveClick(int callbackCode) {
         Intent intent = new Intent(this, UpgradeProActivity.class);
         startActivity(intent);
     };
 
-    private boolean isBelowMaxSavedSessions() {
+    private boolean isLessThanMaxSavedSessions() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         return Constants.MAX_NUMBER_SESSIONS >= (preferences.getInt("numSavedSessions", Constants.MAX_NUMBER_SESSIONS));
     }

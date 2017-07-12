@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="Export session data"
+        android:title="@string/menu_export_data"
         android:id="@+id/menu_export_session_data"
         app:showAsAction="never"/>
 </menu>

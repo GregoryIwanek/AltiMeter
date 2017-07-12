@@ -1,14 +1,14 @@
-package pl.gregoryiwanek.altimeter.app.utils;
+package pl.gregoryiwanek.altimeter.app.utils.widgetextensions;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+
+import pl.gregoryiwanek.altimeter.app.utils.Constants;
 
 /**
  * Consists class responsible for delivering popup notice message.
@@ -23,7 +23,7 @@ public class NoticeDialogFragment {
     public static class NoticeDialogFragmentV4 extends DialogFragment {
 
         private String mTitle;
-        private String mMessage;
+        private int mMessageCode;
         private NoticeDialogListener mListener;
 
         @Override
@@ -54,6 +54,7 @@ public class NoticeDialogFragment {
         private void getBundleArguments() {
             Bundle args = getArguments();
             mTitle = args.getString("title");
+            mMessageCode = args.getInt("code");
         }
 
         @NonNull
@@ -62,8 +63,8 @@ public class NoticeDialogFragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage(mTitle)
                     .setPositiveButton(Constants.POSITIVE, (dialog, which) -> {
-                        setCallbackMessage(mTitle);
-                        mListener.onDialogPositiveClick(mMessage);
+                        setCallbackMessage(mMessageCode);
+                        mListener.onDialogPositiveClick(mMessageCode);
                     })
                     .setNegativeButton(Constants.CANCEL, (dialog, which) -> {
                         //nothing happens, action canceled
@@ -71,13 +72,13 @@ public class NoticeDialogFragment {
             return builder.create();
         }
 
-        private void setCallbackMessage(String message) {
-            mMessage = message;
+        private void setCallbackMessage(int messageCode) {
+            this.mMessageCode = messageCode;
         }
 
         public interface NoticeDialogListener {
 
-            void onDialogPositiveClick(String callbackCode);
+            void onDialogPositiveClick(int callbackCode);
         }
     }
 

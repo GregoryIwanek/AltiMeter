@@ -1,4 +1,4 @@
-package pl.gregoryiwanek.altimeter.app.utils;
+package pl.gregoryiwanek.altimeter.app.utils.screenshotcatcher;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import pl.gregoryiwanek.altimeter.app.R;
 import pl.gregoryiwanek.altimeter.app.map.MapFragment;
 import pl.gregoryiwanek.altimeter.app.recordingsession.RecordingSessionFragment;
+import pl.gregoryiwanek.altimeter.app.utils.formatconventer.FormatAndValueConverter;
 
 /**
  * Consists class responsible for taking care of screenshot share action, it's calculations and operations.

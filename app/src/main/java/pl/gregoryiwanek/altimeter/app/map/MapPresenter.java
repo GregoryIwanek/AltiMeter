@@ -10,9 +10,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
-import pl.gregoryiwanek.altimeter.app.data.database.source.SessionDataSource;
-import pl.gregoryiwanek.altimeter.app.data.database.source.SessionRepository;
-import pl.gregoryiwanek.altimeter.app.utils.ScreenShotCatcher;
+import pl.gregoryiwanek.altimeter.app.data.database.SessionDataSource;
+import pl.gregoryiwanek.altimeter.app.data.database.SessionRepository;
+import pl.gregoryiwanek.altimeter.app.utils.screenshotcatcher.ScreenShotCatcher;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

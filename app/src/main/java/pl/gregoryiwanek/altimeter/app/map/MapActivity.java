@@ -6,8 +6,8 @@ import android.support.annotation.Nullable;
 import butterknife.ButterKnife;
 import pl.gregoryiwanek.altimeter.app.BasicActivity;
 import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.data.database.source.SessionRepository;
-import pl.gregoryiwanek.altimeter.app.data.database.source.local.SessionLocalDataSource;
+import pl.gregoryiwanek.altimeter.app.data.database.SessionRepository;
+import pl.gregoryiwanek.altimeter.app.data.database.local.LocalDataSource;
 
 /**
  * Consists main activity of the Map section.
@@ -43,7 +43,7 @@ public class MapActivity extends BasicActivity {
     private void setPresenter() {
         String id = getIntent().getStringExtra("sessionId");
         MapPresenter mMapPresenter = new MapPresenter(id,
-                SessionRepository.getInstance(SessionLocalDataSource.getInstance(getApplicationContext())),
+                SessionRepository.getInstance(LocalDataSource.newInstance(getApplicationContext())),
                 mMapFragment);
     }
 }

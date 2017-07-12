@@ -33,5 +33,7 @@ interface DetailsContract {
         void saveTextChanges();
 
         void saveChangesInRepository(Map<String, String> changes);
+
+        void exportSessionDataAsFile();
     }
 }

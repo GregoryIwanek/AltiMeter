@@ -1,0 +1,121 @@
+<resources>
+    <string name="app_name">AltiMeter</string>
+
+    <!--WelcomeScreen label strings-->
+    <string name="ws_height" translatable="true">Wysokość</string>
+    <string name="ws_longitude" translatable="true">Długość</string>
+    <string name="ws_latitude" translatable="true">Szerokość</string>
+    <string name="ws_max_height" translatable="true">Max Wysokość</string>
+    <string name="ws_min_height" translatable="true">Min Wysokość</string>
+    <string name="meters_short_text">m n.p.m.</string>
+    <string name="current_longitude_label">Długość</string>
+    <string name="current_latitude_label">Szerokość</string>
+    <string name="current_no_value">...</string>
+    <string name="max_height_text">Max Wysokość</string>
+    <string name="min_height_text">Min Wysokość</string>
+    <string name="service_not_available">Usługa niedostępna</string>
+    <string name="invalid_lat_long_used">Użyta wysokość, szerokość nieprawidłowa</string>
+    <string name="no_address_found">Nie znaleziono adresu</string>
+    <string name="address_found">Adres odnaleziony</string>
+    <string name="distance_text">Dystans</string>
+    <string name="drawer_opened">OTWARTE</string>
+    <string name="drawer_closed">ZAMKNIĘTE</string>
+
+    <!--settings strings-->
+    <string name="pref_send_report">Wyślij raporty błędów</string>
+    <string name="pref_send_report_summary">Pomóż naprawić bugi</string>
+    <string name="pref_sync_frequency">Częstotliwość nasłuchiwania</string>
+    <string name="pref_sync_frequency_summary">Wybierz częstotliwość nasłuchiwania lokalizacji</string>
+    <string name="pref_user_name">Ustaw nazwę użytkownika</string>
+    <string name="pref_user_name_summary">Ustaw swoją nazwę</string>
+    <string name="pref_units">Wybierz jednostki</string>
+
+    <string name="pref_user_profile">Profil użytkownika</string>
+    <string name="pref_update_setting">Zaaktualizuj ustawienia</string>
+
+    <!--about strings-->
+    <string name="about_first">Do you want to know all specific information about your location, anytime, anywhere? Do you want to share distance and altitude of your last mountain trip? Then that app is for you!</string>
+    <string name="about_second">With AltiMeter you are able to catch any information about location and store this for later use, track changes,"\ calculate distance (horizontal, vertical and combined as well) and generate graphs with elevation level and maps of places you've been.</string>
+    <string name="about_how_does_it_work">Jak to działa?</string>
+    <string name="about_what_does_it_do">Co to robi?</string>
+    <string name="pref_location_update_settings">Ustawienia lokalizacji</string>
+    <string name="pref_units_summary">Ustaw jednostki odległości</string>
+    <string name="pref_language">Wybierz język</string>
+    <string name="pref_language_summary">Wybierz preferowany język</string>
+    <string name="pref_style_name">Wybierz styl</string>
+    <string name="pref_style_summary">Wybierz preferowany styl</string>
+    <string name="altitude_graphs">Grafy wysokościowe</string>
+    <string name="new_graph">Nowy graf</string>
+    <string name="map">Mapa</string>
+    <string name="statistics">Statystyki</string>
+    <string name="settings">Ustawienia</string>
+    <string name="about">About</string>
+    <string name="net">net</string>
+    <string name="hpa">hPa</string>
+    <string name="gps">gps</string>
+    <string name="about_menu_description">Przycisk menu nawigacji</string>
+    <string name="about_title">Tytuł</string>
+    <string name="about_actions_main">Przycisk akcji. \nUsuń wszystkie \nUsuń zaznaczone</string>
+    <string name="about_actions_stats">Przycisk akcji. \nZresetuj statystyki</string>
+    <string name="about_share_button">Przycisk menu "podziel się"</string>
+    <string name="about_address_label">Adres ostatniej pobranej lokalizacji</string>
+    <string name="about_checkbox_main">Checkboxes. Zaznacz aby usunąć pojedyńczą sesję</string>
+    <string name="about_labels_details">Informacje o detalach</string>
+    <string name="about_map_content">Mapa z przebytą ścieżką</string>
+    <string name="about_current_elevation">Wysokość ostatniej pobranej lokalizacji</string>
+    <string name="about_rows_main">Sesje. Kliknij aby zobaczyć detale.</string>
+    <string name="about_edit_details">Pole edycji tytułu i opisu</string>
+    <string name="about_recording_buttons">Przyciski kontroli sesji</string>
+    <string name="about_button_add_main">Przycisk "utwórz nową sesję"</string>
+    <string name="about_button_save_details">Przycisk "zapisz tytuł i opis"</string>
+    <string name="about_info_details">Informacje o sesji</string>
+    <string name="about_graph">Graf prezentujący wysokości zapisane w czasie sesji</string>
+    <string name="about_gps_button">Przycisk Gps. Pozwala na użycie modułu gps w celu określenia lokalizacji</string>
+    <string name="about_network_button">Przycisk sieci. Pozwala na użycie sieci w celu bardzo dokładnego określenia wysokości</string>
+    <string name="about_pressure_button">Przycisk barometru. Pozwala na użycie sensora ciśnienowego w celu określenia wysokości</string>
+    <string name="about_min_height">Minimalna wysokość zapisana w trakcie sesji</string>
+    <string name="about_distance">Dystans przebyty w trakcie sesji</string>
+    <string name="about_max_height">Maksymalna wysokość zapisana w trakcie sesji</string>
+    <string name="about_latitude">Długość ostatniej pobranej lokalizacji</string>
+    <string name="about_longitude">Szerokość ostatniej pobranej lokalizacji</string>
+    <string name="new_graph_screen">Ekran nowego grafu</string>
+    <string name="graphs">G\nR\nA\nF\n\nY</string>
+    <string name="new_button">N\nO\nW\nA</string>
+    <string name="details">D\nE\nT\nA\nL\nE</string>
+    <string name="stats">S\nT\nA\nT</string>
+    <string name="map_button">M\nA\nP\nA</string>
+    <string name="author">A\nU\nT\nO\nR</string>
+    <string name="labels_stats">Globalne statystki</string>
+    <string name="label_stats_values">Wartości globalnych statystyk</string>
+    <string name="about_actions_share">Podziel się</string>
+
+    <!--SESSION CONSTANT STRINGS-->
+    <string name="positive">OK</string>
+    <string name="negative">ANULUJ</string>
+    <string name="upgrade_to_pro_export">Upgrade to AltiMeterPRO to export sessions data.\nDo you want to upgrade?</string>
+    <string name="upgrade_to_pro_max_saved">Upgrade to AltiMeterPro to save more than 5 sessions.\nDo you want to upgrade?</string>
+    <string name="message_generate_map">Generować mapę?</string>
+    <string name="message_send_to">Udostępnić?</string>
+    <string name="message_save_session">Zapisać sesję do bazy danych?</string>
+    <string name="message_reset_session">Reset sesji. Jesteś pewien?</string>
+    <string name="message_delete_all">Usuń wszystkie?</string>
+    <string name="message_delete_checked">Usuń zaznaczone?</string>
+    <string name="message_reset_statistics">Reset statystyk?</string>
+    <string name="message_saving_please_wait">Zapisywanie danych, proszę czekaj...</string>
+    <string name="toast_empty_map">Sesja nie ma zapisanych punktów. Zapisz punkty w celu generacji mapy...</string>
+    <string name="toast_session_saved">Dane sesji zapisane</string>
+    <string name="toast_session_paused">Zatrzymano</string>
+    <string name="toast_session_recording">Start sesji</string>
+    <string name="toast_turn_on_source">Zaznacz przynajmniej jedno źródło danych</string>
+    <string name="toast_must_stop_session">Musisz najpierw zatrzymać sesję</string>
+    <string name="toast_checked_deleted">Usunięto zaznaczone sesje</string>
+    <string name="toast_all_deleted">Usunięto wszystkie sesje</string>
+    <string name="toast_changes_saved">Zapisano zmiany</string>
+
+    <!--menu strings-->
+    <string name="menu_delete_all">Usuń wszystkie</string>
+    <string name="menu_delete_checked">Usuń zaznaczone</string>
+    <string name="menu_share">Udostępnij</string>
+    <string name="menu_export_data">Eksport danych</string>
+    <string name="menu_reset_statistics">Reset statystyk</string>
+</resources>

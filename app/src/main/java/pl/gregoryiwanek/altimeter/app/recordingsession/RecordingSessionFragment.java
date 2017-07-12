@@ -1,5 +1,6 @@
 package pl.gregoryiwanek.altimeter.app.recordingsession;
 
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -23,10 +25,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.gregoryiwanek.altimeter.app.BasicFragment;
 import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.data.GraphPoint;
+import pl.gregoryiwanek.altimeter.app.data.sessions.GraphPoint;
 import pl.gregoryiwanek.altimeter.app.map.MapActivity;
+import pl.gregoryiwanek.altimeter.app.recordingsession.RecordingSessionContract.ParentActivityCallback;
 import pl.gregoryiwanek.altimeter.app.utils.Constants;
-import pl.gregoryiwanek.altimeter.app.utils.stylecontroller.StyleController;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -45,7 +47,7 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
     @BindView(R.id.distance_numbers) TextView mDistanceTextView;
     @BindView(R.id.reset_button) ImageButton mRefreshButton;
     @BindView(R.id.pause_button) ImageButton mPlayPauseButton;
-    @BindView(R.id.lock_button) ImageButton mLockButton;
+    @BindView(R.id.save_session_button) ImageButton mSaveButton;
     @BindView(R.id.map_button) ImageButton mMapButton;
     @BindView(R.id.graph_view) GraphViewWidget mGraphViewWidget;
     @BindView(R.id.gps_button) ImageButton mGpsButton;
@@ -54,9 +56,12 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
     @BindView(R.id.gps_value_label) TextView mGpsValueTextView;
     @BindView(R.id.network_value_label) TextView mNetworkValueTextView;
     @BindView(R.id.barometer_value_label) TextView mBarometerValueTextView;
+    @BindView(R.id.progress_bar) ProgressBar mProgressBar;
+    @BindView(R.id.progress_text) TextView mProgressTextView;
 
-    private StyleController styleController;
+    private ParentActivityCallback mCallback;
     private RecordingSessionContract.Presenter mPresenter;
+    private ProgressDialog progressDialog;
 
     public static RecordingSessionFragment newInstance() {
         return new RecordingSessionFragment();
@@ -77,18 +82,13 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setButtonColorsByTheme();
+        setProgressDialog();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         mPresenter.start();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mPresenter.onActivityPaused();
     }
 
     @Override
@@ -142,14 +142,32 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
         mGraphViewWidget.clearData();
     }
 
-    @OnClick(R.id.reset_button)
-    public void onResetButtonClick() {
-        super.popUpNoticeDialog(Constants.MESSAGE_RESET_SESSION);
+    @Override
+    public void showProgressDialog() {
+        progressDialog.setCancelable(false);
+        progressDialog.show();
     }
 
-    @OnClick(R.id.lock_button)
-    public void onLockButtonCLick() {
-        super.popUpNoticeDialog(Constants.MESSAGE_LOCK_SESSION);
+    @Override
+    public void hideProgressDialog() {
+        progressDialog.hide();
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+        progressDialog.dismiss();
+    }
+
+    @OnClick(R.id.reset_button)
+    public void onResetButtonClick() {
+        super.popUpNoticeDialog(Constants.TEXT.MESSAGE_RESET_SESSION.getValue(getContext()),
+                Constants.CODE_RESET_SESSION);
+    }
+
+    @OnClick(R.id.save_session_button)
+    public void onSaveButtonCLick() {
+        super.popUpNoticeDialog(Constants.TEXT.MESSAGE_SAVE_SESSION.getValue(getContext()),
+                Constants.CODE_SAVE_SESSION);
     }
 
     @OnClick(R.id.map_button)
@@ -162,16 +180,23 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
         int tag = getButtonTagAsInt(mPlayPauseButton);
         switch (tag) {
             case R.drawable.ic_play_arrow_black_24dp:
-                mPresenter.callStartLocationRecording();
-                super.applyColorToSingleView(mPlayPauseButton, R.attr.colorButtonSecondary);
+                playEventCalled();
                 break;
             case R.drawable.ic_pause_black_24dp:
-                mPresenter.pauseLocationRecording();
-                super.applyColorToSingleView(mPlayPauseButton, R.attr.colorButtonPrimary);
+                pauseEventCalled();
                 break;
             default:
                 break;
         }
+    }
+
+    private void playEventCalled() {
+        checkDataSourceOpen();
+    }
+
+    private void pauseEventCalled() {
+        mPresenter.pauseLocationRecording();
+        super.applyColorToSingleView(mPlayPauseButton, R.attr.colorButtonPrimary);
     }
 
     @OnClick(R.id.gps_button)
@@ -249,19 +274,20 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
     }
 
     private void showStopSession() {
-        showMessage(Constants.TOAST_MUST_STOP_SESSION);
+        showMessage(Constants.TEXT.TOAST_MUST_STOP_SESSION.getValue(getContext()));
     }
 
     @Override
-    public void onDialogPositiveClick(String callbackCode) {
+    public void onDialogPositiveClick(int callbackCode) {
         switch (callbackCode) {
-            case Constants.MESSAGE_RESET_SESSION:
+            case Constants.CODE_RESET_SESSION:
                 mPresenter.resetSessionData();
                 break;
-            case Constants.MESSAGE_LOCK_SESSION:
-                mPresenter.lockSession();
+            case Constants.CODE_SAVE_SESSION:
+                pauseEventCalled();
+                mPresenter.saveSession(false);
                 break;
-            case Constants.MESSAGE_GENERATE_MAP:
+            case Constants.CODE_GENERATE_MAP:
                 mPresenter.openMapOfSession();
                 break;
         }
@@ -279,6 +305,13 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
 
     private void initButtonsDefault() {
         initiateButtonsTags();
+    }
+
+    private void setProgressDialog() {
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage(Constants.TEXT.MESSAGE_SAVING_PLEASE_WAIT.getValue(getContext()));
+        progressDialog.hide();
+
     }
 
     private void initiateButtonsTags() {
@@ -322,8 +355,9 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
     public void checkDataSourceOpen() {
         if (isAnyDataSourceOpen()) {
             mPresenter.startLocationRecording();
+            super.applyColorToSingleView(mPlayPauseButton, R.attr.colorButtonSecondary);
         } else {
-            showMessage(Constants.TOAST_TURN_ON_SOURCE);
+            showMessage(Constants.TEXT.TOAST_TURN_ON_SOURCE.getValue(getContext()));
         }
     }
 
@@ -334,28 +368,29 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
     }
 
     @Override
-    public void showSessionLocked() {
-        showMessage(Constants.TOAST_SESSION_LOCKED);
+    public void showSessionSaved() {
+        showMessage(Constants.TEXT.TOAST_SESSION_SAVED.getValue(getContext()));
     }
 
     @Override
     public void showRecordingPaused() {
-        showMessage(Constants.TOAST_SESSION_PAUSED);
+        showMessage(Constants.TEXT.TOAST_SESSION_PAUSED.getValue(getContext()));
     }
 
     @Override
     public void showRecordingData() {
-        showMessage(Constants.TOAST_SESSION_RECORDING);
+        showMessage(Constants.TEXT.TOAST_SESSION_RECORDING.getValue(getContext()));
     }
 
     @Override
     public void askGenerateMap() {
-        super.popUpNoticeDialog(Constants.MESSAGE_GENERATE_MAP);
+        super.popUpNoticeDialog(Constants.TEXT.MESSAGE_GENERATE_MAP.getValue(getContext()),
+                Constants.CODE_GENERATE_MAP);
     }
 
     @Override
     public void showShareMenu(Intent screenshotIntent) {
-        startActivity(Intent.createChooser(screenshotIntent, Constants.MESSAGE_SEND_TO));
+        startActivity(Intent.createChooser(screenshotIntent, Constants.TEXT.MESSAGE_SEND_TO.getValue(getContext())));
     }
 
     @Override
@@ -367,12 +402,12 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
 
     @Override
     public void showMapEmpty() {
-        showMessage(Constants.TOAST_EMPTY_MAP);
+        showMessage(Constants.TEXT.TOAST_EMPTY_MAP.getValue(getContext()));
     }
 
-    @SuppressWarnings("ConstantConditions")
+
     private void showMessage(String message) {
-        Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
@@ -423,6 +458,17 @@ public class RecordingSessionFragment extends BasicFragment implements Recording
     @Override
     public void setBarometerTextView(String barometerAlt) {
         mBarometerValueTextView.setText(barometerAlt);
+    }
+
+    public void onBackButtonPressed(ParentActivityCallback callback) {
+        mCallback = callback;
+        pauseEventCalled();
+        mPresenter.saveSession(true);
+    }
+
+    @Override
+    public void onSaveCompletedFromButtonBack() {
+        mCallback.onSessionSaved();
     }
 }
 

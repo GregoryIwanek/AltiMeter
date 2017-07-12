@@ -12,7 +12,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.util.ArrayList;
 
 import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.data.GraphPoint;
+import pl.gregoryiwanek.altimeter.app.data.sessions.GraphPoint;
 import pl.gregoryiwanek.altimeter.app.utils.stylecontroller.StyleController;
 
 /**

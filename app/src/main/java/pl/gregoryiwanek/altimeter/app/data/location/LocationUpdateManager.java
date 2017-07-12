@@ -14,7 +14,7 @@ import android.support.annotation.Nullable;
 
 import java.util.List;
 
-import pl.gregoryiwanek.altimeter.app.data.Session;
+import pl.gregoryiwanek.altimeter.app.data.sessions.Session;
 import pl.gregoryiwanek.altimeter.app.data.location.managers.BarometerManager;
 import pl.gregoryiwanek.altimeter.app.data.location.managers.GpsManager;
 import pl.gregoryiwanek.altimeter.app.data.location.managers.NetworkManager;
@@ -30,7 +30,7 @@ import pl.gregoryiwanek.altimeter.app.data.location.services.helpers.airporttask
 import pl.gregoryiwanek.altimeter.app.data.location.services.helpers.airporttask.AirportsWithDataTaskRx;
 import pl.gregoryiwanek.altimeter.app.data.location.services.helpers.airporttask.xmlparser.XmlAirportValues;
 import pl.gregoryiwanek.altimeter.app.utils.Constants;
-import pl.gregoryiwanek.altimeter.app.utils.FormatAndValueConverter;
+import pl.gregoryiwanek.altimeter.app.utils.formatconventer.FormatAndValueConverter;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;

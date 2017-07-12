@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Language-->
+    <string-array name="languageArray">
+        <item name="Polski">Polski</item>
+        <item name="English">English</item>
+    </string-array>
+    <string-array name="languageArrayValues">
+        <item name="Polski">POLISH</item>
+        <item name="English">ENGLISH</item>
+    </string-array>
+
+    <!--Style-->
+    <string-array name="styleArray">
+        <item name="Light">Jasny</item>
+        <item name="Dark">Ciemny</item>
+        <item name="Candy">Candy</item>
+        <item name="Dracula">Dracula</item>
+        <item name="Ocean">Ocean</item>
+        <item name="Forest">Las</item>
+    </string-array>
+    <string-array name="styleValues">
+        <item name="Light">Light</item>
+        <item name="Dark">Dark</item>
+        <item name="Candy">Candy</item>
+        <item name="Dracula">Dracula</item>
+        <item name="Ocean">Ocean</item>
+        <item name="Forest">Forest</item>
+    </string-array>
+
+    <!--Location update frequency settings-->
+    <string-array name="syncLocationUpdateFrequency">
+        <item name="5">Co 5 sekund</item>
+        <item name="10">Co 10 sekund</item>
+        <item name="30">Co 30 sekund</item>
+        <item name="60">Co 1 minut</item>
+        <item name="2">Co 2 minut</item>
+        <item name="5">Co 5 minut</item>
+    </string-array>
+    <string-array name="syncLocationUpdateFrequencyValues">
+        <item name="5">5</item>
+        <item name="10">10</item>
+        <item name="30">30</item>
+        <item name="60">60</item>
+        <item name="2">120</item>
+        <item name="5">300</item>
+    </string-array>
+
+    <!--Units-->
+    <string-array name="unitsArray">
+        <item name="Meters">Metry</item>
+        <item name="Kilometers">Kilometry</item>
+        <item name="Miles">Mile</item>
+    </string-array>
+    <string-array name="unitsArrayValues">
+        <item name="Meters">METERS</item>
+        <item name="Kilometers">KILOMETERS</item>
+        <item name="Miles">MILES</item>
+    </string-array>
+
+    <string-array name="statistics_names">
+        <item name="num_sessions">num_sessions</item>
+        <item name="num_points">num_points</item>
+        <item name="distance">distance</item>
+        <item name="max_altitude">max_altitude</item>
+        <item name="min_altitude">min_altitude</item>
+        <item name="long_session">long_session</item>
+    </string-array>
+
+    <string-array name="upgrade_pro_list_values">
+        <item name="str_export">Export danych zapisanych sesji</item>
+        <item name="str_save">Nielimitowana liczba sesji do zapisania</item>
+        <item name="str_details">Nowy wygląd okna detali sesji</item>
+        <item name="str_icon">Dynamiczna ikona z aktualną wysokością</item>
+        <item name="str_style">Zestaw unikalnych styli</item>
+        <item name="str_commercials">Brak reklam</item>
+    </string-array>
+
+    <array name="upgrade_pro_list_images">
+        <item>@drawable/ic_import_export_black_24dp</item>
+        <item>@drawable/ic_save_black_24dp</item>
+        <item>@drawable/ic_fiber_new_black_24dp</item>
+        <item>@drawable/ic_event_note_black_24dp</item>
+        <item>@drawable/ic_style_black_24dp</item>
+        <item>@drawable/ic_mood_black_24dp</item>
+    </array>
+</resources>

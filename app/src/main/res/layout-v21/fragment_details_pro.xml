@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="10">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="0.95">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_title_24dp" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/title_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:text="TITLE"
+                        android:layout_gravity="center"
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:textSize="@dimen/text_size_16sp"
+                        android:paddingLeft="@dimen/margin_16dp"
+                        android:paddingRight="@dimen/margin_16dp"/>
+                </FrameLayout>
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <EditText
+                    android:id="@+id/title_value_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:text="..."
+                    android:inputType="textCapWords|textMultiLine"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textSize="@dimen/text_size_16sp"
+                    android:gravity="right|center_vertical"
+                    android:paddingLeft="@dimen/margin_16dp"
+                    android:paddingRight="@dimen/margin_16dp"/>
+            </FrameLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="0.95">
+
+            <TextView
+                android:id="@+id/description_label"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                android:text="DESCRIPTION"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textSize="@dimen/text_size_16sp"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/margin_16dp"
+                android:paddingRight="@dimen/margin_16dp"/>
+
+            <EditText
+                android:id="@+id/description_value_label"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                android:text="..."
+                android:inputType="textCapWords|textMultiLine"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textSize="@dimen/text_size_16sp"
+                android:gravity="right|center_vertical"
+                android:paddingLeft="@dimen/margin_16dp"
+                android:paddingRight="@dimen/margin_16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/changes_label"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                android:text="SAVE CHANGES"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textSize="@dimen/text_size_16sp"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/margin_16dp"
+                android:paddingRight="@dimen/margin_16dp"/>
+
+            <Button
+                android:id="@+id/save_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="8dp"
+                android:text="OK"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/id_label"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                android:text="UNIQUE ID"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textSize="@dimen/text_size_16sp"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/margin_16dp"
+                android:paddingRight="@dimen/margin_16dp"/>
+
+            <TextView
+                android:id="@+id/id_value_label"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                android:text="..."
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textSize="@dimen/text_size_16sp"
+                android:gravity="right|center_vertical"
+                android:paddingLeft="@dimen/margin_16dp"
+                android:paddingRight="@dimen/margin_16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/points_count_label"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                android:text="NUMBER OF POINTS"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textSize="@dimen/text_size_16sp"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/margin_16dp"
+                android:paddingRight="@dimen/margin_16dp"/>
+
+            <TextView
+                android:id="@+id/points_count_value_label"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                android:text="..."
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textSize="@dimen/text_size_16sp"
+                android:gravity="right|center_vertical"
+                android:paddingLeft="@dimen/margin_16dp"
+                android:paddingRight="@dimen/margin_16dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/time_start_label"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                android:text="TIME START"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textSize="@dimen/text_size_16sp"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/margin_16dp"
+                android:paddingRight="@dimen/margin_16dp"/>
+
+            <TextView
+                android:id="@+id/time_start_value_label"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                android:text="..."
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textSize="@dimen/text_size_16sp"
+                android:gravity="right|center_vertical"
+                android:paddingLeft="@dimen/margin_16dp"
+                android:paddingRight="@dimen/margin_16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/time_end_label"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                android:text="TIME END"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textSize="@dimen/text_size_16sp"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/margin_16dp"
+                android:paddingRight="@dimen/margin_16dp"/>
+
+            <TextView
+                android:id="@+id/time_end_value_label"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                android:text="..."
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textSize="@dimen/text_size_16sp"
+                android:gravity="right|center_vertical"
+                android:paddingLeft="@dimen/margin_16dp"
+                android:paddingRight="@dimen/margin_16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/distance_label"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                android:text="DISTANCE"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textSize="@dimen/text_size_16sp"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/margin_16dp"
+                android:paddingRight="@dimen/margin_16dp"/>
+
+            <TextView
+                android:id="@+id/distance_value_label"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                android:text="..."
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textSize="@dimen/text_size_16sp"
+                android:gravity="right|center_vertical"
+                android:paddingLeft="@dimen/margin_16dp"
+                android:paddingRight="@dimen/margin_16dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

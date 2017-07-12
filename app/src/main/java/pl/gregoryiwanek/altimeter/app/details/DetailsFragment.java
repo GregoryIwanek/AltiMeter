@@ -39,8 +39,6 @@ public class DetailsFragment extends BasicFragment implements DetailsContract.Vi
 
     private DetailsContract.Presenter mPresenter;
 
-    public DetailsFragment() {}
-
     public static DetailsFragment newInstance() {
         return new DetailsFragment();
     }
@@ -65,10 +63,11 @@ public class DetailsFragment extends BasicFragment implements DetailsContract.Vi
         switch (item.getItemId()) {
             case R.id.menu_export_session_data:
                 String packageName = this.getClass().getPackage().toString();
-                if (!VersionController.isFreeVersion(packageName)) {
-                    popUpNoticeDialog(Constants.MESSAGE_UPGRADE_TO_PRO_EXPORT);
+                if (VersionController.isFreeVersion(packageName)) {
+                    popUpNoticeDialog(Constants.TEXT.MESSAGE_UPGRADE_TO_PRO_EXPORT.getValue(getContext()),
+                            Constants.CODE_UPGRADE_EXPORT);
                 } else {
-                    // todo code responsible for exporting data from database to file
+                    mPresenter.exportSessionDataAsFile();
                 }
                 break;
         }
@@ -97,6 +96,7 @@ public class DetailsFragment extends BasicFragment implements DetailsContract.Vi
         mPresenter.saveTextChanges();
     }
 
+    // TODO: 03.07.2017 retrieve id from the session presenter's repository , remove id text view
     @Override
     public void sendChanges() {
         Map<String, String> changesMap = new ArrayMap<>();
@@ -106,9 +106,10 @@ public class DetailsFragment extends BasicFragment implements DetailsContract.Vi
         mPresenter.saveChangesInRepository(changesMap);
     }
 
+    // TODO: 03.07.2017 move string into Constants
     @Override
     public void showChangesSaved() {
-        showMessage("Changes saved");
+        showMessage(Constants.TEXT.TOAST_CHANGES_SAVED.getValue(getContext()));
     }
 
     private void showMessage(String message) {
@@ -152,9 +153,9 @@ public class DetailsFragment extends BasicFragment implements DetailsContract.Vi
 
     // // TODO: 17.06.2017
     @Override
-    public void onDialogPositiveClick(String callbackCode) {
+    public void onDialogPositiveClick(int callbackCode) {
         switch (callbackCode) {
-            case Constants.MESSAGE_UPGRADE_TO_PRO_EXPORT:
+            case Constants.CODE_UPGRADE_EXPORT:
                 super.openUpgradePro();
                 break;
         }

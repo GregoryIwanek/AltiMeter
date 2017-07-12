@@ -5,7 +5,7 @@ import java.util.List;
 
 import pl.gregoryiwanek.altimeter.app.BasePresenter;
 import pl.gregoryiwanek.altimeter.app.BaseView;
-import pl.gregoryiwanek.altimeter.app.data.Session;
+import pl.gregoryiwanek.altimeter.app.data.sessions.Session;
 
 /**
  * Created by Grzegorz Iwanek on 18.01.2017. That's it

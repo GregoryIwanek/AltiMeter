@@ -4,10 +4,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import java.util.List;
 import java.util.Map;
 
-import pl.gregoryiwanek.altimeter.app.data.database.source.SessionDataSource;
-import pl.gregoryiwanek.altimeter.app.data.database.source.SessionRepository;
+import pl.gregoryiwanek.altimeter.app.data.database.SessionDataSource;
+import pl.gregoryiwanek.altimeter.app.data.database.SessionRepository;
+import pl.gregoryiwanek.altimeter.app.utils.databaseexporter.DatabaseExporter;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -20,7 +22,6 @@ class DetailsPresenter implements DetailsContract.Presenter {
     private final DetailsFragment mDetailsView;
     private final SessionRepository mSessionRepository;
     private final String sessionId;
-
     DetailsPresenter(String id,
                      @NonNull SessionRepository sessionRepository,
                      @NonNull DetailsFragment detailsFragment) {
@@ -48,6 +49,15 @@ class DetailsPresenter implements DetailsContract.Presenter {
             public void onChangesSaved() {
                 mDetailsView.showChangesSaved();
             }
+
+            @Override
+            public void onExportDataLoaded(List<String[]> args) {
+                for (String[] arrayArg : args) {
+                    for (String str : arrayArg) {
+                        System.out.println("array string is: " + str);
+                    }
+                }
+            }
         };
     }
 
@@ -65,5 +75,14 @@ class DetailsPresenter implements DetailsContract.Presenter {
     @Override
     public void saveChangesInRepository(Map<String, String> changes) {
         mSessionRepository.updateDetailsChanges(callbackDetails, changes);
+    }
+
+    @Override
+    public void exportSessionDataAsFile() {
+        Context context = mDetailsView.getContext();
+        DatabaseExporter exporter = DatabaseExporter.getInstance();
+        exporter.exportSessionDataAsFile(
+                mSessionRepository.getDataToExportAsFile(sessionId, callbackDetails, context)
+        );
     }
 }

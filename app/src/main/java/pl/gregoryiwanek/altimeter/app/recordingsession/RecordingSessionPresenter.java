@@ -5,19 +5,16 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.view.Window;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.data.Session;
-import pl.gregoryiwanek.altimeter.app.data.database.source.SessionDataSource;
-import pl.gregoryiwanek.altimeter.app.data.database.source.SessionRepository;
+import pl.gregoryiwanek.altimeter.app.data.database.SessionDataSource;
+import pl.gregoryiwanek.altimeter.app.data.sessions.Session;
+import pl.gregoryiwanek.altimeter.app.data.database.SessionRepository;
 import pl.gregoryiwanek.altimeter.app.data.location.LocationResponse;
 import pl.gregoryiwanek.altimeter.app.data.location.LocationUpdateManager;
 import pl.gregoryiwanek.altimeter.app.data.location.managers.BarometerManager;
 import pl.gregoryiwanek.altimeter.app.data.location.managers.GpsManager;
 import pl.gregoryiwanek.altimeter.app.data.location.managers.NetworkManager;
-import pl.gregoryiwanek.altimeter.app.utils.ScreenShotCatcher;
+import pl.gregoryiwanek.altimeter.app.utils.screenshotcatcher.ScreenShotCatcher;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -97,14 +94,9 @@ class RecordingSessionPresenter implements Presenter {
 
     @Override
     public void openMapOfSession() {
-        saveSessionToDatabase();
+        saveSession(false);
         String id = mSession.getId();
         mRecordingSessionView.showSessionMap(id);
-    }
-
-    @Override
-    public void callStartLocationRecording() {
-        mRecordingSessionView.checkDataSourceOpen();
     }
 
     @Override
@@ -156,7 +148,6 @@ class RecordingSessionPresenter implements Presenter {
         updateManagerState(GpsManager.class, false);
         int tag = R.drawable.ic_gps_lock_24dp;
         updateButtonState(tag);
-
     }
 
     @Override
@@ -192,26 +183,29 @@ class RecordingSessionPresenter implements Presenter {
     }
 
     @Override
-    public void lockSession() {
-        int tag = R.drawable.ic_play_arrow_black_24dp;
-        updateButtonState(tag);
+    public void saveSession(boolean isSaveCalledByButtonBack) {
+        mSessionRepository.setDatabaseSaveCallback(new SessionDataSource.AsyncDatabaseTask() {
+            @Override
+            public void onPreExecuteTriggered() {
+                mRecordingSessionView.showProgressDialog();
+            }
 
-        mRecordingSessionView.showSessionLocked();
-        mLocationUpdateManager.stopListenForLocations(true);
+            @Override
+            public void onPostExecuteTriggered() {
+                if (isSaveCalledByButtonBack) {
+                    mRecordingSessionView.dismissProgressDialog();
+                    mRecordingSessionView.onSaveCompletedFromButtonBack();
+                } else {
+                    mRecordingSessionView.hideProgressDialog();
+                }
+            }
+        });
+        mSessionRepository.saveSessionToDatabase(mSession);
     }
 
     @Override
     public void onActivityDestroyedUnsubscribeRx() {
         mLocationUpdateManager.onActivityDestroyed();
-    }
-
-    @Override
-    public void onActivityPaused() {
-        saveSessionToDatabase();
-    }
-
-    private void saveSessionToDatabase() {
-        mSessionRepository.updateSessionData(mSession);
     }
 
     @Override
