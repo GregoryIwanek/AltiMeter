@@ -28,7 +28,7 @@ To code and build this app was used:
 **Libraries**
 * <a href="https://github.com/JakeWharton/butterknife" title="ButterKnife">ButterKnife</a>
 * <a href="https://github.com/appsthatmatter/GraphView" title="GraphView">GraphView</a>
-* <a href="https://github.com/ReactiveX/RxJava" title="GraphView">RxJava</a>
+* <a href="https://github.com/ReactiveX/RxJava" title="RxJava">RxJava</a>
 
 **Play services**
 * location

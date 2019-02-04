@@ -1,17 +1,17 @@
 package pl.gregoryiwanek.altimeter.app.data.database.source;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
+import android.content.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import androidx.annotation.*;
 
-import pl.gregoryiwanek.altimeter.app.data.Session;
+import java.util.*;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import pl.gregoryiwanek.altimeter.app.data.sessions.*;
+import pl.gregoryiwanek.altimeter.app.utils.databaseexporter.*;
+
+import static com.google.common.base.Preconditions.*;
+
+//import pl.gregoryiwanek.altimeter.app.data.Session;
 
 /**
  * Created by Grzegorz Iwanek on 27.01.2017.
@@ -102,16 +102,13 @@ public class SessionRepository implements SessionDataSource {
     }
 
     @Override
-    public void createNewSession(@NonNull final Session session, @NonNull final SaveSessionCallback callback) {
+    public void createNewSession(@NonNull final Session session, final SaveSessionCallback callback) {
         //TODO-> consider adding remote data source
         //TODO-> change form of architecture here
         checkNotNull(session);
-        mSessionLocalDataSource.createNewSession(session, new SaveSessionCallback() {
-            @Override
-            public void onNewSessionSaved(String id) {
-                callback.onNewSessionSaved(id);
-                mSessionLocalDataSource.createRecordsTable(session);
-            }
+        mSessionLocalDataSource.createNewSession(session, id -> {
+            callback.onNewSessionSaved(id);
+            mSessionLocalDataSource.createRecordsTable(session);
         });
 
         // Do in memory cache update to keep the app UI to date
@@ -148,7 +145,7 @@ public class SessionRepository implements SessionDataSource {
 
     @Override
     public void deleteSessions(ArrayList<String> sessionsId, boolean isDeleteAll,
-                               @NonNull DeleteSessionCallback callback) {
+                                DeleteSessionCallback callback) {
         mSessionLocalDataSource.deleteSessions(sessionsId, isDeleteAll, callback);
         deleteFromCache(sessionsId, isDeleteAll);
         callback.onSessionsDeleted();
@@ -230,5 +227,14 @@ public class SessionRepository implements SessionDataSource {
 
     private void getSessionsFromRemoteDataSource(@NonNull final LoadSessionsCallback callback) {
 
+    }
+    public SQLSessionContent getDataToExportAsFile(String sessionId, DetailsSessionCallback callbackDetails, Context context) {
+        return null;
+    }
+    public void saveSessionToDatabase(Session mSession) {
+
+    }
+    public void setDatabaseSaveCallback(AsyncDatabaseTask asyncDatabaseTask) {
+        
     }
 }

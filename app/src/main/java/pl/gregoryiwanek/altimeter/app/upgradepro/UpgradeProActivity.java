@@ -1,7 +1,9 @@
 package pl.gregoryiwanek.altimeter.app.upgradepro;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
 
 import pl.gregoryiwanek.altimeter.app.BasicActivity;
 import pl.gregoryiwanek.altimeter.app.R;
@@ -18,6 +20,7 @@ public class UpgradeProActivity extends BasicActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_graph);
+        ViewDataBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_new_graph);
 
         super.initiateUI();
         setUpgradeProFragment();

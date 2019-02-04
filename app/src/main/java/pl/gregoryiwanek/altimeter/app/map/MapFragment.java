@@ -1,43 +1,29 @@
 package pl.gregoryiwanek.altimeter.app.map;
 
-import android.Manifest;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.BaseExpandableListAdapter;
+import android.*;
+import android.content.*;
+import android.content.pm.*;
+import android.graphics.*;
+import android.os.*;
+import android.util.*;
+import android.view.*;
+import android.widget.*;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.common.collect.Iterables;
+import androidx.annotation.*;
+import androidx.core.app.*;
+import androidx.fragment.app.*;
 
-import java.util.List;
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.*;
+import com.google.android.material.snackbar.*;
+import com.google.common.collect.*;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import java.util.*;
+
+import butterknife.*;
 import pl.gregoryiwanek.altimeter.app.R;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.*;
 
 /**
  * Consists view class of Map section.
@@ -48,6 +34,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class MapFragment extends Fragment implements MapContract.View {
 
+    private static final String TAG = MapFragment.class.getName();
     @BindView(R.id.map) MapView mMapView;
 
     private MapContract.Presenter mPresenter;
@@ -61,7 +48,7 @@ public class MapFragment extends Fragment implements MapContract.View {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         ButterKnife.bind(this, view);
         mMapView.onCreate(savedInstanceState);
@@ -71,7 +58,7 @@ public class MapFragment extends Fragment implements MapContract.View {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
     }
 
@@ -115,26 +102,24 @@ public class MapFragment extends Fragment implements MapContract.View {
     }
 
     private void generateAMap(final List<LatLng> positions) {
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @SuppressWarnings("StatementWithEmptyBody")
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                mGoogleMap = mMap;
-                mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                mGoogleMap.setMyLocationEnabled(true);
+        mMapView.getMapAsync(mMap -> {
+            mGoogleMap = mMap;
+            mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
-                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-                } else {
-                    LatLng start = positions.get(0);
-                    LatLng end = Iterables.getLast(positions);
-                    addMarkerToMap(start, "Start");
-                    addMarkerToMap(end, "End");
-                    addPolylinePathToMap(positions);
-                    setCameraPosition(end);
-                }
+
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getContext(), "Turn on location service.", Toast.LENGTH_SHORT).show();
+            } else {
+                mGoogleMap.setMyLocationEnabled(true);
+                LatLng start = positions.get(0);
+                LatLng end = Iterables.getLast(positions);
+                addMarkerToMap(start, "Start");
+                addMarkerToMap(end, "End");
+                addPolylinePathToMap(positions);
+                setCameraPosition(end);
             }
         });
     }

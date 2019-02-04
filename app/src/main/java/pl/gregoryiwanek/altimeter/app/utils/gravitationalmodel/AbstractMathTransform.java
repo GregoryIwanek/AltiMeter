@@ -187,6 +187,7 @@ public abstract class AbstractMathTransform {
          * implementation returns the dimension of output
          * points of the enclosing math transform.
          */
+        @Override
         public int getSourceDimensions() {
             return AbstractMathTransform.this.getTargetDimensions();
         }
@@ -196,6 +197,7 @@ public abstract class AbstractMathTransform {
          * implementation returns the dimension of input
          * points of the enclosing math transform.
          */
+        @Override
         public int getTargetDimensions() {
             return AbstractMathTransform.this.getSourceDimensions();
         }

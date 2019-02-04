@@ -1,10 +1,11 @@
 package pl.gregoryiwanek.altimeter.app.mainview;
 
-import android.content.Context;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.AttributeSet;
-import android.view.View;
+import android.content.*;
+import android.util.*;
+import android.view.*;
+
+import androidx.core.view.*;
+import androidx.swiperefreshlayout.widget.*;
 
 /**
  * Created by Grzegorz Iwanek on 19.01.2017.

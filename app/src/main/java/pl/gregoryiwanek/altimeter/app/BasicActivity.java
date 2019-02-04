@@ -1,46 +1,40 @@
 package pl.gregoryiwanek.altimeter.app;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.content.*;
+import android.content.pm.*;
+import android.graphics.drawable.*;
+import android.os.*;
+import android.preference.*;
+import androidx.annotation.*;
+import androidx.core.content.*;
+import androidx.core.view.*;
+import androidx.appcompat.app.*;
+import androidx.appcompat.widget.Toolbar;
+import android.view.*;
+import android.widget.*;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import pl.gregoryiwanek.altimeter.app.about.AboutFragmentMainWindow;
-import pl.gregoryiwanek.altimeter.app.details.DetailsActivity;
-import pl.gregoryiwanek.altimeter.app.mainview.SessionActivity;
-import pl.gregoryiwanek.altimeter.app.map.MapActivity;
-import pl.gregoryiwanek.altimeter.app.recordingsession.RecordingSessionActivity;
-import pl.gregoryiwanek.altimeter.app.settings.SettingsFragment;
-import pl.gregoryiwanek.altimeter.app.statistics.StatisticsActivity;
-import pl.gregoryiwanek.altimeter.app.upgradepro.UpgradeProActivity;
-import pl.gregoryiwanek.altimeter.app.utils.Constants;
-import pl.gregoryiwanek.altimeter.app.utils.widgetextensions.NoticeDialogFragment;
-import pl.gregoryiwanek.altimeter.app.utils.widgetextensions.NoticeDialogFragment.NoticeDialogFragmentV4.NoticeDialogListener;
-import pl.gregoryiwanek.altimeter.app.utils.stylecontroller.StyleController;
-import pl.gregoryiwanek.altimeter.app.utils.VersionController;
+//import com.google.android.gms.ads.*;
+import com.google.android.material.navigation.NavigationView;
+
+import butterknife.*;
+import pl.gregoryiwanek.altimeter.app.about.*;
+import pl.gregoryiwanek.altimeter.app.details.*;
+import pl.gregoryiwanek.altimeter.app.mainview.*;
+import pl.gregoryiwanek.altimeter.app.map.*;
+import pl.gregoryiwanek.altimeter.app.recordingsession.*;
+import pl.gregoryiwanek.altimeter.app.settings.*;
+import pl.gregoryiwanek.altimeter.app.statistics.*;
+import pl.gregoryiwanek.altimeter.app.upgradepro.*;
+import pl.gregoryiwanek.altimeter.app.utils.*;
+import pl.gregoryiwanek.altimeter.app.utils.stylecontroller.*;
+import pl.gregoryiwanek.altimeter.app.utils.widgetextensions.*;
+import pl.gregoryiwanek.altimeter.app.utils.widgetextensions.NoticeDialogFragment.NoticeDialogFragmentV4.*;
 
 /**
  * Superclass for all activities used in a project.
@@ -57,7 +51,7 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
     @BindView(R.id.toolbar) protected Toolbar mToolbar;
     @BindView(R.id.drawer_layout) protected DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view) protected NavigationView mNavigationView;
-    @BindView(R.id.adView) protected AdView mAdView;
+//    @BindView(R.id.adView) protected AdView mAdView;
 
     private Class<?> type;
     private StyleController styleController = new StyleController(this);
@@ -77,7 +71,7 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
         ButterKnife.bind(this);
         setToolbar();
         setNavigationDrawer();
-        setMobileAds();
+//        setMobileAds();
     }
 
     private void setToolbar() {
@@ -109,10 +103,10 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
 
     private void setMobileAds() {
         if (VersionController.isFreeVersion(this.getPackageName())) {
-            AdRequest adRequest = new AdRequest.Builder().build();
-            mAdView.loadAd(adRequest);
-            mAdView.setScaleX(0.9f);
-            mAdView.setScaleY(1.2f);
+//            AdRequest adRequest = new AdRequest.Builder().build();
+//            mAdView.loadAd(adRequest);
+//            mAdView.setScaleX(0.9f);
+//            mAdView.setScaleY(1.2f);
         }
     }
 
@@ -208,7 +202,7 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
 
     private void runFragment() {
         Fragment fragment = getFragmentToShow();
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.contentFrame, fragment, "settings");
         fragmentTransaction.addToBackStack(null);
@@ -269,16 +263,16 @@ public abstract class BasicActivity extends AppCompatActivity implements NoticeD
     public void onDialogPositiveClick(int callbackCode) {
         Intent intent = new Intent(this, UpgradeProActivity.class);
         startActivity(intent);
-    };
+    }
 
     private boolean isLessThanMaxSavedSessions() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         return Constants.MAX_NUMBER_SESSIONS >= (preferences.getInt("numSavedSessions", Constants.MAX_NUMBER_SESSIONS));
     }
 
-    public static void addFragmentToActivityOnStart(@NonNull android.support.v4.app.FragmentManager fragmentManager,
-                                                    @NonNull android.support.v4.app.Fragment fragment, int frameId) {
-        android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
+    public static void addFragmentToActivityOnStart(@NonNull FragmentManager fragmentManager,
+                                                    @NonNull Fragment fragment, int frameId) {
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(frameId, fragment);
         transaction.commit();
     }

@@ -1,22 +1,19 @@
 package pl.gregoryiwanek.altimeter.app.about;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.graphics.PorterDuff;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
+import android.graphics.*;
+import android.os.*;
+import android.view.*;
+import android.widget.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import androidx.annotation.*;
+import androidx.fragment.app.*;
 
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import java.util.*;
 import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.utils.stylecontroller.StyleController;
+
+import butterknife.*;
+import pl.gregoryiwanek.altimeter.app.*;
+import pl.gregoryiwanek.altimeter.app.utils.stylecontroller.*;
 
 public final class AboutFragmentMainWindow extends Fragment {
 

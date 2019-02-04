@@ -1,6 +1,6 @@
 package pl.gregoryiwanek.altimeter.app.upgradepro;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import pl.gregoryiwanek.altimeter.app.upgradepro.UpgradeProContract.View;
 

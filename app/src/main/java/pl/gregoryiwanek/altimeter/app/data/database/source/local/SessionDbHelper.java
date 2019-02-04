@@ -67,6 +67,7 @@ class SessionDbHelper extends SQLiteOpenHelper {
         db.setVersion(newVersion);
     }
 
+    @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }

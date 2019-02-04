@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -22,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="20"
-                android:background="@color/colorTransparent"/>
+                android:background="@color/colorTransparent" />
 
             <!--65dp-->
             <LinearLayout
@@ -75,11 +74,11 @@
                     android:id="@+id/about_labels_stats"
                     android:layout_width="145dp"
                     android:layout_height="match_parent"
-                    android:background="@drawable/customborder"/>
+                    android:background="@drawable/customborder" />
 
                 <FrameLayout
                     android:id="@+id/about_values_stats"
-                    android:layout_width="155dp"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="130"
                     android:background="@drawable/customborder" />
@@ -90,7 +89,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="40"
                 android:background="@color/colorTransparent"
-                android:orientation="horizontal"/>
+                android:orientation="horizontal" />
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

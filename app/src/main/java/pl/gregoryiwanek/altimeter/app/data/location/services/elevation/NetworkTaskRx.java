@@ -1,22 +1,16 @@
 package pl.gregoryiwanek.altimeter.app.data.location.services.elevation;
 
-import android.location.Location;
-import android.net.Uri;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.location.*;
+import android.net.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import org.json.*;
 
-import pl.gregoryiwanek.altimeter.app.utils.Constants;
+import java.io.*;
+import java.net.*;
+
+import pl.gregoryiwanek.altimeter.app.utils.*;
 import rx.Observable;
-import rx.functions.Func0;
 
 /**
  * Consist JavaRx task. Retrieves elevation value of the given location.
@@ -26,8 +20,7 @@ public class NetworkTaskRx {
 
     private String mLocationsStr;
 
-    // private constructor to prevent instantiation without location object input
-    @SuppressWarnings("unused")
+    /* private constructor to prevent instantiation without location object input*/
     private NetworkTaskRx() {}
 
     public NetworkTaskRx(Location location) {
@@ -39,15 +32,12 @@ public class NetworkTaskRx {
     }
 
     public Observable<Double> getElevationObservable() {
-        return Observable.defer(new Func0<Observable<Double>>() {
-            @Override
-            public Observable<Double> call() {
-                try {
-                    return Observable.just(getElevation());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return null;
-                }
+        return Observable.defer(() -> {
+            try {
+                return Observable.just(getElevation());
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
             }
         });
     }

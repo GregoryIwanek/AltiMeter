@@ -1,39 +1,30 @@
 package pl.gregoryiwanek.altimeter.app.mainview;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.CheckBox;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.content.*;
+import android.os.*;
+import android.preference.*;
+import android.view.*;
+import android.widget.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import androidx.annotation.*;
+import androidx.core.content.*;
+
+import com.google.android.material.floatingactionbutton.*;
+import com.google.android.material.snackbar.*;
+
+import java.util.*;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pl.gregoryiwanek.altimeter.app.BasicFragment;
 import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.data.sessions.Session;
-import pl.gregoryiwanek.altimeter.app.details.DetailsActivity;
-import pl.gregoryiwanek.altimeter.app.recordingsession.RecordingSessionActivity;
+
+import pl.gregoryiwanek.altimeter.app.*;
+import pl.gregoryiwanek.altimeter.app.data.sessions.*;
+import pl.gregoryiwanek.altimeter.app.details.*;
+import pl.gregoryiwanek.altimeter.app.recordingsession.*;
 import pl.gregoryiwanek.altimeter.app.utils.Constants;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.*;
 
 /**
  * View of this section.
@@ -55,7 +46,7 @@ public class SessionFragment extends BasicFragment implements SessionContract.Vi
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mListAdapter = new SessionAdapter(new ArrayList<Session>(0), mSessionItemListener);
+        mListAdapter = new SessionAdapter(new ArrayList<>(0), mSessionItemListener);
     }
 
     @Override
@@ -76,7 +67,7 @@ public class SessionFragment extends BasicFragment implements SessionContract.Vi
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_graph_altitude, container, false);
 
         ButterKnife.bind(this, view);
@@ -181,12 +172,7 @@ public class SessionFragment extends BasicFragment implements SessionContract.Vi
                 (SwipeRefreshLayoutChild) getView().findViewById(R.id.swipe_refresh_layout);
 
         // To make sure setRefreshing() is called after the layout is done with everything else.
-        srl.post(new Runnable() {
-            @Override
-            public void run() {
-                srl.setRefreshing(isActive);
-            }
-        });
+        srl.post(() -> srl.setRefreshing(isActive));
     }
 
     @Override
@@ -287,10 +273,7 @@ public class SessionFragment extends BasicFragment implements SessionContract.Vi
         }
 
         ArrayList<String> getCheckedId() {
-            ArrayList<String> list = new ArrayList<>();
-            for (String sessionId : mCheckedSessions) {
-                list.add(sessionId);
-            }
+            ArrayList<String> list = new ArrayList<>(mCheckedSessions);
             return list;
         }
 
@@ -303,7 +286,7 @@ public class SessionFragment extends BasicFragment implements SessionContract.Vi
         }
 
         private void clearInfoChecked() {
-            mCheckedSessions.clear();;
+            mCheckedSessions.clear();
         }
 
         @Override
@@ -336,26 +319,18 @@ public class SessionFragment extends BasicFragment implements SessionContract.Vi
 
             CheckBox removeItemCB = (CheckBox) rowView.findViewById(R.id.removeItem);
             removeItemCB.setChecked(isChecked(session.getId()));
-            removeItemCB.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (session.isCompleted()) {
-                        session.setCompleted(false);
-                        mCheckedSessions.remove(session.getId());
-                    } else {
-                        session.setCompleted(true);
-                        mCheckedSessions.add(session.getId());
-                    }
-                    mItemListener.onCheckBoxClick(session.getId(), session.isCompleted());
+            removeItemCB.setOnClickListener(view12 -> {
+                if (session.isCompleted()) {
+                    session.setCompleted(false);
+                    mCheckedSessions.remove(session.getId());
+                } else {
+                    session.setCompleted(true);
+                    mCheckedSessions.add(session.getId());
                 }
+                mItemListener.onCheckBoxClick(session.getId(), session.isCompleted());
             });
 
-            rowView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mItemListener.onSessionClick(session);
-                }
-            });
+            rowView.setOnClickListener(view1 -> mItemListener.onSessionClick(session));
 
             return rowView;
         }

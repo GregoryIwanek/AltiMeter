@@ -1,15 +1,16 @@
 package pl.gregoryiwanek.altimeter.app.mainview;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import pl.gregoryiwanek.altimeter.app.data.sessions.Session;
-import pl.gregoryiwanek.altimeter.app.data.database.SessionDataSource;
-import pl.gregoryiwanek.altimeter.app.data.database.SessionRepository;
+import pl.gregoryiwanek.altimeter.app.data.database.source.*;
+import pl.gregoryiwanek.altimeter.app.data.sessions.*;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.*;
+
+//import pl.gregoryiwanek.altimeter.app.data.database.SessionDataSource;
+//import pl.gregoryiwanek.altimeter.app.data.database.SessionRepository;
 
 /**
  * Listens to user actions from the UI ({@link SessionFragment}), retrieves the data and updates the
@@ -47,12 +48,7 @@ class SessionPresenter implements SessionContract.Presenter {
     }
 
     private void setCallbacks() {
-        callbackDelete = new SessionDataSource.DeleteSessionCallback() {
-            @Override
-            public void onSessionsDeleted() {
-                mSessionView.onSessionsDeleted();
-            }
-        };
+        callbackDelete = mSessionView::onSessionsDeleted;
     }
 
     /**

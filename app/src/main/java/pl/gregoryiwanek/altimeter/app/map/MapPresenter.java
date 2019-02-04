@@ -1,20 +1,22 @@
 package pl.gregoryiwanek.altimeter.app.map;
 
-import android.content.ContentResolver;
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.view.Window;
+import android.content.*;
+import android.view.*;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
+import androidx.annotation.*;
 
-import java.util.List;
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.*;
 
-import pl.gregoryiwanek.altimeter.app.data.database.SessionDataSource;
-import pl.gregoryiwanek.altimeter.app.data.database.SessionRepository;
-import pl.gregoryiwanek.altimeter.app.utils.screenshotcatcher.ScreenShotCatcher;
+import java.util.*;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import pl.gregoryiwanek.altimeter.app.data.database.source.*;
+import pl.gregoryiwanek.altimeter.app.utils.screenshotcatcher.*;
+
+import static com.google.common.base.Preconditions.*;
+
+//import pl.gregoryiwanek.altimeter.app.data.database.SessionDataSource;
+//import pl.gregoryiwanek.altimeter.app.data.database.SessionRepository;
 
 /**
  * Presenter of Map section.
@@ -42,12 +44,7 @@ class MapPresenter implements MapContract.Presenter {
 
     @Override
     public void loadMapData() {
-        mSessionRepository.getMapData(mId, new SessionDataSource.LoadMapDataCallback() {
-            @Override
-            public void onMapDataLoaded(List<LatLng> positions) {
-                checkMapData(positions);
-            }
-        });
+        mSessionRepository.getMapData(mId, this::checkMapData);
     }
 
     @Override

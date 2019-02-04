@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -18,26 +17,27 @@
             android:layout_height="wrap_content"
             android:text="Map Screen"
             android:paddingBottom="@dimen/margin_8dp"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"/>
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:text="Shows session's recorded points in form of path."/>
+            android:text="Shows session's recorded points in form of path." />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
             android:paddingBottom="@dimen/activity_padding_bottom_12dp"
-            android:text="Starting and ending point have markers with distance and elevation."/>
+            android:text="Starting and ending point have markers with distance and elevation." />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
             android:paddingBottom="@dimen/margin_8dp"
-            android:text="Click on UI element to get specific information"/>
+            android:text="Click on UI element to get specific information" />
     </LinearLayout>
 
     <LinearLayout
@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="20"
-            android:background="@color/colorTransparent"/>
+            android:background="@color/colorTransparent" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -66,7 +66,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="45"
-                android:background="@drawable/customborder"/>
+                android:background="@drawable/customborder" />
 
             <RelativeLayout
                 android:clickable="true"
@@ -74,13 +74,13 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="125"
-                android:background="@drawable/customborder"/>
+                android:background="@drawable/customborder" />
 
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="80"
-                android:background="@color/colorTransparent"/>
+                android:background="@color/colorTransparent" />
 
             <RelativeLayout
                 android:clickable="true"
@@ -88,7 +88,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="50"
-                android:background="@drawable/customborder"/>
+                android:background="@drawable/customborder" />
         </LinearLayout>
 
         <FrameLayout
@@ -97,13 +97,12 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="395"
-            android:background="@drawable/customborder">
-        </FrameLayout>
+            android:background="@drawable/customborder"></FrameLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="40"
-            android:background="@color/colorTransparent"/>
+            android:background="@color/colorTransparent" />
     </LinearLayout>
 </LinearLayout>

@@ -10,62 +10,66 @@
         android:layout_height="wrap_content"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:paddingBottom="@dimen/margin_8dp"
-        android:text="AltiMeter"/>
+        android:text="AltiMeter" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-        android:text="AltiMeter app measures elevation and location of the device using the build-in device sensors and internet."/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-        android:text="AltiMeter can be used for all outdoor and indoor activities, such as climbing, trekking, hiking and even stair climbing."/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-        android:paddingBottom="@dimen/activity_padding_bottom_12dp"
-        android:text="All sessions are saved to local database with option to share their content."/>
+        android:text="AltiMeter app measures elevation and location of the device using the build-in device sensors and internet." />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        android:paddingBottom="@dimen/margin_8dp"
-        android:text="Author"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-        android:paddingBottom="@dimen/activity_padding_bottom_12dp"
-        android:text="Grzegorz Iwanek"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        android:paddingBottom="@dimen/margin_8dp"
-        android:text="Contact"/>
+        android:text="AltiMeter can be used for all outdoor and indoor activities, such as climbing, trekking, hiking and even stair climbing." />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
         android:paddingBottom="@dimen/activity_padding_bottom_12dp"
-        android:text="iwanekgregory@gmail.com"/>
+        android:text="All sessions are saved to local database with option to share their content." />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:paddingBottom="@dimen/margin_8dp"
-        android:text="Version"/>
+        android:text="Author" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:paddingBottom="@dimen/activity_padding_bottom_12dp"
+        android:text="Grzegorz Iwanek" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:paddingBottom="@dimen/margin_8dp"
+        android:text="Contact" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:paddingBottom="@dimen/activity_padding_bottom_12dp"
+        android:text="iwanekgregory@gmail.com" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:paddingBottom="@dimen/margin_8dp"
+        android:text="Version" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
         android:paddingBottom="@dimen/activity_padding_bottom_12dp"
-        android:text="Beta, Android learning project"/>
+        android:text="Beta, Android learning project" />
 </LinearLayout>

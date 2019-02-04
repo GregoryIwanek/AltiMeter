@@ -1,15 +1,17 @@
 package pl.gregoryiwanek.altimeter.app.recordingsession;
 
-import android.app.ProgressDialog;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.os.*;
 
-import pl.gregoryiwanek.altimeter.app.BasicActivity;
-import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.data.database.SessionRepository;
-import pl.gregoryiwanek.altimeter.app.data.database.local.LocalDataSource;
-import pl.gregoryiwanek.altimeter.app.data.location.LocationUpdateManager;
+import androidx.annotation.*;
+import androidx.databinding.*;
+
+import pl.gregoryiwanek.altimeter.app.*;
+import pl.gregoryiwanek.altimeter.app.data.database.source.*;
+import pl.gregoryiwanek.altimeter.app.data.database.source.local.*;
+import pl.gregoryiwanek.altimeter.app.data.location.*;
+import pl.gregoryiwanek.altimeter.app.databinding.*;
+
+//import pl.gregoryiwanek.altimeter.app.data.database.local.*;
 
 /**
  * Main activity of RecordingSession section.
@@ -22,6 +24,7 @@ public class RecordingSessionActivity extends BasicActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_graph);
+        ActivityNewGraphBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_new_graph);
 
         super.initiateUI();
         super.setShareIcon();
@@ -40,10 +43,10 @@ public class RecordingSessionActivity extends BasicActivity{
         }
     }
 
-    @SuppressWarnings("UnusedAssignment")
+    //@SuppressWarnings("UnusedAssignment")
     private void setPresenter() {
         RecordingSessionPresenter mRecordingSessionPresenter = new RecordingSessionPresenter(
-                SessionRepository.getInstance(LocalDataSource.newInstance(getApplicationContext())),
+                SessionRepository.getInstance(SessionLocalDataSource./*new*/getInstance(getApplicationContext())),
                 new LocationUpdateManager(getApplicationContext()), mRecordingSessionFragment);
     }
 
@@ -56,7 +59,7 @@ public class RecordingSessionActivity extends BasicActivity{
      */
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().findFragmentById(R.id.contentFrame) != null) {
+        if (getSupportFragmentManager().findFragmentById(R.id.contentFrame) != null) {
             super.onBackPressed();
         } else {
             mRecordingSessionFragment.onBackButtonPressed(RecordingSessionActivity.super::onBackPressed);

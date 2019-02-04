@@ -1,19 +1,13 @@
 package pl.gregoryiwanek.altimeter.app.utils.formatconventer;
 
-import android.location.Location;
-import android.text.TextUtils;
+import android.location.*;
+import android.text.*;
 
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.text.*;
+import java.util.*;
 
-import pl.gregoryiwanek.altimeter.app.data.location.services.helpers.airporttask.xmlparser.XmlAirportValues;
-import pl.gregoryiwanek.altimeter.app.utils.Constants;
+import pl.gregoryiwanek.altimeter.app.data.location.services.helpers.airporttask.xmlparser.*;
+import pl.gregoryiwanek.altimeter.app.utils.*;
 
 /**
  * Consists static methods used to format and convert input values to required shape.
@@ -398,18 +392,7 @@ public class FormatAndValueConverter {
      * @param airportsList list of airports to sort by distance to user
      */
     private static void sortAirportsByDistance(List<XmlAirportValues> airportsList) {
-        Collections.sort(airportsList, new Comparator<XmlAirportValues>() {
-            @Override
-            public int compare(XmlAirportValues airport1, XmlAirportValues airport2) {
-                if (airport1.getDistance() > airport2.getDistance()) {
-                    return 1;
-                }
-                if (airport1.getDistance() < airport2.getDistance()) {
-                    return -1;
-                }
-                return 0;
-            }
-        });
+        Collections.sort(airportsList, (airport1, airport2) -> Float.compare(airport1.getDistance(), airport2.getDistance()));
     }
 
     /**
