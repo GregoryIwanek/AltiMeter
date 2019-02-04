@@ -1,19 +1,19 @@
 package pl.gregoryiwanek.altimeter.app.utils.widgetextensions;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
+import android.app.*;
+import android.content.*;
+import android.os.*;
+import androidx.annotation.*;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AlertDialog;
 
 import pl.gregoryiwanek.altimeter.app.utils.Constants;
 
 /**
  * Consists class responsible for delivering popup notice message.
- * Depending on used type of Fragment ({@link android.support.v4.app.Fragment}
- * or {@link android.app.Fragment}), there is requirement of use different subclass of this class.
+ * Depending on used type of Fragment ({@link Fragment}
+ * or {@link Fragment}), there is requirement of use different subclass of this class.
  */
 public class NoticeDialogFragment {
 
@@ -27,7 +27,7 @@ public class NoticeDialogFragment {
         private NoticeDialogListener mListener;
 
         @Override
-        public void onAttach(Context context) {
+        public void onAttach(@NonNull Context context) {
             super.onAttach(context);
 
             // try attach listener to a parent Fragment, if this object is attached directly
@@ -78,21 +78,23 @@ public class NoticeDialogFragment {
 
         public interface NoticeDialogListener {
 
-            void onDialogPositiveClick(int callbackCode);
+            default void onDialogPositiveClick(int callbackCode) {
+
+            }
         }
     }
 
     /**
      * Notice Dialog for use with fragments "import android.app.Fragment" (not support.V4, just Fragment!!!)
      */
-    public static class NoticeDialogFragmentApp extends android.app.DialogFragment {
+    public static class NoticeDialogFragmentApp extends DialogFragment {
 
         private String mTitle;
 
-        @SuppressWarnings("deprecation")
+        //@SuppressWarnings("deprecation")
         @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
+        public void onAttach(Context context /*Activity activity*/) {
+            super.onAttach(context /*activity*/);
             getBundleArguments();
         }
 

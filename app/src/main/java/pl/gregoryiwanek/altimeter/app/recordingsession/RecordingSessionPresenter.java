@@ -2,25 +2,27 @@ package pl.gregoryiwanek.altimeter.app.recordingsession;
 
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.view.Window;
+import android.view.*;
 
-import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.data.database.SessionDataSource;
-import pl.gregoryiwanek.altimeter.app.data.sessions.Session;
-import pl.gregoryiwanek.altimeter.app.data.database.SessionRepository;
-import pl.gregoryiwanek.altimeter.app.data.location.LocationResponse;
-import pl.gregoryiwanek.altimeter.app.data.location.LocationUpdateManager;
-import pl.gregoryiwanek.altimeter.app.data.location.managers.BarometerManager;
-import pl.gregoryiwanek.altimeter.app.data.location.managers.GpsManager;
-import pl.gregoryiwanek.altimeter.app.data.location.managers.NetworkManager;
-import pl.gregoryiwanek.altimeter.app.utils.screenshotcatcher.ScreenShotCatcher;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import androidx.annotation.*;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import pl.gregoryiwanek.altimeter.app.*;
+import pl.gregoryiwanek.altimeter.app.data.database.source.SessionDataSource;
+import pl.gregoryiwanek.altimeter.app.data.database.source.SessionRepository;
+import pl.gregoryiwanek.altimeter.app.data.location.*;
+import pl.gregoryiwanek.altimeter.app.data.location.managers.*;
+import pl.gregoryiwanek.altimeter.app.data.sessions.*;
+import pl.gregoryiwanek.altimeter.app.utils.screenshotcatcher.*;
+import rx.*;
+import rx.android.schedulers.*;
+import rx.schedulers.*;
+
+import static com.google.common.base.Preconditions.*;
+import static pl.gregoryiwanek.altimeter.app.recordingsession.RecordingSessionContract.View;
 import static pl.gregoryiwanek.altimeter.app.recordingsession.RecordingSessionContract.*;
+
+//import pl.gregoryiwanek.altimeter.app.data.database.SessionDataSource;
+//import pl.gregoryiwanek.altimeter.app.data.database.SessionRepository;
 
 /**
  * Presenter class of RecordingSession section.

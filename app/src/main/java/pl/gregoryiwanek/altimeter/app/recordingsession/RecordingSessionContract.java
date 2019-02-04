@@ -2,7 +2,7 @@ package pl.gregoryiwanek.altimeter.app.recordingsession;
 
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.Window;
 
 import java.util.ArrayList;

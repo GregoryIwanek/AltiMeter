@@ -88,7 +88,8 @@
                             android:layout_width="36dp"
                             android:layout_height="36dp"
                             android:layout_gravity="center"
-                            android:background="@drawable/ic_refresh_black_24dp"/>
+                            android:background="@drawable/ic_refresh_black_24dp"
+                            android:focusable="true" />
                     </FrameLayout>
 
                     <FrameLayout
@@ -106,7 +107,8 @@
                             android:layout_width="36dp"
                             android:layout_height="36dp"
                             android:layout_gravity="center"
-                            android:background="@drawable/ic_play_arrow_black_24dp"/>
+                            android:background="@drawable/ic_play_arrow_black_24dp"
+                            android:focusable="true" />
                     </FrameLayout>
 
                     <FrameLayout
@@ -456,7 +458,7 @@
                 android:layout_weight="0.85">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:layout_weight="1">

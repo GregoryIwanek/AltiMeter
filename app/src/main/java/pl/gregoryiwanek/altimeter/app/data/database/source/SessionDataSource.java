@@ -1,71 +1,79 @@
 package pl.gregoryiwanek.altimeter.app.data.database.source;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.content.*;
+import android.os.*;
 
-import com.google.android.gms.maps.model.LatLng;
+import androidx.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.google.android.gms.maps.model.*;
 
-import pl.gregoryiwanek.altimeter.app.data.Session;
+import java.util.*;
+
+import pl.gregoryiwanek.altimeter.app.data.sessions.*;
+
+//import pl.gregoryiwanek.altimeter.app.data.Session;
 
 /**
  * Entry point for accessing data.
  */
 public interface SessionDataSource {
 
-    interface LoadSessionsCallback {
-        void onSessionLoaded(List<Session> sessions);
+	interface LoadSessionsCallback {
+		void onSessionLoaded(List<Session> sessions);
 
-        void onDataNotAvailable();
-    }
+		void onDataNotAvailable();
+	}
 
-    interface LoadMapDataCallback {
+	interface LoadMapDataCallback {
 
-        void onMapDataLoaded(List<LatLng> positions);
-    }
+		void onMapDataLoaded(List<LatLng> positions);
+	}
 
-    interface SaveSessionCallback {
+	interface SaveSessionCallback {
 
-        void onNewSessionSaved(String id);
-    }
+		void onNewSessionSaved(String id);
+	}
 
-    interface DeleteSessionCallback {
+	interface DeleteSessionCallback {
 
-        void onSessionsDeleted();
-    }
+		void onSessionsDeleted();
+	}
 
-    interface DetailsSessionCallback {
+	interface DetailsSessionCallback {
 
-        void onDetailsLoaded(Bundle bundle);
+		void onDetailsLoaded(Bundle bundle);
 
-        void onChangesSaved();
-    }
+		void onChangesSaved();
 
-    void createRecordsTable(@NonNull Session session);
+		void onExportDataLoaded(List<String[]> args);
+	}
 
-    void createNewSession(@NonNull Session session, @NonNull SaveSessionCallback callback);
+	void createRecordsTable(@NonNull Session session);
 
-    void updateSessionData(@NonNull Session session);
+	void createNewSession(@NonNull Session session, SaveSessionCallback callback);
 
-    void getSessions(@NonNull LoadSessionsCallback callback);
+	void updateSessionData(@NonNull Session session);
 
-    void clearSessionData(@NonNull String sessionId);
+	void getSessions(@NonNull LoadSessionsCallback callback);
 
-    void refreshSessions();
+	void clearSessionData(@NonNull String sessionId);
 
-    void getMapData(@NonNull String sessionId, @NonNull LoadMapDataCallback callback);
+	void refreshSessions();
 
-    void getDetails(@NonNull String sessionId, DetailsSessionCallback callback, Context context);
+	void getMapData(@NonNull String sessionId, @NonNull LoadMapDataCallback callback);
 
-    void deleteSessions(ArrayList<String> sessionsId, boolean isDeleteAll, @Nullable DeleteSessionCallback callback);
+	void getDetails(@NonNull String sessionId, DetailsSessionCallback callback, Context context);
 
-    void setSessionChecked(String sessionId, boolean isCompleted);
+	void deleteSessions(ArrayList<String> sessionsId, boolean isDeleteAll, @Nullable DeleteSessionCallback callback);
 
-    void updateDetailsChanges(@NonNull DetailsSessionCallback callback, Map<String, String> changes);
+	void setSessionChecked(String sessionId, boolean isCompleted);
+
+	void updateDetailsChanges(@NonNull DetailsSessionCallback callback, Map<String, String> changes);
+
+	abstract class AsyncDatabaseTask {
+		public abstract void onPreExecuteTriggered();
+
+		public abstract void onPostExecuteTriggered();
+	}
 }
 

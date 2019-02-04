@@ -11,12 +11,12 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
-        android:background="@drawable/ic_logo_black_48dp"/>
+        android:background="@drawable/ic_logo_black_48dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:text="ALTIMETER"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 </FrameLayout>

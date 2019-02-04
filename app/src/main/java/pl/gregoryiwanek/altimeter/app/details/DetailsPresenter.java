@@ -1,17 +1,19 @@
 package pl.gregoryiwanek.altimeter.app.details;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.content.*;
+import android.os.*;
 
-import java.util.List;
-import java.util.Map;
+import androidx.annotation.*;
 
-import pl.gregoryiwanek.altimeter.app.data.database.SessionDataSource;
-import pl.gregoryiwanek.altimeter.app.data.database.SessionRepository;
-import pl.gregoryiwanek.altimeter.app.utils.databaseexporter.DatabaseExporter;
+import java.util.*;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import pl.gregoryiwanek.altimeter.app.data.database.source.*;
+import pl.gregoryiwanek.altimeter.app.utils.databaseexporter.*;
+
+import static com.google.common.base.Preconditions.*;
+
+//import pl.gregoryiwanek.altimeter.app.data.database.SessionDataSource;
+//import pl.gregoryiwanek.altimeter.app.data.database.SessionRepository;
 
 /**
  * Presenter class of Details section.

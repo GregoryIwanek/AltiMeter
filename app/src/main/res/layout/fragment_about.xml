@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/coordinatorContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,73 +14,85 @@
             android:id="@+id/about_button_graphs"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="1"
             android:background="@drawable/about_button_selector"
             android:text="@string/graphs"
-            android:textSize="10sp"
-            android:layout_marginRight="6dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"
-            android:layout_weight="1"/>
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead.Inverse"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/about_button_new_graph"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="1"
             android:background="@drawable/about_button_selector"
             android:text="@string/new_button"
-            android:textSize="10sp"
-            android:layout_marginRight="6dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"
-            android:layout_weight="1"/>
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead.Inverse"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/about_button_details"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="1"
             android:background="@drawable/about_button_selector"
             android:text="@string/details"
-            android:textSize="10sp"
-            android:layout_marginRight="6dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"
-            android:layout_weight="1"/>
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead.Inverse"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/about_button_stats"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="1"
             android:background="@drawable/about_button_selector"
             android:text="@string/stats"
-            android:textSize="10sp"
-            android:layout_marginRight="6dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"
-            android:layout_weight="1"/>
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead.Inverse"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/about_button_map"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="1"
             android:background="@drawable/about_button_selector"
             android:text="@string/map_button"
-            android:textSize="10sp"
-            android:layout_marginRight="6dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"
-            android:layout_weight="1"/>
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead.Inverse"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/about_button_author"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="1"
             android:background="@drawable/about_button_selector"
             android:text="@string/author"
-            android:textSize="10sp"
-            android:layout_marginRight="6dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"
-            android:layout_weight="1"/>
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead.Inverse"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <ScrollView
@@ -89,8 +100,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
-    </ScrollView>
+        android:fillViewport="true" />
 </LinearLayout>
 
 

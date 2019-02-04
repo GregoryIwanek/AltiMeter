@@ -1,14 +1,13 @@
 package pl.gregoryiwanek.altimeter.app.about;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.os.*;
+import android.view.*;
 
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import androidx.annotation.*;
 import pl.gregoryiwanek.altimeter.app.R;
+
+import butterknife.*;
+import pl.gregoryiwanek.altimeter.app.*;
 
 public class InnerFragmentMap extends BasicInnerFragment {
 

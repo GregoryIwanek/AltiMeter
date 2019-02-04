@@ -1,11 +1,13 @@
 package pl.gregoryiwanek.altimeter.app.statistics;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
+import androidx.databinding.*;
 
 import pl.gregoryiwanek.altimeter.app.BasicActivity;
 import pl.gregoryiwanek.altimeter.app.R;
 import pl.gregoryiwanek.altimeter.app.data.statistics.StatisticsManager;
+import pl.gregoryiwanek.altimeter.app.databinding.*;
 
 /**
  * Main activity class of Statistics section.
@@ -18,6 +20,7 @@ public class StatisticsActivity extends BasicActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
+        ActivityStatisticsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_statistics);
 
         super.initiateUI();
         setStatisticsFragment();
@@ -35,7 +38,7 @@ public class StatisticsActivity extends BasicActivity {
         }
     }
 
-    @SuppressWarnings("UnusedAssignment")
+    //@SuppressWarnings("UnusedAssignment")
     private void setPresenter() {
         StatisticsPresenter mStatisticsPresenter = new StatisticsPresenter(mStatisticsFragment,
                 new StatisticsManager(this));

@@ -41,7 +41,7 @@
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textSize="@dimen/text_size_large_30sp"
                 android:textAlignment="center"
-                android:gravity="center"/>
+                android:gravity="center" />
 
             <TextView
                 android:id="@+id/current_elevation_text_label"
@@ -71,30 +71,32 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.5"/>
+                    android:layout_weight="1.5" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
+
                     <ImageButton
                         android:id="@+id/reset_button"
                         android:clickable="true"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:layout_gravity="center"
-                        android:background="@drawable/ic_refresh_black_24dp"/>
+                        android:background="@drawable/ic_refresh_black_24dp" />
                 </FrameLayout>
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.5"/>
+                    android:layout_weight="1.5" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
+
                     <ImageButton
                         android:id="@+id/pause_button"
                         android:clickable="true"
@@ -107,7 +109,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.5"/>
+                    android:layout_weight="1.5" />
             </LinearLayout>
 
             <FrameLayout
@@ -123,25 +125,26 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.5"/>
+                    android:layout_weight="1.5" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
+
                     <ImageButton
                         android:id="@+id/save_session_button"
                         android:clickable="true"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:layout_gravity="center"
-                        android:background="@drawable/ic_lock_outline_black_24dp"/>
+                        android:background="@drawable/ic_lock_outline_black_24dp" />
                 </FrameLayout>
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.5"/>
+                    android:layout_weight="1.5" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -154,13 +157,13 @@
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:layout_gravity="center"
-                        android:background="@drawable/ic_terrain_graph_black_24dp"/>
+                        android:background="@drawable/ic_terrain_graph_black_24dp" />
                 </FrameLayout>
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.5"/>
+                    android:layout_weight="1.5" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -175,7 +178,7 @@
         <pl.gregoryiwanek.altimeter.app.recordingsession.GraphViewWidget
             android:id="@+id/graph_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
     </FrameLayout>
 
     <!--layouts with max height, time, min height, longitude icon, latitude icon, small border line between,
@@ -203,13 +206,14 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:layout_weight="1.5">
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="20dp"
                         android:text="@string/gps"
                         android:textSize="14sp"
                         android:gravity="end|bottom"
-                        android:layout_marginBottom="@dimen/margin_8dp"/>
+                        android:layout_marginBottom="@dimen/margin_8dp" />
 
                     <TextView
                         android:id="@+id/gps_value_label"
@@ -218,7 +222,7 @@
                         android:text="@string/current_no_value"
                         android:textSize="14sp"
                         android:gravity="end|bottom"
-                        android:layout_marginBottom="@dimen/margin_8dp"/>
+                        android:layout_marginBottom="@dimen/margin_8dp" />
                 </LinearLayout>
 
                 <FrameLayout
@@ -235,7 +239,7 @@
                         android:textAppearance="?android:textAppearanceLarge"
                         android:layout_gravity="start|center_vertical"
                         android:background="@drawable/ic_gps_lock_24dp"
-                        android:textAlignment="center"/>
+                        android:textAlignment="center" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -284,7 +288,7 @@
                         android:textAppearance="?android:textAppearanceLarge"
                         android:layout_gravity="start|center_vertical"
                         android:background="@drawable/ic_network_lock_24dp"
-                        android:textAlignment="center"/>
+                        android:textAlignment="center" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -315,7 +319,7 @@
                         android:text="@string/current_no_value"
                         android:textSize="14sp"
                         android:gravity="end|bottom"
-                        android:layout_marginBottom="@dimen/margin_8dp"/>
+                        android:layout_marginBottom="@dimen/margin_8dp" />
                 </LinearLayout>
 
                 <FrameLayout
@@ -332,7 +336,7 @@
                         android:textAppearance="?android:textAppearanceLarge"
                         android:layout_gravity="start|center_vertical"
                         android:background="@drawable/ic_barometer_lock_24dp"
-                        android:textAlignment="center"/>
+                        android:textAlignment="center" />
                 </FrameLayout>
             </LinearLayout>
         </LinearLayout>
@@ -365,7 +369,8 @@
                     android:text="@string/min_height_text"
                     android:textAppearance="?android:textAppearanceMedium"
                     android:gravity="center"
-                    android:textAlignment="center"/>
+                    android:textAlignment="center" />
+
                 <TextView
                     android:id="@+id/min_height_numbers"
                     android:layout_width="match_parent"
@@ -375,7 +380,7 @@
                     android:text="@string/current_no_value"
                     android:textAppearance="?android:textAppearanceSmall"
                     android:gravity="center"
-                    android:textAlignment="center"/>
+                    android:textAlignment="center" />
             </LinearLayout>
 
             <LinearLayout
@@ -393,7 +398,7 @@
                     android:text="@string/distance_text"
                     android:textAppearance="?android:textAppearanceMedium"
                     android:gravity="center"
-                    android:textAlignment="center"/>
+                    android:textAlignment="center" />
 
                 <TextView
                     android:id="@+id/distance_numbers"
@@ -404,7 +409,7 @@
                     android:text="@string/current_no_value"
                     android:textAppearance="?android:textAppearanceSmall"
                     android:gravity="center"
-                    android:textAlignment="center"/>
+                    android:textAlignment="center" />
             </LinearLayout>
 
             <LinearLayout
@@ -422,7 +427,7 @@
                     android:text="@string/max_height_text"
                     android:textAppearance="?android:textAppearanceMedium"
                     android:gravity="center"
-                    android:textAlignment="center"/>
+                    android:textAlignment="center" />
 
                 <TextView
                     android:id="@+id/max_height_numbers"
@@ -433,7 +438,7 @@
                     android:text="@string/current_no_value"
                     android:textAppearance="?android:textAppearanceSmall"
                     android:gravity="center"
-                    android:textAlignment="center"/>
+                    android:textAlignment="center" />
             </LinearLayout>
         </LinearLayout>
 
@@ -450,7 +455,7 @@
             android:layout_weight="0.85">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:layout_weight="1">
@@ -470,7 +475,7 @@
                         android:text="@string/current_latitude_label"
                         android:textAppearance="?android:textAppearanceLarge"
                         android:gravity="center"
-                        android:textAlignment="center"/>
+                        android:textAlignment="center" />
 
                     <TextView
                         android:id="@+id/current_longitude_label"
@@ -481,7 +486,7 @@
                         android:text="@string/current_longitude_label"
                         android:textAppearance="?android:textAppearanceLarge"
                         android:gravity="center"
-                        android:textAlignment="center"/>
+                        android:textAlignment="center" />
                 </LinearLayout>
 
                 <!--separator line-->
@@ -505,7 +510,7 @@
                         android:text="@string/current_no_value"
                         android:textAppearance="?android:textAppearanceMedium"
                         android:gravity="center"
-                        android:textAlignment="center"/>
+                        android:textAlignment="center" />
 
                     <TextView
                         android:id="@+id/current_longitude_value"
@@ -516,7 +521,7 @@
                         android:text="@string/current_no_value"
                         android:textAppearance="?android:textAppearanceMedium"
                         android:gravity="center"
-                        android:textAlignment="center"/>
+                        android:textAlignment="center" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

@@ -1,28 +1,26 @@
 package pl.gregoryiwanek.altimeter.app.data.location.services.elevation;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.util.Log;
-import android.widget.Toast;
+import android.*;
+import android.content.*;
+import android.content.pm.*;
+import android.location.*;
+import android.os.*;
+import android.util.*;
+import android.widget.*;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
+import androidx.annotation.*;
+import androidx.core.app.*;
+
+import com.google.android.gms.common.*;
+import com.google.android.gms.common.api.*;
 import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.*;
 
-import java.io.IOException;
+import java.io.*;
 
-import pl.gregoryiwanek.altimeter.app.utils.Constants;
-import pl.gregoryiwanek.altimeter.app.data.location.LocationResponse;
-import pl.gregoryiwanek.altimeter.app.utils.gravitationalmodel.EarthGravitationalModel;
+import pl.gregoryiwanek.altimeter.app.data.location.*;
+import pl.gregoryiwanek.altimeter.app.utils.*;
+import pl.gregoryiwanek.altimeter.app.utils.gravitationalmodel.*;
 
 /**
  * Consist Gps listener (Google API Client). Returns updates of location every interval set.
@@ -187,11 +185,11 @@ public class GpsLocationListener implements GoogleApiClient.ConnectionCallbacks,
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.d(LOG_TAG, " connection suspended triggered!");
+        Log.i(LOG_TAG, " connection suspended triggered!");
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(LOG_TAG, " connection failed triggered!");
+        Log.i(LOG_TAG, " connection failed triggered!");
     }
 }

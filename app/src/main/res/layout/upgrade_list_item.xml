@@ -9,7 +9,7 @@
         android:background="@color/colorTransparent"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:id="@+id/item_image"/>
+        android:id="@+id/item_image" />
 
     <TextView
         android:paddingLeft="@dimen/activity_padding_bottom_8dp"
@@ -19,5 +19,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/item_title"
-        android:gravity="start|center"/>
+        android:gravity="start|center" />
 </LinearLayout>

@@ -1,27 +1,20 @@
 package pl.gregoryiwanek.altimeter.app.details;
 
-import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v4.util.ArrayMap;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.os.*;
+import android.view.*;
+import android.widget.*;
 
-import java.util.Map;
+import androidx.collection.*;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import pl.gregoryiwanek.altimeter.app.BasicFragment;
+import com.google.android.material.snackbar.*;
+
+import java.util.*;
 import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.utils.Constants;
-import pl.gregoryiwanek.altimeter.app.utils.VersionController;
+
+import pl.gregoryiwanek.altimeter.app.*;
+
+import butterknife.*;
+import pl.gregoryiwanek.altimeter.app.utils.*;
 
 /**
  * View class of Details section.

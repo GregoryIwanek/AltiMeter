@@ -1,11 +1,12 @@
 package pl.gregoryiwanek.altimeter.app.settings;
 
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
-import android.support.annotation.Nullable;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.preference.PreferenceFragmentCompat;
 
 import pl.gregoryiwanek.altimeter.app.R;
 import pl.gregoryiwanek.altimeter.app.utils.stylecontroller.StyleController;
@@ -13,7 +14,7 @@ import pl.gregoryiwanek.altimeter.app.utils.stylecontroller.StyleController;
 /**
  * Class consists preference settings fragment and preference view.
  */
-public final class SettingsFragment extends PreferenceFragment {
+public final class SettingsFragment extends PreferenceFragmentCompat {
 
     StyleController styleController;
 
@@ -22,6 +23,10 @@ public final class SettingsFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
         styleController = new StyleController(getActivity());
+    }
+    @Override
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+
     }
 
     @Override

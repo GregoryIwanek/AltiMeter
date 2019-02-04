@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -18,55 +17,59 @@
             android:layout_height="wrap_content"
             android:text="@string/new_graph_screen"
             android:paddingBottom="@dimen/margin_8dp"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"/>
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
             android:paddingBottom="@dimen/activity_padding_bottom_12dp"
-            android:text="New graph screen is a section responsible for holding new session's operations."/>
+            android:text="New graph screen is a section responsible for holding new session's operations." />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
             android:paddingBottom="@dimen/margin_8dp"
-            android:text="Features:"/>
+            android:text="Features:" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:text="- recording altitude by GPS, internet and barometer"/>
+            android:text="- recording altitude by GPS, internet and barometer" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:text="- limiting number of sources to take data from"/>
+            android:text="- limiting number of sources to take data from" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:text="- drawing altitude in time graph"/>
+            android:text="- drawing altitude in time graph" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:text="- printing information about location"/>
+            android:text="- printing information about location" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/activity_padding_bottom_12dp"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:text="- generating map with recorded locations"/>
+            android:text="- generating map with recorded locations" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
             android:paddingBottom="@dimen/margin_8dp"
-            android:text="Click on UI element to get specific information"/>
+            android:text="Click on UI element to get specific information" />
     </LinearLayout>
 
     <FrameLayout
@@ -85,8 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="20"
-                android:background="@color/colorTransparent">
-            </FrameLayout>
+                android:background="@color/colorTransparent"></FrameLayout>
 
             <!--65dp-->
             <LinearLayout
@@ -102,7 +104,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="45"
-                    android:background="@drawable/customborder"/>
+                    android:background="@drawable/customborder" />
 
                 <RelativeLayout
                     android:clickable="true"
@@ -110,13 +112,13 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="125"
-                    android:background="@drawable/customborder"/>
+                    android:background="@drawable/customborder" />
 
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="80"
-                    android:background="@color/colorTransparent"/>
+                    android:background="@color/colorTransparent" />
 
                 <RelativeLayout
                     android:clickable="true"
@@ -124,7 +126,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="50"
-                    android:background="@drawable/customborder"/>
+                    android:background="@drawable/customborder" />
             </LinearLayout>
 
             <LinearLayout
@@ -140,7 +142,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="110"
-                    android:background="@drawable/customborder"/>
+                    android:background="@drawable/customborder" />
 
                 <RelativeLayout
                     android:clickable="true"
@@ -148,7 +150,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="85"
-                    android:background="@drawable/customborder"/>
+                    android:background="@drawable/customborder" />
 
                 <RelativeLayout
                     android:clickable="true"
@@ -156,7 +158,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="105"
-                    android:background="@drawable/customborder"/>
+                    android:background="@drawable/customborder" />
             </LinearLayout>
 
             <LinearLayout
@@ -166,8 +168,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="170"
                 android:orientation="horizontal"
-                android:background="@drawable/customborder">
-            </LinearLayout>
+                android:background="@drawable/customborder"></LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -182,7 +183,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="100"
-                    android:background="@drawable/customborder"/>
+                    android:background="@drawable/customborder" />
 
                 <RelativeLayout
                     android:clickable="true"
@@ -190,7 +191,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="100"
-                    android:background="@drawable/customborder"/>
+                    android:background="@drawable/customborder" />
 
                 <RelativeLayout
                     android:clickable="true"
@@ -198,8 +199,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="100"
-                    android:background="@drawable/customborder"/>
+                    android:background="@drawable/customborder" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -213,7 +215,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="100"
-                    android:background="@drawable/customborder"/>
+                    android:background="@drawable/customborder" />
 
                 <RelativeLayout
                     android:clickable="true"
@@ -221,7 +223,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="100"
-                    android:background="@drawable/customborder"/>
+                    android:background="@drawable/customborder" />
 
                 <RelativeLayout
                     android:clickable="true"
@@ -229,7 +231,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="100"
-                    android:background="@drawable/customborder"/>
+                    android:background="@drawable/customborder" />
             </LinearLayout>
 
             <LinearLayout
@@ -245,7 +247,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="150"
-                    android:background="@drawable/customborder"/>
+                    android:background="@drawable/customborder" />
 
                 <RelativeLayout
                     android:clickable="true"
@@ -253,7 +255,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="150"
-                    android:background="@drawable/customborder"/>
+                    android:background="@drawable/customborder" />
             </LinearLayout>
 
             <LinearLayout
@@ -261,8 +263,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="35"
                 android:orientation="horizontal"
-                android:background="@color/colorTransparent">
-            </LinearLayout>
+                android:background="@color/colorTransparent"></LinearLayout>
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

@@ -1,29 +1,25 @@
 package pl.gregoryiwanek.altimeter.app.data.database.source.local;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.content.*;
+import android.database.*;
+import android.database.sqlite.*;
+import android.os.*;
+import android.preference.*;
 
-import com.google.android.gms.maps.model.LatLng;
+import androidx.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.google.android.gms.maps.model.*;
 
-import pl.gregoryiwanek.altimeter.app.data.Session;
-import pl.gregoryiwanek.altimeter.app.data.database.source.SessionDataSource;
-import pl.gregoryiwanek.altimeter.app.data.database.source.local.SessionDbContract.SessionEntry;
-import pl.gregoryiwanek.altimeter.app.utils.Constants;
-import pl.gregoryiwanek.altimeter.app.utils.FormatAndValueConverter;
+import java.util.*;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static pl.gregoryiwanek.altimeter.app.data.database.source.local.SessionDbContract.*;
+import pl.gregoryiwanek.altimeter.app.data.database.source.*;
+import pl.gregoryiwanek.altimeter.app.data.database.source.local.SessionDbContract.*;
+import pl.gregoryiwanek.altimeter.app.data.sessions.*;
+import pl.gregoryiwanek.altimeter.app.utils.*;
+import pl.gregoryiwanek.altimeter.app.utils.formatconventer.*;
+
+//import pl.gregoryiwanek.altimeter.app.data.Session;
+//import pl.gregoryiwanek.altimeter.app.utils.FormatAndValueConverter;
 
 /**
  * Consists

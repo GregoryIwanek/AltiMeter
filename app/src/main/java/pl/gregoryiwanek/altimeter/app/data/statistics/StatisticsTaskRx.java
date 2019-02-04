@@ -1,16 +1,13 @@
 package pl.gregoryiwanek.altimeter.app.data.statistics;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.content.*;
+import android.preference.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.utils.Constants;
+import pl.gregoryiwanek.altimeter.app.*;
+import pl.gregoryiwanek.altimeter.app.utils.*;
 import rx.Observable;
-import rx.functions.Func0;
 
 /**
  * Consists JavaRx task dealing with fetching global statistics of an app.
@@ -49,12 +46,7 @@ class StatisticsTaskRx {
 
     // reset statistics, get boolean observable if succeed or not
     Observable<Boolean> getResetObservable() {
-        return Observable.defer(new Func0<Observable<Boolean>>() {
-            @Override
-            public Observable<Boolean> call() {
-                return Observable.just(isResetSuccess());
-            }
-        });
+        return Observable.defer(() -> Observable.just(isResetSuccess()));
     }
 
     private Boolean isResetSuccess() {

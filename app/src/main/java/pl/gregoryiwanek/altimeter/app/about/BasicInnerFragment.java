@@ -1,19 +1,20 @@
 package pl.gregoryiwanek.altimeter.app.about;
 
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.os.Bundle;
+import android.os.*;
 
-import butterknife.OnClick;
+import androidx.fragment.app.*;
 import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.utils.widgetextensions.NoticeDialogFragment;
+
+import butterknife.*;
+import pl.gregoryiwanek.altimeter.app.*;
+import pl.gregoryiwanek.altimeter.app.utils.widgetextensions.NoticeDialogFragment.*;
 
 public abstract class BasicInnerFragment extends Fragment {
 
     protected void showUpDialog(String title) {
         Bundle args = new Bundle();
         args.putString("title", title);
-        DialogFragment ndf = new NoticeDialogFragment.NoticeDialogFragmentApp();
+        NoticeDialogFragmentApp ndf = new NoticeDialogFragmentApp();
         ndf.setArguments(args);
         ndf.show(getFragmentManager(), "NoticeDialogFragment");
     }

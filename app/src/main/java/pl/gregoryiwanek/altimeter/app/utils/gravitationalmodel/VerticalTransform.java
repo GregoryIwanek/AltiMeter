@@ -38,6 +38,7 @@ public abstract class VerticalTransform extends AbstractMathTransform {
     /**
      * Gets the dimension of input points.
      */
+    @Override
     public final int getSourceDimensions() {
         return 3;
     }
@@ -45,6 +46,7 @@ public abstract class VerticalTransform extends AbstractMathTransform {
     /**
      * Gets the dimension of output points.
      */
+    @Override
     public final int getTargetDimensions() {
         return 3;
     }

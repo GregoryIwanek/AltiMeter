@@ -92,7 +92,7 @@
 
     <!--SESSION CONSTANT STRINGS-->
     <string name="positive">OK</string>
-    <string name="negative">CANCEL</string>
+    <string name="negative">"@android:string/cancel"</string>
     <string name="upgrade_to_pro_export">Upgrade to AltiMeterPRO to export sessions data.\nDo you want to upgrade?</string>
     <string name="upgrade_to_pro_max_saved">Upgrade to AltiMeterPro to save more than 5 sessions.\nDo you want to upgrade?</string>
     <string name="message_generate_map">Generate a map?</string>

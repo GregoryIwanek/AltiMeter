@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:clickable="true">
+        android:clickable="true"
+        android:focusable="true">
 
         <LinearLayout
             android:id="@+id/graphsLL"
@@ -42,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_gravity="center"
-                android:text="NIE MA GRAFÓW"
+                android:text="NO GRAPHS"
                 android:layout_marginBottom="@dimen/margin_8dp"
                 android:layout_weight="1" />
 
@@ -52,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="DODAJ GRAF"/>
+                android:text="ADD GRAPH" />
         </LinearLayout>
     </RelativeLayout>
 </pl.gregoryiwanek.altimeter.app.mainview.SwipeRefreshLayoutChild>

@@ -1,18 +1,23 @@
 package pl.gregoryiwanek.altimeter.app.mainview;
 
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
+import android.content.*;
+import android.os.*;
+import android.preference.*;
 
-import com.google.android.gms.ads.MobileAds;
+import androidx.annotation.*;
+import androidx.databinding.*;
 
-import pl.gregoryiwanek.altimeter.app.BasicActivity;
-import pl.gregoryiwanek.altimeter.app.R;
-import pl.gregoryiwanek.altimeter.app.data.database.SessionRepository;
-import pl.gregoryiwanek.altimeter.app.data.database.local.LocalDataSource;
-import pl.gregoryiwanek.altimeter.app.utils.formatconventer.FormatAndValueConverter;
-import pl.gregoryiwanek.altimeter.app.utils.VersionController;
+//import com.google.android.gms.ads.*;
+
+import pl.gregoryiwanek.altimeter.app.*;
+import pl.gregoryiwanek.altimeter.app.data.database.source.*;
+import pl.gregoryiwanek.altimeter.app.data.database.source.local.*;
+import pl.gregoryiwanek.altimeter.app.databinding.*;
+import pl.gregoryiwanek.altimeter.app.utils.*;
+import pl.gregoryiwanek.altimeter.app.utils.formatconventer.*;
+
+//import pl.gregoryiwanek.altimeter.app.data.database.SessionRepository;
+//import pl.gregoryiwanek.altimeter.app.data.database.local.LocalDataSource;
 
 /**
  * Launcher activity of the application.
@@ -25,7 +30,9 @@ public class SessionActivity extends BasicActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph_altitude);
-        initGoogleMobileAds();
+//        ActivityGraphAltitudeBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_graph_altitude);
+
+//        initGoogleMobileAds();
 
         super.initiateUI();
         setSessionFragment();
@@ -46,7 +53,7 @@ public class SessionActivity extends BasicActivity {
 
     private void setPresenter() {
         SessionPresenter mSessionPresenter = new SessionPresenter(
-                SessionRepository.getInstance(LocalDataSource.newInstance(this)),
+                SessionRepository.getInstance(SessionLocalDataSource./*new*/getInstance(this)),
                 mSessionFragment);
     }
 
@@ -58,7 +65,7 @@ public class SessionActivity extends BasicActivity {
 
     private void initGoogleMobileAds() {
         if (VersionController.isFreeVersion(this.getPackageName())) {
-            MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+//            MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
         }
     }
 }

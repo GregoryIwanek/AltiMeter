@@ -20,6 +20,7 @@
  */
 package pl.gregoryiwanek.altimeter.app.utils.gravitationalmodel;
 
+import android.annotation.*;
 import android.content.Context;
 import android.content.res.AssetManager;
 
@@ -29,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.nio.charset.*;
 import java.util.StringTokenizer;
 
 /**
@@ -206,6 +208,7 @@ public final class EarthGravitationalModel extends VerticalTransform {
      * @param filename The filename (e.g. {@code "WGS84.cof"}, relative to this class directory.
      * @throws IOException if the file can't be read or has an invalid content.
      */
+    @SuppressLint("NewApi")
     public void load(final String filename, Context context) throws IOException {
         AssetManager assManager = context.getApplicationContext().getAssets();
         InputStream stream = assManager.open("egm180.txt");
@@ -214,7 +217,7 @@ public final class EarthGravitationalModel extends VerticalTransform {
             throw new FileNotFoundException(filename);
         }
         final LineNumberReader in;
-        in = new LineNumberReader(new InputStreamReader(stream, "ISO-8859-1"));
+        in = new LineNumberReader(new InputStreamReader(stream, StandardCharsets.ISO_8859_1));
         String line;
         while ((line = in.readLine()) != null) {
             final StringTokenizer tokens = new StringTokenizer(line);
@@ -257,7 +260,7 @@ public final class EarthGravitationalModel extends VerticalTransform {
      * to read the coefficient from an other source than an ASCII file in some future
      * version.
      */
-    private final void initialize() {
+    private void initialize() {
         /*
          * MODIFY CNM EVEN ZONAL COEFFICIENTS.
          */
@@ -312,6 +315,7 @@ public final class EarthGravitationalModel extends VerticalTransform {
      * @return The value to add in order to get the height above the geoid (in metres).
      * @throws Exception if the offset can't be computed for the specified coordinates.
      */
+    @Override
     public double heightOffset(final double longitude, final double latitude, final double height)
             throws Exception {
         /*

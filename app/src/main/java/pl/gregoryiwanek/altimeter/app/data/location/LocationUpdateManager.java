@@ -9,8 +9,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.List;
 
@@ -263,14 +263,9 @@ public class LocationUpdateManager implements LocationResponse {
         }
     }
 
-    @SuppressWarnings("Convert2Lambda")
+    //@SuppressWarnings("Convert2Lambda")
     public Observable<Boolean> isSessionEmptyObservable() {
-        return Observable.defer(new Func0<Observable<Boolean>>() {
-            @Override
-            public Observable<Boolean> call() {
-                return Observable.just(isSessionEmpty());
-            }
-        });
+        return Observable.defer(() -> Observable.just(isSessionEmpty()));
     }
 
     private boolean isSessionEmpty() {
@@ -549,7 +544,7 @@ public class LocationUpdateManager implements LocationResponse {
     }
 
     private void saveCurrentIdDrawerMapGeneration() {
-        System.out.println("it's happening!!!");
+        System.out.println("saveCurrentIdDrawerMapGeneration");
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("sessionId", mSession.getId());

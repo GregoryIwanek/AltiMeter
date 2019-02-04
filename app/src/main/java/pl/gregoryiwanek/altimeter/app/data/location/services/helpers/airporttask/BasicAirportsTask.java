@@ -1,29 +1,18 @@
 package pl.gregoryiwanek.altimeter.app.data.location.services.helpers.airporttask;
 
-import android.net.Uri;
-import android.util.Log;
+import android.net.*;
+import android.util.*;
 
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
+import org.xml.sax.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.List;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.*;
 
-import pl.gregoryiwanek.altimeter.app.data.location.services.helpers.airporttask.xmlparser.XmlAirportParser;
-import pl.gregoryiwanek.altimeter.app.data.location.services.helpers.airporttask.xmlparser.XmlAirportValues;
+import pl.gregoryiwanek.altimeter.app.data.location.services.helpers.airporttask.xmlparser.*;
 import rx.Observable;
-import rx.functions.Func0;
 
 /**
  * Consists superclass of all airport data tasks.
@@ -35,12 +24,7 @@ abstract class BasicAirportsTask {
     private String sXmlStr;
 
     Observable<List<XmlAirportValues>> getNearestAirportsObservable(final Uri airportUri, final String parserMode) {
-        return Observable.defer(new Func0<Observable<List<XmlAirportValues>>>() {
-            @Override
-            public Observable<List<XmlAirportValues>> call() {
-                return Observable.just(getNearestAirports(airportUri, parserMode));
-            }
-        });
+        return Observable.defer(() -> Observable.just(getNearestAirports(airportUri, parserMode)));
     }
 
     private List<XmlAirportValues> getNearestAirports(Uri airportUri, String parserMode) {
@@ -78,7 +62,7 @@ abstract class BasicAirportsTask {
             sXmlStr = stringBuilder.toString();
             System.out.println(sXmlStr);
         } catch (IOException e) {
-            Log.d(getClass().getSimpleName(), "ERROR IOS EXCEPTION");
+            Log.i(getClass().getSimpleName(), "ERROR IOS EXCEPTION");
             return null;
         } finally {
             // close opened url connection
